@@ -79,7 +79,6 @@ namespace Archaeologists
             }
             else
                 throw new System.Exception("Faction id's are already in use, unable to register factions for Archaeologists Guild.");
-            //Debug.Log("Faction id's are already in use, unable to register factions for Archaeologists Guild. If this is the first time loading/starting with the mod, there's a problem!");
 
             Debug.Log("Finished mod init: Archaeologists");
         }

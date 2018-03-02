@@ -1,0 +1,19 @@
+ManifestFileVersion: 0
+CRC: 1935045620
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 7a96fd09f5145749dcbbca7e83449c13
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 1033bf7ddfd4c6d43e7a6382c0a0a61a
+HashAppended: 0
+ClassTypes:
+- Class: 49
+  Script: {instanceID: 0}
+Assets:
+- Assets/Untracked/ModBuilder/Archaeologists.dfmod.json
+- Assets/Untracked/ModBuilder/Archaeologists/ArchaeologistsGuild.cs.txt
+- Assets/Untracked/ModBuilder/Archaeologists/_startupMod.cs.txt
+- Assets/Game/Addons/Archaeologists/WorldData/RESIAM10.RMB-543-building10.json
+Dependencies: []
