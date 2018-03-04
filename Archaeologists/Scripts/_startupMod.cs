@@ -87,6 +87,10 @@ namespace Archaeologists
             // Override default formula
             FormulaHelper.formula_1pe_1sk.Add("CalculateEnemyPacification", CalculateEnemyPacification);
 
+            // Add locator to scene
+            GameObject go = new GameObject("LocatorDevice");
+            go.AddComponent<LocatorDevice>();
+
             Debug.Log("Finished mod init: Archaeologists");
         }
 
