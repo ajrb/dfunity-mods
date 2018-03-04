@@ -3,8 +3,11 @@
 // License:         MIT License (http://www.opensource.org/licenses/mit-license.php)
 // Author:          Hazelnut
 
+using DaggerfallConnect;
 using DaggerfallConnect.Arena2;
 using DaggerfallWorkshop.Game;
+using DaggerfallWorkshop.Game.Entity;
+using DaggerfallWorkshop.Game.Formulas;
 using DaggerfallWorkshop.Game.Guilds;
 using DaggerfallWorkshop.Game.Utility.ModSupport;
 using System.Collections.Generic;
@@ -71,7 +74,8 @@ namespace Archaeologists
             if (success)
             {
                 // Register the Guild class
-                GuildManager.RegisterCustomGuild(FactionFile.GuildGroups.GGroup0, typeof(ArchaeologistsGuild));
+                if (!GuildManager.RegisterCustomGuild(FactionFile.GuildGroups.GGroup0, typeof(ArchaeologistsGuild)))
+                    throw new System.Exception("GuildGroup GGroup0 is already in use, unable to register Archaeologists Guild.");
                 // Register the quest service id
                 Services.RegisterGuildService(1000, GuildServices.Quests);
                 // Register the custom locator service
@@ -80,7 +84,33 @@ namespace Archaeologists
             else
                 throw new System.Exception("Faction id's are already in use, unable to register factions for Archaeologists Guild.");
 
+            // Override default formula
+            FormulaHelper.formula_1pe_1sk.Add("CalculateEnemyPacification", CalculateEnemyPacification);
+
             Debug.Log("Finished mod init: Archaeologists");
+        }
+
+        private static bool CalculateEnemyPacification(PlayerEntity player, DFCareer.Skills languageSkill)
+        {
+            Debug.Log("Pacification override!");
+            double chance = 0;
+            if (languageSkill == DFCareer.Skills.Etiquette ||
+                languageSkill == DFCareer.Skills.Streetwise)
+            {
+                chance += player.Skills.GetLiveSkillValue(languageSkill) / 2;
+                chance += player.Stats.LivePersonality / 2;
+            }
+            else
+            {
+                chance += player.Skills.GetLiveSkillValue(languageSkill);
+                chance += (player.Stats.LivePersonality - 50) / 5;
+            }
+            chance += GameManager.Instance.WeaponManager.Sheathed ? 10 : -25;
+            chance += (player.Stats.LiveLuck - 50) / 5;
+
+            int roll = Random.Range(0, 130);
+            Debug.LogFormat("Pacification {3} using {0} skill: chance= {1}  roll= {2}", languageSkill, chance, roll, (roll < chance) ? "success" : "failure");
+            return (roll < chance);
         }
     }
 }

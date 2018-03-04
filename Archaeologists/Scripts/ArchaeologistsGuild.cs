@@ -24,6 +24,8 @@ namespace DaggerfallWorkshop.Game.Guilds
 
         protected static TextFile.Token newLine = TextFile.CreateFormatToken(TextFile.Formatting.JustifyCenter);
 
+        // Guild messages - must clone any that contain macros when returning.
+
         protected static TextFile.Token[] welcomeTokens = new TextFile.Token[]
         {
             TextFile.CreateTextToken("Excellent, %pcn, welcome to the Archaeologists! "), newLine,
@@ -145,7 +147,7 @@ namespace DaggerfallWorkshop.Game.Guilds
 
         public override TextFile.Token[] TokensPromotion(int newRank)
         {
-            return promotionTokens;
+            return (TextFile.Token[]) promotionTokens.Clone();
         }
 
         #endregion
@@ -162,13 +164,19 @@ namespace DaggerfallWorkshop.Game.Guilds
             return (rank >= 4);
         }
 
+        public override int ReducedIdentifyCost(int price)
+        {
+            // Free (1gp) identification at rank 5
+            return (rank >= 5) ? 1 : price;
+        }
+
         #endregion
 
         #region Service Access:
 
         public override bool CanAccessLibrary()
         {
-            return (rank >= 4);
+            return (rank >= 2);
         }
 
         public override bool CanAccessService(GuildServices service)
@@ -205,6 +213,18 @@ namespace DaggerfallWorkshop.Game.Guilds
 
         #endregion
 
+        #region Service: Training
+
+        public override int GetTrainingMax(DFCareer.Skills skill)
+        {
+            // Language skill training is capped by char intelligence instead of default
+            int playerINT = GameManager.Instance.PlayerEntity.Stats.PermanentIntelligence;
+            return (DaggerfallSkills.IsLanguageSkill(skill)) ? playerINT : defaultTrainingMax;
+        }
+
+        #endregion
+
+
         #region Joining
 
         public override bool IsEligibleToJoin(PlayerEntity playerEntity)
@@ -223,7 +243,7 @@ namespace DaggerfallWorkshop.Game.Guilds
             if (GetReputation(playerEntity) < 0)
                 msg = ineligibleBadRepTokens;
             if (playerEntity.Stats.GetPermanentStatValue(DFCareer.Stats.Intelligence) < intReqs[0])
-                msg = ineligibleLowIntTokens;
+                msg = (TextFile.Token[]) ineligibleLowIntTokens.Clone();
             return msg;
         }
         public override TextFile.Token[] TokensEligible(PlayerEntity playerEntity)
@@ -232,7 +252,7 @@ namespace DaggerfallWorkshop.Game.Guilds
         }
         public override TextFile.Token[] TokensWelcome()
         {
-            return welcomeTokens;
+            return (TextFile.Token[]) welcomeTokens.Clone();
         }
 
         #endregion
