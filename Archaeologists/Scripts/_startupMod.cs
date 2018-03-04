@@ -109,8 +109,15 @@ namespace Archaeologists
             chance += (player.Stats.LiveLuck - 50) / 5;
 
             int roll = Random.Range(0, 130);
-            Debug.LogFormat("Pacification {3} using {0} skill: chance= {1}  roll= {2}", languageSkill, chance, roll, (roll < chance) ? "success" : "failure");
-            return (roll < chance);
+            bool success = (roll < chance);
+
+            if (success)
+                player.TallySkill(languageSkill, 3);    // Increased skill uses from (assumed) 1 in classic on success to make raising language skills easier
+            else if (languageSkill != DFCareer.Skills.Etiquette && languageSkill != DFCareer.Skills.Streetwise)
+                player.TallySkill(languageSkill, 1);
+
+            Debug.LogFormat("Pacification {3} using {0} skill: chance= {1}  roll= {2}", languageSkill, chance, roll, success ? "success" : "failure");
+            return success;
         }
     }
 }
