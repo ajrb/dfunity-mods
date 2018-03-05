@@ -24,7 +24,7 @@ namespace DaggerfallWorkshop.Game.Guilds
 
         protected static TextFile.Token newLine = TextFile.CreateFormatToken(TextFile.Formatting.JustifyCenter);
 
-        // Guild messages - must clone any that contain macros when returning.
+        // Guild messages - must clone any that contain macros before returning.
 
         protected static TextFile.Token[] welcomeTokens = new TextFile.Token[]
         {
@@ -39,32 +39,33 @@ namespace DaggerfallWorkshop.Game.Guilds
 
         protected static TextFile.Token[] eligibleTokens = new TextFile.Token[]
         {
-            TextFile.CreateTextToken("Yes, you seem like you're a good candidate who could "), newLine,
-            TextFile.CreateTextToken("assist us with all the field work we're engaged in. "), newLine, newLine,
+            TextFile.CreateTextToken("Yes, you seem like a good candidate to assist us "), newLine,
+            TextFile.CreateTextToken("in the kinds of field work we engage in. "), newLine, newLine,
             TextFile.CreateTextToken("We offer classes in all the various obscure languages of"), newLine,
             TextFile.CreateTextToken("Tamriel, as well as some of the more practical skills "), newLine,
-            TextFile.CreateTextToken("required in the field when off searching remote locations "), newLine,
+            TextFile.CreateTextToken("required in the field while searching remote locations "), newLine,
             TextFile.CreateTextToken("for interesting antiquities and rare artifacts. "), newLine, newLine,
             TextFile.CreateTextToken("Once you rise in our ranks to the title of Field Officer, "), newLine,
-            TextFile.CreateTextToken("you will gain access to our magically powered locator device "), newLine,
-            TextFile.CreateTextToken("to use for whatever purposes you wish. Until then, you will be "), newLine,
+            TextFile.CreateTextToken("you will gain access to our magicka-powered locator device "), newLine,
+            TextFile.CreateTextToken("to use for whatever purpose you wish. Until then you will be "), newLine,
             TextFile.CreateTextToken("restricted to a single charge for each task we set you. "), newLine, newLine,
             TextFile.CreateTextToken("Beyond field work, our higher ranks are open to the more "), newLine,
             TextFile.CreateTextToken("accomplished scholars among us, and provide a great reduction "), newLine,
-            TextFile.CreateTextToken("in the cost of charging the locator device. Be aware, only "), newLine,
-            TextFile.CreateTextToken("those of sufficient intellect will be accepted. "), newLine,
+            TextFile.CreateTextToken("in the cost of locator device charges. Be aware, only "), newLine,
+            TextFile.CreateTextToken("those with sufficient intellect will be accepted. "), newLine,
         };
 
         protected static TextFile.Token[] ineligibleLowSkillTokens = new TextFile.Token[]
         {
-            TextFile.CreateTextToken("I am sad to say that you are ineligible to join our guild."), newLine,
-            TextFile.CreateTextToken("We only accept members who have studied languages and "), newLine,
-            TextFile.CreateTextToken("other skills useful for field work. "), newLine,
+            TextFile.CreateTextToken("I am sad to say that you are not eligible to join our guild."), newLine,
+            TextFile.CreateTextToken("We only accept members who have studied languages or the "), newLine,
+            TextFile.CreateTextToken("other skills useful for field work; such as climbing, "), newLine,
+            TextFile.CreateTextToken("lockpicking and stealth. "), newLine,
         };
 
         protected static TextFile.Token[] ineligibleBadRepTokens = new TextFile.Token[]
         {
-            TextFile.CreateTextToken("I am sad to say that you are not eligible to join our guild."), newLine,
+            TextFile.CreateTextToken("I am sad to say that you are ineligible to join our guild."), newLine,
             TextFile.CreateTextToken("Your reputation amongst scholars is such that we do not "), newLine,
             TextFile.CreateTextToken("wish to be associated with you, even for simple field work. "), newLine,
         };
@@ -83,20 +84,19 @@ namespace DaggerfallWorkshop.Game.Guilds
             TextFile.CreateTextToken("Keep up the good work, and continue to study hard. "), newLine,
         };
 
-        static int[] intReqs = new int[] { 35, 40, 45, 50, 60, 60, 65, 65, 70, 70 };
+        static int[] intReqs = new int[] { 40, 40, 45, 50, 60, 60, 65, 65, 70, 70 };
 
         #endregion
 
         #region Properties & Data
 
         static string[] rankTitles = new string[] {
-            "Field Assistant", "Field Worker", "Field Officer", "Field Director", "Apprentice", "Novice", "Journeyman", "Associate", "Professor", "Master"
+            "Field Assistant", "Field Agent", "Field Officer", "Field Director", "Apprentice", "Novice", "Journeyman", "Associate", "Professor", "Master"
         };
 
         static List<DFCareer.Skills> guildSkills = new List<DFCareer.Skills>() {
                 DFCareer.Skills.Centaurian,
                 DFCareer.Skills.Climbing,
-                DFCareer.Skills.Dodging,
                 DFCareer.Skills.Daedric,
                 DFCareer.Skills.Dragonish,
                 DFCareer.Skills.Giantish,
@@ -144,6 +144,15 @@ namespace DaggerfallWorkshop.Game.Guilds
         #endregion
 
         #region Guild Ranks
+
+        protected override int CalculateNewRank(PlayerEntity playerEntity)
+        {
+            int newRank - base.CalculateNewRank(playerEntity);
+            int peINT = playerEntity.Stats.GetPermanentStatValue(DFCareer.Stats.Intelligence);
+            while (peINT < intReqs[newRank]
+                newRank--;
+            return newRank;
+        }
 
         public override TextFile.Token[] TokensPromotion(int newRank)
         {
