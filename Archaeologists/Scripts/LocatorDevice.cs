@@ -35,6 +35,10 @@ namespace Archaeologists
                 questTargetPos = GetQuestTargetLocation();
                 Debug.LogFormat("Quest target is at: {0} {1} {2}", questTargetPos.x, questTargetPos.y, questTargetPos.z);
             }
+            else
+            {
+                enabled = false;
+            }
 
         }
 
@@ -76,7 +80,6 @@ namespace Archaeologists
                 if (!result)
                     return Vector3.zero;
             }
-
             Vector3 dungeonBlockPosition = new Vector3(targetMarker.dungeonX * RDBLayout.RDBSide, 0, targetMarker.dungeonZ * RDBLayout.RDBSide);
             return dungeonBlockPosition + targetMarker.flatPosition + buildingOrigin;
         }

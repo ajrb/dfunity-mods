@@ -8,6 +8,8 @@ using DaggerfallConnect;
 using DaggerfallConnect.Arena2;
 using DaggerfallWorkshop.Game.Entity;
 using UnityEngine;
+using DaggerfallWorkshop.Game.UserInterfaceWindows;
+using DaggerfallWorkshop.Game.Items;
 
 namespace DaggerfallWorkshop.Game.Guilds
 {
@@ -147,9 +149,9 @@ namespace DaggerfallWorkshop.Game.Guilds
 
         protected override int CalculateNewRank(PlayerEntity playerEntity)
         {
-            int newRank - base.CalculateNewRank(playerEntity);
+            int newRank = base.CalculateNewRank(playerEntity);
             int peINT = playerEntity.Stats.GetPermanentStatValue(DFCareer.Stats.Intelligence);
-            while (peINT < intReqs[newRank]
+            while (peINT < intReqs[newRank])
                 newRank--;
             return newRank;
         }
@@ -218,11 +220,34 @@ namespace DaggerfallWorkshop.Game.Guilds
         public static void LocatorGuildService()
         {
             Debug.Log("Locator service.");
+            Guild thisGuild = GameManager.Instance.GuildManager.GetGuild(FactionFile.GuildGroups.GGroup0);
+            DaggerfallTradeWindow tradeWindow = new DaggerfallTradeWindow(DaggerfallUI.UIManager, DaggerfallTradeWindow.WindowModes.Buy, null, thisGuild);
+            tradeWindow.MerchantItems = GetLocatorCharges();
+            DaggerfallUI.UIManager.PushWindow(tradeWindow);
+        }
+
+        static ItemCollection GetLocatorCharges()
+        {
+            ItemCollection charges = new ItemCollection();
+            for (int i = 0; i < 16; i++)
+            {
+                DaggerfallUnityItem locator = new DaggerfallUnityItem(ItemGroups.Jewellery, 7);
+                locator.shortName = "Locator device";
+                locator.value = 50; //00;
+                locator.typeDependentData = 1;
+                charges.AddItem(locator);
+            }
+            return charges;
+        }
+
+        public void UseLocator()
+        {
+
         }
 
         #endregion
 
-        #region Service: Training
+            #region Service: Training
 
         public override int GetTrainingMax(DFCareer.Skills skill)
         {

@@ -79,7 +79,7 @@ namespace Archaeologists
                 // Register the quest service id
                 Services.RegisterGuildService(1000, GuildServices.Quests);
                 // Register the custom locator service
-                Services.RegisterGuildService(1001, ArchaeologistsGuild.LocatorGuildService, "Locator Charging");
+                Services.RegisterGuildService(1001, ArchaeologistsGuild.LocatorGuildService, "Locator Charges");
             }
             else
                 throw new System.Exception("Faction id's are already in use, unable to register factions for Archaeologists Guild.");
@@ -87,9 +87,9 @@ namespace Archaeologists
             // Override default formula
             FormulaHelper.formula_1pe_1sk.Add("CalculateEnemyPacification", CalculateEnemyPacification);
 
-            // Add locator to scene
+            // Add locator device object to scene and attach script
             GameObject go = new GameObject("LocatorDevice");
-            go.AddComponent<LocatorDevice>();
+            LocatorDevice deviceObj = go.AddComponent<LocatorDevice>();
 
             Debug.Log("Finished mod init: Archaeologists");
         }
