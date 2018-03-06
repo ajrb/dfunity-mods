@@ -79,7 +79,7 @@ namespace Archaeologists
                 // Register the quest service id
                 Services.RegisterGuildService(1000, GuildServices.Quests);
                 // Register the custom locator service
-                Services.RegisterGuildService(1001, ArchaeologistsGuild.LocatorGuildService, "Locator Charges");
+                Services.RegisterGuildService(1001, ArchaeologistsGuild.LocatorService, "Locator Charges");
             }
             else
                 throw new System.Exception("Faction id's are already in use, unable to register factions for Archaeologists Guild.");

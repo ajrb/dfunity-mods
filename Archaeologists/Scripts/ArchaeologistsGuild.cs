@@ -18,7 +18,7 @@ namespace DaggerfallWorkshop.Game.Guilds
         #region Constants
 
         private const int factionId = 1000;
-        private const int LocatorService = 1001;
+        private const int LocatorServiceId = 1001;
 
         #endregion
 
@@ -207,7 +207,7 @@ namespace DaggerfallWorkshop.Game.Guilds
                 case GuildServices.DaedraSummoning:
                     return (rank >= 7);
             }
-            if ((int) service == LocatorService)
+            if ((int) service == LocatorServiceId)
                 return (rank >= 2);
 
             return false;
@@ -217,7 +217,7 @@ namespace DaggerfallWorkshop.Game.Guilds
 
         #region Service: Locator
 
-        public static void LocatorGuildService()
+        public static void LocatorService()
         {
             Debug.Log("Locator service.");
             Guild thisGuild = GameManager.Instance.GuildManager.GetGuild(FactionFile.GuildGroups.GGroup0);
@@ -229,6 +229,7 @@ namespace DaggerfallWorkshop.Game.Guilds
         static ItemCollection GetLocatorCharges()
         {
             ItemCollection charges = new ItemCollection();
+            charges.NoStacking = true;
             for (int i = 0; i < 16; i++)
             {
                 DaggerfallUnityItem locator = new DaggerfallUnityItem(ItemGroups.Jewellery, 7);
