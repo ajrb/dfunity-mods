@@ -10,6 +10,7 @@ using DaggerfallWorkshop.Game.Entity;
 using UnityEngine;
 using DaggerfallWorkshop.Game.UserInterfaceWindows;
 using DaggerfallWorkshop.Game.Items;
+using Archaeologists;
 
 namespace DaggerfallWorkshop.Game.Guilds
 {
@@ -229,21 +230,9 @@ namespace DaggerfallWorkshop.Game.Guilds
         static ItemCollection GetLocatorCharges()
         {
             ItemCollection charges = new ItemCollection();
-            charges.NoStacking = true;
             for (int i = 0; i < 16; i++)
-            {
-                DaggerfallUnityItem locator = new DaggerfallUnityItem(ItemGroups.Jewellery, 7);
-                locator.shortName = "Locator device";
-                locator.value = 50; //00;
-                locator.typeDependentData = 1;
-                charges.AddItem(locator);
-            }
+                charges.AddItem(new LocatorItem(), ItemCollection.AddPosition.DontCare, true);
             return charges;
-        }
-
-        public void UseLocator()
-        {
-
         }
 
         #endregion

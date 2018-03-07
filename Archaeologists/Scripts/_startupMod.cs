@@ -9,6 +9,7 @@ using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Entity;
 using DaggerfallWorkshop.Game.Formulas;
 using DaggerfallWorkshop.Game.Guilds;
+using DaggerfallWorkshop.Game.Items;
 using DaggerfallWorkshop.Game.Utility.ModSupport;
 using System.Collections.Generic;
 using UnityEngine;
@@ -17,10 +18,10 @@ namespace Archaeologists
 {
     public class _startupMod : MonoBehaviour
     {
-        [Invoke(StateManager.StateTypes.Start)]
+        [Invoke(StateManager.StateTypes.Start, 0)]
         public static void InitStart(InitParams initParams)
         {
-            initMod();
+            InitMod();
         }
 
         /* 
@@ -33,10 +34,10 @@ namespace Archaeologists
         */
         void Awake()
         {
-            initMod();
+            InitMod();
         }
 
-        public static void initMod()
+        public static void InitMod()
         {
             Debug.Log("Begin mod init: Archaeologists");
 
@@ -80,6 +81,8 @@ namespace Archaeologists
                 Services.RegisterGuildService(1000, GuildServices.Quests);
                 // Register the custom locator service
                 Services.RegisterGuildService(1001, ArchaeologistsGuild.LocatorService, "Locator Charges");
+                // Register the custom locator item
+                ItemCollection.RegisterCustomItem(typeof(LocatorItem).ToString(), typeof(LocatorItem));
             }
             else
                 throw new System.Exception("Faction id's are already in use, unable to register factions for Archaeologists Guild.");
@@ -89,7 +92,7 @@ namespace Archaeologists
 
             // Add locator device object to scene and attach script
             GameObject go = new GameObject("LocatorDevice");
-            LocatorDevice deviceObj = go.AddComponent<LocatorDevice>();
+            go.AddComponent<LocatorDevice>();
 
             Debug.Log("Finished mod init: Archaeologists");
         }

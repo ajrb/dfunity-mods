@@ -5,8 +5,11 @@
 
 using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
+using DaggerfallWorkshop.Game.Items;
 using DaggerfallWorkshop.Game.Questing;
+using DaggerfallWorkshop.Game.Serialization;
 using DaggerfallWorkshop.Utility;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Archaeologists
@@ -15,31 +18,20 @@ namespace Archaeologists
     {
         const string indicatorFilename = "SUN_00I0.IMG";
 
-        private float lastTime = 0;
+        private Vector3 questTargetPos = Vector3.zero;
 
         Texture2D indicatorTexure;
         Vector2 indicatorSize;
-
-        private Vector3 questTargetPos = Vector3.zero;
 
         void Start()
         {
             indicatorTexure = DaggerfallUI.GetTextureFromImg(indicatorFilename);
             indicatorSize = new Vector2(indicatorTexure.width, indicatorTexure.height);
 
-            PlayerEnterExit.OnTransitionDungeonInterior += OnTransitionToDungeonInterior;
+            SaveLoadManager.OnLoad += SaveLoadManager_OnLoad;
             PlayerEnterExit.OnTransitionDungeonExterior += OnTransitionToDungeonExterior;
 
-            if (GameManager.Instance.PlayerEnterExit.IsPlayerInsideDungeon && questTargetPos == Vector3.zero)
-            {
-                questTargetPos = GetQuestTargetLocation();
-                Debug.LogFormat("Quest target is at: {0} {1} {2}", questTargetPos.x, questTargetPos.y, questTargetPos.z);
-            }
-            else
-            {
-                enabled = false;
-            }
-
+            enabled = false;
         }
 
         void OnGUI()
@@ -63,13 +55,21 @@ namespace Archaeologists
             }
         }
 
-        void Update()
+        public void ActivateDevice()
         {
-            if (Time.realtimeSinceStartup > lastTime + 10)
-                lastTime = Time.realtimeSinceStartup;
+            questTargetPos = GetQuestTargetLocation();
+            enabled = true;
+            Debug.LogFormat("Locator device activated, target is at: {0} {1} {2}", questTargetPos.x, questTargetPos.y, questTargetPos.z);
         }
 
-        public Vector3 GetQuestTargetLocation()
+        public void DeactivateDevice()
+        {
+            questTargetPos = Vector3.zero;
+            enabled = false;
+            Debug.Log("Locator device deactivated.");
+        }
+
+        private Vector3 GetQuestTargetLocation()
         {
             QuestMarker targetMarker;
             Vector3 buildingOrigin;
@@ -84,17 +84,35 @@ namespace Archaeologists
             return dungeonBlockPosition + targetMarker.flatPosition + buildingOrigin;
         }
 
-
-        private void OnTransitionToDungeonInterior(PlayerEnterExit.TransitionEventArgs args)
+        private void SaveLoadManager_OnLoad(SaveData_v1 saveData)
         {
-            questTargetPos = GetQuestTargetLocation();
-            Debug.LogFormat("Quest target is at: {0} {1} {2}", questTargetPos.x, questTargetPos.y, questTargetPos.z);
+            DeactivateDevice();
+            List<DaggerfallUnityItem> wands = GameManager.Instance.PlayerEntity.Items.SearchItems(ItemGroups.Jewellery, 140);
+            foreach(DaggerfallUnityItem item in wands)
+            {
+                if (item.nativeMaterialValue == LocatorItem.ACTIVATED)
+                {
+                    ActivateDevice();
+                    return;
+                }
+            }
         }
 
         private void OnTransitionToDungeonExterior(PlayerEnterExit.TransitionEventArgs args)
         {
-            questTargetPos = Vector3.zero;
+            DeactivateDevice();
+            RemoveActiveDevices(GameManager.Instance.PlayerEntity.Items);
+            RemoveActiveDevices(GameManager.Instance.PlayerEntity.WagonItems);
         }
 
+        private static void RemoveActiveDevices(ItemCollection collection)
+        {
+            List<DaggerfallUnityItem> wands = collection.SearchItems(ItemGroups.Jewellery, 140);
+            foreach (DaggerfallUnityItem item in wands)
+            {
+                if (item.nativeMaterialValue == LocatorItem.ACTIVATED)
+                    collection.RemoveItem(item);
+            }
+        }
     }
 }
