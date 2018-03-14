@@ -35,10 +35,10 @@ namespace Archaeologists
         */
         void Awake()
         {
-            InitMod();
+            InitMod(true);
         }
 
-        public static void InitMod()
+        public static void InitMod(bool debug = false)
         {
             Debug.Log("Begin mod init: Archaeologists");
 
@@ -84,8 +84,9 @@ namespace Archaeologists
                 Services.RegisterGuildService(1001, ArchaeologistsGuild.LocatorService, "Locator Charges");
                 // Register the custom locator item
                 ItemCollection.RegisterCustomItem(typeof(LocatorItem).ToString(), typeof(LocatorItem));
-                // Register the quest pack
-                QuestTablesManager.RegisterQuestPack("Archaeologists");
+                // Register the quest list
+                if (!debug)
+                    QuestListsManager.RegisterQuestList("Archaeologists");
             }
             else
                 throw new System.Exception("Faction id's are already in use, unable to register factions for Archaeologists Guild.");
