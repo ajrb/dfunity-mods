@@ -5,6 +5,7 @@
 
 using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
+using DaggerfallWorkshop.Game.Guilds;
 using DaggerfallWorkshop.Game.Items;
 using DaggerfallWorkshop.Game.Questing;
 using DaggerfallWorkshop.Game.Serialization;
@@ -28,9 +29,13 @@ namespace Archaeologists
             indicatorTexure = DaggerfallUI.GetTextureFromImg(indicatorFilename);
             indicatorSize = new Vector2(indicatorTexure.width, indicatorTexure.height);
 
+            // Register listner for start quest event so free locator device can be given for dungeons
+            QuestMachine.OnQuestStarted += QuestMachine_OnQuestStarted;
+
+            // Register listeners for loading game and exiting dungeons - so that state can be updated
             SaveLoadManager.OnLoad += SaveLoadManager_OnLoad;
             PlayerEnterExit.OnTransitionDungeonExterior += OnTransitionToDungeonExterior;
-
+            
             enabled = false;
         }
 
@@ -84,6 +89,35 @@ namespace Archaeologists
             return dungeonBlockPosition + targetMarker.flatPosition + buildingOrigin;
         }
 
+        private static void RemoveActiveDevices(ItemCollection collection)
+        {
+            List<DaggerfallUnityItem> wands = collection.SearchItems(ItemGroups.Jewellery, 140);
+            foreach (DaggerfallUnityItem item in wands)
+            {
+                if (item.nativeMaterialValue == LocatorItem.ACTIVATED)
+                    collection.RemoveItem(item);
+            }
+        }
+
+        #region Event listeners
+
+        private void QuestMachine_OnQuestStarted(Quest quest)
+        {
+            // If quest is from archaeologists and involves a dungeon place, give player a locator charge
+            if (quest.FactionId == ArchaeologistsGuild.FactionId)
+            {
+                QuestResource[] foundResources = quest.GetAllResources(typeof(Place));
+                foreach (Place place in foundResources)
+                {
+                    if (place.SiteDetails.siteType == SiteTypes.Dungeon)
+                    {
+                        GameManager.Instance.PlayerEntity.Items.AddItem(new LocatorItem(), ItemCollection.AddPosition.DontCare, true);
+                        break;
+                    }
+                }
+            }
+        }
+
         private void SaveLoadManager_OnLoad(SaveData_v1 saveData)
         {
             DeactivateDevice();
@@ -105,14 +139,6 @@ namespace Archaeologists
             RemoveActiveDevices(GameManager.Instance.PlayerEntity.WagonItems);
         }
 
-        private static void RemoveActiveDevices(ItemCollection collection)
-        {
-            List<DaggerfallUnityItem> wands = collection.SearchItems(ItemGroups.Jewellery, 140);
-            foreach (DaggerfallUnityItem item in wands)
-            {
-                if (item.nativeMaterialValue == LocatorItem.ACTIVATED)
-                    collection.RemoveItem(item);
-            }
-        }
+        #endregion
     }
 }

@@ -139,6 +139,8 @@ namespace DaggerfallWorkshop.Game.Guilds
 
         #region Guild Membership and Faction
 
+        public static int FactionId { get { return factionId; } }
+
         public override int GetFactionId()
         {
             return factionId;
@@ -223,14 +225,14 @@ namespace DaggerfallWorkshop.Game.Guilds
             Debug.Log("Locator service.");
             Guild thisGuild = GameManager.Instance.GuildManager.GetGuild(FactionFile.GuildGroups.GGroup0);
             DaggerfallTradeWindow tradeWindow = new DaggerfallTradeWindow(DaggerfallUI.UIManager, DaggerfallTradeWindow.WindowModes.Buy, null, thisGuild);
-            tradeWindow.MerchantItems = GetLocatorCharges();
+            tradeWindow.MerchantItems = GetLocatorCharges(16);
             DaggerfallUI.UIManager.PushWindow(tradeWindow);
         }
 
-        static ItemCollection GetLocatorCharges()
+        static ItemCollection GetLocatorCharges(int number)
         {
             ItemCollection charges = new ItemCollection();
-            for (int i = 0; i < 16; i++)
+            for (int i = 0; i < number; i++)
                 charges.AddItem(new LocatorItem(), ItemCollection.AddPosition.DontCare, true);
             return charges;
         }
