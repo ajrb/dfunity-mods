@@ -1,0 +1,11 @@
+-- Archaeologist mod quest list
+
+-- name:        filename of QRC txt file
+-- group:       guild group from FactionFile.GuildGroups enum - GGroup0
+-- membership:  N=non-member, M=member
+-- minRep:      minimum reputation required to be offered the quest (units can use X wildcard)
+-- notes:
+
+schema: *name, group, membership, minRep, notes
+
+ARCH001, GGroup0, M, 0, test quest based on N0C00Y13

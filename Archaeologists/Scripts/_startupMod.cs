@@ -10,6 +10,7 @@ using DaggerfallWorkshop.Game.Entity;
 using DaggerfallWorkshop.Game.Formulas;
 using DaggerfallWorkshop.Game.Guilds;
 using DaggerfallWorkshop.Game.Items;
+using DaggerfallWorkshop.Game.Questing;
 using DaggerfallWorkshop.Game.Utility.ModSupport;
 using System.Collections.Generic;
 using UnityEngine;
@@ -83,6 +84,8 @@ namespace Archaeologists
                 Services.RegisterGuildService(1001, ArchaeologistsGuild.LocatorService, "Locator Charges");
                 // Register the custom locator item
                 ItemCollection.RegisterCustomItem(typeof(LocatorItem).ToString(), typeof(LocatorItem));
+                // Register the quest pack
+                QuestTablesManager.RegisterQuestPack("Archaeologists");
             }
             else
                 throw new System.Exception("Faction id's are already in use, unable to register factions for Archaeologists Guild.");
