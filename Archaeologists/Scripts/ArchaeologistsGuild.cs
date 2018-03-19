@@ -180,8 +180,8 @@ namespace DaggerfallWorkshop.Game.Guilds
 
         public override int ReducedIdentifyCost(int price)
         {
-            // Free (1gp) identification at rank 5
-            return (rank >= 5) ? 1 : price;
+            // Free identification at rank 5
+            return (rank >= 5) ? 0 : price;
         }
 
         #endregion
