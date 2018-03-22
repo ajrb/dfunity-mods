@@ -1,0 +1,212 @@
+-- Archaeologist Quest
+Quest: JHAR003
+DisplayName: Skeletons in the Closet
+-- Message panels
+QRC:
+
+QuestorOffer:  [1000]
+<ce>            We try to avoid contemporary politics where possible,
+<ce>            %pcf. The last thing we need is some monarch throwing
+<ce>            a temper tantrum and beheading some guild officials
+<ce>            simply because someone says something inconvenient
+<ce>            to the royal family. That, I will now say, is our current
+<ce>            predicament. Apparently some wizard identified a few
+<ce>            bones down in ___dung_ that relate to
+<ce>            someone's long-lost ancestor of some kind. The details are
+<ce>            complex and uninteresting, but %crn wishes to keep the people
+<ce>            in the dark, and our failure will bring serious consequences. Will
+<ce>            you be the one to resolve this crisis?
+
+RefuseQuest:  [1001]
+<ce>         Pathetic.
+<--->
+<ce>         I see. Are you planning to do anything at all for us?
+<--->
+<ce>         Do we not matter to you, %pcf?
+
+AcceptQuest:  [1002]
+<ce>         Remember, they're in ___dung_.
+<ce>         According to the statement, the bones were wrapped
+<ce>         in some sort of sack. Such an uninteresting presentation
+<ce>         has warded off the treasure hunters until now, I suppose.
+<ce>         Take no more than =timer_ days to bring it back here.
+<ce>         Our reputation is on the line, as unfair as that sounds.
+<ce>         Better days are ahead, %pcf. Best of luck.
+
+QuestFail:  [1003]
+<ce>         The deadline has passed to bring back the ancient
+<ce>         bones from ___dung_. _questgiver_
+<ce>         will not accept failure.
+
+QuestComplete:  [1004]
+<ce>         Thank you once more, %pcf. May your satisfaction
+<ce>         for such excellent work outweigh this meager reward.
+
+Message:  1020
+<ce>         Excellent. I will send this off right away. We have allotted
+<ce>         _reward_ gold pieces as a reward.
+
+Message:  1021
+<ce>        Magnificent. You have truly saved us from some fairly
+<ce>        credible threats. We had allotted _reward_ gold pieces for you,
+<ce>        but a member recently turned over a magical _magicitem_
+<ce>        to the guild. I haven't bothered to get it identified yet, if you will
+<ce>        forgive me. Would you prefer it as a reward instead of the gold?
+
+Message:  1025
+<ce>        This bag radiates a subtle magical power. Its only obvious effect
+<ce>        is that it appears to be well-maintained. Whoever gathered
+<ce>        these bones knew they would have an important story to tell.
+
+Message:  1030
+%qdt:
+ The Archaeologists of ___qg_
+ need me to bring some bones from
+ ___dung_ within =timer_ days.
+ They should be in a sack of some kind.
+
+Message:  1040
+<ce>        As soon as your hand touches the sack, you know
+<ce>        something is not right. It's filled with stones, not bones.
+<ce>        You also sense movement close by.
+
+Message:  1041
+<ce>        Whatever the wizard's aim was, the plan is now foiled.
+<ce>        You will be the last adventurer claimed by this trap.
+
+Message:  1042
+<ce>        Oh, this will make %crn the laughingstock
+<ce>        of the Iliac Bay. A healthy dose of blackmail
+<ce>        will keep them off our backs in this matter.
+<ce>        Well done, in the name of the Archaeologists!
+
+Message:  1060
+<ce>        Once the skeletal warrior acknowledges the blow, it ceases moving.
+<ce>        You notice a piece of parchment hanging from one of its ribs.
+<ce>        You calmly remove it and put it into your pack.
+
+Message:  1061
+ %pcn,
+<ce>
+ The King of Worms hails you, friend. I hope to find you in good spirits,
+ for I wish to ask a boon of you. Among your possessions are the bones
+ of one _ancestor_, who found no end to misfortune and
+ cruelty while yet in life. At least, this is what %g3 spirit tells me. If you
+ consider %g3 history of greater value than the squabbling of childish
+ monarchs, and wish to show your devotion to the workers of dark arts,
+ bring %g3 remains here. An enchanted _magicitem2_ awaits you.
+<ce>
+ Truthfully yours,
+ _necro_
+ _far_, ___far_
+
+Message:  1062
+<ce>      So this was what %g3 body looked like. What a pity.
+<ce>      This tells me even more than %g1 could. But I will
+<ce>      not keep you. Take the _magicitem2_ I promised you,
+<ce>      and remember: though mortals forget, the dead will not.
+
+QBN:
+
+Person _qg_ group Questor male
+Person _ancestor_ group Local_3.0
+Person _necro_ group Spellcaster
+
+Item _reward_ gold range 801 to 1499
+Item _magicitem_ magic_item
+Item _magicitem2_ magic_item
+Item _sack_ large_sack
+Item _falsesack_ large_sack
+Item _letter_ letter used 1061
+
+Place _far_ remote house1
+Place _dung_ remote dungeon
+
+Foe _wiz_ is Mage
+Foe _sk_ is Skeletal_warrior
+
+Clock _timer_ 00:00 0 flag 17 range 0 2
+Clock _skel_ 8:00 1.00:00
+
+--   Quest start-up:
+   start timer _timer_
+   log 1030 step 0
+   pick one of _good_ _good_ _good_ _bad_
+   pick one of _norm_ _norm_ _mag_
+   pick one of _sent_ _peace_
+   reveal _dung_
+   place npc _necro_ at _far_
+
+variable _norm_
+variable _mag_
+variable _peace_
+variable _sent_
+
+_good_ task:
+   place item _sack_ at _dung_
+
+_bad_ task:
+  place item _falsesack_ at _dung_
+
+_found_ task:
+  clicked item _sack_
+  say 1025
+
+_n1_ task:
+  when _found_ and _sent_
+  start timer _skel_
+
+_vict1_ task:
+ toting _sack_ and _qg_ clicked
+
+_vict1a_ task:
+ when _vict1_ and _norm_
+ give pc _reward_
+ end quest
+
+_vict1b_ task:
+ when _vict1_ and _mag_
+ prompt 1021 yes _vict1c_ no _vict1d_
+
+_vict1c_ task:
+ give pc _magicitem_
+ end quest
+
+_vict1d_ task:
+ give pc _reward_
+ end quest
+
+_spawn_ task:
+  clicked item _falsesack_
+  say 1040
+  create foe _wiz_ every 1 minutes 1 times with 100% success
+
+_kill_ task:
+  killed 1 _wiz_
+  say 1041
+
+_falsevict_ task:
+  toting _falsesack_ and _qg_ clicked
+  say 1042
+  give pc _reward_
+  end quest
+
+_skel_ task:
+  create foe _sk_ every 1 minutes 1 times with 100% success
+
+_skel2_ task:
+  injured _sk_
+  say 1060
+  restrain foe _sk_
+  get item _letter_
+
+_nvict_ task:
+  toting _sack_ and _necro_ clicked
+  say 1062
+  get item _magicitem2_
+  make _magicitem2_ permanent
+  end quest
+
+_timer_ task:
+    say 1003
+    end quest
