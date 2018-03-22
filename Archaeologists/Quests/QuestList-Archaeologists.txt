@@ -9,3 +9,4 @@
 schema: *name, group, membership, minRep, notes
 
 ARCH001, GGroup0, M, 0, test quest based on N0C00Y13
+JHAR003, GGroup0, M, 0, search for an ancestor's remains
