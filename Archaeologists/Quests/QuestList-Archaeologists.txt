@@ -12,3 +12,4 @@ ARCH001, GGroup0, M, 0, test quest based on N0C00Y13
 JHAR001, GGroup0, M, 0, get an adversarial mage's notes
 JHAR002, GGroup0, M, 0, rescue a lost explorer from a dungeon
 JHAR003, GGroup0, M, 0, search for an ancestor's remains
+JHAR004, GGroup0, M, 0, slay a mummy at a farm home
