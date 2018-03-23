@@ -1,0 +1,242 @@
+-- StartsBy: NPC
+-- Questee: member
+-- Questor: mage
+-- Repute: 0
+-- QuestId: 9
+-- Edited for Daggerfall Unity by Jay_H
+Messages: 23
+Quest: JHAR001
+-- Message panels
+QRC:
+
+QuestorOffer:  [1000]
+<ce>                 The Archaeologists have a reputation for
+<ce>                 excellence, knowledge, and precision, which
+<ce>                 we credit in part to members such as yourself,
+<ce>                 and in another part to possessing the best research.
+<ce>                 We have received word that some novice from
+<ce>                 the Mages Guild, _scholar_, is
+<ce>                 currently in ___dest_ with some notes we
+<ce>                 would find particularly useful at this time. We need
+<ce>                 someone to go retrieve them under the right guise.
+<ce>                 Are you able to do this, %pcf?
+                                     <--->
+<ce>                 We have had a bit of a rocky history with the Mages
+<ce>                 Guild in the past for a variety of reasons. We certainly
+<ce>                 don't wish them any harm, but among other conflicts,
+<ce>                 we have grown tired of their high-mindedness and their
+<ce>                 insistence on keeping their work too private. We can
+<ce>                 remedy the second problem this very season. Some mage,
+<ce>                 _scholar_, is staying in ___dest_ with
+<ce>                 a set of notes we consider to be of great worth. We request
+<ce>                 that you go and retrieve them for us.
+
+RefuseQuest:  [1001]
+<ce>                  Then what are you doing here? Shoo.
+<--->
+<ce>                  Then step aside. This needs to be done by someone.
+<--->
+<ce>                  Then would you leave, please? There
+<ce>                  is work to be done here.
+
+AcceptQuest:  [1002]
+<ce>                   Very good. And remember, it's in ___dest_.
+<ce>                   Now, first of all, make no mention of your identity.
+<ce>                   Find some way to get those notes, preferably without
+<ce>                   making a murderer of yourself. We need no such
+<ce>                   reputation in this guild. Our parallel research project
+<ce>                   will be underway in =queston_ days, such that your mission
+<ce>                   will be a failure if you have not returned by that time.
+<ce>                   Be cautious, %pcf. Fare thee well.
+<--->
+<ce>                   I don't know how long _scholar_ will remain in
+<ce>                   ___dest_, so time is of the essence. I will have
+<ce>                   _reward_ gold pieces for you when you return.
+<ce>                   Please, just ensure you can't be called a murderer
+<ce>                   when this is over. Just be back here in one piece
+<ce>                   without tarnishing our good name. We need it
+<ce>                   in no more than =queston_ days.
+
+QuestComplete:  [1004]
+<ce>              Wonderful, %pcf. I merely hope you covered your
+<ce>              tracks before returning to ___qgiver_. If the town
+<ce>              guard come looking for you, I will offer no excuses.
+<ce>              But here, take your reward.
+
+
+QuestLogEntry:  [1010]
+%qdt:
+ The Archaeologists in ___qgiver_
+ have asked me to get research notes
+ from _scholar_, who is staying
+ at ___dest_. I should
+ be back within =queston_ days.
+
+Message:  1020
+<ce>               Wait, who are you? My research
+<ce>               notes? But I just finished them.
+<ce>               Did _dummy_ send you?
+<--->
+<ce>               I have no idea who you are or why
+<ce>               you would ask for my research.
+<ce>               I treasure it above my own life.
+<ce>               Did _dummy_ give you permission
+<ce>               to ask for this?
+
+Message:  1021
+<ce>               Well, all right then. I'll need it back within
+<ce>               _falsetimer_ days. If you're not here by
+<ce>               then I'll be going to ___falsehouse_
+<ce>               and you'll have to catch up to me there.
+<ce>               %oth, sometimes the Mages Guild
+<ce>               is more trouble than it's worth.
+<--->
+<ce>               This is troubling. I can't go lending out my latest
+<ce>               research to every %ra the guild sends to me.
+<ce>               I need you to take it to me in ___falsehouse_
+<ce>               when they're finished, and tell _dummy_ that
+<ce>               this is the last time I'm bothering with this nonsense.
+
+Message:  1022
+<ce>               Then I will cast you back from whence you came!
+<--->
+<ce>               Begone, %ra! You will have none of my work!
+
+Message:  1023
+<ce>               You knock _scholar_ off balance
+<ce>               and  quickly snatch the parchment.
+<ce>               It's time to head back to ___qgiver_.
+
+Message:  1024
+<ce>               _scholar_ lies dead at your feet. No
+<ce>               doubt word of this will get around %crn.
+
+Message:  1030
+<ce>               Try as you might, you can't break the seal on this document.
+<--->
+<ce>               This parchment is sealed tightly shut.
+<--->
+<ce>               The seal on this document is impervious to your attempts.
+
+Message:  1040
+<ce>               This is pathetically obvious. I just spoke to
+<ce>               _dummy_ yesterday. Do
+<ce>               you truly believe I will fall to such a naive lie?
+<ce>               Yet experience tells me such a cur as yourself
+<ce>               will even slay to obtain trivial notes from
+<ce>               an innocent like myself. I therefore make
+<ce>               a proposition. I will make a set of false notes
+<ce>               which you can take to your godless employer,
+<ce>               and no blood will be spilt this day. Isn't that
+<ce>               an agreeable resolution to our dilemma, %ra?
+
+Message:  1041
+<ce>               Indeed, honour among thieves is meaningless talk.
+<ce>               I do thank you, nevertheless, for having an open
+<ce>               mind on this matter. Some other thick-headed mercenary
+<ce>               would be happier to see me dead than to even retrieve
+<ce>               the document. Such is the way of the Iliac Bay these days.
+<ce>               
+<ce>               There, it is done. Now take it and get yourself lost before
+<ce>               I call the guard and we all jump to Oblivion together.
+
+Message:  1042
+<ce>               Then I will defend it with my life! Have at you, filthy beast!
+<--->
+<ce>               Then die! No mercy for criminal scoundrels!
+<--->
+<ce>               Then there is no hope for you! Die!
+
+Message:  1043
+<ce>               You presume this can be counted as
+<ce>               self-defense. Now to get the research.
+
+QBN:
+Item _realnotes_ letter used 1030
+Item _falsenotes_ letter used 1030
+Item _reward_ gold range 351 to 599
+Item _falsetimer_ gold range 4 to 15
+
+Person _qgiver_ group Questor male
+Person _dummy_ group Local_3.0
+Person _scholar_ group Spellcaster
+
+Place _falsehouse_ remote tavern
+Place _dest_ remote random
+
+Foe _mage1_ is Mage
+Foe _mage2_ is Battle_mage
+Foe _e1_ is Imp
+Foe _e2_ is Gargoyle
+Foe _f1_ is Fire_atronach
+
+Clock _queston_ 00:00 0 flag 17 range 1 2
+Clock _spawn_ 2:00 1.00:00
+
+--	Quest start-up:
+	start timer _queston_ 
+	log 1010 step 0 
+	pick one of _true_ _false_
+                place npc _scholar_ at _dest_
+
+variable _true_
+variable _false_
+
+_queston_ task:
+	end quest 
+
+_talked_ task:
+	clicked npc _scholar_ 
+
+_path1_ task:
+                when _talked_ and _true_
+                prompt 1020 yes _path1a_ no _path1b_
+
+_path1a_ task:
+	get item _realnotes_
+	say 1021
+
+_path1b_ task:
+                say 1022
+                hide npc _scholar_
+                place foe _mage1_ at _dest_
+                create foe _f1_ every 1 minutes 1 times with 100% success
+
+_steal_ task:
+                injured _mage1_
+                say 1023
+	get item _realnotes_
+                
+_path2_ task:
+                when _talked_ and _false_
+                prompt 1040 yes _path2a_ no _path2b_
+
+_path2a_ task:
+	get item _falsenotes_
+	say 1041
+                start timer _spawn_
+
+_path2b_ task:
+                say 1042
+                hide npc _scholar_
+                place foe _mage2_ at _dest_
+                give item _realnotes_ to _mage2_
+
+_intentional_ task:
+                killed _mage2_
+                say 1043
+
+_spawn_ task:
+                create foe _e1_ every 45 minutes 1 times with 35% success
+                create foe _e2_ every 45 minutes 1 times with 35% success
+
+_S.12_ task:
+	toting _realnotes_ and _qgiver_ clicked 
+	give pc _reward_ 
+	end quest 
+
+_S.13_ task:
+	toting _falsenotes_ and _qgiver_ clicked 
+	give pc _reward_ 
+                change repute with _qgiver_ by -1
+	end quest 
