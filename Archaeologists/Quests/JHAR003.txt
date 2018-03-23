@@ -13,9 +13,9 @@ QuestorOffer:  [1000]
 <ce>            predicament. Apparently some wizard identified a few
 <ce>            bones down in ___dung_ that relate to
 <ce>            someone's long-lost ancestor of some kind. The details are
-<ce>            complex and uninteresting, but %crn wishes to keep the people
-<ce>            in the dark, and our failure will bring serious consequences. Will
-<ce>            you be the one to resolve this crisis?
+<ce>            complex and uninteresting, but %crn wishes to
+<ce>            keep the people in the dark, and our failure will bring serious
+<ce>            consequences. Will you be the one to resolve this crisis?
 
 RefuseQuest:  [1001]
 <ce>         Pathetic.
