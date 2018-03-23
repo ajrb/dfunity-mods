@@ -1,0 +1,144 @@
+-- StartsBy: NPC
+-- Questee: member
+-- Questor: Archaeologists
+-- Repute: 0
+-- QuestId: 3
+Messages: 13
+Quest: JHAR002
+-- Message panels
+QRC:
+
+QuestorOffer:  [1000]
+<ce>               Good day. The Archaeologists encourage an
+<ce>               adventuring spirit, in proper moderation, of course.
+<ce>               Nevertheless, occasionally we have a new recruit
+<ce>               who, now trained to explore the great wild world,
+<ce>               forgets such basic skills as remembering how to find
+<ce>               the exit in a deep, dark cave. Would you be willing
+<ce>               to go look for _rescue_, who has
+<ce>               entirely disappeared within ___dung_?
+
+RefuseQuest:  [1001]
+<ce>               Do you not remember those first
+<ce>               terrifying experiences, %pcf?
+<--->
+<ce>               At this rate, %crn is going to
+<ce>               investigate us for these disappearances.
+
+AcceptQuest:  [1002]
+<ce>               Thank you, %pcf, truly. I will admit we
+<ce>               don't have a reward meted out for this
+<ce>               action, but I will see what I can do while
+<ce>               you're out. Please bring %g2 here in
+<ce>               no more than =timer_ days. Otherwise I will
+<ce>               have to inform the surviving family, and our
+<ce>               shame will be indelible. Best of luck.
+<ce>               And while you're coming out of
+<ce>               ___dung_, would you be able
+<ce>               to teach _rescue_ a thing or
+<ce>               two about exploration and survival? It will
+<ce>               likely save us all some trouble down the road.
+
+QuestComplete:  [1004]
+<ce>               Dear _rescue_, what a relief it is to
+<ce>               see you. We have a great deal of training to give you
+<ce>               before you'll be doing any spelunking on your own.
+<ce>               After all, not everyone can handle themselves
+<ce>               like %pcn, now can they? Once again, thank you,
+<ce>               %pct. We don't have a material reward available,
+<ce>               but what say I make mention of this on your guild record?
+<ce>               I'm certain it'll help you reach promotion a little quicker,
+<ce>               if nothing else. I hope that compensates the trouble.
+
+RumorsDuringQuest:  [1005]
+_rescue_ hasn't been around for a long time.
+<--->
+Them Archaeologists are irresponsible.
+
+RumorsPostfailure:  [1006]
+_rescue_ hasn't been around for a long time.
+<--->
+_rescue_'s family is furious with the Archaeologists.
+
+RumorsPostsuccess:  [1007]
+I hear _rescue_ is in good shape now. Good thing.
+<--->
+I hope my children never want to join the Archaeologists.
+
+QuestorPostsuccess:  [1008]
+Welcome, %pcf. _rescue_ says hello as well.
+
+QuestorPostfailure:  [1009]
+Have you seen _rescue_, %pcf? Oh, of course not.
+
+QuestLogEntry:  [1010]
+%qdt:
+ _qgiver_ of the Archaeologists
+ needs me to find _rescue_
+ in ___dung_. I have
+ =timer_ days to find %g2 and
+ return to ___qgiver_.
+
+Message:  1011
+<ce>                 _rescue_ looks thoroughly ashamed.
+<ce>                 
+<ce>                 "I told them it wouldn't be necessary.
+<ce>                 How long have I been down here?"
+<ce>                 
+<ce>                 You beckon for %g2 to follow, and %g1
+<ce>                 stands behind you without further argument.
+<--->
+<ce>                 _rescue_'s eyes look
+<ce>                 hollow and full of despair.
+<ce>                 
+<ce>                 "The exit's gone. It was right here. I'm sure of it.
+<ce>                 Now we'll never get out. We're both trapped here."
+<ce>                 
+<ce>                 You strong-arm %g2 into following
+<ce>                 you, and %g1 keeps silence.
+
+Message:  1012
+<ce>                    Without a word, _rescue_ heads off
+<ce>                    in the direction of ___qgiver_.
+
+
+QBN:
+
+Person _qgiver_ group Questor male
+Person _rescue_ group Chemist
+
+Place _dung_ remote dungeon
+
+Clock _timer_ 00:00 0 flag 17 range 0 2
+
+--	Quest start-up:
+	start timer _timer_ 
+	reveal _dung_ 
+	log 1010 step 0 
+	place npc _rescue_ at _dung_ 
+
+_timer_ task:
+	end quest 
+
+_S.01_ task:
+	clicked npc _rescue_ 
+	hide npc _rescue_ 
+	say 1011 
+	add _rescue_ face 
+
+_reward_ task:
+	when _qgclicked_ and _S.01_ 
+	give pc nothing 
+                change repute with _qg_ by +2
+	end quest 
+
+_qgclicked_ task:
+	clicked npc _qgiver_ 
+
+_S.04_ task:
+	when _qgclicked_ and not _S.01_ 
+	clear _qgclicked_ _S.04_ 
+
+_cick_ task:
+	when _S.01_ and _timer_ 
+	say 1012 
