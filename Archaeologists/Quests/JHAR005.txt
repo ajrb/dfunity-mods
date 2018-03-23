@@ -1,0 +1,173 @@
+Quest: JHAR005
+-- Message panels
+QRC:
+
+QuestorOffer:  [1000]
+<ce>                    We have an assignment we believe you would
+<ce>                    succeed with, assuming you aren't as jelly-kneed
+<ce>                    as a few of our other members. There's an enchanted
+<ce>                    object in ___dungeon_ we believe to
+<ce>                    be of Breton origin, at least a few centuries old. We
+<ce>                    don't know precisely what it does, which entails a
+<ce>                    certain degree of risk. If I offered you _reward_ gold
+<ce>                    pieces, would you head down and pick it up for us?
+
+RefuseQuest:  [1001]
+<ce>                    Jelly-kneed as them all, then.
+<--->
+<ce>                    You will never rise in rank with that attitude.
+<--->
+<ce>                    Really, %pcf.
+
+AcceptQuest:  [1002]
+<ce>               Then perhaps it's not a lost cause after all.
+<ce>               I look forward to your return. Just, please,
+<ce>               be prepared for anything. There is no hurry
+<ce>               in this matter, so grab the object only when
+<ce>               you feel yourself prepared. I will hope to see
+<ce>               it within =traveltime_ days. Take a locator charge.
+<ce>               It will no doubt help you this time.
+
+QuestComplete:  [1004]
+<ce>               Thank you once more, %pcf. Your service is well received.
+
+QuestorPostsuccess:  [1008]
+I hope you share your adventures with the newer members, %pcf.
+
+QuestLogEntry:  [1010]
+%qdt:
+ _questgiver_ of the
+ Archaeologists has sent me to
+ ___dungeon_ to get
+ an enchanted _mitem_.
+ I should be prepared for anything.
+ It must arrive in ___questgiver_
+ within =traveltime_ days.
+
+Message:  1040
+<ce>           You inspect the _mitem_. It has an
+<ce>           engraved symbol of a sun. You seem
+<ce>           to hear hissing as you hold it, as well as
+<ce>           whispering in an unintelligible language.
+
+Message:  1041
+<ce>           You inspect the _mitem_. It has an
+<ce>           engraved symbol of a moon. You seem
+<ce>           to hear howling as you hold it, as well as
+<ce>           whispering in an unintelligible language.
+
+Message:  1042
+<ce>           You inspect the _mitem_. It has an
+<ce>           engraved symbol of a sun. You seem
+<ce>           to hear raspy breathing as you hold it, as well
+<ce>           as whispering in an unintelligible language.
+
+Message:  1043
+<ce>           You inspect the _mitem_. It has an
+<ce>           engraved symbol of a moon. You seem
+<ce>           to hear squeaking as you hold it, as well
+<ce>           as whispering in an unintelligible language.
+
+Message:  1050
+<ce>               What a joy to see you! This little object is quite
+<ce>               powerful. I'll mitigate the enchantment for now
+<ce>               so you can get some peace and quiet, but I'll merely
+<ce>               say this is worth years of studying texts. Just listen
+<ce>               to it closely. You'll learn a lot. If we hear of some
+<ce>               other similar trinket, I hope you'll be up for the
+<ce>               challenge. Have your gold.
+
+Message:  1051
+<ce>               What a joy to see you! This little object is quite
+<ce>               powerful. I'll mitigate the enchantment for now
+<ce>               so you can get some peace and quiet, but I'll merely
+<ce>               say this is worth years of studying texts. Just listen
+<ce>               to it closely. You'll learn a lot. If we hear of some other
+<ce>               similar trinket, I hope you'll be up for the challenge.
+<ce>               I also wanted to mention that I have your _reward_
+<ce>               gold pieces here, but I received this _altrew_
+<ce>               while you were out. It's enchanted, but I don't know
+<ce>               what with. Would you prefer it as a reward instead
+<ce>               of the gold?
+
+QBN:
+Item _mitem_ trinket
+Item _reward_ gold range 501 to 799
+Item _altrew_ magic_item
+
+Person _questgiver_ group Questor female
+
+Place _dungeon_ remote dungeon
+
+Clock _traveltime_ 00:00 0 flag 17 range 0 2
+
+Foe _e1_ is Spider
+Foe _e2_ is Werewolf
+Foe _e2a_ is Wereboar
+Foe _e3_ is Imp
+Foe _e4_ is Giant_bat
+Foe _e4a_ is Giant_rat
+
+--	Quest start-up:
+	place item _mitem_ at _dungeon_ 
+	start timer _traveltime_ 
+	reveal _dungeon_ 
+	log 1010 step 0
+                pick one of _b1_ _b2_ _b3_ _b4_
+                pick one of _stand_ _alt_
+
+variable _b1_
+variable _b2_
+variable _b3_
+variable _b4_
+variable _stand_
+variable _alt_
+
+_traveltime_ task:
+	end quest 
+
+_grabbed_ task:
+               clicked item _mitem_
+
+_spawn1_ task:
+               when _grabbed_ and _b1_
+               say 1040
+               create foe _e1_ every 30 minutes indefinitely with 50% success
+
+_spawn2_ task:
+               when _grabbed_ and _b2_
+               say 1041
+               create foe _e2_ every 30 minutes indefinitely with 25% success
+               create foe _e2a_ every 30 minutes indefinitely with 25% success
+
+_spawn3_ task:
+               when _grabbed_ and _b3_
+               say 1042
+               create foe _e3_ every 30 minutes indefinitely with 50% success
+
+_spawn4_ task:
+               when _grabbed_ and _b4_
+               say 1043
+               create foe _e4_ every 30 minutes indefinitely with 25% success
+               create foe _e4a_ every 30 minutes indefinitely with 25% success
+
+_S.01_ task:
+	toting _mitem_ and _questgiver_ clicked
+
+_normend_ task:
+                when _S.01_ and _stand_
+                say 1050
+	give pc _reward_ 
+	end quest 
+
+_altend_ task:
+                when _S.01_ and _alt_
+                prompt 1051 yes _altend2_ no _simple_
+
+_altend2_ task:
+                give pc _altrew_
+                end quest
+
+_simple_ task:
+                give pc _reward_
+                end quest
