@@ -755,7 +755,7 @@
                     "TextureArchive": 184,
                     "TextureRecord": 1,
                     "FactionID": 803,
-                    "Flags": 33
+                    "Flags": 32
                 },
                 {
                     "Position": 4,
@@ -765,7 +765,7 @@
                     "TextureArchive": 184,
                     "TextureRecord": 19,
                     "FactionID": 801,
-                    "Flags": 33
+                    "Flags": 32
                 },
                 {
                     "Position": 5,
@@ -795,7 +795,7 @@
                     "TextureArchive": 184,
                     "TextureRecord": 2,
                     "FactionID": 0,
-                    "Flags": 33
+                    "Flags": 32
                 },
                 {
                     "Position": 8,
@@ -805,7 +805,7 @@
                     "TextureArchive": 182,
                     "TextureRecord": 45,
                     "FactionID": 0,
-                    "Flags": 33
+                    "Flags": 32
                 },
             ],
             "BlockDoorRecords": [
