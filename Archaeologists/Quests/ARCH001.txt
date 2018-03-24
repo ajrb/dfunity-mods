@@ -53,8 +53,9 @@ QuestorPostfailure:  [1009]
 <ce>                     on your discretion %pcn!
 
 QuestLogEntry:  [1010]
-%qdt: I met _questgiver_
- of the Archeaologists Guild of ___questgiver_
+%qdt:
+ I met _questgiver_ of 
+ the Archaeologists Guild of ___questgiver_
  who sent me on a quest to find an
  ancient magical text hidden in ___dungeon_.
  I have =traveltime_ days to get it to %g2.
