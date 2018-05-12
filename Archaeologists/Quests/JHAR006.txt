@@ -1,0 +1,82 @@
+Quest: JHAR006
+-- Message panels
+QRC:
+
+QuestorOffer:  [1000]
+<ce>             Good day. We have an ancient document
+<ce>             that needs to arrive in ___goalplace_ intact
+<ce>             within =2goalplace_ days, under guard.
+<ce>             We can spare =gold_ gold pieces for expenses.
+<ce>             Are you up to the task?
+
+RefuseQuest:  [1001]
+<ce>              Then let me see what else I have.
+
+AcceptQuest:  [1002]
+<ce>             The poor thing is centuries old, but it'll be preserved
+<ce>             well enough for you to find _goal_. Find %g2 in
+<ce>             ___goalplace_. I don't know where %g1 is. You'll
+<ce>             get the expense payment from %g2.
+<ce>             
+<ce>             Also please keep it close to your person. Word is
+<ce>             already out about its existence. Its age will attract
+<ce>             persons of the lowest quality. Be going now, and
+<ce>             take no more than =2goalplace_ days.
+
+QuestComplete:  [1004]
+<ce>             Welcome, good friend. Ah, this is that page
+<ce>             I was informed of? Marvelous. I was starting to
+<ce>             doubt its existence altogether. Well then, let
+<ce>             me get you your payment. =gold_ gold pieces,
+<ce>             just as I agreed. Off you go then. Thank you.
+
+QuestLogEntry:  [1010]
+%qdt:
+_qgiver_ of ___qgiver_
+has sent me to take an old
+document to _goal_,
+currently in ___goalplace_.
+I should move quickly and guard
+it safely. I have =2goalplace_ days.
+
+Message:  1015
+<ce>     I hear _goal_ is in ___goalplace_. Take it to %g2.
+<--->
+<ce>     I don't know anything about it, actually.
+<--->
+<ce>     Head on over to ___goalplace_, I says.
+
+Message:  1050
+<ce>     _qgiver_ needed the document to
+<ce>     be in _goal_'s hands by now.
+
+QBN:
+Item _letter_ letter
+Item _gold_ gold range 15 to 75
+
+Person _goal_ group Local_3.0
+Person _qgiver_ group Questor male
+
+Place _goalplace_ remote random
+
+Foe _F.00_ is Thief
+Foe _F.01_ is Burglar
+
+Clock _2goalplace_ 00:00 0 flag 1 range 0 2
+
+--	Quest start-up:
+	start timer _2goalplace_ 
+	log 1010 step 0 
+	get item _letter_ 
+	create foe _F.00_ every 35 minutes 10 times with 15% success 
+	create foe _F.01_ every 45 minutes 10 times with 15% success 
+                place npc _goal_ at _goalplace_
+
+_ending_ task:
+                toting _letter_ and _goal_ clicked
+                give pc _gold
+                end quest
+
+_2goalplace_ task:
+                say 1050
+                end quest
