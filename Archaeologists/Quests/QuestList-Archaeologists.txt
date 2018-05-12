@@ -14,3 +14,4 @@ JHAR002, GGroup0, M, 0, rescue a lost explorer from a dungeon
 JHAR003, GGroup0, M, 0, search for an ancestor's remains
 JHAR004, GGroup0, M, 0, slay a mummy at a farm home
 JHAR005, GGroup0, M, 0, get a trapped trinket from a dungeon
+JHAR006, GGroup0, M, 0, escort an old document to another town
