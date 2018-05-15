@@ -1,10 +1,6 @@
--- StartsBy: NPC
--- Questee: member
--- Questor: mage
--- Repute: 0
--- QuestId: 9
 Messages: 23
 Quest: JHAR001
+DisplayName: Borrowing Notes
 -- Message panels
 QRC:
 

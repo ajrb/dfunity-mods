@@ -1,4 +1,5 @@
 Quest: JHAR006
+DisplayName: Tattered Courier
 -- Message panels
 QRC:
 

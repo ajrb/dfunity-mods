@@ -1,10 +1,5 @@
--- StartsBy: NPC
--- Questee: member
--- Questor: Archaeologists
--- Repute: 0
--- QuestId: 3
-Messages: 13
 Quest: JHAR002
+DisplayName: Finding the Lost
 -- Message panels
 QRC:
 

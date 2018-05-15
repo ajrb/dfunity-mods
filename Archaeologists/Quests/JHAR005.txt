@@ -1,4 +1,5 @@
 Quest: JHAR005
+DisplayName: Regional Treasure
 -- Message panels
 QRC:
 
