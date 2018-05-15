@@ -3,7 +3,6 @@
 -- Questor: mage
 -- Repute: 0
 -- QuestId: 9
--- Edited for Daggerfall Unity by Jay_H
 Messages: 23
 Quest: JHAR001
 -- Message panels
