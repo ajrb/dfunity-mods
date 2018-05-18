@@ -72,6 +72,11 @@ Message:  1040
 <ce>                      This must be the magical text
 <ce>                     _questgiver_ sent you to find.
 
+Message:  1041
+<ce>                      Thanfully due to your high skill at Orcish, you
+<ce>                     swiftly realise you shouldn't recite this in full,
+<ce>                  unless you want to be attacked by Imps - which you don't.
+
 QuestTimeLapse:  [1045]
 <ce>                      As you read the final word,
 <ce>                      you hear two loud pops and
@@ -106,8 +111,18 @@ _S.01_ task:
 
 _S.02_ task:
 	clicked item _text_ 
-	_text_ used saying 1045 do _S.03_ 
-	say 1040 
+	_text_ used saying 1020 do _read_ 
+	say 1040
 
+variable _read_
 _S.03_ task:
-	create foe _imps_ every 1 minutes 1 times with 100% success 
+    when not _orcish_ and _read_
+    say 1045
+	create foe _imps_ every 1 minutes 1 times with 100% success
+
+_safeRead_ task:
+    when _orcish_ and _read_
+    say 1041
+
+_orcish_ task:
+    skill Orcish 70
