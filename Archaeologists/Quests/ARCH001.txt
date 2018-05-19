@@ -73,9 +73,9 @@ Message:  1040
 <ce>                     _questgiver_ sent you to find.
 
 Message:  1041
-<ce>                      Thanfully due to your high skill at Orcish, you
-<ce>                     swiftly realise you shouldn't recite this in full,
-<ce>                  unless you want to be attacked by Imps - which you don't.
+<ce>                  Thankfully due to your high skill with Orcish language,
+<ce>                   you realise you shouldn't recite this in full, unless you
+<ce>                   want to be attacked by Imps of course, which you don't!
 
 QuestTimeLapse:  [1045]
 <ce>                      As you read the final word,
@@ -125,4 +125,4 @@ _safeRead_ task:
     say 1041
 
 _orcish_ task:
-    skill Orcish 70
+    when skill Orcish is at least 70
