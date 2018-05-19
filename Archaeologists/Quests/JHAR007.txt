@@ -1,0 +1,67 @@
+Quest: JHAR007
+DisplayName: Busywork
+-- Message panels
+QRC:
+
+QuestorOffer:  [1000]
+<ce>	We're looking for someone to assign to go
+<ce>	to ___dung_ for one _relig_.
+<ce>	Are you able to go?
+
+RefuseQuest:  [1001]
+<ce>	This is the basic fabric of our work, %pct.
+
+AcceptQuest:  [1002]
+<ce>	You'll find it somewhere down there. Our work will
+<ce>	finish in =timer_ days, so it must be in my hands
+<ce>	before then. Time is of the essence. Now go.
+
+QuestComplete:  [1004]
+<ce>	Well done, %pcf. I see you've kept it in good condition.
+<ce>	Here's your fee, =reward_ gold pieces.
+
+QuestorPostsuccess:  [1008]
+Our good %pct. What can I do for you?
+
+QuestLogEntry:  [1010]
+%qdt:
+ _qgiver_ of the Archaeologists
+ has sent me to ___dung_ to
+ find a _relig_ somewhere inside.
+ I must return to ___qgiver_
+ within =timer_ days.
+
+Message:  1040
+<ce>	This must be the _relig_ you were sent to find.
+
+Message:  1041
+<ce>	_qgiver_ needed you the _relig_ by now.
+
+QBN:
+Item _relig_ religious
+Item _reward_ gold range 201 to 399
+
+Person _qgiver_ group Questor male
+
+Place _dung_ remote dungeon
+
+Clock _timer_ 00:00 0 flag 17 range 0 2
+
+--	Quest start-up:
+	place item _relig_ at _dung_ 
+	start timer _timer_ 
+	reveal _dung_ 
+	log 1010 step 0
+
+_grab_ task:
+                clicked item _relig_
+                say 1040
+
+_timer_ task:
+	say 1041
+	end quest 
+
+_end_ task:
+	toting _relig_ and _qgiver_ clicked
+	give pc _reward_ 
+	end quest 
