@@ -1,11 +1,6 @@
--- StartsBy: NPC
--- Questee: member
--- Questor: mage
--- Repute: 0
--- QuestId: 9
--- Edited for Daggerfall Unity by Jay_H
 Messages: 23
 Quest: JHAR001
+DisplayName: Borrowing Notes
 -- Message panels
 QRC:
 
