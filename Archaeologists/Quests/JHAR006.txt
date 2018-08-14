@@ -40,12 +40,12 @@ currently in ___goalplace_.
 I should move quickly and guard
 it safely. I have =2goalplace_ days.
 
-Message:  1015
-<ce>     I hear _goal_ is in ___goalplace_. Take it to %g2.
-<--->
-<ce>     I don't know anything about it, actually.
-<--->
-<ce>     Head on over to ___goalplace_, I says.
+-Message:  1015
+-<ce>     I hear _goal_ is in ___goalplace_. Take it to %g2.
+-<--->
+-<ce>     I don't know anything about it, actually.
+-<--->
+-<ce>     Head on over to ___goalplace_, I says.
 
 Message:  1050
 <ce>     _qgiver_ needed the document to

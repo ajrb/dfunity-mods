@@ -83,7 +83,7 @@ Message:  1042
 Message:  1060
 <ce>        Once the skeletal warrior acknowledges the blow, it ceases moving.
 <ce>        You notice a piece of parchment hanging from one of its ribs.
-<ce>        You calmly remove it and put it into your pack.
+<ce>        You remove it and put it into your pack.
 
 Message:  1061
  %pcn,
@@ -161,6 +161,7 @@ _vict1_ task:
 
 _vict1a_ task:
  when _vict1_ and _norm_
+ say 1020
  give pc _reward_
  end quest
 

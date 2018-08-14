@@ -198,10 +198,15 @@ _path1b_ task:
                 create foe _f1_ every 1 minutes 1 times with 100% success
 
 _steal_ task:
-                injured _mage1_
-                say 1023
+    injured _mage1_
+    say 1023
 	get item _realnotes_
                 
+_murder_ task:
+    killed _mage1_
+    say 1024
+    change repute with _qgiver_ by -7
+
 _path2_ task:
                 when _talked_ and _false_
                 prompt 1040 yes _path2a_ no _path2b_
@@ -218,12 +223,12 @@ _path2b_ task:
                 give item _realnotes_ to _mage2_
 
 _intentional_ task:
-                killed _mage2_
-                say 1043
+    killed _mage2_
+    say 1043
 
 _spawn_ task:
-                create foe _e1_ every 45 minutes 1 times with 35% success
-                create foe _e2_ every 45 minutes 1 times with 35% success
+    create foe _e1_ every 45 minutes 1 times with 35% success
+    create foe _e2_ every 45 minutes 1 times with 35% success
 
 _S.12_ task:
 	toting _realnotes_ and _qgiver_ clicked 
@@ -233,5 +238,5 @@ _S.12_ task:
 _S.13_ task:
 	toting _falsenotes_ and _qgiver_ clicked 
 	give pc _reward_ 
-                change repute with _qgiver_ by -1
+    change repute with _qgiver_ by -1
 	end quest 
