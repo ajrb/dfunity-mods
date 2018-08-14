@@ -1,0 +1,102 @@
+Quest: JHAR009
+DisplayName: Heat Seeker
+-- Message panels
+QRC:
+
+QuestorOffer:  [1000]
+<ce>         An object was recently brought in with a nasty curse of sorts.
+<ce>         Left alone the _trink_ is harmless, but once it touches
+<ce>         warm flesh of any kind, its previous master will perceive
+<ce>         its location and slay whoever possesses it. The fact
+<ce>         that this master is a daedra should give you pause, %pct.
+<ce>         We require someone to hold this object and defeat the foe
+<ce>         so we can get it recorded and evaluated. Will you be
+<ce>         the one to do it?
+
+RefuseQuest:  [1001]
+<ce>         Well, if you change your mind, the _trink_ will surely be here.
+<--->
+<ce>         I suppose someone else could eventually kill it by sheer luck.
+
+AcceptQuest:  [1002]
+<ce>         Here it is. We cannot possibly tell how long it will take to find
+<ce>         you. Who knows in what region the creature makes its home.
+<ce>         All we know is that, however long it takes, it comes to kill.
+<ce>         Be prepared for battle. Return to me when the task is finished.
+<ce>         Farewell, and let whatever god you worship be with you.
+
+QuestFail:  [1003]
+<ce>         You have avoided this daedra for long enough. You discard the
+<ce>         _trink_ and get on with your life.
+
+QuestComplete:  [1004]
+<ce>         My fears have been assuaged. No one here doubts your ability,
+<ce>         but any time we combine the words "task" and "daedra," we discard
+<ce>         all guarantees concerning the future. I certainly believe you have
+<ce>         earned these =reward_ gold pieces.
+
+Message:  1017
+<ce>         A harsh voice cries out nearby.
+<ce>         
+<ce>         "Filthy mortal! Why must you desecrate it with your
+<ce>         puny hands? The vengeance of Oblivion be upon you!"
+
+Message:  1018
+<ce>         You stand triumphant over the daedra's corpse.
+<ce>         It's time to return to _qgiver_ and deliver
+<ce>         the _trink_.
+
+Message:  1030
+%qdt:
+ _qgiver_, of the Archaeologists in
+ ___qgiver_, has given me a _trink_
+
+ which will eventually attract a murderous daedra.
+ I must slay it and return the object to %g2.
+
+QBN:
+Item _reward_ gold
+Item _trink_ trinket
+
+Person _qgiver_ group Questor male
+
+Clock _timer_ 12:00 2.12:00
+Clock _failsafe_ 60.00:00
+
+Foe _enemy_ is Frost_daedra
+
+--	Quest start-up:
+	start timer _timer_ 
+	start timer _failsafe_ 
+	log 1030 step 0
+    get item _trink_
+
+
+variable _timer_
+
+_battle_ task:
+    when _timer_ and not _slain_
+    say 1017
+    create foe _enemy_ every 1 minutes 1 times with 100% success
+	create foe _enemy_ every 1200 minutes indefinitely with 100% success
+
+_slain_ task:
+     killed _enemy_
+    say 1018
+
+_qgclicked_ task:
+	clicked npc _qgiver_ 
+
+_clearclick_ task:
+	when _qgclicked_ and not _slain_
+	clear _qgclicked_ _clearclick_ 
+
+_pcreward_ task:
+	when _qgclicked_ and _slain_ 
+	give pc _reward_
+    take _trink_ from pc
+	end quest 
+
+_failsafe_ task:
+    say 1003
+	end quest 

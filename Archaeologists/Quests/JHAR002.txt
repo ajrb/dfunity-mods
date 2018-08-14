@@ -124,7 +124,7 @@ _S.01_ task:
 _reward_ task:
 	when _qgclicked_ and _S.01_ 
 	give pc nothing 
-                change repute with _qg_ by +2
+                -change repute with _qg_ by +2
 	end quest 
 
 _qgclicked_ task:
