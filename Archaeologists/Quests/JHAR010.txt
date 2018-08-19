@@ -1,0 +1,135 @@
+Quest: JHAR010
+DisplayName: Permission to Speak
+-- Message panels
+QRC:
+
+QuestorOffer:  [1000]
+<ce> We received a message from a field agent,
+<ce> _agent_, stating that %g1
+<ce> found something of value. We need someone
+<ce> willing to enter the cave %g1 works in
+<ce> and bring back the object. Will you
+<ce> do it for =reward_ gold pieces?
+
+RefuseQuest:  [1001]
+<ce> Well, it was going to be a bit complicated
+<ce> anyway. Not everyone's cup of tea.
+
+AcceptQuest:  [1002]
+<ce> I'll pay you if you bring it here in =timer_
+<ce> days. Our agents never disclose their location
+<ce> via written communication for their own
+<ce> safety, so you'll first have to speak with
+<ce> _gate_, who's in ___lib_.
+<ce> Take this letter of authenticity. We run a tight ship
+<ce> with regards to these matters, so %g1 will disclose
+<ce> no information without proof. Stay safe, %pct.
+
+QuestFail:  [1003]
+<ce> You can no longer deliver the
+<ce> _item_ to _qgiver_.
+
+QuestComplete:  [1004]
+<ce> Welcome back. I see it's in good condition, then.
+<ce> Well, here's your pay. Good work.
+
+RumorsDuringQuest:  [1005]
+I wonder what it's like to work for the Archaeologists.
+
+Message: 1020
+<ce> Your story is interesting, but I do not believe it.
+<ce> If you are a member of the Archaeologists, why have
+<ce> I never seen you before? I need proper proof before
+<ce> I speak of _agent_'s whereabouts.
+
+Message: 1021
+<ce> _gate_ looks at the document carefully,
+<ce> and then uses a knife to scratch at a few
+<ce> of the letters. Satisfied, %g1 looks up.
+<ce> 
+<ce> "It's genuine. _agent_ is in
+<ce> ___dung_. I'll mark it on your
+<ce> map. Be certain you're ready for combat.
+<ce> It's no place for a mere compass reader."
+<ce> 
+<ce> The agent then resumes work, ignoring you.
+
+Message: 1022
+<ce> Good day, %ra. Ah, you're here to answer
+<ce> my letter? Who told you my location?
+<ce> Yes, that's the right answer. Our good
+<ce> _gate_, leaving no loose
+<ce> ends untied. Well, here it is. Tell
+<ce> _qgiver_ I will demand
+<ce> an increase in rank when I'm topside.
+<ce> It's the least %g1 could do, after all.
+<ce> Best of luck on the way back out!
+
+Message:  1030
+%qdt:
+ _qgiver_ of the Archaeologists
+ has received word that _agent_,
+ a fellow member, has found an object of
+ value during a field excavation.
+ In accordance with guild rules, %g1 omitted
+ %g3 current location. I must speak with
+ _gate_ in ___lib_
+ to learn where to go, and have received a
+ letter proving my authenticity. I will
+ be paid =reward_ gold if I deliver it
+ to ___qgiver_ in =timer_ days.
+
+Message:  1031
+%qdt:
+ _agent_ is engaged in
+ work within ___dung_.
+
+QBN:
+Item _reward_ gold
+Item _paper_ letter
+Item _item_ magic_item
+
+Person _qgiver_ group Questor male
+Person _gate_ faction Dancers
+Person _agent_ group Local_4.0
+
+Place _lib_ remote library
+Place _dung_ remote dungeon
+
+Clock _timer_ 00:00 0 flag 17 range 0 2
+
+--	Quest start-up:
+	log 1030 step 0 
+    get item _paper_
+    start timer _timer_
+    pc at _lib_ set _inside_
+    place npc _gate_ at _lib_
+
+_talk_ task:
+    clicked npc _gate_ say 1020
+    _paper_ used do _persuade_
+
+variable _inside_
+variable _persuade_
+
+_finish_ task:
+    when _inside_ and _persuade_
+	say 1021
+    reveal _dung_
+    log 1031 step 1
+    place npc _agent_ at _dung_
+
+_tag_ task:
+    clicked npc _agent_
+    say 1022
+    get item _item_
+
+_pcgetsgold_ task:
+	toting _item_ and _qgiver_ clicked
+	give pc _reward_
+	end quest
+
+_timer_ task:
+    say 1003
+    make _item_ permanent
+    end quest

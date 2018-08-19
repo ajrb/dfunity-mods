@@ -15,6 +15,7 @@ JHAR003, GGroup0, M, 0, search for an ancestor's remains
 JHAR004, GGroup0, M, 0, slay a mummy at a farm home
 JHAR005, GGroup0, M, 0, get a trapped trinket from a dungeon
 JHAR006, GGroup0, M, 0, escort an old document to another town
-JHAR007, GGroup0, M, 0, 
-JHAR008, GGroup0, M, 0, 
+JHAR007, GGroup0, M, 0, retrieve a normal trinket from a dungeon
+JHAR008, GGroup0, M, 0, retrieve an object stolen by a guild member
 JHAR009, GGroup0, M, 30, defeat a daedra haunting a trinket
+JHAR010, GGroup0, M, 10, retrieve an object from a field agent
