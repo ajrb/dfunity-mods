@@ -35,7 +35,7 @@
                 "Num3dObjectRecords": 47,
                 "NumFlatObjectRecords": 17,
                 "NumSection3Records": 27,
-                "NumPeopleRecords": 8,
+                "NumPeopleRecords": 9,
                 "NumDoorRecords": 7
             },
             "Block3dObjectRecords": [
@@ -799,12 +799,22 @@
                 },
                 {
                     "Position": 8,
-                    "XPos": 70,
+                    "XPos": 80,
                     "YPos": 0,
                     "ZPos": 210,
                     "TextureArchive": 182,
                     "TextureRecord": 45,
                     "FactionID": 0,
+                    "Flags": 32
+                },
+                {
+                    "Position": 9,
+                    "XPos": 10,
+                    "YPos": 0,
+                    "ZPos": 360,
+                    "TextureArchive": 184,
+                    "TextureRecord": 26,
+                    "FactionID": 1002,
                     "Flags": 32
                 },
             ],

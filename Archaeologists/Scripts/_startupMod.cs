@@ -73,6 +73,21 @@ namespace Archaeologists
                 ggroup = 0,
                 children = null
             }) && success;
+            success = FactionFile.RegisterCustomFaction(1002, new FactionFile.FactionData()
+            {
+                id = 1002,
+                parent = 1000,
+                type = 2,
+                name = "The Archaeologist Summoners",
+                summon = -1,
+                region = -1,
+                power = 25,
+                face = -1,
+                race = -1,
+                sgroup = 2,
+                ggroup = 0,
+                children = null
+            }) && success;
             if (success)
             {
                 // Register the Guild class
@@ -84,6 +99,8 @@ namespace Archaeologists
                 Services.RegisterGuildService(1001, ArchaeologistsGuild.LocatorService, "Locator Charges");
                 // Register the custom locator item
                 ItemCollection.RegisterCustomItem(typeof(LocatorItem).ToString(), typeof(LocatorItem));
+                // Register the daedra summoning service
+                Services.RegisterGuildService(1002, GuildServices.DaedraSummoning);
                 // Register the quest list
                 if (!debug)
                     QuestListsManager.RegisterQuestList("Archaeologists");
