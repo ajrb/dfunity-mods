@@ -246,7 +246,7 @@ namespace DaggerfallWorkshop.Game.Guilds
 
             if (thisGuild.Rank < 6)
             {
-                tradeWindow.OnTrade += LocatorPurchse_OnTrade;
+                tradeWindow.OnTrade += LocatorPurchase_OnTrade;
                 DaggerfallMessageBox messageBox = new DaggerfallMessageBox(DaggerfallUI.UIManager, tradeWindow, true);
                 string[] message = new string[] {
                     "We require that you provide the guild with either a holy tome",
@@ -269,11 +269,10 @@ namespace DaggerfallWorkshop.Game.Guilds
             return charges;
         }
 
-        static void LocatorPurchse_OnTrade(DaggerfallTradeWindow.WindowModes mode, int numItems, int value)
+        static void LocatorPurchase_OnTrade(DaggerfallTradeWindow.WindowModes mode, int numItems, int value)
         {
             if (mode == DaggerfallTradeWindow.WindowModes.Buy && numItems > 0)
-            {
-                // Remove holy items from player items.
+            {   // Remove holy items from player items.
                 ItemCollection coll = GameManager.Instance.PlayerEntity.Items;
                 numItems = RemoveItems(coll, numItems, (int)ReligiousItems.Holy_tome);
                 numItems = RemoveItems(coll, numItems, (int)ReligiousItems.Holy_dagger);
@@ -281,6 +280,9 @@ namespace DaggerfallWorkshop.Game.Guilds
                 numItems = RemoveItems(coll, numItems, (int)ReligiousItems.Holy_tome);
                 numItems = RemoveItems(coll, numItems, (int)ReligiousItems.Holy_dagger);
             }
+            // If this was an attempt to steal, so reduce guild reputation by 25.
+            if (value == 0)
+                GameManager.Instance.PlayerEntity.FactionData.ChangeReputation(factionId, -25, true);
         }
 
         static int RemoveItems(ItemCollection coll, int numItems, int itemIndex)
