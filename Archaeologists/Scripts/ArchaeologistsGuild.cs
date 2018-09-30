@@ -97,6 +97,8 @@ namespace DaggerfallWorkshop.Game.Guilds
             "Field Assistant", "Field Agent", "Field Officer", "Field Director", "Apprentice", "Novice", "Journeyman", "Associate", "Professor", "Master"
         };
 
+        static int[] RankLocatorCosts = new int[] { 0, 0, 4000, 3000, 2000, 1500, 1200, 800, 600, 400 };
+
         static List<DFCareer.Skills> guildSkills = new List<DFCareer.Skills>() {
                 DFCareer.Skills.Centaurian,
                 DFCareer.Skills.Climbing,
@@ -223,23 +225,79 @@ namespace DaggerfallWorkshop.Game.Guilds
         public static void LocatorService()
         {
             Debug.Log("Locator service.");
+
+            // Get the guild instance.
             Guild thisGuild = GameManager.Instance.GuildManager.GetGuild(FactionFile.GuildGroups.GGroup0);
+            // Check how many holy items the player has. Offer 16 if no limit.
+            int holyCount = 16;
+            if (thisGuild.Rank < 6)
+            {
+                PlayerEntity playerEntity = GameManager.Instance.PlayerEntity;
+                List<DaggerfallUnityItem> tomes = playerEntity.Items.SearchItems(ItemGroups.ReligiousItems, (int)ReligiousItems.Holy_tome);
+                tomes.AddRange(playerEntity.WagonItems.SearchItems(ItemGroups.ReligiousItems, (int)ReligiousItems.Holy_tome));
+                List<DaggerfallUnityItem> daggers = playerEntity.Items.SearchItems(ItemGroups.ReligiousItems, (int)ReligiousItems.Holy_dagger);
+                daggers.AddRange(playerEntity.WagonItems.SearchItems(ItemGroups.ReligiousItems, (int)ReligiousItems.Holy_dagger));
+                holyCount = tomes.Count + daggers.Count;
+            }
+            // Show trade window and a popup message to inform player how many locators they can purchase.
             DaggerfallTradeWindow tradeWindow = new DaggerfallTradeWindow(DaggerfallUI.UIManager, DaggerfallTradeWindow.WindowModes.Buy, null, thisGuild);
-            tradeWindow.MerchantItems = GetLocatorCharges(16);
+            tradeWindow.MerchantItems = GetLocatorCharges(holyCount, RankLocatorCosts[thisGuild.Rank]);
             DaggerfallUI.UIManager.PushWindow(tradeWindow);
+
+            if (thisGuild.Rank < 6)
+            {
+                tradeWindow.OnTrade += LocatorPurchse_OnTrade;
+                DaggerfallMessageBox messageBox = new DaggerfallMessageBox(DaggerfallUI.UIManager, tradeWindow, true);
+                string[] message = new string[] {
+                    "We require that you provide the guild with either a holy tome",
+                    "   or holy dagger for each locator charge we supply you.",
+                    " At least until you reach the more senior ranks of the guild.", "",
+                    "  You currently have " + holyCount + " holy items in your possesion, so you",
+                    "    can purchase up to that many devices at this time.",
+                };
+                messageBox.SetText(message);
+                messageBox.ClickAnywhereToClose = true;
+                messageBox.Show();
+            }
         }
 
-        static ItemCollection GetLocatorCharges(int number)
+        static ItemCollection GetLocatorCharges(int number, int value)
         {
             ItemCollection charges = new ItemCollection();
             for (int i = 0; i < number; i++)
-                charges.AddItem(new LocatorItem(), ItemCollection.AddPosition.DontCare, true);
+                charges.AddItem(new LocatorItem(value), ItemCollection.AddPosition.DontCare, true);
             return charges;
+        }
+
+        static void LocatorPurchse_OnTrade(DaggerfallTradeWindow.WindowModes mode, int numItems, int value)
+        {
+            if (mode == DaggerfallTradeWindow.WindowModes.Buy && numItems > 0)
+            {
+                // Remove holy items from player items.
+                ItemCollection coll = GameManager.Instance.PlayerEntity.Items;
+                numItems = RemoveItems(coll, numItems, (int)ReligiousItems.Holy_tome);
+                numItems = RemoveItems(coll, numItems, (int)ReligiousItems.Holy_dagger);
+                coll = GameManager.Instance.PlayerEntity.WagonItems;
+                numItems = RemoveItems(coll, numItems, (int)ReligiousItems.Holy_tome);
+                numItems = RemoveItems(coll, numItems, (int)ReligiousItems.Holy_dagger);
+            }
+        }
+
+        static int RemoveItems(ItemCollection coll, int numItems, int itemIndex)
+        {
+            foreach (DaggerfallUnityItem item in coll.SearchItems(ItemGroups.ReligiousItems, itemIndex))
+            {
+                if (numItems <= 0)
+                    return 0;
+                coll.RemoveItem(item);
+                numItems--;
+            }
+            return numItems;
         }
 
         #endregion
 
-            #region Service: Training
+        #region Service: Training
 
         public override int GetTrainingMax(DFCareer.Skills skill)
         {

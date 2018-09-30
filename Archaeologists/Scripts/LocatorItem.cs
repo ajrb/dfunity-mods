@@ -15,12 +15,18 @@ namespace Archaeologists
         internal const int INACTIVE = 1;
         internal const int ACTIVATED = 2;
 
+        internal const int BASEVALUE = 600;
+
         //public static LocatorDevice locatorDevice;
 
-        public LocatorItem() : base(ItemGroups.Jewellery, 7)
+        public LocatorItem() : this(BASEVALUE)
+        {
+        }
+
+        public LocatorItem(int baseValue) : base(ItemGroups.Jewellery, 7)
         {
             shortName = "Locator device";
-            value = 50; //00;
+            value = baseValue;
             nativeMaterialValue = INACTIVE;
         }
 
