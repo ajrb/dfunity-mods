@@ -239,25 +239,34 @@ namespace DaggerfallWorkshop.Game.Guilds
                 daggers.AddRange(playerEntity.WagonItems.SearchItems(ItemGroups.ReligiousItems, (int)ReligiousItems.Holy_dagger));
                 holyCount = tomes.Count + daggers.Count;
             }
-            // Show trade window and a popup message to inform player how many locators they can purchase.
-            DaggerfallTradeWindow tradeWindow = new DaggerfallTradeWindow(DaggerfallUI.UIManager, DaggerfallTradeWindow.WindowModes.Buy, null, thisGuild);
-            tradeWindow.MerchantItems = GetLocatorCharges(holyCount, RankLocatorCosts[thisGuild.Rank]);
-            DaggerfallUI.UIManager.PushWindow(tradeWindow);
-
-            if (thisGuild.Rank < 6)
+            if (thisGuild.Rank >= 6 || holyCount > 0)
             {
-                tradeWindow.OnTrade += LocatorPurchase_OnTrade;
-                DaggerfallMessageBox messageBox = new DaggerfallMessageBox(DaggerfallUI.UIManager, tradeWindow, true);
-                string[] message = new string[] {
-                    "We require that you provide the guild with either a holy tome",
-                    "   or holy dagger for each locator charge we supply you.",
-                    " At least until you reach the more senior ranks of the guild.", "",
-                    "  You currently have " + holyCount + " holy items in your possesion, so you",
-                    "    can purchase up to that many devices at this time.",
-                };
-                messageBox.SetText(message);
-                messageBox.ClickAnywhereToClose = true;
-                messageBox.Show();
+                // Show trade window and a popup message to inform player how many locators they can purchase.
+                DaggerfallTradeWindow tradeWindow = new DaggerfallTradeWindow(DaggerfallUI.UIManager, DaggerfallTradeWindow.WindowModes.Buy, null, thisGuild);
+                tradeWindow.MerchantItems = GetLocatorCharges(holyCount, RankLocatorCosts[thisGuild.Rank]);
+                DaggerfallUI.UIManager.PushWindow(tradeWindow);
+
+                if (thisGuild.Rank < 6)
+                {
+                    tradeWindow.OnTrade += LocatorPurchase_OnTrade;
+                    DaggerfallMessageBox messageBox = new DaggerfallMessageBox(DaggerfallUI.UIManager, tradeWindow, true);
+                    string[] message = new string[] {
+                        "We require that you provide the guild with either a holy tome",
+                        "   or holy dagger for each locator charge we supply you.",
+                        " At least until you reach the more senior ranks of the guild.", "",
+                        "  You currently have " + holyCount + " holy items in your possesion, so you",
+                        "    can purchase up to that many devices at this time.",
+                    };
+                    messageBox.SetText(message);
+                    messageBox.ClickAnywhereToClose = true;
+                    messageBox.Show();
+                }
+            }
+            else
+            {
+                DaggerfallUI.MessageBox(new string[] {
+                    "You need to provide the guild either a holy tome or holy dagger",
+                    " for each locator charge we supply you with. You have neither." });
             }
         }
 
