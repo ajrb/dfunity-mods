@@ -52,6 +52,7 @@ namespace Archaeologists
                 summon = -1,
                 region = -1,
                 power = 40,
+                enemy1 = (int) FactionFile.FactionIDs.The_Mages_Guild,
                 face = -1,
                 race = -1,
                 sgroup = 2,

@@ -87,19 +87,15 @@ namespace DaggerfallWorkshop.Game.Guilds
             TextFile.CreateTextToken("Keep up the good work, and continue to study hard. "), newLine,
         };
 
-        static int[] intReqs = new int[] { 40, 40, 45, 50, 60, 60, 65, 65, 70, 70 };
+        protected static int[] intReqs = { 40, 45, 50, 55, 60, 60, 65, 65, 70, 70 };
 
-        #endregion
-
-        #region Properties & Data
-
-        static string[] rankTitles = {
+        protected static string[] rankTitles = {
             "Field Assistant", "Field Agent", "Field Officer", "Field Director", "Apprentice", "Novice", "Journeyman", "Associate", "Professor", "Master"
         };
 
-        static int[] RankLocatorCosts = { 0, 0, 4000, 3000, 2000, 1500, 1200, 800, 600, 400 };
+        protected static int[] RankLocatorCosts = { 0, 0, 4000, 3000, 2000, 1500, 1200, 800, 600, 400 };
 
-        static List<DFCareer.Skills> guildSkills = new List<DFCareer.Skills>() {
+        protected static List<DFCareer.Skills> guildSkills = new List<DFCareer.Skills>() {
                 DFCareer.Skills.Centaurian,
                 DFCareer.Skills.Climbing,
                 DFCareer.Skills.Daedric,
@@ -113,7 +109,7 @@ namespace DaggerfallWorkshop.Game.Guilds
                 DFCareer.Skills.Stealth,
             };
 
-        static List<DFCareer.Skills> trainingSkills = new List<DFCareer.Skills>() {
+        protected static List<DFCareer.Skills> trainingSkills = new List<DFCareer.Skills>() {
                 DFCareer.Skills.Centaurian,
                 DFCareer.Skills.Climbing,
                 DFCareer.Skills.Dodging,
@@ -130,6 +126,10 @@ namespace DaggerfallWorkshop.Game.Guilds
                 DFCareer.Skills.Stealth,
                 DFCareer.Skills.Swimming,
             };
+
+        #endregion
+
+        #region Properties
 
         public override string[] RankTitles { get { return rankTitles; } }
 
@@ -155,6 +155,9 @@ namespace DaggerfallWorkshop.Game.Guilds
         protected override int CalculateNewRank(PlayerEntity playerEntity)
         {
             int newRank = base.CalculateNewRank(playerEntity);
+            int magesRank = GameManager.Instance.GuildManager.GetGuild(FactionFile.GuildGroups.MagesGuild).Rank;
+            if (magesRank > 5)
+                newRank = Mathf.Min(5, rank);   // Cap rank at 5 when above rank 5 in mages guild.
             int peINT = playerEntity.Stats.GetPermanentStatValue(DFCareer.Stats.Intelligence);
             while (peINT < intReqs[newRank])
                 newRank--;
@@ -188,7 +191,7 @@ namespace DaggerfallWorkshop.Game.Guilds
 
         public override bool AvoidDeath()
         {
-            if (rank >= 7 && UnityEngine.Random.Range(0, 50) < rank &&
+            if (rank >= 7 && Random.Range(0, 50) < rank &&
                 GameManager.Instance.PlayerEntity.FactionData.GetReputation((int) FactionFile.FactionIDs.Stendarr) >= 0 &&
                 !GameManager.Instance.PlayerEnterExit.IsPlayerSubmerged)
             {
