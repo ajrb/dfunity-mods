@@ -24,11 +24,11 @@ namespace Archaeologists
             "The locator devices falls quiet before turning to dust in your hand.";
         internal const string FAIL_ACTIVATE_MSG =
             "Locator devices can only be activated in dungeon labyrinths.";
-        internal static string[] EXPLORATION_NEEDED_MSG = new string[] {
+        internal static string[] EXPLORATION_NEEDED_MSG = {
             "Locator devices can only be activated once you have explored a",
             "sufficient amount of the dungeon. This is to enable the magic",
             " in the device to become attuned to this particular dungeon." };
-        internal static string[] ACTIVATION_MSG = new string[] {
+        internal static string[] ACTIVATION_MSG = {
             " The locator device vibrates and hums into action.", "",
             "You now see a bright disk in your mind when looking",
             "     in the direction of your desired target." };

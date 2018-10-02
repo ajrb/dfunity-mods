@@ -29,7 +29,7 @@ namespace DaggerfallWorkshop.Game.Guilds
 
         // Guild messages - must clone any that contain macros before returning.
 
-        protected static TextFile.Token[] welcomeTokens = new TextFile.Token[]
+        protected static TextFile.Token[] welcomeTokens =
         {
             TextFile.CreateTextToken("Excellent, %pcn, welcome to the Archaeologists! "), newLine,
             TextFile.CreateTextToken("We'll get you started on field work as soon as possible. "), newLine,
@@ -40,7 +40,7 @@ namespace DaggerfallWorkshop.Game.Guilds
             TextFile.CreateTextToken("study and improve your skills. "), newLine,
         };
 
-        protected static TextFile.Token[] eligibleTokens = new TextFile.Token[]
+        protected static TextFile.Token[] eligibleTokens =
         {
             TextFile.CreateTextToken("Yes, you seem like a good candidate to assist us "), newLine,
             TextFile.CreateTextToken("in the kinds of field work we engage in. "), newLine, newLine,
@@ -58,7 +58,7 @@ namespace DaggerfallWorkshop.Game.Guilds
             TextFile.CreateTextToken("those with sufficient intellect will be accepted. "), newLine,
         };
 
-        protected static TextFile.Token[] ineligibleLowSkillTokens = new TextFile.Token[]
+        protected static TextFile.Token[] ineligibleLowSkillTokens =
         {
             TextFile.CreateTextToken("I am sad to say that you are not eligible to join our guild."), newLine,
             TextFile.CreateTextToken("We only accept members who have studied languages or the "), newLine,
@@ -66,21 +66,21 @@ namespace DaggerfallWorkshop.Game.Guilds
             TextFile.CreateTextToken("lockpicking and stealth. "), newLine,
         };
 
-        protected static TextFile.Token[] ineligibleBadRepTokens = new TextFile.Token[]
+        protected static TextFile.Token[] ineligibleBadRepTokens =
         {
             TextFile.CreateTextToken("I am sad to say that you are ineligible to join our guild."), newLine,
             TextFile.CreateTextToken("Your reputation amongst scholars is such that we do not "), newLine,
             TextFile.CreateTextToken("wish to be associated with you, even for simple field work. "), newLine,
         };
 
-        protected static TextFile.Token[] ineligibleLowIntTokens = new TextFile.Token[]
+        protected static TextFile.Token[] ineligibleLowIntTokens =
         {
             TextFile.CreateTextToken("Sorry, %pcf, you do not exhibit the intellect we require "), newLine,
             TextFile.CreateTextToken("from our recruits. Perhaps a less scholarly guild, such "), newLine,
             TextFile.CreateTextToken("as the Fighters guild, would be more suited to your aptitude. "), newLine,
         };
 
-        protected static TextFile.Token[] promotionTokens = new TextFile.Token[]
+        protected static TextFile.Token[] promotionTokens =
         {
             TextFile.CreateTextToken("Congratulations, %pcf. Because of your outstanding work for "), newLine,
             TextFile.CreateTextToken("the guild, we have promoted you to the rank of %lev. "), newLine,
@@ -93,11 +93,11 @@ namespace DaggerfallWorkshop.Game.Guilds
 
         #region Properties & Data
 
-        static string[] rankTitles = new string[] {
+        static string[] rankTitles = {
             "Field Assistant", "Field Agent", "Field Officer", "Field Director", "Apprentice", "Novice", "Journeyman", "Associate", "Professor", "Master"
         };
 
-        static int[] RankLocatorCosts = new int[] { 0, 0, 4000, 3000, 2000, 1500, 1200, 800, 600, 400 };
+        static int[] RankLocatorCosts = { 0, 0, 4000, 3000, 2000, 1500, 1200, 800, 600, 400 };
 
         static List<DFCareer.Skills> guildSkills = new List<DFCareer.Skills>() {
                 DFCareer.Skills.Centaurian,
@@ -186,6 +186,18 @@ namespace DaggerfallWorkshop.Game.Guilds
             return (rank >= 5) ? 0 : price;
         }
 
+        public override bool AvoidDeath()
+        {
+            if (rank >= 7 && UnityEngine.Random.Range(0, 50) < rank &&
+                GameManager.Instance.PlayerEntity.FactionData.GetReputation((int) FactionFile.FactionIDs.Stendarr) >= 0 &&
+                !GameManager.Instance.PlayerEnterExit.IsPlayerSubmerged)
+            {
+                DaggerfallUI.AddHUDText(HardStrings.avoidDeath);
+                return true;
+            }
+            return false;
+        }
+
         #endregion
 
         #region Service Access:
@@ -250,7 +262,7 @@ namespace DaggerfallWorkshop.Game.Guilds
                 {
                     tradeWindow.OnTrade += LocatorPurchase_OnTrade;
                     DaggerfallMessageBox messageBox = new DaggerfallMessageBox(DaggerfallUI.UIManager, tradeWindow, true);
-                    string[] message = new string[] {
+                    string[] message = {
                         "We require that you provide the guild with either a holy tome",
                         "   or holy dagger for each locator charge we supply you.",
                         " At least until you reach the more senior ranks of the guild.", "",
