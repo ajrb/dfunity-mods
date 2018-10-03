@@ -22,7 +22,7 @@ RefuseQuest:  [1001]
 
 AcceptQuest:  [1002]
 <ce>               Thank you, %pcf, truly. I will admit we
-<ce>               don't have a reward meted out for this
+<ce>               don't have a reward to be meted out for this
 <ce>               action, but I will see what I can do while
 <ce>               you're out. Please bring %g2 here in
 <ce>               no more than =timer_ days. Otherwise I will
@@ -37,7 +37,7 @@ AcceptQuest:  [1002]
 QuestComplete:  [1004]
 <ce>               Dear _rescue_, what a relief it is to
 <ce>               see you. We have a great deal of training to give you
-<ce>               before you'll be doing any spelunking on your own.
+<ce>               before you'll be doing any more spelunking on your own.
 <ce>               After all, not everyone can handle themselves
 <ce>               like %pcn, now can they? Once again, thank you,
 <ce>               %pct. We don't have a material reward available,
@@ -124,7 +124,7 @@ _S.01_ task:
 _reward_ task:
 	when _qgclicked_ and _S.01_ 
 	give pc nothing 
-    change repute with _qgiver_ by +2
+                -change repute with _qg_ by +2
 	end quest 
 
 _qgclicked_ task:

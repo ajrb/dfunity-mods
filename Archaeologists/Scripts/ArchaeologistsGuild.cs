@@ -29,7 +29,7 @@ namespace DaggerfallWorkshop.Game.Guilds
 
         // Guild messages - must clone any that contain macros before returning.
 
-        protected static TextFile.Token[] welcomeTokens = new TextFile.Token[]
+        protected static TextFile.Token[] welcomeTokens =
         {
             TextFile.CreateTextToken("Excellent, %pcn, welcome to the Archaeologists! "), newLine,
             TextFile.CreateTextToken("We'll get you started on field work as soon as possible. "), newLine,
@@ -40,7 +40,7 @@ namespace DaggerfallWorkshop.Game.Guilds
             TextFile.CreateTextToken("study and improve your skills. "), newLine,
         };
 
-        protected static TextFile.Token[] eligibleTokens = new TextFile.Token[]
+        protected static TextFile.Token[] eligibleTokens =
         {
             TextFile.CreateTextToken("Yes, you seem like a good candidate to assist us "), newLine,
             TextFile.CreateTextToken("in the kinds of field work we engage in. "), newLine, newLine,
@@ -58,7 +58,7 @@ namespace DaggerfallWorkshop.Game.Guilds
             TextFile.CreateTextToken("those with sufficient intellect will be accepted. "), newLine,
         };
 
-        protected static TextFile.Token[] ineligibleLowSkillTokens = new TextFile.Token[]
+        protected static TextFile.Token[] ineligibleLowSkillTokens =
         {
             TextFile.CreateTextToken("I am sad to say that you are not eligible to join our guild."), newLine,
             TextFile.CreateTextToken("We only accept members who have studied languages or the "), newLine,
@@ -66,38 +66,36 @@ namespace DaggerfallWorkshop.Game.Guilds
             TextFile.CreateTextToken("lockpicking and stealth. "), newLine,
         };
 
-        protected static TextFile.Token[] ineligibleBadRepTokens = new TextFile.Token[]
+        protected static TextFile.Token[] ineligibleBadRepTokens =
         {
             TextFile.CreateTextToken("I am sad to say that you are ineligible to join our guild."), newLine,
             TextFile.CreateTextToken("Your reputation amongst scholars is such that we do not "), newLine,
             TextFile.CreateTextToken("wish to be associated with you, even for simple field work. "), newLine,
         };
 
-        protected static TextFile.Token[] ineligibleLowIntTokens = new TextFile.Token[]
+        protected static TextFile.Token[] ineligibleLowIntTokens =
         {
             TextFile.CreateTextToken("Sorry, %pcf, you do not exhibit the intellect we require "), newLine,
             TextFile.CreateTextToken("from our recruits. Perhaps a less scholarly guild, such "), newLine,
             TextFile.CreateTextToken("as the Fighters guild, would be more suited to your aptitude. "), newLine,
         };
 
-        protected static TextFile.Token[] promotionTokens = new TextFile.Token[]
+        protected static TextFile.Token[] promotionTokens =
         {
             TextFile.CreateTextToken("Congratulations, %pcf. Because of your outstanding work for "), newLine,
             TextFile.CreateTextToken("the guild, we have promoted you to the rank of %lev. "), newLine,
             TextFile.CreateTextToken("Keep up the good work, and continue to study hard. "), newLine,
         };
 
-        static int[] intReqs = new int[] { 40, 40, 45, 50, 60, 60, 65, 65, 70, 70 };
+        protected static int[] intReqs = { 40, 45, 50, 55, 60, 60, 65, 65, 70, 70 };
 
-        #endregion
-
-        #region Properties & Data
-
-        static string[] rankTitles = new string[] {
+        protected static string[] rankTitles = {
             "Field Assistant", "Field Agent", "Field Officer", "Field Director", "Apprentice", "Novice", "Journeyman", "Associate", "Professor", "Master"
         };
 
-        static List<DFCareer.Skills> guildSkills = new List<DFCareer.Skills>() {
+        protected static int[] RankLocatorCosts = { 0, 0, 4000, 3000, 2000, 1500, 1200, 800, 600, 400 };
+
+        protected static List<DFCareer.Skills> guildSkills = new List<DFCareer.Skills>() {
                 DFCareer.Skills.Centaurian,
                 DFCareer.Skills.Climbing,
                 DFCareer.Skills.Daedric,
@@ -111,7 +109,7 @@ namespace DaggerfallWorkshop.Game.Guilds
                 DFCareer.Skills.Stealth,
             };
 
-        static List<DFCareer.Skills> trainingSkills = new List<DFCareer.Skills>() {
+        protected static List<DFCareer.Skills> trainingSkills = new List<DFCareer.Skills>() {
                 DFCareer.Skills.Centaurian,
                 DFCareer.Skills.Climbing,
                 DFCareer.Skills.Dodging,
@@ -128,6 +126,10 @@ namespace DaggerfallWorkshop.Game.Guilds
                 DFCareer.Skills.Stealth,
                 DFCareer.Skills.Swimming,
             };
+
+        #endregion
+
+        #region Properties
 
         public override string[] RankTitles { get { return rankTitles; } }
 
@@ -153,6 +155,9 @@ namespace DaggerfallWorkshop.Game.Guilds
         protected override int CalculateNewRank(PlayerEntity playerEntity)
         {
             int newRank = base.CalculateNewRank(playerEntity);
+            int magesRank = GameManager.Instance.GuildManager.GetGuild(FactionFile.GuildGroups.MagesGuild).Rank;
+            if (magesRank > 5)
+                newRank = Mathf.Min(5, rank);   // Cap rank at 5 when above rank 5 in mages guild.
             int peINT = playerEntity.Stats.GetPermanentStatValue(DFCareer.Stats.Intelligence);
             while (peINT < intReqs[newRank])
                 newRank--;
@@ -182,6 +187,18 @@ namespace DaggerfallWorkshop.Game.Guilds
         {
             // Free identification at rank 5
             return (rank >= 5) ? 0 : price;
+        }
+
+        public override bool AvoidDeath()
+        {
+            if (rank >= 7 && Random.Range(0, 50) < rank &&
+                GameManager.Instance.PlayerEntity.FactionData.GetReputation((int) FactionFile.FactionIDs.Stendarr) >= 0 &&
+                !GameManager.Instance.PlayerEnterExit.IsPlayerSubmerged)
+            {
+                DaggerfallUI.AddHUDText(HardStrings.avoidDeath);
+                return true;
+            }
+            return false;
         }
 
         #endregion
@@ -223,23 +240,90 @@ namespace DaggerfallWorkshop.Game.Guilds
         public static void LocatorService()
         {
             Debug.Log("Locator service.");
+
+            // Get the guild instance.
             Guild thisGuild = GameManager.Instance.GuildManager.GetGuild(FactionFile.GuildGroups.GGroup0);
-            DaggerfallTradeWindow tradeWindow = new DaggerfallTradeWindow(DaggerfallUI.UIManager, DaggerfallTradeWindow.WindowModes.Buy, null, thisGuild);
-            tradeWindow.MerchantItems = GetLocatorCharges(16);
-            DaggerfallUI.UIManager.PushWindow(tradeWindow);
+            // Check how many holy items the player has. Offer 16 if no limit.
+            int holyCount = 16;
+            if (thisGuild.Rank < 6)
+            {
+                PlayerEntity playerEntity = GameManager.Instance.PlayerEntity;
+                List<DaggerfallUnityItem> tomes = playerEntity.Items.SearchItems(ItemGroups.ReligiousItems, (int)ReligiousItems.Holy_tome);
+                tomes.AddRange(playerEntity.WagonItems.SearchItems(ItemGroups.ReligiousItems, (int)ReligiousItems.Holy_tome));
+                List<DaggerfallUnityItem> daggers = playerEntity.Items.SearchItems(ItemGroups.ReligiousItems, (int)ReligiousItems.Holy_dagger);
+                daggers.AddRange(playerEntity.WagonItems.SearchItems(ItemGroups.ReligiousItems, (int)ReligiousItems.Holy_dagger));
+                holyCount = tomes.Count + daggers.Count;
+            }
+            if (thisGuild.Rank >= 6 || holyCount > 0)
+            {
+                // Show trade window and a popup message to inform player how many locators they can purchase.
+                DaggerfallTradeWindow tradeWindow = new DaggerfallTradeWindow(DaggerfallUI.UIManager, DaggerfallTradeWindow.WindowModes.Buy, null, thisGuild);
+                tradeWindow.MerchantItems = GetLocatorCharges(holyCount, RankLocatorCosts[thisGuild.Rank]);
+                DaggerfallUI.UIManager.PushWindow(tradeWindow);
+
+                if (thisGuild.Rank < 6)
+                {
+                    tradeWindow.OnTrade += LocatorPurchase_OnTrade;
+                    DaggerfallMessageBox messageBox = new DaggerfallMessageBox(DaggerfallUI.UIManager, tradeWindow, true);
+                    string[] message = {
+                        "We require that you provide the guild with either a holy tome",
+                        "   or holy dagger for each locator charge we supply you.",
+                        " At least until you reach the more senior ranks of the guild.", "",
+                        "  You currently have " + holyCount + " holy items in your possesion, so you",
+                        "    can purchase up to that many devices at this time.",
+                    };
+                    messageBox.SetText(message);
+                    messageBox.ClickAnywhereToClose = true;
+                    messageBox.Show();
+                }
+            }
+            else
+            {
+                DaggerfallUI.MessageBox(new string[] {
+                    "You need to provide the guild either a holy tome or holy dagger",
+                    " for each locator charge we supply you with. You have neither." });
+            }
         }
 
-        static ItemCollection GetLocatorCharges(int number)
+        static ItemCollection GetLocatorCharges(int number, int value)
         {
             ItemCollection charges = new ItemCollection();
             for (int i = 0; i < number; i++)
-                charges.AddItem(new LocatorItem(), ItemCollection.AddPosition.DontCare, true);
+                charges.AddItem(new LocatorItem(value), ItemCollection.AddPosition.DontCare, true);
             return charges;
+        }
+
+        static void LocatorPurchase_OnTrade(DaggerfallTradeWindow.WindowModes mode, int numItems, int value)
+        {
+            if (mode == DaggerfallTradeWindow.WindowModes.Buy && numItems > 0)
+            {   // Remove holy items from player items.
+                ItemCollection coll = GameManager.Instance.PlayerEntity.Items;
+                numItems = RemoveItems(coll, numItems, (int)ReligiousItems.Holy_tome);
+                numItems = RemoveItems(coll, numItems, (int)ReligiousItems.Holy_dagger);
+                coll = GameManager.Instance.PlayerEntity.WagonItems;
+                numItems = RemoveItems(coll, numItems, (int)ReligiousItems.Holy_tome);
+                numItems = RemoveItems(coll, numItems, (int)ReligiousItems.Holy_dagger);
+            }
+            // If this was an attempt to steal, so reduce guild reputation by 25.
+            if (value == 0)
+                GameManager.Instance.PlayerEntity.FactionData.ChangeReputation(factionId, -25, true);
+        }
+
+        static int RemoveItems(ItemCollection coll, int numItems, int itemIndex)
+        {
+            foreach (DaggerfallUnityItem item in coll.SearchItems(ItemGroups.ReligiousItems, itemIndex))
+            {
+                if (numItems <= 0)
+                    return 0;
+                coll.RemoveItem(item);
+                numItems--;
+            }
+            return numItems;
         }
 
         #endregion
 
-            #region Service: Training
+        #region Service: Training
 
         public override int GetTrainingMax(DFCareer.Skills skill)
         {

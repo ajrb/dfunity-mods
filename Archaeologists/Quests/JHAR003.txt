@@ -35,7 +35,7 @@ AcceptQuest:  [1002]
 
 QuestFail:  [1003]
 <ce>         The deadline has passed to bring back the ancient
-<ce>         bones from ___dung_. _qg_
+<ce>         bones from ___dung_. _questgiver_
 <ce>         will not accept failure.
 
 QuestComplete:  [1004]

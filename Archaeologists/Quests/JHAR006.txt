@@ -75,7 +75,7 @@ Clock _2goalplace_ 00:00 0 flag 1 range 0 2
 
 _ending_ task:
                 toting _letter_ and _goal_ clicked
-                give pc _gold_
+                give pc _gold
                 end quest
 
 _2goalplace_ task:

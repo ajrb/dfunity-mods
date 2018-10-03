@@ -1,0 +1,23 @@
+-- Archaeologist mod quest list
+
+-- name:        filename of QRC txt file
+-- group:       guild group from FactionFile.GuildGroups enum - GGroup0
+-- membership:  N=non-member, M=member
+-- minRep:      minimum reputation required to be offered the quest (units can use X wildcard)
+-- notes:
+
+schema: *name, group, membership, minRep, notes
+
+ARCH001, GGroup0, M, 0, test quest based on N0C00Y13
+JHAR001, GGroup0, M, 0, get an adversarial mage's notes
+JHAR002, GGroup0, M, 0, rescue a lost explorer from a dungeon
+JHAR003, GGroup0, M, 0, search for an ancestor's remains
+JHAR004, GGroup0, M, 0, slay a mummy at a farm home
+JHAR005, GGroup0, M, 0, get a trapped trinket from a dungeon
+JHAR006, GGroup0, M, 0, escort an old document to another town
+JHAR007, GGroup0, M, 0, retrieve a normal trinket from a dungeon
+JHAR008, GGroup0, M, 0, retrieve an object stolen by a guild member
+JHAR009, GGroup0, M, 30, defeat a daedra haunting a trinket
+JHAR010, GGroup0, M, 10, retrieve an object from a field agent
+JHAR011, GGroup0, M, 0, translate a document in Giantish
+JHAR012, GGroup0, M, 0, translate a document in Nymph

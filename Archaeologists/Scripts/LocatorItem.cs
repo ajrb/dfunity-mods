@@ -15,12 +15,33 @@ namespace Archaeologists
         internal const int INACTIVE = 1;
         internal const int ACTIVATED = 2;
 
-        //public static LocatorDevice locatorDevice;
+        internal const int BASEVALUE = 600;             // Base value of a locator device. Actual cost will depend on guild rank.
+        internal const int ACTIVATION_EXPLORATION = 25; // Percentage of dungeon that must be explored before device will activate.
 
-        public LocatorItem() : base(ItemGroups.Jewellery, 7)
+        internal const string NAME = "Locator device";
+
+        internal const string DEACTIVATION_MSG =
+            "The locator devices falls quiet before turning to dust in your hand.";
+        internal const string FAIL_ACTIVATE_MSG =
+            "Locator devices can only be activated in dungeon labyrinths.";
+        internal static string[] EXPLORATION_NEEDED_MSG = {
+            "Locator devices can only be activated once you have explored a",
+            "sufficient amount of the dungeon. This is to enable the magic",
+            " in the device to become attuned to this particular dungeon." };
+        internal static string[] ACTIVATION_MSG = {
+            " The locator device vibrates and hums into action.", "",
+            "You now see a bright disk in your mind when looking",
+            "     in the direction of your desired target." };
+
+
+        public LocatorItem() : this(BASEVALUE)
         {
-            shortName = "Locator device";
-            value = 50; //00;
+        }
+
+        public LocatorItem(int baseValue) : base(ItemGroups.Jewellery, 7)
+        {
+            shortName = NAME;
+            value = baseValue;
             nativeMaterialValue = INACTIVE;
         }
 
@@ -31,14 +52,24 @@ namespace Archaeologists
 
         public override bool UseItem(ItemCollection collection)
         {
-            if (GameManager.Instance.PlayerEnterExit.IsPlayerInsideDungeon)
+            if (!GameManager.Instance.PlayerEnterExit.IsPlayerInsideDungeon)
             {
+                DaggerfallUI.MessageBox(FAIL_ACTIVATE_MSG);
+            }
+            else
+            {
+                int exploredPercent = Automap.instance.ExploredPercentage();
+                Debug.Log("Explored: " + exploredPercent);
                 LocatorDevice locatorDevice = Object.FindObjectOfType<LocatorDevice>();
                 if (locatorDevice != null)
                 {
                     if (nativeMaterialValue == INACTIVE)
                     {
-                        if (!locatorDevice.enabled)
+                        if (exploredPercent < ACTIVATION_EXPLORATION)
+                        {
+                            DaggerfallUI.MessageBox(EXPLORATION_NEEDED_MSG);
+                        }
+                        else if (!locatorDevice.enabled)
                         {
                             if (stackCount > 1)
                                 stackCount -= 1;
@@ -49,12 +80,14 @@ namespace Archaeologists
                             activeLocator.nativeMaterialValue = ACTIVATED;
                             collection.AddItem(activeLocator, ItemCollection.AddPosition.DontCare, true);
                             locatorDevice.ActivateDevice();
+                            DaggerfallUI.MessageBox(ACTIVATION_MSG);
                         }
                     }
                     else
                     {
                         collection.RemoveItem(this);
                         locatorDevice.DeactivateDevice();
+                        DaggerfallUI.MessageBox(DEACTIVATION_MSG);
                     }
                 }
                 else
