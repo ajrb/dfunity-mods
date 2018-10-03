@@ -49,16 +49,15 @@ Message:  1021
 <ce> on this sheet mean absolutely nothing to you.
 
 Message:  1022
-<ce> Thankfully, the characters here are legible. Much of it
-<ce> is drawn rather than written, but a few small insertions
-<ce> written near various landmarks show a pattern of
-<ce> migration away from ___dung_.
+<ce> Thankfully, the characters here are legible. A few
+<ce> small insertions drawn near various landmarks show
+<ce> a pattern of migration away from ___dung_.
 
 Message:  1023
 <ce> Your expert skill in Giantish brings out more details.
 <ce> The characters all point to a forced migration due to
 <ce> invading predators based in ___dung_.
-<ce> Words suggesting "danger" and "death" are written near the
+<ce> Symbols suggesting "danger" and "death" are written near the
 <ce> navigational lines. You get a rough sense for the century
 <ce> this was written in.
 
@@ -99,7 +98,7 @@ Item _bigreward_ gold range 1001 to 1399
 
 Person _qgiver_ group Questor male
 
-Place _dung_ remote dungeon
+Place _dung_ remote city
 Place _town_ remote random
 
 Clock _timer_ 00:00 0 flag 17 range 0 2
