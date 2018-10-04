@@ -1,0 +1,150 @@
+Quest: JHAR012
+DisplayName: The Lost Language
+-- Message panels
+QRC:
+
+QuestorOffer:  [1000]
+<ce> As you well know, Nymph is one of the hardest
+<ce> languages to properly document and master.
+<ce> One of our patrons has so little faith in
+<ce> our ability to translate it that he requires
+<ce> the work be done by an actual living creature,
+<ce> not an Archaeologist. Do you have skill enough
+<ce> to converse with them?
+
+RefuseQuest:  [1001]
+<ce> I'm glad you're honest.
+
+AcceptQuest:  [1002]
+<ce> We are temporarily maintaining one specimen in
+<ce> ___res_, inside _res_.
+<ce> Their unpredictable natures require some
+<ce> pacifying measures to stay indoors,
+<ce> which wears on their temperaments.
+<ce> In short, know what you're doing when you
+<ce> arrive. Get her input on this sheet
+<ce> I now give you. I will ask you to return
+<ce> within =timer_ days with an understanding
+<ce> of its general meaning. Farewell.
+
+QuestFail:   [1003]
+<ce> _qgiver_ assigned you to return
+<ce> to ___qgiver_ by now.
+
+QuestComplete:  [1004]
+<ce> Let me see. It appears... yes...
+<ce> Well, it all looks to be in proper order.
+<ce> I can't argue with this. I'm certain our
+<ce> client will be pleased. A job well done,
+<ce> %pcf. Here's payment for your work.
+
+RumorsPostSuccess:   [1007]
+The Archaeologists were hiding a nymph over in ___res_. She's gone now.
+
+QuestLogEntry:  [1010]
+%qdt:
+ _qgiver_ of the Archaeologists
+ needs me to go to ___res_
+ to find a nymph inside _res_
+ and learn from a document in her
+ language. I should return to
+ ___qgiver_ within =timer_ days.
+
+Message:  1011
+<ce> You walk into the residence and immediately
+<ce> attract the nymph's attention. You call out
+<ce> what you believe to be a greeting, but her bad mood
+<ce> carries more weight. Your unexpected arrival
+<ce> appears to have been the last straw.
+
+Message:  1012
+<ce> Having barely crossed the threshold, you whistle
+<ce> into the residence expertly to catch the nymph's
+<ce> attention. She calls out to you, and you respond in like
+<ce> manner. Soon enough, she welcomes you into her temporary home.
+
+Message:  1014
+<ce> You greet the creature warmly and ask for the
+<ce> favor of translation. Though somewhat reticent
+<ce> at being held in this building for such
+<ce> purposes, she decides to help you.
+<ce> She explains what she knows concerning the
+<ce> origin and purpose of the paper, which
+<ce> appears to be a list of alchemical ingredients
+<ce> and their purposes for brewing remedies and
+<ce> poisons. You thank her for her kindness,
+<ce> and she bids you a safe return to your home.
+
+Message:  1020
+<ce> The nymph's eyes smolder. Any hopes of getting
+<ce> further translations from her are now nil.
+
+Message:  1021
+<ce> The nymph is dead. _qgiver_ will be livid.
+
+QBN:
+Item _letter_ letter
+Item _reward_ gold
+
+Person _qgiver_ group Questor male
+
+Place _res_ remote house1
+
+Foe _nymph_ is Nymph
+
+Clock _timer_ 00:00 0 flag 17 range 0 2
+
+--	Quest start-up:
+	get item _letter_
+	start timer _timer_
+	log 1010 step 0
+    place foe _nymph_ at _res_
+    pc at _res_ do _inside_
+
+variable _inside_
+_skilled_ task:
+    when skill Nymph is at least 2
+
+_enter0_ task:
+    when _inside_ and not _skilled_
+    say 1011
+
+_enter1_ task:
+    when _inside_ and _skilled_
+    say 1012
+    restrain foe _nymph_
+    _letter_ used do _trans_
+
+variable _trans_
+_trans1_ task:
+    when _trans_ and not _inj_ and _inside_
+    say 1014
+    start task _done_
+
+variable _done_
+_inj_ task:
+    injured _nymph_
+    say 1020
+    change repute with _qgiver_ by -3
+
+_killed_ task:
+    killed _nymph_
+    say 1021
+    change repute with _qgiver_ by -10
+    end quest
+
+_qgclicked_ task:
+	clicked npc _qgiver_ 
+
+_clearclick_ task:
+	when _qgclicked_ and not _done_
+	clear _qgclicked_ _clearclick_ 
+
+_pcreward_ task:
+	when _qgclicked_ and _done_ 
+    give pc _reward_
+    end quest
+
+_timer_ task:
+	say 1003
+	end quest 
