@@ -42,7 +42,7 @@ QuestComplete:  [1004]
 <ce>                   members of the Archeaologists.
 
 QuestorPostsuccess:  [1008]
-Certainly I remember you, %pcf. You brought me that text, right?
+Certainly I remember you, %pcf. You brought me that ancient text, right?
 
 QuestorPostfailure:  [1009]
 <ce>               I can't imagine a simpler assignment than
@@ -54,7 +54,7 @@ QuestorPostfailure:  [1009]
 
 QuestLogEntry:  [1010]
 %qdt:
- I met _questgiver_ of 
+ I met _questgiver_ of
  the Archaeologists Guild of ___questgiver_
  who sent me on a quest to find an
  ancient magical text hidden in ___dungeon_.
@@ -96,22 +96,22 @@ Clock _traveltime_ 00:00 0 flag 17 range 0 2
 Foe _imps_ is 2 Imp
 
 --	Quest start-up:
-	place item _text_ at _dungeon_ 
-	start timer _traveltime_ 
-	reveal _dungeon_ 
-	log 1010 step 0 
+	place item _text_ at _dungeon_
+	start timer _traveltime_
+	reveal _dungeon_
+	log 1010 step 0
 
 _traveltime_ task:
-	end quest 
+	end quest
 
 _S.01_ task:
-	toting _text_ and _questgiver_ clicked 
-	give pc _reward_ 
-	end quest 
+	toting _text_ and _questgiver_ clicked
+	give pc _reward_
+	end quest
 
 _S.02_ task:
-	clicked item _text_ 
-	_text_ used saying 1020 do _read_ 
+	clicked item _text_
+	_text_ used saying 1020 do _read_
 	say 1040
 
 variable _read_
