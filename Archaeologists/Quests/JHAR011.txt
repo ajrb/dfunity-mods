@@ -1,0 +1,185 @@
+Quest: JHAR011
+DisplayName: On the Shoulders of Giants
+-- Message panels
+QRC:
+
+QuestorOffer:  [1000]
+<ce> We need someone who knows more than the basic
+<ce> greeting grunts of Giantish. There is a document
+<ce> waiting in another city that has lacked
+<ce> translation for far too long. If you can do it,
+<ce> I can pay you =reward_ gold. What do you say?
+
+RefuseQuest:  [1001]
+<ce> Good. Better not to lie about your capabilities.
+
+AcceptQuest:  [1002]
+<ce> One of our agents found the originals, which are being
+<ce> held in storage, and made a copy now waiting in
+<ce> ___town_. Look in _town_.
+<ce> It contains a series of drawings around ____town_
+<ce> which we hope will lead to something of interest.
+<ce> I need not mention that the giants have a long history
+<ce> in the Iliac Bay, so their input is of great worth.
+<ce> Return here in =timer_ days with your explanation.
+
+QuestFail:   [1003]
+<ce> The Archaeologists required your translation
+<ce> of the Giantish document by now.
+
+QuestComplete:  [1004]
+<ce> Thank you for your time, %pct.
+
+RumorsPostSuccess:   [1007]
+There's a Giantish expert over in ___qgiver_.
+
+QuestLogEntry:  [1010]
+%qdt:
+ _qgiver_, the Archaeologists,
+ has assigned me to find a Giantish document
+ in _town_ of ___town_
+ and provide a translation. I have
+ to return to ___qgiver_ within =timer_ days.
+
+Message:  1020
+<ce> This must be the copy left for you.
+
+Message:  1021
+<ce> Try as you might, the primitive scribbles and drawings
+<ce> on this sheet mean absolutely nothing to you.
+
+Message:  1022
+<ce> Thankfully, the characters here are legible. A few
+<ce> small insertions drawn near various landmarks show
+<ce> a pattern of migration away from ___dung_.
+
+Message:  1023
+<ce> Your expert skill in Giantish brings out more details.
+<ce> The characters all point to a forced migration due to
+<ce> invading predators based in ___dung_.
+<ce> Symbols suggesting "danger" and "death" are written near the
+<ce> navigational lines. You get a rough sense for the century
+<ce> this was written in.
+
+Message:  1030
+<ce> You have nothing to say, is that it?
+<ce> You haven't even read the sheet yet.
+<ce> Don't waste my time. Look at it first and then talk to me.
+
+Message:  1031
+<ce> You merely pretended to be an expert on Giantish? What a waste
+<ce> of time. I presume you intended well, but the ignorant tend
+<ce> to overestimate their abilities. I will take the document
+<ce> and thank you for bringing it to me, but you will get
+<ce> no pay. The whole point of this was the translation,
+<ce> not a delivery service. This matter is concluded.
+
+Message:  1032
+<ce> I see, so their movement was leading away from
+<ce> ___dung_? Interesting. Well, your skill
+<ce> certainly speaks for itself. I'm happy to have enlisted
+<ce> your aid in this matter.
+
+Message:  1033
+<ce> You have more to say? Tell on.
+<ce> 
+<ce> This explanation is fabulous. I will have to get this
+<ce> information to some other experts in ____qgiver_.
+<ce> Magnificent work. You didn't manage to find any other
+<ce> clues about who the giants' predators were? Well,
+<ce> at this point perhaps I'm getting greedy. This is an
+<ce> important step forward. I believe this kind of
+<ce> dedication demands a greater reward. Very well done.
+
+QBN:
+Item _letter_ letter
+Item _reward_ gold range 501 to 799
+Item _bigreward_ gold range 1001 to 1399
+
+Person _qgiver_ group Questor male
+
+Place _dung_ remote city
+Place _town_ remote random
+
+Clock _timer_ 00:00 0 flag 17 range 0 2
+
+--	Quest start-up:
+	place item __letter_ at _town_
+	start timer _timer_
+	log 1010 step 0
+
+_grab_ task:
+    clicked item _letter_
+    say 1020
+    _letter_ used do _lr_
+
+_timer_ task:
+	say 1003
+	end quest 
+
+_skilled1_ task:
+    when skill Giantish is at least 30
+
+_skilled2_ task:
+    when skill Giantish is at least 50
+
+_clear1_ task:
+    when _skilled2_ and _grab_
+    clear _skilled1_
+
+variable _lr_
+
+_trans0_ task:
+    when _lr_ and not _skilled1_ and not _skilled2_
+    say 1021
+    clear _grab_
+
+_trans1_ task:
+    when _lr_ and _skilled1_
+    say 1022
+    reveal _dung_ 
+    clear _grab_
+
+_trans2_ task:
+    when _lr_ and _skilled2_
+    say 1023
+    reveal _dung_ 
+    clear _grab_
+
+_qgclicked_ task:
+	clicked npc _qgiver_ 
+
+_refuse_ task:
+	when _qgclicked_ and _grab_
+    say 1030
+	clear _qgclicked_ _clearclick_ 
+
+_clearclick_ task:
+	when _qgclicked_ and not _grab_ and not _trans0_ and not _trans1_ and not _trans2_
+	clear _qgclicked_ _clearclick_ 
+
+_pcreward_ task:
+	when _qgclicked_ and _trans1_ 
+    say 1032
+    start task _victory_
+
+variable _victory_
+_vict1_ task:
+    when _victory_ and not _skilled2_
+	give pc _reward_
+	end quest
+
+_pcbigreward_ task:
+	when _qgclicked_ and _trans2_ 
+    say 1033
+
+_vict2_ task:
+    when _victory_ and _skilled2_
+	give pc _bigreward_
+	end quest
+
+_pcfail_ task:
+	when _qgclicked_ and _trans0_ 
+    say 1031
+	change repute with _qgiver_ by +2
+	end quest

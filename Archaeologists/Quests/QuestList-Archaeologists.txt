@@ -19,3 +19,5 @@ JHAR007, GGroup0, M, 0, retrieve a normal trinket from a dungeon
 JHAR008, GGroup0, M, 0, retrieve an object stolen by a guild member
 JHAR009, GGroup0, M, 30, defeat a daedra haunting a trinket
 JHAR010, GGroup0, M, 10, retrieve an object from a field agent
+JHAR011, GGroup0, M, 0, translate a document in Giantish
+JHAR012, GGroup0, M, 0, translate a document in Nymph
