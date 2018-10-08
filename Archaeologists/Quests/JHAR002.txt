@@ -22,7 +22,7 @@ RefuseQuest:  [1001]
 
 AcceptQuest:  [1002]
 <ce>               Thank you, %pcf, truly. I will admit we
-<ce>               don't have a reward meted out for this
+<ce>               don't have a reward to be meted out for this
 <ce>               action, but I will see what I can do while
 <ce>               you're out. Please bring %g2 here in
 <ce>               no more than =timer_ days. Otherwise I will
@@ -37,7 +37,7 @@ AcceptQuest:  [1002]
 QuestComplete:  [1004]
 <ce>               Dear _rescue_, what a relief it is to
 <ce>               see you. We have a great deal of training to give you
-<ce>               before you'll be doing any spelunking on your own.
+<ce>               before you'll be doing any more spelunking on your own.
 <ce>               After all, not everyone can handle themselves
 <ce>               like %pcn, now can they? Once again, thank you,
 <ce>               %pct. We don't have a material reward available,
@@ -76,19 +76,19 @@ QuestLogEntry:  [1010]
 
 Message:  1011
 <ce>                 _rescue_ looks thoroughly ashamed.
-<ce>                 
+<ce>
 <ce>                 "I told them it wouldn't be necessary.
 <ce>                 How long have I been down here?"
-<ce>                 
+<ce>
 <ce>                 You beckon for %g2 to follow, and %g1
 <ce>                 stands behind you without further argument.
 <--->
 <ce>                 _rescue_'s eyes look
 <ce>                 hollow and full of despair.
-<ce>                 
+<ce>
 <ce>                 "The exit's gone. It was right here. I'm sure of it.
 <ce>                 Now we'll never get out. We're both trapped here."
-<ce>                 
+<ce>
 <ce>                 You strong-arm %g2 into following
 <ce>                 you, and %g1 keeps silence.
 
@@ -107,33 +107,33 @@ Place _dung_ remote dungeon
 Clock _timer_ 00:00 0 flag 17 range 0 2
 
 --	Quest start-up:
-	start timer _timer_ 
-	reveal _dung_ 
-	log 1010 step 0 
-	place npc _rescue_ at _dung_ 
+	start timer _timer_
+	reveal _dung_
+	log 1010 step 0
+	place npc _rescue_ at _dung_
 
 _timer_ task:
-	end quest 
+	end quest
 
 _S.01_ task:
-	clicked npc _rescue_ 
-	hide npc _rescue_ 
-	say 1011 
-	add _rescue_ face 
+	clicked npc _rescue_
+	hide npc _rescue_
+	say 1011
+	add _rescue_ face
 
 _reward_ task:
-	when _qgclicked_ and _S.01_ 
-	give pc nothing 
+	when _qgclicked_ and _S.01_
+	give pc nothing
     change repute with _qgiver_ by +2
-	end quest 
+	end quest
 
 _qgclicked_ task:
-	clicked npc _qgiver_ 
+	clicked npc _qgiver_
 
 _S.04_ task:
-	when _qgclicked_ and not _S.01_ 
-	clear _qgclicked_ _S.04_ 
+	when _qgclicked_ and not _S.01_
+	clear _qgclicked_ _S.04_
 
 _cick_ task:
-	when _S.01_ and _timer_ 
-	say 1012 
+	when _S.01_ and _timer_
+	say 1012
