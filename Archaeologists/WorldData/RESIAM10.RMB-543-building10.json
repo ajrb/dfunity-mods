@@ -1,7 +1,7 @@
 {
     "FactionId": 1000,
     "BuildingType": 11,
-    "Quality": 10,
+    "Quality": 20,
     "RmbSubRecord": {
         "XPos": 1792,
         "ZPos": 1408,
