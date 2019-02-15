@@ -1,0 +1,295 @@
+Quest: JHAR013
+DisplayName: 
+-- Message panels
+QRC:
+
+QuestorOffer:  [1000]
+<ce>  As one of the newer guilds in the Iliac Bay,
+<ce>  the Archaeologists do not carry the sheer
+<ce>  political weight that some other well-
+<ce>  established groups do. We fight periodically
+<ce>  to maintain our place in %crn, and on occasion
+<ce>  the powers that be require some motivation
+<ce>  to allow us to continue here. We hope to count
+<ce>  on your help for one such encounter, if you
+<ce>  feel yourself in the persuading mood.
+
+RefuseQuest:  [1001]
+<ce>  Someone else will take care of it, I trust.
+
+AcceptQuest:  [1002]
+<ce>  The current disagreement regards _nob_,
+<ce>  one of the regional nobles living in ___palace_.
+<ce>  We can go for months without any problem, but in times
+<ce>  like these accusations arise that require face-to-face
+<ce>  discussion. I suspect some family member in the Mages
+<ce>  Guild who's gotten too vocal about our existence.
+<ce>  Whatever the case, I'll hear from you within =timer_ days.
+<ce>  If things go wrong, I will need time to speak to the
+<ce>  others about our future here in ___qgiver_.
+<ce>  Our best wishes go with you.
+
+QuestFail:   [1003]
+<ce>  _qgiver_ sent you to resolve the dispute
+<ce>  with _nob_ and return by now.
+
+QuestComplete:  [1004]
+<ce>  So how did it turn out? Well, that certainly could have
+<ce>  been worse. Sometimes we have to fight day after day merely
+<ce>  to prove our self-evident worth to the people of %crn.
+<ce>  I feel inclined to inform the %t about this harassment.
+<ce>  But that's no concern to you. Take this gold. Your
+<ce>  work has been more than satisfactory.
+
+RumorsPostSuccess:   [1007]
+Them Archaeologists are good people, I says.
+<--->
+The Archaeologists and the Mages Guild are always fighting about stuff. %god knows what.
+
+QuestorPostFailure:   [1009]
+Someone else stepped up after your failure with _nob_, thank %god.
+
+QuestLogEntry:  [1010]
+%qdt:
+ The Archaeologists of ___qgiver_
+ have sent me to ___palace_ to speak
+ to _nob_ concerning some dispute
+ about the guild's place in %crn.
+ I am to return, problem resolved,
+ within =timer_ days.
+
+Message:  1015
+<ce>  "Good day. Your name and purpose?
+<ce>  
+<ce>  "Ah, yes, we have a bit of a disagreement to discuss.
+<ce>  Will you take a look at this sheet? Your so-called
+<ce>  guild has outlasted its lease in ___qgiver_
+<ce>  for over =rand_ months with no excuse provided. As
+<ce>  you can see, the building was to be rented only for
+<ce>  that period, and then you and your kind should have
+<ce>  found some other place in Tamriel to scurry off to.
+<ce>  I have no option but to demand that consequences be
+<ce>  paid for this flaunting of a legitimate contract."
+<ce>  
+<ce>  This document bears faded marks that lead you
+<ce>  to believe it has been altered. Do you attempt to
+<ce>  speak to the fact and foil this apparent plot?
+
+Message:  1016
+<ce>  Your attempts at eloquence are bested.
+<ce>  _nob_ is outraged by your accusations.
+<ce>  
+<ce>  "Is that so? You wish to tell me that I have
+<ce>  falsified this document to try to get you filthy rats
+<ce>  out of %crn? Oh, how pathetic! Good %ra,
+<ce>  I could have you arrested right now for impugning my
+<ce>  honor and the %t would not think it twice.
+<ce>  Consider yourself lucky that I, unlike your kind,
+<ce>  abide by the law. I will have nothing further to
+<ce>  do with you. Go to my clerk _clerk_
+<ce>  in ___ctown_ and pay an administrative fee
+<ce>  of 750 gold, lest I send the town guard marching
+<ce>  into ___qgiver_ to arrest your bunch of
+<ce>  delinquents on the spot. Leave, rodent."
+
+Message:  1017
+<ce>  Yes? I understand that the Archaeologists have an
+<ce>  administrative fee to pay. Do you have that with
+<ce>  you at this time?
+
+Message:  1018
+<ce>  Ah, thank you. I accept your payment.
+<ce>  _nob_ informed me of the matter and I am
+<ce>  happy to settle the account. We will revisit the matter
+<ce>  of the building's lease with the guild's leaders some
+<ce>  other time. Thank you, %ra.
+
+Message:  1019
+%qdt:
+ _nob_ refused to look at the evidence
+ and demanded that I pay a 750 gold bribe
+ to a clerk named _clerk_
+ in ___ctown_ to resolve the matter.
+
+Message:  1020
+<ce>  _nob_ may be clever, but you are more so.
+<ce>  You softly point out a few inconsistencies in the document,
+<ce>  deflecting blame to some errant scribe in another city.
+<ce>  Though %g1 tries to get angry, you maintain control
+<ce>  of the situation.
+<ce>  
+<ce>  "Well. I suppose there is still much to be said
+<ce>  for forbearance, isn't there? The Archaeologists
+<ce>  are citizens of %crn as much as anyone, as much
+<ce>  as it may disappoint civilized folk. Still,
+<ce>  what you say may be the truth. I will instruct
+<ce>  you to go to my servant _serv_ in ___stown_
+<ce>  and say the phrase 'The Archaeologists found
+<ce>  a small _gem_,' and %g1 will understand what
+<ce>  it means. Good day, %ra."
+<ce>  
+<ce>  This noble, bested in debate, wants to
+<ce>  avoid being accused of falsifying documents
+<ce>  before the %t for a petty vendetta. Perhaps
+<ce>  this is the best outcome for all this time.
+
+Message:  1021
+<ce>  _serv_'s ears perk up upon hearing
+<ce>  the code phrase, and %g1 writes something down
+<ce>  on a nearby parchment.
+<ce>  
+<ce>  "This is quite a surprise. Odd to see
+<ce>  _nob_ pull back so far from such
+<ce>  a determined course, isn't it friend? I am happy to see
+<ce>  the Archaeologists persist a little longer in %crn,
+<ce>  and I will process the forbearance order. Good day."
+
+Message:  1022
+%qdt:
+ I caught _nob_ in the lie and
+ was instructed to speak a code phrase
+ to a servant in ___stown_ named
+ _serv_ who can help
+ resolve the Archaeologist's difficulty.
+
+Message:  1025
+<ce>  The evidence and _nob_'s hostility leave you
+<ce>  little defense. Instead of attempting to attack the
+<ce>  merits of the claim, you listen to %g3 accusations
+<ce>  without further dispute.
+<ce>  
+<ce>  "Well, at least one of your kind is willing to listen.
+<ce>  I am frankly upset at their flagrant disobedience
+<ce>  of law and order, but your example is a small ray of
+<ce>  hope. If you will pay a small administrative fee
+<ce>  of 300 gold to my assistant _ast_
+<ce>  in ___atown_, I will ensure that more time is
+<ce>  given before we close the doors of that so-called guild
+<ce>  you belong to. Thank you for submitting to the proper
+<ce>  order of things, %ra."
+
+Message:  1026
+%qdt:
+ Rather than fight _nob_'s rather
+ fraudulent claims, I submitted to %g3
+ judgment and was directed to pay a bribe
+ of 300 gold to an assistant named
+ _ast_ in ___atown_ to
+ forbear actions against the Archaeologists.
+
+QBN:
+Item _reward_ gold
+Item _rand_ gold range 5 to 12
+Item _gem_ gem
+
+Person _qgiver_ group Questor male
+Person _nob_ faction Random_Noble
+Person _clerk_ group Librarian
+Person _ast_ group Librarian
+Person _serv_ group Librarian
+
+Place _palace_ remote palace
+Place _ctown_ remote library
+Place _atown_ remote library
+Place _stown_ remote library
+
+Clock _timer_ 00:00 0 flag 1 range 0 2
+
+--	Quest start-up:
+	start timer _timer_ 
+	log 1010 step 0 
+	place npc _nob_ at _palace_
+
+_talk_ task:
+    clicked npc _nob_
+    prompt 1015 yes _begin_ no _submit_
+
+_begin_ task:
+    pick one of _go1_ _go2_ _go3_
+
+_check1_ task:
+   when skill Etiquette is at least 20
+
+_check2_ task:
+    when skill Etiquette is at least 30
+
+_check3_ task:
+    when skill Etiquette is at least 40
+
+variable _go1_
+variable _go2_
+variable _go3_
+
+_c1_ task:
+    when _check1_ and _go1_
+    start task _victory_
+
+_c2_ task:
+    when _check2_ and _go2_
+    start task _victory_
+
+_c3_ task:
+    when _check3_ and _go3_
+    start task _victory_
+
+_d1_ task:
+    when not _check1_ and _go1_
+    start task _fail_
+
+_d2_ task:
+    when not _check2_ and _go2_
+    start task _fail_
+
+_d3_ task:
+    when not _check3_ and _go3_
+    start task _fail_
+
+_victory_ task:
+    say 1020
+    log 1022 step 1
+    place npc _serv_ at _stown_
+
+_stalk_ task:
+    clicked npc _serv_
+    say 1021
+    start task _winner_
+
+variable _winner_
+_fail_ task:
+    say 1016
+    log 1019 step 1
+    place npc _clerk_ at _ctown_
+
+_ctalk_ task:
+    clicked _clerk_ and at least 750 gold otherwise do _nogold_
+    say 1018
+    start task _winner_
+
+_nogold_ task:
+    say 1017
+
+_submit_ task:
+    say 1025
+    log 1026 step 1
+    place npc _ast_ at _atown_
+
+_atalk_ task:
+    clicked _ast_ and at least 300 gold otherwise do _nogold_
+    say 1018
+    start task _winner_
+
+_qgclicked_ task:
+	clicked npc _qgiver_ 
+
+_clearclick_ task:
+	when _qgclicked_ and not _winner_ 
+	clear _qgclicked_ _clearclick_ 
+
+_pcreward_ task:
+	when _qgclicked_ and _winner_ 
+	give pc _reward_
+	end quest
+
+_timer_ task:
+    say 1003
+    end quest

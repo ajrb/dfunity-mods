@@ -22,3 +22,4 @@ JHAR009, GGroup0, M, 30, 0, defeat a daedra haunting a trinket
 JHAR010, GGroup0, M, 15, 0, retrieve an object from a field agent
 JHAR011, GGroup0, M, 0, 0, translate a document in Giantish
 JHAR012, GGroup0, M, 0, 0, translate a document in Nymph
+JHAR013, GGroup0, M, 10, 0, get forbearance from an angry noble
