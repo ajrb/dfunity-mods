@@ -7,8 +7,9 @@ QuestorOffer:  [1000]
 <ce>	Our association attracts all manner of people,
 <ce>	and not all merit our trust. Occasionally we make
 <ce>	mistakes. I need someone to retrieve a _tri_
-<ce>	one of our members, or former members,
-<ce>	has absconded with. Will you recover it?
+<ce>	one of our members, or former members, has
+<ce>	absconded with. Will you exact a punishment
+<ce>	and recover what was has been stolen?
 
 RefuseQuest:  [1001]
 <ce>	How shall we rely on you?
