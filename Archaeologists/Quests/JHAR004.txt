@@ -5,58 +5,59 @@ DisplayName: Site Cleanup
 QRC:
 
 QuestorOffer:  [1000]
-<ce>                  We recently sent a pair of members off to
-<ce>                  ___rural_ to follow a lead on
-<ce>                  some excavation they were undertaking in
-<ce>                  a remote site. According to their report, they
-<ce>                  were using some sort of magic to detect
-<ce>                  enchantments or life or some other matter
-<ce>                  when something dead began moving and
-<ce>                  uprooting itself. Since then we've been informed
-<ce>                  that the mummy is not returning to sleep, and
-<ce>                  the property owners are rather furious.
-<ce>                  Are you capable of returning the dead to
-<ce>                  their proper place?
+<ce>  We recently sent a pair of members off to
+<ce>  ___rural_ to follow a lead on
+<ce>  some excavation they were undertaking in
+<ce>  a remote site. According to their report, they
+<ce>  were using some sort of magic to detect
+<ce>  enchantments or life or some other matter
+<ce>  when something dead began moving and
+<ce>  uprooting itself. Since then we've been informed
+<ce>  that the mummy is not returning to sleep, and
+<ce>  the property owners are rather furious.
+<ce>  Are you capable of returning the dead to
+<ce>  their proper place?
 
 RefuseQuest:  [1001]
-<ce>              Well, at least you're honest. The last person
-<ce>              we sent didn't make it back alive.
+<ce>  Well, at least you're honest. The last person
+<ce>  we sent didn't make it back alive.
 <--->
-<ce>              We need this resolved, now.
+<ce>  We need this resolved, now.
 <--->
-<ce>              This is a simple matter. Why won't anyone accept it?
+<ce>  This is a simple matter. Why won't anyone accept it?
 
 AcceptQuest:  [1002]
-<ce>              Thank you. The town guard, for whatever reason,
-<ce>              refuses to take responsibility in this matter, so we
-<ce>              can only depend on persons such as yourself to
-<ce>              do the clean up. We have to give a report to
-<ce>              some officials of %crn within =timer_
-<ce>              days, and I need you to have fixed the problem and
-<ce>              returned by that time. I'll have _reward_ gold pieces
-<ce>              here for you when that happens. And do be sure to
-<ce>              stop by a temple if the battle turns grievous, would you?
-<ce>              Disease can be an awful thing.
+<ce>  Thank you. The %t, for whatever reason, refuses
+<ce>  to take responsibility in this matter, so we
+<ce>  can only depend on persons such as yourself to
+<ce>  do the clean up. We have to give a report to
+<ce>  some officials of %crn within =timer_
+<ce>  days, and I need you to have fixed the problem and
+<ce>  returned by that time. I'll have _reward_ gold pieces
+<ce>  here for you when that happens. And do be sure to
+<ce>  stop by a temple if the battle turns grievous, would you?
+<ce>  Disease can be an awful thing. Best of luck
+<ce>  on your way to ___rural_.
 
 QuestFail:  [1003]
-<ce>              You were supposed to slay the mummy at
-<ce>              ___rural_ and return to ___questgiver_ by now.
+<ce>  You were supposed to slay the mummy at
+<ce>  ___rural_ and return to ___questgiver_ by now.
 
 QuestComplete:  [1004]
-<ce>              How was it? I assumed it would be a fairly standard matter,
-<ce>              once we got past the "dead rising and ambling about"
-<ce>              statement. Yet another success on your guild record.
-<ce>              Take the gold and my thanks.
+<ce>  How was it? I assumed it would be a fairly standard matter,
+<ce>  once we got past the "dead rising and ambling about"
+<ce>  statement. Yet another success on your guild record.
+<ce>  Take the gold and my thanks.
 <--->
-<ce>              I certainly hope you don't feel we're merely using you for
-<ce>              menial tasks. These matters are just as important as
-<ce>              historical excavations. We maintain our good name through
-<ce>              guild members such as yourself. Here is the gold I promised,
-<ce>              which I hope you accept with my thanks.
+<ce>  I certainly hope you don't feel we're merely using you for
+<ce>  menial tasks. These matters are just as important as
+<ce>  historical excavations. We maintain our good name through
+<ce>  guild members such as yourself. Here is the gold I promised,
+<ce>  which I hope you accept with my thanks.
 
 Message: 1020
-<ce>              The mummy has been defeated. You hope there's no
-<ce>              actual reason it would come back a second time.
+<ce>  The mummy has been defeated. You hope there's no
+<ce>  actual reason it would come back a second time.
 
 Message:  1030
 %qdt:
@@ -87,14 +88,14 @@ variable _outside_
 
 _spawn_ task:
 	when _outside_ and not _slain_
-                start task _begin_
+  start task _begin_
 
 _begin_ task:
-                create foe _enemy_ every 1 minutes 1 times with 100% success
+  create foe _enemy_ every 0 minutes 1 times with 100% success
 
 _slain_ task:
 	killed 1 _enemy_
-                say 1020
+  say 1020
 
 _qgclicked_ task:
 	clicked npc _questgiver_ 
@@ -109,5 +110,5 @@ _pcreward_ task:
 	end quest 
 
 _timer_ task:
-          say 1003
+  say 1003
 	end quest

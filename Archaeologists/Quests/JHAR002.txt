@@ -9,7 +9,7 @@ QuestorOffer:  [1000]
 <ce>               Nevertheless, occasionally we have a new recruit
 <ce>               who, now trained to explore the great wild world,
 <ce>               forgets such basic skills as remembering how to find
-<ce>               the exit in a deep, dark cave. Would you be willing
+<ce>               the exit in a dark cave. Would you be willing
 <ce>               to go look for _rescue_, who has
 <ce>               entirely disappeared within ___dung_?
 
