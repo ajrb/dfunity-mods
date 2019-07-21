@@ -1,5 +1,5 @@
 // Project:         Archaeologists Guild for Daggerfall Unity (http://www.dfworkshop.net)
-// Copyright:       Copyright (C) 2018 Hazelnut
+// Copyright:       Copyright (C) 2019 Hazelnut
 // License:         MIT License (http://www.opensource.org/licenses/mit-license.php)
 // Author:          Hazelnut
 
@@ -11,6 +11,7 @@ using UnityEngine;
 using DaggerfallWorkshop.Game.UserInterfaceWindows;
 using DaggerfallWorkshop.Game.Items;
 using Archaeologists;
+using DaggerfallConnect.FallExe;
 
 namespace DaggerfallWorkshop.Game.Guilds
 {
@@ -37,25 +38,25 @@ namespace DaggerfallWorkshop.Game.Guilds
             TextFile.CreateTextToken("of %lev, however, with hard work and dedication, "), newLine,
             TextFile.CreateTextToken("I'm sure that you'll be recognised for promotion soon enough. "), newLine,
             TextFile.CreateTextToken("Please ensure you make use of our training facilities to "), newLine,
-            TextFile.CreateTextToken("study and improve your skills. "), newLine,
+            TextFile.CreateTextToken("study and improve your skills, and accept this mark of recall. "), newLine,
         };
 
         protected static TextFile.Token[] eligibleTokens =
         {
-            TextFile.CreateTextToken("Yes, you seem like a good candidate to assist us "), newLine,
-            TextFile.CreateTextToken("in the kinds of field work we engage in. "), newLine, newLine,
-            TextFile.CreateTextToken("We offer classes in all the various obscure languages of"), newLine,
-            TextFile.CreateTextToken("Tamriel, as well as some of the more practical skills "), newLine,
+            TextFile.CreateTextToken("Yes, you seem like a suitable candidate to assist us in"), newLine,
+            TextFile.CreateTextToken("the kind of field work we require for our research. "), newLine, newLine,
+            TextFile.CreateTextToken("We offer classes in all the various obscure languages "), newLine,
+            TextFile.CreateTextToken("of Tamriel, as well as some of the more practical skills "), newLine,
             TextFile.CreateTextToken("required in the field while searching remote locations "), newLine,
             TextFile.CreateTextToken("for interesting antiquities and rare artifacts. "), newLine, newLine,
-            TextFile.CreateTextToken("Once you rise in our ranks to the title of Field Officer, "), newLine,
-            TextFile.CreateTextToken("you will gain access to our magicka-powered locator device "), newLine,
-            TextFile.CreateTextToken("to use for whatever purpose you wish. Until then you will be "), newLine,
-            TextFile.CreateTextToken("restricted to a single charge for each task we set you. "), newLine, newLine,
+            TextFile.CreateTextToken("Once you rise in our ranks to the title of Field Officer, you"), newLine,
+            TextFile.CreateTextToken("will gain access to charges for our magicka-powered locator"), newLine,
+            TextFile.CreateTextToken("device to purchase for whatever purpose you wish. Until then"), newLine,
+            TextFile.CreateTextToken("you will be restricted to a single charge for each task. "), newLine, newLine,
             TextFile.CreateTextToken("Beyond field work, our higher ranks are open to the more "), newLine,
-            TextFile.CreateTextToken("accomplished scholars among us, and provide a great reduction "), newLine,
-            TextFile.CreateTextToken("in the cost of locator device charges. Be aware, only "), newLine,
-            TextFile.CreateTextToken("those with sufficient intellect will be accepted. "), newLine,
+            TextFile.CreateTextToken("accomplished scholars among us, and provide a great "), newLine,
+            TextFile.CreateTextToken("reduction to the cost of locator device charges. Note, "), newLine,
+            TextFile.CreateTextToken("only those with sufficient intellect will be promoted. "), newLine,
         };
 
         protected static TextFile.Token[] ineligibleLowSkillTokens =
@@ -336,6 +337,24 @@ namespace DaggerfallWorkshop.Game.Guilds
 
 
         #region Joining
+
+        override public void Join()
+        {
+            base.Join();
+            // Give recall item
+            DaggerfallUnityItem item = ItemBuilder.CreateItem(ItemGroups.Jewellery, (int)Jewellery.Mark);
+            item.legacyMagic = new DaggerfallEnchantment[]
+            {
+                new DaggerfallEnchantment()
+                {
+                    type = EnchantmentTypes.CastWhenUsed,
+                    param = 94
+                }
+            };
+            item.shortName = "%it of Recall";
+            item.IdentifyItem();
+            GameManager.Instance.PlayerEntity.Items.AddItem(item);
+        }
 
         public override bool IsEligibleToJoin(PlayerEntity playerEntity)
         {
