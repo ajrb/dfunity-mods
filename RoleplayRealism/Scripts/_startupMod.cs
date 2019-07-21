@@ -100,13 +100,15 @@ namespace RoleplayRealism
                 double adjustedDamage = damage;
                 if (weaponAnimTime < 800)
                     adjustedDamage *= (double)weaponAnimTime / 800;
-                else if (weaponAnimTime > 5000)
+                else if (weaponAnimTime < 5000)
+                    adjustedDamage = damage;
+                else if (weaponAnimTime < 6000)
                     adjustedDamage *= 0.85;
-                else if (weaponAnimTime > 6000)
+                else if (weaponAnimTime < 8000)
                     adjustedDamage *= 0.75;
-                else if (weaponAnimTime > 8000)
+                else if (weaponAnimTime < 9000)
                     adjustedDamage *= 0.5;
-                else if (weaponAnimTime > 9000)
+                else if (weaponAnimTime >= 9000)
                     adjustedDamage *= 0.25;
 
                 Debug.LogFormat("Adjusted Weapon Damage for bow drawing from {0} to {1} (t={2}ms)", damage, (int)adjustedDamage, weaponAnimTime);
