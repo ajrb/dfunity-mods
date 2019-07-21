@@ -1,0 +1,27 @@
+{
+    "Version": "1.0",
+    "Sections": [
+        {
+            "Name": "Modules",
+            "Description": "Enable or disable the optional modules contained in this mod",
+            "IsAdvanced": false,
+            "Keys": [
+                {
+                    "Value": true,
+                    "Name": "bedSleeping",
+                    "Description": "Allows sleep to be initiated by clicking on a bed",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
+                },
+                {
+                    "Value": true,
+                    "Name": "advancedArchery",
+                    "Description": "Alters to-hit and damage done by arrows depending on the length of pull",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
+                }
+            ],
+            "$version": "v1"
+        }
+    ]
+}

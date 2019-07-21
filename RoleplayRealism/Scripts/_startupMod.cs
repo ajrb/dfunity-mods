@@ -10,6 +10,7 @@ using DaggerfallWorkshop.Game.Items;
 using DaggerfallWorkshop.Game.UserInterface;
 using DaggerfallWorkshop.Game.UserInterfaceWindows;
 using DaggerfallWorkshop.Game.Utility.ModSupport;
+using DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings;
 using UnityEngine;
 
 namespace RoleplayRealism
@@ -19,7 +20,11 @@ namespace RoleplayRealism
         [Invoke(StateManager.StateTypes.Start, 0)]
         public static void InitStart(InitParams initParams)
         {
-            InitMod();
+            ModSettings settings = initParams.Mod.GetSettings();
+            bool bedSleeping = settings.GetBool("Modules", "bedSleeping");
+            bool archery = settings.GetBool("Modules", "advancedArchery");
+
+            InitMod(bedSleeping, archery);
         }
 
         /* 
@@ -32,20 +37,26 @@ namespace RoleplayRealism
         */
         void Awake()
         {
-            InitMod(true);
+            InitMod(true, true, true);
         }
 
-        public static void InitMod(bool debug = false)
+        public static void InitMod(bool bedSleeping, bool archery, bool debug = false)
         {
             Debug.Log("Begin mod init: RoleplayRealism");
 
-            PlayerActivate.RegisterModelActivation(41000, BedActivation);
-            PlayerActivate.RegisterModelActivation(41001, BedActivation);
-            PlayerActivate.RegisterModelActivation(41002, BedActivation);
+            if (bedSleeping)
+            {
+                PlayerActivate.RegisterModelActivation(41000, BedActivation);
+                PlayerActivate.RegisterModelActivation(41001, BedActivation);
+                PlayerActivate.RegisterModelActivation(41002, BedActivation);
+            }
 
-            // Override adjust to hit mod and damage formulas
-            FormulaHelper.formula_2de_2i.Add("AdjustWeaponHitChanceMod", AdjustWeaponHitChanceMod);
-            FormulaHelper.formula_2de_2i.Add("AdjustWeaponAttackDamage", AdjustWeaponAttackDamage);
+            if (archery)
+            {
+                // Override adjust to hit and damage formulas
+                FormulaHelper.formula_2de_2i.Add("AdjustWeaponHitChanceMod", AdjustWeaponHitChanceMod);
+                FormulaHelper.formula_2de_2i.Add("AdjustWeaponAttackDamage", AdjustWeaponAttackDamage);
+            }
 
             Debug.Log("Finished mod init: RoleplayRealism");
         }
@@ -70,9 +81,9 @@ namespace RoleplayRealism
                     adjustedHitChanceMod = hitChanceMod;
                 else if (weaponAnimTime < 2000)
                     adjustedHitChanceMod += 10;
-                else if (weaponAnimTime > 4000)
+                else if (weaponAnimTime > 5000)
                     adjustedHitChanceMod -= 10;
-                else if (weaponAnimTime > 6000)
+                else if (weaponAnimTime > 8000)
                     adjustedHitChanceMod -= 20;
 
                 Debug.LogFormat("Adjusted Weapon HitChanceMod for bow drawing from {0} to {1} (t={2}ms)", hitChanceMod, adjustedHitChanceMod, weaponAnimTime);
@@ -87,21 +98,20 @@ namespace RoleplayRealism
             if (weaponAnimTime > 0 && (weapon.TemplateIndex == (int)Weapons.Short_Bow || weapon.TemplateIndex == (int)Weapons.Long_Bow))
             {
                 double adjustedDamage = damage;
-                if (weaponAnimTime < 1000)
-                    adjustedDamage *= (double)weaponAnimTime / 1000;
-                else if (weaponAnimTime > 4000)
+                if (weaponAnimTime < 800)
+                    adjustedDamage *= (double)weaponAnimTime / 800;
+                else if (weaponAnimTime > 5000)
                     adjustedDamage *= 0.85;
                 else if (weaponAnimTime > 6000)
                     adjustedDamage *= 0.75;
                 else if (weaponAnimTime > 8000)
                     adjustedDamage *= 0.5;
-                else if (weaponAnimTime > 10000)
+                else if (weaponAnimTime > 9000)
                     adjustedDamage *= 0.25;
 
                 Debug.LogFormat("Adjusted Weapon Damage for bow drawing from {0} to {1} (t={2}ms)", damage, (int)adjustedDamage, weaponAnimTime);
                 return (int)adjustedDamage;
             }
-            Debug.Log("AdjustWeaponAttackDamage for bow drawing. " + damage);
 
             return damage;
         }
