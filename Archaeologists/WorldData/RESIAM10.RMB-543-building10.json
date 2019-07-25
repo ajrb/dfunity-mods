@@ -57,7 +57,7 @@
                 "Num3dObjectRecords": 47,
                 "NumFlatObjectRecords": 17,
                 "NumSection3Records": 27,
-                "NumPeopleRecords": 8,
+                "NumPeopleRecords": 9,
                 "NumDoorRecords": 7
             },
             "Block3dObjectRecords": [
@@ -828,6 +828,16 @@
                     "TextureRecord": 22,
                     "FactionID": 1002,
                     "Flags": 32
+                },
+                {
+                    "Position": 9,
+                    "XPos": -565,
+                    "YPos": 1,
+                    "ZPos": -470,
+                    "TextureArchive": 182,
+                    "TextureRecord": 24,
+                    "FactionID": 1003,
+                    "Flags": 0
                 },
             ],
             "BlockDoorRecords": [

@@ -21,6 +21,7 @@ namespace DaggerfallWorkshop.Game.Guilds
 
         private const int factionId = 1000;
         private const int LocatorServiceId = 1001;
+        private const int RepairServiceId = 1003;
 
         #endregion
 
@@ -228,7 +229,9 @@ namespace DaggerfallWorkshop.Game.Guilds
                 case GuildServices.DaedraSummoning:
                     return (rank >= 7);
             }
-            if ((int) service == LocatorServiceId)
+            if ((int)service == LocatorServiceId)
+                return (rank >= 2);
+            if ((int)service == RepairServiceId)
                 return (rank >= 2);
 
             return false;
@@ -270,8 +273,8 @@ namespace DaggerfallWorkshop.Game.Guilds
                         "We require that you provide the guild with either a holy tome",
                         "   or holy dagger for each locator charge we supply you.",
                         " At least until you reach the more senior ranks of the guild.", "",
-                        "  You currently have " + holyCount + " holy items in your possesion, so you",
-                        "    can purchase up to that many devices at this time.",
+                        "  You currently have " + holyCount + " holy items in your posession, so you",
+                        "    can purchase up to that many locators at this time.",
                     };
                     messageBox.SetText(message);
                     messageBox.ClickAnywhereToClose = true;
@@ -305,7 +308,7 @@ namespace DaggerfallWorkshop.Game.Guilds
                 numItems = RemoveItems(coll, numItems, (int)ReligiousItems.Holy_tome);
                 numItems = RemoveItems(coll, numItems, (int)ReligiousItems.Holy_dagger);
             }
-            // If this was an attempt to steal, so reduce guild reputation by 25.
+            // If this was an attempt to steal, then reduce guild reputation by 25.
             if (value == 0)
                 GameManager.Instance.PlayerEntity.FactionData.ChangeReputation(factionId, -25, true);
         }
@@ -335,6 +338,20 @@ namespace DaggerfallWorkshop.Game.Guilds
 
         #endregion
 
+        #region Service: Repair Recall Mark
+
+        public static void RepairMarkService()
+        {
+            Debug.Log("Repair Recall Mark service.");
+
+            int cost = 1000;
+            DaggerfallUI.MessageBox(new string[] {
+                "Repairing your mark of recall will cost " + cost + " gold pieces,",
+                " Do you want to repair your mark?" });
+        }
+
+
+        #endregion
 
         #region Joining
 

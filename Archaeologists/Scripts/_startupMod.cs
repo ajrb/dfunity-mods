@@ -57,7 +57,7 @@ namespace Archaeologists
                 race = -1,
                 sgroup = 2,
                 ggroup = 0,
-                children = new List<int>() { 1001 }
+                children = new List<int>() { 1001, 1002, 1003 }
             });
             success = FactionFile.RegisterCustomFaction(1001, new FactionFile.FactionData()
             {
@@ -89,6 +89,21 @@ namespace Archaeologists
                 ggroup = 0,
                 children = null
             }) && success;
+            success = FactionFile.RegisterCustomFaction(1003, new FactionFile.FactionData()
+            {
+                id = 1003,
+                parent = 1000,
+                type = 2,
+                name = "The Archaeologist Repairers",
+                summon = -1,
+                region = -1,
+                power = 25,
+                face = -1,
+                race = -1,
+                sgroup = 2,
+                ggroup = 0,
+                children = null
+            }) && success;
             if (success)
             {
                 // Register the Guild class
@@ -102,6 +117,9 @@ namespace Archaeologists
                 ItemCollection.RegisterCustomItem(typeof(LocatorItem).ToString(), typeof(LocatorItem));
                 // Register the daedra summoning service
                 Services.RegisterGuildService(1002, GuildServices.DaedraSummoning);
+                // Register the custom recharge service for teleport mark
+                Services.RegisterGuildService(1003, ArchaeologistsGuild.RepairMarkService, "Repair Recall Mark");
+
                 // Register the quest list
                 if (!debug)
                     QuestListsManager.RegisterQuestList("Archaeologists");
