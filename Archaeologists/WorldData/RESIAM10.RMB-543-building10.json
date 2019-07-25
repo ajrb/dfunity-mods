@@ -8,7 +8,7 @@
         "YRotation": 1536,
         "Exterior": {
             "Header": {
-                "Num3dObjectRecords": 1,
+                "Num3dObjectRecords": 3,
                 "NumFlatObjectRecords": 0,
                 "NumSection3Records": 0,
                 "NumPeopleRecords": 0,
@@ -23,6 +23,28 @@
                     "YPos": 0,
                     "ZPos": 0,
                     "YRotation": 0
+                },
+                {
+                    "ModelId": "43756",
+                    "ModelIdNum": 43756,
+                    "ObjectType": 0,
+                    "XPos": -468,
+                    "YPos": -62,
+                    "ZPos": -604,
+                    "YRotation": -977,
+                    "XRotation": 0,
+                    "ZRotation": 0
+                },
+                {
+                    "ModelId": "43756",
+                    "ModelIdNum": 43756,
+                    "ObjectType": 0,
+                    "XPos": 321,
+                    "YPos": -62,
+                    "ZPos": -345,
+                    "YRotation": -990,
+                    "XRotation": 0,
+                    "ZRotation": 0
                 }
             ],
             "BlockFlatObjectRecords": [],
