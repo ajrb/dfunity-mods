@@ -64,7 +64,7 @@ namespace Archaeologists
                 id = 1001,
                 parent = 1000,
                 type = 2,
-                name = "The Archaeologist Locators",
+                name = "Archaeologist Locators",
                 summon = -1,
                 region = -1,
                 power = 30,
@@ -79,7 +79,7 @@ namespace Archaeologists
                 id = 1002,
                 parent = 1000,
                 type = 2,
-                name = "The Archaeologist Summoners",
+                name = "Archaeologist Summoners",
                 summon = -1,
                 region = -1,
                 power = 25,
@@ -94,7 +94,7 @@ namespace Archaeologists
                 id = 1003,
                 parent = 1000,
                 type = 2,
-                name = "The Archaeologist Repairers",
+                name = "Archaeologist Repairers",
                 summon = -1,
                 region = -1,
                 power = 25,
@@ -109,6 +109,7 @@ namespace Archaeologists
                 // Register the Guild class
                 if (!GuildManager.RegisterCustomGuild(FactionFile.GuildGroups.GGroup0, typeof(ArchaeologistsGuild)))
                     throw new System.Exception("GuildGroup GGroup0 is already in use, unable to register Archaeologists Guild.");
+
                 // Register the quest service id
                 Services.RegisterGuildService(1000, GuildServices.Quests);
                 // Register the custom locator service
@@ -117,7 +118,7 @@ namespace Archaeologists
                 ItemCollection.RegisterCustomItem(typeof(LocatorItem).ToString(), typeof(LocatorItem));
                 // Register the daedra summoning service
                 Services.RegisterGuildService(1002, GuildServices.DaedraSummoning);
-                // Register the custom recharge service for teleport mark
+                // Register the custom repair service for teleport mark
                 Services.RegisterGuildService(1003, ArchaeologistsGuild.RepairMarkService, "Repair Recall Mark");
 
                 // Register the quest list

@@ -12,6 +12,7 @@ using DaggerfallWorkshop.Game.UserInterfaceWindows;
 using DaggerfallWorkshop.Game.Items;
 using Archaeologists;
 using DaggerfallConnect.FallExe;
+using DaggerfallWorkshop.Game.UserInterface;
 
 namespace DaggerfallWorkshop.Game.Guilds
 {
@@ -22,6 +23,9 @@ namespace DaggerfallWorkshop.Game.Guilds
         private const int factionId = 1000;
         private const int LocatorServiceId = 1001;
         private const int RepairServiceId = 1003;
+
+        const int notEnoughGoldId = 454;
+        const int recallEffectId = 94;
 
         #endregion
 
@@ -39,7 +43,7 @@ namespace DaggerfallWorkshop.Game.Guilds
             TextFile.CreateTextToken("of %lev, however, with hard work and dedication, "), newLine,
             TextFile.CreateTextToken("I'm sure that you'll be recognised for promotion soon enough. "), newLine,
             TextFile.CreateTextToken("Please ensure you make use of our training facilities to "), newLine,
-            TextFile.CreateTextToken("study and improve your skills, and accept this mark of recall. "), newLine,
+            TextFile.CreateTextToken("study and improve your skills, and accept this Mark of Recall. "), newLine,
         };
 
         protected static TextFile.Token[] eligibleTokens =
@@ -241,7 +245,7 @@ namespace DaggerfallWorkshop.Game.Guilds
 
         #region Service: Locator
 
-        public static void LocatorService()
+        public static void LocatorService(IUserInterfaceWindow window = null)
         {
             Debug.Log("Locator service.");
 
@@ -340,16 +344,72 @@ namespace DaggerfallWorkshop.Game.Guilds
 
         #region Service: Repair Recall Mark
 
-        public static void RepairMarkService()
+        public static void RepairMarkService(IUserInterfaceWindow window = null)
         {
             Debug.Log("Repair Recall Mark service.");
 
-            int cost = 1000;
-            DaggerfallUI.MessageBox(new string[] {
-                "Repairing your mark of recall will cost " + cost + " gold pieces,",
-                " Do you want to repair your mark?" });
+            DaggerfallUnityItem markOfRecall = FindRecallMark();
+            if (markOfRecall == null)
+            {
+                DaggerfallUI.MessageBox("You don't have your Mark of Recall on you.");
+            }
+            else
+            {
+                int cost = CalculateRepairCost(markOfRecall);
+                if (GameManager.Instance.PlayerEntity.GetGoldAmount() < cost)
+                {
+                    DaggerfallUI.MessageBox(notEnoughGoldId);
+                }
+                else if (cost == 0)
+                {
+                    DaggerfallUI.MessageBox("Your Mark of Recall shows no signs of wear, and doesn't need any repairs.");
+                }
+                else
+                {
+                    string message = "Repairing your Mark of Recall will cost " + cost + " gold pieces, is that okay?";
+                    DaggerfallMessageBox confirmRepairBox = new DaggerfallMessageBox(DaggerfallUI.UIManager, DaggerfallMessageBox.CommonMessageBoxButtons.YesNo, message, window);
+                    confirmRepairBox.OnButtonClick += ConfirmRepairBox_OnButtonClick;
+                    confirmRepairBox.Show();
+                }
+                    
+            }
         }
 
+        static void ConfirmRepairBox_OnButtonClick(DaggerfallMessageBox sender, DaggerfallMessageBox.MessageBoxButtons messageBoxButton)
+        {
+            sender.CloseWindow();
+            if (messageBoxButton == DaggerfallMessageBox.MessageBoxButtons.Yes)
+            {
+                DaggerfallUnityItem markOfRecall = FindRecallMark();
+                if (markOfRecall != null)
+                {
+                    int cost = CalculateRepairCost(markOfRecall);
+                    GameManager.Instance.PlayerEntity.DeductGoldAmount(cost);
+                    markOfRecall.currentCondition = markOfRecall.maxCondition;
+                    DaggerfallUI.MessageBox("Your Mark of Recall is now as good as new.");
+                }
+            }
+        }
+
+        private static DaggerfallUnityItem FindRecallMark()
+        {
+            List<DaggerfallUnityItem> marks = GameManager.Instance.PlayerEntity.Items.SearchItems(ItemGroups.Jewellery, (int)Jewellery.Mark);
+            if (marks.Count > 0)
+                foreach (DaggerfallUnityItem item in marks)
+                    if (item.IsEnchanted)
+                        foreach (DaggerfallEnchantment enchantment in item.LegacyEnchantments)
+                            if (enchantment.type == EnchantmentTypes.CastWhenUsed && enchantment.param == recallEffectId)
+                                return item;
+
+            return null;
+        }
+
+        private static int CalculateRepairCost(DaggerfallUnityItem markOfRecall)
+        {
+            int repairAmount = markOfRecall.maxCondition - markOfRecall.currentCondition;
+            int cost = repairAmount * 2;    // 20gp per use, or 1200 for a full repair
+            return cost;
+        }
 
         #endregion
 
@@ -365,7 +425,7 @@ namespace DaggerfallWorkshop.Game.Guilds
                 new DaggerfallEnchantment()
                 {
                     type = EnchantmentTypes.CastWhenUsed,
-                    param = 94
+                    param = recallEffectId
                 }
             };
             item.shortName = "%it of Recall";
