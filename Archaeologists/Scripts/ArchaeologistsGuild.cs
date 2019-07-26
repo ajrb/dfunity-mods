@@ -26,6 +26,7 @@ namespace DaggerfallWorkshop.Game.Guilds
 
         const int notEnoughGoldId = 454;
         const int recallEffectId = 94;
+        private const int replaceMarkCost = 10000;
 
         #endregion
 
@@ -351,7 +352,31 @@ namespace DaggerfallWorkshop.Game.Guilds
             DaggerfallUnityItem markOfRecall = FindRecallMark();
             if (markOfRecall == null)
             {
-                DaggerfallUI.MessageBox("You don't have your Mark of Recall on you.");
+                if (GameManager.Instance.PlayerEntity.GetGoldAmount() < replaceMarkCost)
+                {
+                    DaggerfallUI.MessageBox(new string[] {
+                        "You don't appear to have your Mark of Recall on you, or enough",
+                        "for a replacement. If you have been careless and lost or broken",
+                        "it, I can replace it for a price of 10,000 gold pieces. They're",
+                        "expensive, and the guild only provides one free Mark per member."
+                    });
+                }
+                else
+                {
+                    DaggerfallMessageBox replaceMarkBox = new DaggerfallMessageBox(DaggerfallUI.UIManager, window, true);
+                    string[] message = {
+                        "   You don't appear to have your Mark of Recall on you.",
+                        "   If you have been careless and lost or broken it, then",
+                        "      I can replace it at a cost of 10,000 gold.",
+                        "",
+                        "      Would you like a replacement Mark of Recall?"
+                    };
+                    replaceMarkBox.SetText(message);
+                    replaceMarkBox.AddButton(DaggerfallMessageBox.MessageBoxButtons.Yes);
+                    replaceMarkBox.AddButton(DaggerfallMessageBox.MessageBoxButtons.No, true);
+                    replaceMarkBox.OnButtonClick += ReplaceMarkBox_OnButtonClick;
+                    replaceMarkBox.Show();
+                }
             }
             else
             {
@@ -362,16 +387,27 @@ namespace DaggerfallWorkshop.Game.Guilds
                 }
                 else if (cost == 0)
                 {
-                    DaggerfallUI.MessageBox("Your Mark of Recall shows no signs of wear, and doesn't need any repairs.");
+                    DaggerfallUI.MessageBox("Your Mark of Recall shows no signs of wear that I can see.");
                 }
                 else
                 {
-                    string message = "Repairing your Mark of Recall will cost " + cost + " gold pieces, is that okay?";
+                    string message = "Repairing your Mark of Recall will cost " + cost + " gp, okay?";
                     DaggerfallMessageBox confirmRepairBox = new DaggerfallMessageBox(DaggerfallUI.UIManager, DaggerfallMessageBox.CommonMessageBoxButtons.YesNo, message, window);
                     confirmRepairBox.OnButtonClick += ConfirmRepairBox_OnButtonClick;
                     confirmRepairBox.Show();
                 }
                     
+            }
+        }
+
+        static void ReplaceMarkBox_OnButtonClick(DaggerfallMessageBox sender, DaggerfallMessageBox.MessageBoxButtons messageBoxButton)
+        {
+            sender.CloseWindow();
+            if (messageBoxButton == DaggerfallMessageBox.MessageBoxButtons.Yes)
+            {
+                GameManager.Instance.PlayerEntity.DeductGoldAmount(replaceMarkCost);
+                GivePlayerMarkOfRecall();
+                DaggerfallUI.MessageBox("Here's your replacement Mark of Recall, take more care in future!");
             }
         }
 
@@ -419,6 +455,11 @@ namespace DaggerfallWorkshop.Game.Guilds
         {
             base.Join();
             // Give recall item
+            GivePlayerMarkOfRecall();
+        }
+
+        private static void GivePlayerMarkOfRecall()
+        {
             DaggerfallUnityItem item = ItemBuilder.CreateItem(ItemGroups.Jewellery, (int)Jewellery.Mark);
             item.legacyMagic = new DaggerfallEnchantment[]
             {
