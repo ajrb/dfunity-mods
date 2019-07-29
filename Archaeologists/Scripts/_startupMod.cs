@@ -10,6 +10,7 @@ using DaggerfallWorkshop.Game.Entity;
 using DaggerfallWorkshop.Game.Formulas;
 using DaggerfallWorkshop.Game.Guilds;
 using DaggerfallWorkshop.Game.Items;
+using DaggerfallWorkshop.Game.MagicAndEffects.MagicEffects;
 using DaggerfallWorkshop.Game.Questing;
 using DaggerfallWorkshop.Game.Utility.ModSupport;
 using System.Collections.Generic;
@@ -156,6 +157,11 @@ namespace Archaeologists
             chance += GameManager.Instance.WeaponManager.Sheathed ? 10 : -25;
             chance += (player.Stats.LiveLuck - 50) / 5;
 
+            // Add chance from Comprehend Languages effect if present
+            ComprehendLanguages languagesEffect = (ComprehendLanguages)GameManager.Instance.PlayerEffectManager.FindIncumbentEffect<ComprehendLanguages>();
+            if (languagesEffect != null)
+                chance += languagesEffect.ChanceValue();
+
             int roll = Random.Range(0, 130);
             bool success = (roll < chance);
 
@@ -167,5 +173,6 @@ namespace Archaeologists
             Debug.LogFormat("Pacification {3} using {0} skill: chance= {1}  roll= {2}", languageSkill, chance, roll, success ? "success" : "failure");
             return success;
         }
+
     }
 }
