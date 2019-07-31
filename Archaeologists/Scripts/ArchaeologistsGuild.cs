@@ -273,7 +273,7 @@ namespace DaggerfallWorkshop.Game.Guilds
                 if (thisGuild.Rank < 6)
                 {
                     tradeWindow.OnTrade += LocatorPurchase_OnTrade;
-                    DaggerfallMessageBox messageBox = new DaggerfallMessageBox(DaggerfallUI.UIManager, tradeWindow, true);
+                    DaggerfallMessageBox messageBox = new DaggerfallMessageBox(DaggerfallUI.UIManager, window, true);
                     string[] message = {
                         "We require that you provide the guild with either a holy tome",
                         "   or holy dagger for each locator charge we supply you.",
