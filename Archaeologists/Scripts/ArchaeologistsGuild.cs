@@ -246,7 +246,7 @@ namespace DaggerfallWorkshop.Game.Guilds
 
         #region Service: Locator
 
-        public static void LocatorService(IUserInterfaceWindow window = null)
+        public static void LocatorService(IUserInterfaceWindow window)
         {
             Debug.Log("Locator service.");
 
@@ -345,7 +345,7 @@ namespace DaggerfallWorkshop.Game.Guilds
 
         #region Service: Repair Recall Mark
 
-        public static void RepairMarkService(IUserInterfaceWindow window = null)
+        public static void RepairMarkService(IUserInterfaceWindow window)
         {
             Debug.Log("Repair Recall Mark service.");
 
