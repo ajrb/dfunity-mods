@@ -75,7 +75,7 @@ Message:  1041
 <ce>        You will be the last adventurer claimed by this trap.
 
 Message:  1042
-<ce>        Oh, this will make %crn the laughingstock
+<ce>        Oh, this will make %crn the laughing stock
 <ce>        of the Iliac Bay. A healthy dose of blackmail
 <ce>        will keep them off our backs in this matter.
 <ce>        Well done, in the name of the Archaeologists!
