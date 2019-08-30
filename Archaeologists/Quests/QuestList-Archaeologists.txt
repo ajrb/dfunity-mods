@@ -24,3 +24,4 @@ JHAR011, GGroup0, M, 0, 0, translate a document in Giantish
 JHAR012, GGroup0, M, 0, 0, translate a document in Nymph
 JHAR013, GGroup0, M, 10, 0, get forbearance from an angry noble
 JHAR014, GGroup0, M, 10, 0, demonstrate Orcish skill in a dungeon
+JHAR015, GGroup0, M, 90, 1, deliver the Staff of Magnus
