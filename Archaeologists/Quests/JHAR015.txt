@@ -164,7 +164,7 @@ Person _qgiver_ group Questor
 Person _dummy_ group Resident1 male
 Person _kni_ faction Generic_Knightly_Order
 
-Place _dung_ remote dungeon11
+Place _dung_ remote dungeon2
 Place _dest_ remote palace
 Place _fenceplace_ remote tavern
 Place _dummyplace_ remote house
