@@ -23,10 +23,6 @@ AcceptQuest:  [1002]
 <ce>	be sufficient for the effort. Please have the _tri_
 <ce>	here within =timer_ days. Best of luck.
 
-QuestFail:  [1003]
-<ce>	In spite of your best efforts, you have failed
-<ce>	to return the stolen _tri_ to the Archaeologists.
-
 QuestComplete:  [1004]
 <ce>	Excellent work. Do not be concerned for our friend's
 <ce>	life. Sooner or later the same would have occurred
@@ -34,14 +30,14 @@ QuestComplete:  [1004]
 <ce>	Have your fee and my thanks.
 
 RumorsDuringQuest:  [1005]
-They say there's an artifact thief in ___dungeon_.
+They say there's an artifact thief in ___rand_.
 <--->
-I hear the Archaeologists are mad about some kind of thief in ___dungeon_.
+I hear the Archaeologists are mad about some kind of thief in ___rand_.
 
 Message:  1020
-Went off to ___dungeon_, running from the Archaeologists.
+Went off to ___rand_, running from the Archaeologists.
 <--->
-___dungeon_. That's all I know.
+___rand_. That's all I know.
 
 Message:  1025
 <ce>	You strike down the thief. Now to
@@ -59,7 +55,7 @@ QBN:
 Person _qgiver_ group Questor male
 Person _dummy_ group Local_3.0 anyInfo 1020 rumors 1020
 
-Place _dungeon_ remote random
+Place _rand_ remote random
 
 Foe _enemy_ is Thief
 
@@ -71,11 +67,13 @@ Item _reward_ gold range 250 to 400
 --	Quest start-up:
 	start timer _timer_ 
 	log 1030 step 0 
-	place foe _enemy_ at _dungeon_
-                place npc _dummy_ at _dungeon_
-                hide npc _dummy_
-	          give item _tri_ to _enemy_
-	          reveal _dungeon_
+	place foe _enemy_ at _rand_
+    place npc _dummy_ at _rand_
+	give item _tri_ to _enemy_
+	pc at _rand_ do _hide_
+
+_hide_ task:
+    hide npc _dummy_
 
 _slain_ task:
 	killed 1 _enemy_ saying 1025
@@ -89,5 +87,4 @@ _qgclicked_ task:
 	clicked npc _qgiver_ 
 
 _timer_ task:
-	say 1003
 	end quest

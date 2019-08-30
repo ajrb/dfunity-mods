@@ -1,0 +1,283 @@
+Quest: JHAR015
+DisplayName: The Simplest of Errands
+-- Message panels
+QRC:
+
+QuestorOffer:  [1000]
+<ce>   You'll do perfectly for this one. We need
+<ce>   someone who is completely trustworthy to
+<ce>   merely deliver a powerful artifact.
+<ce>   Will you help us?
+
+RefuseQuest:  [1001]
+<ce>   Quite unfortunate.
+
+AcceptQuest:  [1002]
+<ce>   Then I will present to you the Staff of Magnus.
+<ce>   Truly the stuff of legends. It needs to get to
+<ce>   ___dest_ in =timer_ days' time.
+<ce>   Look for _kni_ in _dest_.
+<ce>   We suspect you'll be followed by less scrupulous
+<ce>   persons interested in obtaining it through
+<ce>   illegitimate means. Be sure to defend yourself
+<ce>   as necessary. Safe journey.
+
+QuestFail:   [1003]
+<ce>   Stolen? That is a tragedy. You must not rest
+<ce>   until it is in _kni_'s hands.
+
+QuestComplete:   [1004]
+<ce>   Ah, the Staff of Magnus! This will be of great
+<ce>   worth for a certain task we've been planning.
+<ce>   Thank you for bringing it without harm.
+<ce>   
+<ce>   We didn't allot a formal reward for you out
+<ce>   of our coffers, but we wanted to show our
+<ce>   appreciation a different way. Please take it
+<ce>   and use it however you like. One day it will
+<ce>   change hands, and someone else will enjoy
+<ce>   its power, for better or for worse.
+
+Message:  1010
+<ce>   Somehow, a group of cruel-looking people
+<ce>   has gotten the drop on you. In fact, the
+<ce>   number is so great that you're thoroughly
+<ce>   surprised you didn't notice them before.
+<ce>   Either they are very good at what they do,
+<ce>   some sort of magic is helping them, or both.
+<ce>   
+<ce>   "Quick! Get the staff from %pg2!"
+<ce>   
+<ce>   You take a defensive stance but are shoved
+<ce>   from behind. Your foes form a circle around
+<ce>   you and toss you back and forth among them,
+<ce>   scarcely letting you maintain balance. In the
+<ce>   bedlam you feel the Staff of Magnus leave
+<ce>   your possession, though you can't tell
+<ce>   who took it. Once they see it come loose,
+<ce>   the majority of the band roars with delight
+<ce>   and escapes. A few stay behind to delay you.
+
+Message:  1011
+It got stolen from you? Wow, just yesterday I lost Chrysamere! Hahaha!
+<--->
+You should retrace your steps. That's how I find stuff I forgot.
+<--->
+You should look for people who sell stolen stuff. Like _fence_.
+
+Message:  1012
+That _fence_, always trying to make a big name for %g2self.
+<--->
+_fence_ is becoming quite notorious.
+<--->
+_fence_ is going for the big game these days, they says.
+<--->
+_fence_ lives in ___fenceplace_. Why'd you ask?
+
+Message:  1013
+<ce>  Good %god! %oth, and by my life!
+<ce>  No, I had nothing to do with the Staff
+<ce>  of Magnus hit! I don't get involved with
+<ce>  that stuff! I pick pockets at bars, not
+<ce>  sell artifacts on the black market!
+<ce>  On my mother's grave, go to ___dummyplace_
+<ce>  and talk to _dummy_. He's in
+<ce>  _dummyplace_. That's who stole it
+<ce>  from you!
+
+Message:  1014
+<ce>  You suddenly sense movement. Three cloaked
+<ce>  figures have gotten the jump on you.
+<ce>  Whoever these people are, they are good.
+
+Message:  1015
+<ce>  This parchment contains no writing.
+<ce>  It only holds a roughly-drawn
+<ce>  map leading from ___dung_,
+<ce>  to the %di.
+
+Message:  1016
+<ce>  _fence_'s face turns pale
+<ce>  at seeing you.
+<ce>  
+<ce>  "You never should have never come here!
+<ce>  My client needs the Staff of Magnus
+<ce>  more than you do! You have no idea
+<ce>  what you're interrupting here!"
+<ce>  
+<ce>  Nevertheless, he enters a battle stance
+<ce>  to defend himself.
+
+Message:  1017
+<ce>  The staff appears undamaged.
+<ce>  Now, finally, you can deliver it.
+
+Message:  1018
+<ce>  A short, sharp whistle pierces
+<ce>  the air once you enter.
+<ce>  Your arrival has been noticed.
+
+Message:  1030
+%qdt:
+ I have been entrusted with the Staff
+ of Magnus, a powerful artifact.
+ The Archaeologists need me to deliver
+ it to _kni_ of ___dest_
+ in =timer_ days' time.
+
+Message:  1031
+%qdt:
+ The Staff of Magnus has been stolen
+ from me by a mob.
+
+Message:  1032
+%qdt:
+ _fence_, a known fence
+ of stolen goods in ___fenceplace_,
+ swore that he doesn't know who took
+ the Staff from me, though he knew it happened.
+ He told me to talk to _dummy_,
+ who lives in ___dummyplace_
+ at _dummyplace_.
+
+Message:  1033
+%qdt:
+ The house where _dummy_
+ lives, if %g1's a real person at all,
+ was a trap. On some assailants there
+ I found some directions leading
+ from a den called ___dung_
+ in ____dung_.
+
+Message:  1034
+%qdt:
+ I have recovered the Staff of Magnus
+ from _fence_.
+
+QBN:
+Item _reward_ artifact Lords_Mail
+Item _staff_ artifact Staff_of_Magnus anyInfo 1011
+Item _letter_ letter
+
+Person _fence_ faction The_Thieves_Guild male anyInfo 1012
+Person _qgiver_ group Questor
+Person _dummy_ group Resident1 male
+Person _kni_ faction Generic_Knightly_Order
+
+Place _dung_ remote dungeon2
+Place _dest_ remote palace
+Place _fenceplace_ remote tavern
+Place _dummyplace_ remote house
+
+Clock _timer_ 00:00 0 flag 17 range 1 2
+Clock _ambush_ 1.00:00 1.12:00
+Clock _dummydelay_ 0:01
+
+Foe _init1_ is Burglar
+Foe _init2_ is Thief
+Foe _atk1_ is Burglar
+Foe _atk2_ is Bard
+Foe _nme1_ is Acrobat
+Foe _nme2_ is Ranger
+Foe _nme3_ is Thief
+Foe _boss_ is Nightblade
+
+--	Quest start-up:
+    dialog link for person _fence_ item _staff_
+	start timer _timer_ 
+    start timer _ambush_
+	log 1030 step 0 
+	get item _staff_
+-    pc at _dest_ do _ambush_
+
+_ambush_ task:
+    say 1010
+    take _staff_ from pc
+    add dialog for item _staff_
+    place npc _fence_ at _fenceplace_
+    create foe _init1_ every 0 minutes 2 times with 100% success
+    create foe _init2_ every 0 minutes 2 times with 100% success
+    log 1031 step 1
+    pc at _dummyplace_ do _houseattack_
+    place npc _kni_ at _dest_
+
+_qgclicked_ task:
+	clicked npc _qgiver_ 
+
+_clearclick_ task:
+	when _qgclicked_ and not _ambush_
+	clear _qgclicked_ _clearclick_ 
+
+_talk_ task:
+    when _qgclicked_ and _ambush_
+    say 1003
+
+_fencetalk_ task:
+    clicked npc _fence_
+
+_ft1_ task:
+    when _fencetalk_ and not _alert_
+    say 1013
+    clear _fencetalk_
+    log 1032 step 2
+
+_houseattack_ task:
+    start timer _dummydelay_
+    place npc _fence_ at _dung_
+
+_nohouse_ task:
+    when not _houseattack_
+    stop timer _dummydelay_
+
+_dummydelay_ task:
+    say 1014
+    create foe _atk1_ every 0 minutes 2 times with 100% success
+    create foe _atk2_ every 0 minutes 1 times with 100% success
+    give item _letter_ to _atk2_
+    _letter_ used do _readletter_
+
+_readletter_ task:
+    reveal _dung_
+    say 1015
+    pc at _dung_ set _alert_
+    log 1033 step 3
+    take _letter_ from pc
+
+_alert_ task:
+    say 1018
+    create foe _nme1_ every 8 minutes indefinitely with 2% success
+    create foe _nme2_ every 6 minutes indefinitely with 1% success
+    create foe _nme3_ every 5 minutes indefinitely with 1% success
+
+_ft2_ task:
+    when _fencetalk_ and _alert_
+    say 1016
+    hide npc _fence_
+    place foe _boss_ at _dung_
+    give item _staff_ to _boss_
+    have _staff_ set _recover_
+    create foe _nme1_ every 0 minutes 1 times with 100% success
+    create foe _nme2_ every 0 minutes 1 times with 100% success
+    cast Shield spell on _boss_
+    cast Spell_Reflection spell on _boss_
+    cast Spell_Shield spell on _boss_
+    cast Troll's_Blood spell on _boss_
+
+_inj_ task:
+    injured _boss_
+    cast Heal spell on _boss_
+
+_recover_ task:
+    say 1017
+    log 1034 step 4
+
+_victory_ task:
+    toting _staff_ and _kni_ clicked
+    give pc _reward_
+    end quest
+
+_timer_ task:
+	make _staff_ permanent 
+    change repute with _qgiver_ by -20
+	end quest 
+
