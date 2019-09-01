@@ -114,7 +114,7 @@ namespace Archaeologists
                 // Register the quest service id
                 Services.RegisterGuildService(1000, GuildServices.Quests);
                 // Register the custom locator service
-                Services.RegisterGuildService(1001, ArchaeologistsGuild.LocatorService, "Locator Charges");
+                Services.RegisterGuildService(1001, ArchaeologistsGuild.LocatorService, "Locator Devices");
                 // Register the custom locator item
                 ItemCollection.RegisterCustomItem(typeof(LocatorItem).ToString(), typeof(LocatorItem));
                 // Register the daedra summoning service
@@ -141,7 +141,6 @@ namespace Archaeologists
 
         private static bool CalculateEnemyPacification(PlayerEntity player, DFCareer.Skills languageSkill)
         {
-            Debug.Log("Pacification override!");
             double chance = 0;
             if (languageSkill == DFCareer.Skills.Etiquette ||
                 languageSkill == DFCareer.Skills.Streetwise)
@@ -170,7 +169,7 @@ namespace Archaeologists
             else if (languageSkill != DFCareer.Skills.Etiquette && languageSkill != DFCareer.Skills.Streetwise)
                 player.TallySkill(languageSkill, 1);
 
-            Debug.LogFormat("Pacification {3} using {0} skill: chance= {1}  roll= {2}", languageSkill, chance, roll, success ? "success" : "failure");
+            Debug.LogFormat("Archaeologists Pacification {3} using {0} skill: chance= {1}  roll= {2}", languageSkill, chance, roll, success ? "success" : "failure");
             return success;
         }
 

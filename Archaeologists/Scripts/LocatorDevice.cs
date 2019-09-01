@@ -63,8 +63,11 @@ namespace Archaeologists
         public void ActivateDevice()
         {
             questTargetPos = GetQuestTargetLocation();
-            enabled = true;
-            Debug.LogFormat("Locator device activated, target is at: {0} {1} {2}", questTargetPos.x, questTargetPos.y, questTargetPos.z);
+            if (questTargetPos != Vector3.zero)
+            {
+                enabled = true;
+                Debug.LogFormat("Locator device activated, target is at: {0} {1} {2}", questTargetPos.x, questTargetPos.y, questTargetPos.z);
+            }
         }
 
         public void DeactivateDevice()
@@ -78,12 +81,11 @@ namespace Archaeologists
         {
             QuestMarker targetMarker;
             Vector3 buildingOrigin;
-            bool result = QuestMachine.Instance.GetCurrentLocationQuestMarker(MarkerTypes.QuestItem, out targetMarker, out buildingOrigin);
+            bool result = QuestMachine.Instance.GetCurrentLocationQuestMarker(out targetMarker, out buildingOrigin);
             if (!result)
             {
-                result = QuestMachine.Instance.GetCurrentLocationQuestMarker(MarkerTypes.QuestSpawn, out targetMarker, out buildingOrigin);
-                if (!result)
-                    return Vector3.zero;
+                Debug.Log("Problem getting quest marker.");
+                return Vector3.zero;
             }
             Vector3 dungeonBlockPosition = new Vector3(targetMarker.dungeonX * RDBLayout.RDBSide, 0, targetMarker.dungeonZ * RDBLayout.RDBSide);
             return dungeonBlockPosition + targetMarker.flatPosition + buildingOrigin;

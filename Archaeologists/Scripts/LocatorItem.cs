@@ -15,8 +15,8 @@ namespace Archaeologists
         internal const int INACTIVE = 1;
         internal const int ACTIVATED = 2;
 
-        internal const int BASEVALUE = 600;             // Base value of a locator device. Actual cost will depend on guild rank.
-        internal const int ACTIVATION_EXPLORATION = 25; // Percentage of dungeon that must be explored before device will activate.
+        internal const int BASEVALUE = 800;             // Base value of a locator device. Actual cost will depend on guild rank.
+        internal const int BASEACTIVATION_EXPLORATION = 20; // Percentage of dungeon that must be explored before device will activate.
 
         internal const string NAME = "Locator device";
 
@@ -47,7 +47,7 @@ namespace Archaeologists
 
         public override bool IsStackable()
         {
-            return true;
+            return false;
         }
 
         public override bool UseItem(ItemCollection collection)
@@ -59,28 +59,32 @@ namespace Archaeologists
             else
             {
                 int exploredPercent = Automap.instance.ExploredPercentage();
-                Debug.Log("Explored: " + exploredPercent);
                 LocatorDevice locatorDevice = Object.FindObjectOfType<LocatorDevice>();
                 if (locatorDevice != null)
                 {
                     if (nativeMaterialValue == INACTIVE)
                     {
-                        if (exploredPercent < ACTIVATION_EXPLORATION)
+                        if (!locatorDevice.enabled)
                         {
-                            DaggerfallUI.MessageBox(EXPLORATION_NEEDED_MSG);
-                        }
-                        else if (!locatorDevice.enabled)
-                        {
-                            if (stackCount > 1)
-                                stackCount -= 1;
+                            int requiredExploration = (value * BASEACTIVATION_EXPLORATION) / BASEVALUE;
+                            Debug.LogFormat("Explored: {0}  Required: {1}", exploredPercent, requiredExploration);
+                            if (exploredPercent < requiredExploration)
+                            {
+                                DaggerfallUI.MessageBox(EXPLORATION_NEEDED_MSG);
+                            }
                             else
-                                collection.RemoveItem(this);
+                            {
+                                if (stackCount > 1)
+                                    stackCount -= 1;
+                                else
+                                    collection.RemoveItem(this);
 
-                            LocatorItem activeLocator = new LocatorItem();
-                            activeLocator.nativeMaterialValue = ACTIVATED;
-                            collection.AddItem(activeLocator, ItemCollection.AddPosition.DontCare, true);
-                            locatorDevice.ActivateDevice();
-                            DaggerfallUI.MessageBox(ACTIVATION_MSG);
+                                LocatorItem activeLocator = new LocatorItem();
+                                activeLocator.nativeMaterialValue = ACTIVATED;
+                                collection.AddItem(activeLocator, ItemCollection.AddPosition.DontCare, true);
+                                locatorDevice.ActivateDevice();
+                                DaggerfallUI.MessageBox(ACTIVATION_MSG);
+                            }
                         }
                     }
                     else

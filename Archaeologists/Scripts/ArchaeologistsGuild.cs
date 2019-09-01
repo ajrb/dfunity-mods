@@ -58,10 +58,10 @@ namespace DaggerfallWorkshop.Game.Guilds
             TextFile.CreateTextToken("Once you rise in our ranks to the title of Field Officer, you"), newLine,
             TextFile.CreateTextToken("will gain access to charges for our magicka-powered locator"), newLine,
             TextFile.CreateTextToken("device to purchase for whatever purpose you wish. Until then"), newLine,
-            TextFile.CreateTextToken("you will be restricted to a single charge for each task. "), newLine, newLine,
+            TextFile.CreateTextToken("you will be restricted to a single locator for each task. "), newLine, newLine,
             TextFile.CreateTextToken("Beyond field work, our higher ranks are open to the more "), newLine,
             TextFile.CreateTextToken("accomplished scholars among us, and provide a great "), newLine,
-            TextFile.CreateTextToken("reduction to the cost of locator device charges. Note, "), newLine,
+            TextFile.CreateTextToken("reduction to the cost of locator devices. Note that "), newLine,
             TextFile.CreateTextToken("only those with sufficient intellect will be promoted. "), newLine,
         };
 
@@ -100,7 +100,7 @@ namespace DaggerfallWorkshop.Game.Guilds
             "Field Assistant", "Field Agent", "Field Officer", "Field Director", "Apprentice", "Novice", "Journeyman", "Associate", "Professor", "Master"
         };
 
-        protected static int[] RankLocatorCosts = { 0, 0, 4000, 3000, 2000, 1500, 1200, 800, 600, 400 };
+        protected static int[] RankLocatorCosts = { 0, 0, 2000, 1600, 1200, 1000, 800, 600, 400, 200 };
 
         protected static List<DFCareer.Skills> guildSkills = new List<DFCareer.Skills>() {
                 DFCareer.Skills.Centaurian,
@@ -267,7 +267,7 @@ namespace DaggerfallWorkshop.Game.Guilds
             {
                 // Show trade window and a popup message to inform player how many locators they can purchase.
                 DaggerfallTradeWindow tradeWindow = new DaggerfallTradeWindow(DaggerfallUI.UIManager, DaggerfallTradeWindow.WindowModes.Buy, null, thisGuild);
-                tradeWindow.MerchantItems = GetLocatorCharges(holyCount, RankLocatorCosts[thisGuild.Rank]);
+                tradeWindow.MerchantItems = GetLocatorDevices(holyCount, RankLocatorCosts[thisGuild.Rank]);
                 DaggerfallUI.UIManager.PushWindow(tradeWindow);
 
                 if (thisGuild.Rank < 6)
@@ -276,7 +276,7 @@ namespace DaggerfallWorkshop.Game.Guilds
                     DaggerfallMessageBox messageBox = new DaggerfallMessageBox(DaggerfallUI.UIManager, window, true);
                     string[] message = {
                         "We require that you provide the guild with either a holy tome",
-                        "   or holy dagger for each locator charge we supply you.",
+                        "   or holy dagger for each locator device we supply you.",
                         " At least until you reach the more senior ranks of the guild.", "",
                         "  You currently have " + holyCount + " holy items in your posession, so you",
                         "    can purchase up to that many locators at this time.",
@@ -290,16 +290,16 @@ namespace DaggerfallWorkshop.Game.Guilds
             {
                 DaggerfallUI.MessageBox(new string[] {
                     "You need to provide the guild either a holy tome or holy dagger",
-                    " for each locator charge we supply you with. You have neither." });
+                    " for each locator device we supply you with. You have neither." });
             }
         }
 
-        static ItemCollection GetLocatorCharges(int number, int value)
+        static ItemCollection GetLocatorDevices(int number, int value)
         {
-            ItemCollection charges = new ItemCollection();
+            ItemCollection locators = new ItemCollection();
             for (int i = 0; i < number; i++)
-                charges.AddItem(new LocatorItem(value), ItemCollection.AddPosition.DontCare, true);
-            return charges;
+                locators.AddItem(new LocatorItem(value), ItemCollection.AddPosition.DontCare, true);
+            return locators;
         }
 
         static void LocatorPurchase_OnTrade(DaggerfallTradeWindow.WindowModes mode, int numItems, int value)
