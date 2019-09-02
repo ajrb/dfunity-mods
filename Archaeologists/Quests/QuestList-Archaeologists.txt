@@ -12,16 +12,16 @@ schema: *name, group, membership, minReq, flag, notes
 ARCH001, GGroup0, M, 0, 0, test quest based on N0C00Y13
 JHAR001, GGroup0, M, 0, 0, get an adversarial mage's notes
 JHAR002, GGroup0, M, 0, 0, rescue a lost explorer from a dungeon
-JHAR003, GGroup0, M, 0, 0, search for an ancestor's remains
-JHAR004, GGroup0, M, 0, 0, slay a mummy at a farm home
-JHAR005, GGroup0, M, 0, 0, get a trapped trinket from a dungeon
+JHAR003, GGroup0, M, 3, 0, search for an ancestor's remains
+JHAR004, GGroup0, M, 1, 0, slay a mummy at a farm home
+JHAR005, GGroup0, M, 1, 0, get a trapped trinket from a dungeon
 JHAR006, GGroup0, M, 0, 0, escort an old document to another town
 JHAR007, GGroup0, M, 0, 0, retrieve a normal trinket from a dungeon
 JHAR008, GGroup0, M, 0, 0, retrieve an object stolen by a guild member
-JHAR009, GGroup0, M, 30, 0, defeat a daedra haunting a trinket
+JHAR009, GGroup0, M, 6, 0, defeat a daedra haunting a trinket
 JHAR010, GGroup0, M, 15, 0, retrieve an object from a field agent
 JHAR011, GGroup0, M, 0, 0, translate a document in Giantish
 JHAR012, GGroup0, M, 0, 0, translate a document in Nymph
-JHAR013, GGroup0, M, 10, 0, get forbearance from an angry noble
-JHAR014, GGroup0, M, 10, 0, demonstrate Orcish skill in a dungeon
+JHAR013, GGroup0, M, 3, 0, get forbearance from an angry noble
+JHAR014, GGroup0, M, 2, 0, demonstrate Orcish skill in a dungeon
 JHAR015, GGroup0, M, 90, 1, deliver the Staff of Magnus
