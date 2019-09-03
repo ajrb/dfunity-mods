@@ -23,8 +23,9 @@ namespace RoleplayRealism
             ModSettings settings = initParams.Mod.GetSettings();
             bool bedSleeping = settings.GetBool("Modules", "bedSleeping");
             bool archery = settings.GetBool("Modules", "advancedArchery");
+            bool riding = settings.GetBool("Modules", "enhancedRiding");
 
-            InitMod(bedSleeping, archery);
+            InitMod(bedSleeping, archery, riding);
         }
 
         /* 
@@ -37,10 +38,10 @@ namespace RoleplayRealism
         */
         void Awake()
         {
-            InitMod(true, true, true);
+            InitMod(true, true, true, true);
         }
 
-        public static void InitMod(bool bedSleeping, bool archery, bool debug = false)
+        public static void InitMod(bool bedSleeping, bool archery, bool riding, bool debug = false)
         {
             Debug.Log("Begin mod init: RoleplayRealism");
 
@@ -56,6 +57,15 @@ namespace RoleplayRealism
                 // Override adjust to hit and damage formulas
                 FormulaHelper.formula_2de_2i.Add("AdjustWeaponHitChanceMod", AdjustWeaponHitChanceMod);
                 FormulaHelper.formula_2de_2i.Add("AdjustWeaponAttackDamage", AdjustWeaponAttackDamage);
+            }
+
+            if (riding)
+            {
+                GameObject playerAdvGO = GameObject.Find("PlayerAdvanced");
+                if (playerAdvGO)
+                {
+                    playerAdvGO.AddComponent<EnhancedRiding>();
+                }
             }
 
             Debug.Log("Finished mod init: RoleplayRealism");
