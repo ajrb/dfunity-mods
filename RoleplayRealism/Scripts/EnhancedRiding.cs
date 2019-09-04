@@ -82,6 +82,8 @@ namespace DaggerfallWorkshop.Game
                     else
                     {
                         GameObject guard = playerEntity.SpawnCityGuard(mobileNpc.transform.position, mobileNpc.transform.forward);
+                        DaggerfallEntityBehaviour guardBehaviour = guard.GetComponent<DaggerfallEntityBehaviour>();
+                        HandleCharge(guard, guardBehaviour);
                     }
                     playerEntity.CrimeCommitted = PlayerEntity.Crimes.Assault;  // Nearest to manslaughter
                     mobileNpc.Motor.gameObject.SetActive(false);
@@ -89,30 +91,47 @@ namespace DaggerfallWorkshop.Game
             }
         }
 
-        // Handle charging into enemies.
+        // Handle entity collisions.
         private void OnControllerColliderHit(ControllerColliderHit other)
         {
             if (cachedColliderHitObject != other.gameObject)
             {
                 DaggerfallEntityBehaviour hitEntityBehaviour = other.gameObject.GetComponent<DaggerfallEntityBehaviour>();
                 if (playerMotor.IsRiding && playerMotor.IsRunning && hitEntityBehaviour)
-                {
-                    if (hitEntityBehaviour.Entity is EnemyEntity)
-                    {
-                        EnemyEntity hitEnemyEntity = (EnemyEntity) hitEntityBehaviour.Entity;
-                        if (!hitEnemyEntity.PickpocketByPlayerAttempted)
-                        {
-                            Debug.LogFormat("Charged down a {0}!", other.gameObject.name);
-                            hitEnemyEntity.PickpocketByPlayerAttempted = true;
-                            DaggerfallEntityBehaviour playerEntityBehaviour = GameManager.Instance.PlayerEntity.EntityBehaviour;
-                            int damage = FormulaHelper.CalculateHandToHandMaxDamage(GameManager.Instance.PlayerEntity.Skills.GetLiveSkillValue(DFCareer.Skills.HandToHand));
-                            hitEntityBehaviour.DamageHealthFromSource(playerEntityBehaviour, damage * 2, true, BloodPos());
-                            GameManager.Instance.PlayerEntity.DecreaseFatigue(PlayerEntity.DefaultFatigueLoss * 15);
-                        }
-                    }
-                }
+                    HandleCharge(other.gameObject, hitEntityBehaviour);
                 else
                     cachedColliderHitObject = other.gameObject;
+            }
+        }
+
+        // Handle charging into enemies.
+        private void HandleCharge(GameObject hitGO, DaggerfallEntityBehaviour hitEntityBehaviour)
+        {
+            if (hitEntityBehaviour.Entity is EnemyEntity)
+            {
+                EnemyEntity hitEnemyEntity = (EnemyEntity)hitEntityBehaviour.Entity;
+                if (!hitEnemyEntity.PickpocketByPlayerAttempted)
+                {
+                    Debug.LogFormat("Charged down a {0}!", hitEntityBehaviour.name);
+
+                    // Play heavy hit sound.
+                    EnemySounds enemySounds = hitGO.GetComponent<EnemySounds>();
+                    DaggerfallMobileUnit entityMobileUnit = hitGO.GetComponentInChildren<DaggerfallMobileUnit>();
+                    Genders gender;
+                    if (entityMobileUnit.Summary.Enemy.Gender == MobileGender.Male || hitEnemyEntity.MobileEnemy.ID == (int)MobileTypes.Knight_CityWatch)
+                        gender = Genders.Male;
+                    else
+                        gender = Genders.Female;
+                    enemySounds.PlayCombatVoice(gender, false, true);
+
+                    // Handle charge hit.
+                    hitEnemyEntity.PickpocketByPlayerAttempted = true;
+                    DaggerfallEntityBehaviour playerEntityBehaviour = GameManager.Instance.PlayerEntity.EntityBehaviour;
+                    int damage = FormulaHelper.CalculateHandToHandMaxDamage(GameManager.Instance.PlayerEntity.Skills.GetLiveSkillValue(DFCareer.Skills.HandToHand));
+                    hitEntityBehaviour.DamageHealthFromSource(playerEntityBehaviour, damage * 2, true, BloodPos());
+                    GameManager.Instance.PlayerEntity.DecreaseFatigue(PlayerEntity.DefaultFatigueLoss * 15);
+
+                }
             }
         }
 
