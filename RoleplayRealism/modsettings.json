@@ -19,6 +19,13 @@
                     "Description": "Alters to-hit and damage done by arrows depending on the length of pull",
                     "$version": "v1",
                     "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
+                },
+                {
+                    "Value": true,
+                    "Name": "enhancedRiding",
+                    "Description": "Enhances horse riding, improving presentation and allowing galloping.",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
                 }
             ],
             "$version": "v1"
