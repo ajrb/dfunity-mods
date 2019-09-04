@@ -130,7 +130,6 @@ namespace DaggerfallWorkshop.Game
                     int damage = FormulaHelper.CalculateHandToHandMaxDamage(GameManager.Instance.PlayerEntity.Skills.GetLiveSkillValue(DFCareer.Skills.HandToHand));
                     hitEntityBehaviour.DamageHealthFromSource(playerEntityBehaviour, damage * 2, true, BloodPos());
                     GameManager.Instance.PlayerEntity.DecreaseFatigue(PlayerEntity.DefaultFatigueLoss * 15);
-
                 }
             }
         }
@@ -177,10 +176,9 @@ namespace DaggerfallWorkshop.Game
                         Rect posExt = new Rect(pos.x, drawBottom, (ridingTexture.width - 14) * horseScaleX, Screen.height - drawBottom + horseScaleY);
                         GUI.DrawTextureWithTexCoords(posExt, ridingTexture.texture, new Rect(extX, 0.2f - yAdjExt, extW, yAdjExt));
                     }
-
                 }
             }
-
         }
+
     }
 }
