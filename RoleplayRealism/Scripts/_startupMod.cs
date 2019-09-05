@@ -3,10 +3,12 @@
 // License:         MIT License (http://www.opensource.org/licenses/mit-license.php)
 // Author:          Hazelnut
 
+using DaggerfallConnect;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Entity;
 using DaggerfallWorkshop.Game.Formulas;
 using DaggerfallWorkshop.Game.Items;
+using DaggerfallWorkshop.Game.MagicAndEffects;
 using DaggerfallWorkshop.Game.UserInterface;
 using DaggerfallWorkshop.Game.UserInterfaceWindows;
 using DaggerfallWorkshop.Game.Utility.ModSupport;
@@ -17,6 +19,8 @@ namespace RoleplayRealism
 {
     public class _startupMod : MonoBehaviour
     {
+        public static float EncEffectScaleFactor = 2f;
+
         [Invoke(StateManager.StateTypes.Start, 0)]
         public static void InitStart(InitParams initParams)
         {
@@ -24,8 +28,9 @@ namespace RoleplayRealism
             bool bedSleeping = settings.GetBool("Modules", "bedSleeping");
             bool archery = settings.GetBool("Modules", "advancedArchery");
             bool riding = settings.GetBool("Modules", "enhancedRiding");
+            bool encumbrance = settings.GetBool("Modules", "encumbranceEffects");
 
-            InitMod(bedSleeping, archery, riding);
+            InitMod(bedSleeping, archery, riding, encumbrance);
         }
 
         /* 
@@ -38,10 +43,10 @@ namespace RoleplayRealism
         */
         void Awake()
         {
-            InitMod(true, true, true, true);
+            InitMod(true, true, true, true, true);
         }
 
-        public static void InitMod(bool bedSleeping, bool archery, bool riding, bool debug = false)
+        public static void InitMod(bool bedSleeping, bool archery, bool riding, bool encumbrance, bool debug = false)
         {
             Debug.Log("Begin mod init: RoleplayRealism");
 
@@ -66,6 +71,11 @@ namespace RoleplayRealism
                 {
                     playerAdvGO.AddComponent<EnhancedRiding>();
                 }
+            }
+
+            if (encumbrance)
+            {
+                EntityEffectBroker.OnNewMagicRound += EncumbranceEffects_OnNewMagicRound;
             }
 
             Debug.Log("Finished mod init: RoleplayRealism");
@@ -128,6 +138,28 @@ namespace RoleplayRealism
             return damage;
         }
 
+        private static void EncumbranceEffects_OnNewMagicRound()
+        {
+            PlayerEntity playerEntity = GameManager.Instance.PlayerEntity;
+            if (playerEntity.CurrentHealth > 0 && playerEntity.EntityBehaviour.enabled)
+            {
+                float encPc = playerEntity.CarriedWeight / playerEntity.MaxEncumbrance;
+                float encOver = Mathf.Max(encPc - 0.75f, 0f) * EncEffectScaleFactor;
+                if (encOver > 0)
+                {
+                    int speedEffect = (int)(playerEntity.Stats.PermanentSpeed * encOver);
+                    int fatigueEffect = (int)(encOver * 100);
+                    Debug.LogFormat("Encumbrance {0}, over {1} = effects: {2} speed, {3} fatigue", encPc, encOver, speedEffect, fatigueEffect);
+
+                    playerEntity.DecreaseFatigue(fatigueEffect, false);
+
+                    EntityEffectManager playerEffectManager = playerEntity.EntityBehaviour.GetComponent<EntityEffectManager>();
+                    int[] statMods = new int[DaggerfallStats.Count];
+                    statMods[(int)DFCareer.Stats.Speed] = -speedEffect;
+                    playerEffectManager.MergeDirectStatMods(statMods);
+                }
+            }
+        }
 
     }
 }
