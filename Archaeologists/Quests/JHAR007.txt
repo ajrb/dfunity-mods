@@ -35,7 +35,7 @@ Message:  1040
 <ce>	This must be the _relig_ you were sent to find.
 
 Message:  1041
-<ce>	_qgiver_ needed you the _relig_ by now.
+<ce>	_qgiver_ needed the _relig_ by now.
 
 QBN:
 Item _relig_ religious
