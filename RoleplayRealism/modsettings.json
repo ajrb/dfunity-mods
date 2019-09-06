@@ -26,6 +26,13 @@
                     "Description": "Enhances horse riding, improving presentation and allowing galloping.",
                     "$version": "v1",
                     "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
+                },
+                {
+                    "Value": true,
+                    "Name": "encumbranceEffects",
+                    "Description": "Provides speed and fatigue penalties when carrying too much",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
                 }
             ],
             "$version": "v1"
