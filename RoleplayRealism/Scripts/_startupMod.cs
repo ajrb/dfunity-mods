@@ -149,7 +149,7 @@ namespace RoleplayRealism
                 {
                     int speedEffect = (int)(playerEntity.Stats.PermanentSpeed * encOver);
                     int fatigueEffect = (int)(encOver * 100);
-                    Debug.LogFormat("Encumbrance {0}, over {1} = effects: {2} speed, {3} fatigue", encPc, encOver, speedEffect, fatigueEffect);
+                    //Debug.LogFormat("Encumbrance {0}, over {1} = effects: {2} speed, {3} fatigue", encPc, encOver, speedEffect, fatigueEffect);
 
                     playerEntity.DecreaseFatigue(fatigueEffect, false);
 
