@@ -141,7 +141,7 @@ namespace RoleplayRealism
         private static void EncumbranceEffects_OnNewMagicRound()
         {
             PlayerEntity playerEntity = GameManager.Instance.PlayerEntity;
-            if (playerEntity.CurrentHealth > 0 && playerEntity.EntityBehaviour.enabled)
+            if (playerEntity.CurrentHealth > 0 && playerEntity.EntityBehaviour.enabled && !GameManager.Instance.EntityEffectBroker.SyntheticTimeIncrease)
             {
                 float encPc = playerEntity.CarriedWeight / playerEntity.MaxEncumbrance;
                 float encOver = Mathf.Max(encPc - 0.75f, 0f) * EncEffectScaleFactor;
