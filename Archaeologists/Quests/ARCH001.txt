@@ -1,4 +1,5 @@
 Quest: ARCH001
+DisplayName: Discreet Text Retrieval
 -- Message panels
 QRC:
 
