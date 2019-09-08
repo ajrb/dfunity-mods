@@ -1,5 +1,5 @@
 Quest: JHAR013
-DisplayName: 
+DisplayName: Petty Politics
 -- Message panels
 QRC:
 
