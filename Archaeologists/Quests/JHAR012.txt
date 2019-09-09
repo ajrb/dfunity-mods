@@ -103,7 +103,7 @@ Clock _timer_ 00:00 0 flag 17 range 0 2
 
 variable _inside_
 _skilled_ task:
-    when skill Nymph is at least 10
+    when skill Nymph is at least 20
 
 _enter0_ task:
     when _inside_ and not _skilled_
