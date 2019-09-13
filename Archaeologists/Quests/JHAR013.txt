@@ -5,14 +5,12 @@ QRC:
 
 QuestorOffer:  [1000]
 <ce>  As one of the newer guilds in the Iliac Bay,
-<ce>  the Archaeologists do not carry the sheer
-<ce>  political weight that some other well-
-<ce>  established groups do. We fight periodically
-<ce>  to maintain our place in %crn, and on occasion
-<ce>  the powers that be require some motivation
-<ce>  to allow us to continue here. We hope to count
-<ce>  on your help for one such encounter, if you
-<ce>  feel yourself in the persuading mood.
+<ce>  the Archaeologists must fight periodically
+<ce>  to maintain our place in %crn. On occasion
+<ce>  the powers that be require some persuasion
+<ce>  to allow us to continue here. Hopefully
+<ce>  we can count on you to placate a noble
+<ce>  with a streak of wrath against us.
 
 RefuseQuest:  [1001]
 <ce>  Someone else will take care of it, I trust.
@@ -20,13 +18,13 @@ RefuseQuest:  [1001]
 AcceptQuest:  [1002]
 <ce>  The current disagreement regards _nob_,
 <ce>  one of the regional nobles living in ___palace_.
-<ce>  We can go for months without any problem, but in times
-<ce>  like these accusations arise that require face-to-face
-<ce>  discussion. I suspect some family member in the Mages
-<ce>  Guild who's gotten too vocal about our existence.
-<ce>  Whatever the case, I'll hear from you within =timer_ days.
-<ce>  If things go wrong, I will need time to speak to the
-<ce>  others about our future here in ___qgiver_.
+<ce>  Please speak to %g2 and get to the bottom of
+<ce>  whatever is bothering %g2, before the guild
+<ce>  suffers the effects of an overgrown tantrum.
+<ce>  Remember: polite speech and patience. I'll need to
+<ce>  hear from you within =timer_ days. If things go
+<ce>  wrong, I will need time to speak to the others about
+<ce>  our future here in ___qgiver_.
 <ce>  Our best wishes go with you.
 
 QuestFail:   [1003]
