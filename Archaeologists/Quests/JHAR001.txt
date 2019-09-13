@@ -17,10 +17,9 @@ QuestorOffer:  [1000]
 <ce>                 Are you able to do this, %pcf?
                                      <--->
 <ce>                 We have had a bit of a rocky history with the Mages
-<ce>                 Guild in the past for a variety of reasons. We certainly
-<ce>                 don't wish them any harm, but among other conflicts,
-<ce>                 we have grown tired of their high-mindedness and their
-<ce>                 insistence on keeping their work too private. We can
+<ce>                 Guild in the past for a variety of reasons. We, 
+<ce>                 like many, hate their high-mindedness and their
+<ce>                 insistence on keeping their work so private. We can
 <ce>                 remedy the second problem this very season. Some mage,
 <ce>                 _scholar_, is staying in ___dest_ with
 <ce>                 a set of notes we consider to be of great worth. We request
