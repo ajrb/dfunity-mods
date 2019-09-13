@@ -14,6 +14,7 @@ using DaggerfallWorkshop.Game.UserInterfaceWindows;
 using DaggerfallWorkshop.Game.Utility.ModSupport;
 using DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings;
 using UnityEngine;
+using DaggerfallWorkshop;
 
 namespace RoleplayRealism
 {
@@ -29,8 +30,9 @@ namespace RoleplayRealism
             bool archery = settings.GetBool("Modules", "advancedArchery");
             bool riding = settings.GetBool("Modules", "enhancedRiding");
             bool encumbrance = settings.GetBool("Modules", "encumbranceEffects");
+            bool bandaging = settings.GetBool("Modules", "bandaging");
 
-            InitMod(bedSleeping, archery, riding, encumbrance);
+            InitMod(bedSleeping, archery, riding, encumbrance, bandaging);
         }
 
         /* 
@@ -46,7 +48,7 @@ namespace RoleplayRealism
             InitMod(true, true, true, true, true);
         }
 
-        public static void InitMod(bool bedSleeping, bool archery, bool riding, bool encumbrance, bool debug = false)
+        public static void InitMod(bool bedSleeping, bool archery, bool riding, bool encumbrance, bool bandaging, bool debug = false)
         {
             Debug.Log("Begin mod init: RoleplayRealism");
 
@@ -76,6 +78,11 @@ namespace RoleplayRealism
             if (encumbrance)
             {
                 EntityEffectBroker.OnNewMagicRound += EncumbranceEffects_OnNewMagicRound;
+            }
+
+            if (bandaging)
+            {
+                DaggerfallUnity.Instance.ItemHelper.RegisterItemUseHander((int)UselessItems2.Bandage, UseBandage);
             }
 
             Debug.Log("Finished mod init: RoleplayRealism");
@@ -160,6 +167,21 @@ namespace RoleplayRealism
                     playerEffectManager.MergeDirectStatMods(statMods);
                 }
             }
+        }
+
+        private static bool UseBandage(DaggerfallUnityItem item, ItemCollection collection)
+        {
+            if (collection != null)
+            {
+                PlayerEntity playerEntity = GameManager.Instance.PlayerEntity;
+                int medical = playerEntity.Skills.GetLiveSkillValue(DFCareer.Skills.Medical);
+                int heal = (int) Mathf.Min(medical / 2, playerEntity.MaxHealth * 0.4f);
+                Debug.LogFormat("Applying a Bandage to heal {0} health.", heal);
+                collection.RemoveItem(item);
+
+                playerEntity.IncreaseHealth(heal);
+            }
+            return true;
         }
 
     }
