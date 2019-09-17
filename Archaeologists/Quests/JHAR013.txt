@@ -7,10 +7,10 @@ QuestorOffer:  [1000]
 <ce>  As one of the newer guilds in the Iliac Bay,
 <ce>  the Archaeologists must fight periodically
 <ce>  to maintain our place in %crn. On occasion
-<ce>  the powers that be require some persuasion
-<ce>  to allow us to continue here. Hopefully
-<ce>  we can count on you to placate a noble
-<ce>  with a streak of wrath against us.
+<ce>  the powers that be require some verbal persuasion
+<ce>  to allow us to continue here. Hopefully we can
+<ce>  count on you to placate a noble with a
+<ce>  streak of wrath against us.
 
 RefuseQuest:  [1001]
 <ce>  Someone else will take care of it, I trust.
