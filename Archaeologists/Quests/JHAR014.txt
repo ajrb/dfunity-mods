@@ -41,7 +41,6 @@ Message:  1010
 <ce>  to you in return, familiar with the Archaeologist
 <ce>  routine. The two of you commit to maintaining
 <ce>  peace insofar as you are not attacked.
-<ce>  The two following you are elated.
 
 Message:  1011
 <ce>  The injured orc bellows with rage.
@@ -61,6 +60,11 @@ Message:  1014
 <ce>  Your sponsors grow agitated at the time you've
 <ce>  spent on other matters than what they asked.
 <ce>  They excuse themselves to go look elsewhere.
+
+Message:  1015
+<ce>  _dummy1_ asks, "What are
+<ce>  we doing outside, pray tell?
+<ce>  Are there more orcs out here?"
 
 Message:  1030
 %qdt:
@@ -83,7 +87,7 @@ Person _dummy2_ group Resident2
 
 Clock _timer_ 00:00 0 flag 17 range 1 5
 Clock _final_ 8:00 16:00
-Clock _spawn_ 0:03 0:6
+Clock _spawn_ 0:03 0:06
 
 Foe _peace_ is Orc
 Foe _fight_ is Orc
@@ -114,7 +118,7 @@ _skilled_ task:
 
 variable _spawn_
 _good_ task:
-    when _skilled_ and _spawn_ and not _slain_
+    when _skilled_ and _spawn_ and _inside_ and not _slain_
     create foe _peace_ every 0 minutes 1 times with 100% success
     say 1010
     restrain foe _peace_
@@ -124,15 +128,22 @@ _inj_ task:
     injured _peace_
     say 1011
 
+_advise_ task:
+    when _spawn_ and not _inside_
+    say 1015
+
 _slain_ task:
     killed _peace_
     say 1012
+
+_badspawn_ task:
+    when _slain_ and _inside_
     create foe _fight_ every 28 minutes indefinitely with 5% success
     create foe _nme1_ every 65 minutes indefinitely with 5% success
     create foe _nme2_ every 87 minutes indefinitely with 3% success
 
 _nogood_ task:
-    when _spawn_ and not _skilled_
+    when _spawn_ and _inside_ and not _skilled_
     say 1013
     create foe _fight_ every 0 minutes 1 times with 100% success
     create foe _fight_ every 28 minutes indefinitely with 5% success
