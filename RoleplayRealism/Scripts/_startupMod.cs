@@ -15,6 +15,8 @@ using DaggerfallWorkshop.Game.Utility.ModSupport;
 using DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings;
 using UnityEngine;
 using DaggerfallWorkshop;
+using DaggerfallConnect.FallExe;
+using DaggerfallWorkshop.Game.Banking;
 
 namespace RoleplayRealism
 {
@@ -31,8 +33,10 @@ namespace RoleplayRealism
             bool riding = settings.GetBool("Modules", "enhancedRiding");
             bool encumbrance = settings.GetBool("Modules", "encumbranceEffects");
             bool bandaging = settings.GetBool("Modules", "bandaging");
+            bool shipPorts = settings.GetBool("Modules", "shipPorts");
+            bool rebalance = settings.GetBool("Modules", "itemRebalance");
 
-            InitMod(bedSleeping, archery, riding, encumbrance, bandaging);
+            InitMod(bedSleeping, archery, riding, encumbrance, bandaging, shipPorts, rebalance);
         }
 
         /* 
@@ -45,10 +49,10 @@ namespace RoleplayRealism
         */
         void Awake()
         {
-            InitMod(true, true, true, true, true);
+            InitMod(true, true, true, true, true, true, true, true);
         }
 
-        public static void InitMod(bool bedSleeping, bool archery, bool riding, bool encumbrance, bool bandaging, bool debug = false)
+        public static void InitMod(bool bedSleeping, bool archery, bool riding, bool encumbrance, bool bandaging, bool shipPorts, bool rebalance, bool debug = false)
         {
             Debug.Log("Begin mod init: RoleplayRealism");
 
@@ -80,9 +84,22 @@ namespace RoleplayRealism
                 EntityEffectBroker.OnNewMagicRound += EncumbranceEffects_OnNewMagicRound;
             }
 
+            ItemHelper itemHelper = DaggerfallUnity.Instance.ItemHelper;
             if (bandaging)
             {
-                DaggerfallUnity.Instance.ItemHelper.RegisterItemUseHander((int)UselessItems2.Bandage, UseBandage);
+                itemHelper.RegisterItemUseHander((int)UselessItems2.Bandage, UseBandage);
+            }
+
+            if (shipPorts)
+            {
+                GameManager.Instance.TransportManager.ShipAvailiable = IsShipAvailiable;
+            }
+
+            if (rebalance)
+            {
+                ItemTemplate cart = itemHelper.GetItemTemplate(93);
+                cart.basePrice = 900;
+                itemHelper.SetItemTemplate(cart);
             }
 
             Debug.Log("Finished mod init: RoleplayRealism");
@@ -184,5 +201,18 @@ namespace RoleplayRealism
             return true;
         }
 
+        private static bool IsShipAvailiable()
+        {
+            if (GameManager.Instance.TransportManager.IsOnShip())
+                return true;
+
+            DFLocation location = GameManager.Instance.PlayerGPS.CurrentLocation;
+            if (location.Loaded == true)
+            {
+                return location.Exterior.ExteriorData.PortTownAndUnknown != 0 && DaggerfallBankManager.OwnsShip;
+            }
+
+            return false;
+        }
     }
 }
