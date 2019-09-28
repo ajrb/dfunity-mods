@@ -18,22 +18,18 @@ using UnityEngine;
 
 namespace Archaeologists
 {
-    public class _startupMod : MonoBehaviour
+    public class ArchaeologistsMod : MonoBehaviour
     {
+        static Mod mod;
+
         [Invoke(StateManager.StateTypes.Start, 0)]
-        public static void InitStart(InitParams initParams)
+        public static void Init(InitParams initParams)
         {
-            InitMod();
+            mod = initParams.Mod;
+            var go = new GameObject(mod.Title);
+            go.AddComponent<ArchaeologistsMod>();
         }
 
-        /* 
-        *   used for debugging
-        *   howto debug:
-        *       -) add a dummy GameObject to DaggerfallUnityGame scene
-        *       -) attach this script (_startupMod) as component
-        *       -) deactivate mod in mod list (since dummy gameobject will start up mod)
-        *       -) attach debugger and set breakpoint to one of the mod's cs files and debug
-        */
         void Awake()
         {
             InitMod(true);

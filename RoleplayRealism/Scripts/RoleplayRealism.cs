@@ -42,14 +42,13 @@ namespace RoleplayRealism
             bool encumbrance = settings.GetBool("Modules", "encumbranceEffects");
             bool bandaging = settings.GetBool("Modules", "bandaging");
             bool shipPorts = settings.GetBool("Modules", "shipPorts");
-            bool rebalance = settings.GetBool("Modules", "itemRebalance");
 
-            InitMod(bedSleeping, archery, riding, encumbrance, bandaging, shipPorts, rebalance);
+            InitMod(bedSleeping, archery, riding, encumbrance, bandaging, shipPorts);
 
             mod.IsReady = true;
         }
 
-        public static void InitMod(bool bedSleeping, bool archery, bool riding, bool encumbrance, bool bandaging, bool shipPorts, bool rebalance)
+        public static void InitMod(bool bedSleeping, bool archery, bool riding, bool encumbrance, bool bandaging, bool shipPorts)
         {
             Debug.Log("Begin mod init: RoleplayRealism");
 

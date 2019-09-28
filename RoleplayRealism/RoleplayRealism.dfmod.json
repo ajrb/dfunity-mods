@@ -7,7 +7,6 @@
     "ModDescription": "Roleplay and realism modifications",
     "GUID": "d828b782-46e9-40e7-8ae6-19cde308032e",
     "Files": [
-        "Assets/Game/Mods/RoleplayRealism/Assets/ItemTemplates.json",
         "Assets/Game/Mods/RoleplayRealism/Scripts/EnhancedRiding.cs",
         "Assets/Game/Mods/RoleplayRealism/modsettings.json",
         "Assets/Game/Mods/RoleplayRealism/Scripts/RoleplayRealism.cs"
