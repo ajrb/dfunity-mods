@@ -776,7 +776,7 @@
                     "ZPos": 56,
                     "TextureArchive": 184,
                     "TextureRecord": 26,
-                    "FactionID": 803,
+                    "FactionID": 1004,
                     "Flags": 32
                 },
                 {
@@ -786,7 +786,7 @@
                     "ZPos": -430,
                     "TextureArchive": 183,
                     "TextureRecord": 12,
-                    "FactionID": 801,
+                    "FactionID": 1005,
                     "Flags": 0
                 },
                 {
@@ -796,7 +796,7 @@
                     "ZPos": -185,
                     "TextureArchive": 182,
                     "TextureRecord": 19,
-                    "FactionID": 841,
+                    "FactionID": 1006,
                     "Flags": 0
                 },
                 {
@@ -806,7 +806,7 @@
                     "ZPos": -315,
                     "TextureArchive": 183,
                     "TextureRecord": 5,
-                    "FactionID": 840,
+                    "FactionID": 1007,
                     "Flags": 0
                 },
                 {

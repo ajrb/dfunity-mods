@@ -40,6 +40,50 @@ namespace Archaeologists
             Debug.Log("Begin mod init: Archaeologists");
 
             // Register the new faction id's
+            if (RegisterFactionIds())
+            {
+                // Register the Guild class
+                if (!GuildManager.RegisterCustomGuild(FactionFile.GuildGroups.GGroup0, typeof(ArchaeologistsGuild)))
+                    throw new System.Exception("GuildGroup GGroup0 is already in use, unable to register Archaeologists Guild.");
+
+                // Register the quest service id
+                Services.RegisterGuildService(1000, GuildServices.Quests);
+                // Register the custom locator service
+                Services.RegisterGuildService(1001, ArchaeologistsGuild.LocatorService, "Locator Devices");
+                // Register the custom locator item
+                ItemCollection.RegisterCustomItem(typeof(LocatorItem).ToString(), typeof(LocatorItem));
+                // Register the daedra summoning service
+                Services.RegisterGuildService(1002, GuildServices.DaedraSummoning);
+                // Register the custom repair service for teleport mark
+                Services.RegisterGuildService(1003, ArchaeologistsGuild.RepairMarkService, "Repair Recall Mark");
+                // Register the training service id
+                Services.RegisterGuildService(1004, GuildServices.Training);
+                // Register the indentification service id
+                Services.RegisterGuildService(1005, GuildServices.Identify);
+                // Register the buy potions service id
+                Services.RegisterGuildService(1006, GuildServices.BuyPotions);
+                // Register the make potions service id
+                Services.RegisterGuildService(1007, GuildServices.MakePotions);
+
+                // Register the quest list
+                if (!debug)
+                    QuestListsManager.RegisterQuestList("Archaeologists");
+            }
+            else
+                throw new System.Exception("Faction id's are already in use, unable to register factions for Archaeologists Guild.");
+
+            // Override default formula
+            FormulaHelper.formula_1pe_1sk.Add("CalculateEnemyPacification", CalculateEnemyPacification);
+
+            // Add locator device object to scene and attach script
+            GameObject go = new GameObject("LocatorDevice");
+            go.AddComponent<LocatorDevice>();
+
+            Debug.Log("Finished mod init: Archaeologists");
+        }
+
+        private static bool RegisterFactionIds()
+        {
             bool success = FactionFile.RegisterCustomFaction(1000, new FactionFile.FactionData()
             {
                 id = 1000,
@@ -49,7 +93,7 @@ namespace Archaeologists
                 summon = -1,
                 region = -1,
                 power = 40,
-                enemy1 = (int) FactionFile.FactionIDs.The_Mages_Guild,
+                enemy1 = (int)FactionFile.FactionIDs.The_Mages_Guild,
                 face = -1,
                 race = -1,
                 sgroup = 2,
@@ -101,38 +145,67 @@ namespace Archaeologists
                 ggroup = 0,
                 children = null
             }) && success;
-            if (success)
+            success = FactionFile.RegisterCustomFaction(1004, new FactionFile.FactionData()
             {
-                // Register the Guild class
-                if (!GuildManager.RegisterCustomGuild(FactionFile.GuildGroups.GGroup0, typeof(ArchaeologistsGuild)))
-                    throw new System.Exception("GuildGroup GGroup0 is already in use, unable to register Archaeologists Guild.");
-
-                // Register the quest service id
-                Services.RegisterGuildService(1000, GuildServices.Quests);
-                // Register the custom locator service
-                Services.RegisterGuildService(1001, ArchaeologistsGuild.LocatorService, "Locator Devices");
-                // Register the custom locator item
-                ItemCollection.RegisterCustomItem(typeof(LocatorItem).ToString(), typeof(LocatorItem));
-                // Register the daedra summoning service
-                Services.RegisterGuildService(1002, GuildServices.DaedraSummoning);
-                // Register the custom repair service for teleport mark
-                Services.RegisterGuildService(1003, ArchaeologistsGuild.RepairMarkService, "Repair Recall Mark");
-
-                // Register the quest list
-                if (!debug)
-                    QuestListsManager.RegisterQuestList("Archaeologists");
-            }
-            else
-                throw new System.Exception("Faction id's are already in use, unable to register factions for Archaeologists Guild.");
-
-            // Override default formula
-            FormulaHelper.formula_1pe_1sk.Add("CalculateEnemyPacification", CalculateEnemyPacification);
-
-            // Add locator device object to scene and attach script
-            GameObject go = new GameObject("LocatorDevice");
-            go.AddComponent<LocatorDevice>();
-
-            Debug.Log("Finished mod init: Archaeologists");
+                id = 1004,
+                parent = 1000,
+                type = 2,
+                name = "Archaeologist Trainers",
+                summon = -1,
+                region = -1,
+                power = 25,
+                face = -1,
+                race = -1,
+                sgroup = 2,
+                ggroup = 0,
+                children = null
+            }) && success;
+            success = FactionFile.RegisterCustomFaction(1005, new FactionFile.FactionData()
+            {
+                id = 1005,
+                parent = 1000,
+                type = 2,
+                name = "Archaeologist Indentifiers",
+                summon = -1,
+                region = -1,
+                power = 25,
+                face = -1,
+                race = -1,
+                sgroup = 2,
+                ggroup = 0,
+                children = null
+            }) && success;
+            success = FactionFile.RegisterCustomFaction(1006, new FactionFile.FactionData()
+            {
+                id = 1006,
+                parent = 1000,
+                type = 2,
+                name = "Archaeologist Apothecaries",
+                summon = -1,
+                region = -1,
+                power = 25,
+                face = -1,
+                race = -1,
+                sgroup = 2,
+                ggroup = 0,
+                children = null
+            }) && success;
+            success = FactionFile.RegisterCustomFaction(1007, new FactionFile.FactionData()
+            {
+                id = 1007,
+                parent = 1000,
+                type = 2,
+                name = "Archaeologist Mixers",
+                summon = -1,
+                region = -1,
+                power = 25,
+                face = -1,
+                race = -1,
+                sgroup = 2,
+                ggroup = 0,
+                children = null
+            }) && success;
+            return success;
         }
 
         private static bool CalculateEnemyPacification(PlayerEntity player, DFCareer.Skills languageSkill)
