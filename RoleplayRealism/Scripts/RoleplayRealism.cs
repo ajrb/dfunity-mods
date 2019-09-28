@@ -1,5 +1,5 @@
 // Project:         RoleplayRealism mod for Daggerfall Unity (http://www.dfworkshop.net)
-// Copyright:       Copyright (C) 2018 Hazelnut
+// Copyright:       Copyright (C) 2019 Hazelnut
 // License:         MIT License (http://www.opensource.org/licenses/mit-license.php)
 // Author:          Hazelnut
 
@@ -15,19 +15,27 @@ using DaggerfallWorkshop.Game.Utility.ModSupport;
 using DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings;
 using UnityEngine;
 using DaggerfallWorkshop;
-using DaggerfallConnect.FallExe;
 using DaggerfallWorkshop.Game.Banking;
 
 namespace RoleplayRealism
 {
-    public class _startupMod : MonoBehaviour
+    public class RoleplayRealism : MonoBehaviour
     {
         public static float EncEffectScaleFactor = 2f;
 
+        static Mod mod;
+
         [Invoke(StateManager.StateTypes.Start, 0)]
-        public static void InitStart(InitParams initParams)
+        public static void Init(InitParams initParams)
         {
-            ModSettings settings = initParams.Mod.GetSettings();
+            mod = initParams.Mod;
+            var go = new GameObject(mod.Title);
+            go.AddComponent<RoleplayRealism>();
+        }
+
+        void Awake()
+        {
+            ModSettings settings = mod.GetSettings();
             bool bedSleeping = settings.GetBool("Modules", "bedSleeping");
             bool archery = settings.GetBool("Modules", "advancedArchery");
             bool riding = settings.GetBool("Modules", "enhancedRiding");
@@ -37,22 +45,11 @@ namespace RoleplayRealism
             bool rebalance = settings.GetBool("Modules", "itemRebalance");
 
             InitMod(bedSleeping, archery, riding, encumbrance, bandaging, shipPorts, rebalance);
+
+            mod.IsReady = true;
         }
 
-        /* 
-        *   used for debugging
-        *   howto debug:
-        *       -) add a dummy GameObject to DaggerfallUnityGame scene
-        *       -) attach this script (_startupMod) as component
-        *       -) deactivate mod in mod list (since dummy gameobject will start up mod)
-        *       -) attach debugger and set breakpoint to one of the mod's cs files and debug
-        */
-        void Awake()
-        {
-            InitMod(true, true, true, true, true, true, true, true);
-        }
-
-        public static void InitMod(bool bedSleeping, bool archery, bool riding, bool encumbrance, bool bandaging, bool shipPorts, bool rebalance, bool debug = false)
+        public static void InitMod(bool bedSleeping, bool archery, bool riding, bool encumbrance, bool bandaging, bool shipPorts, bool rebalance)
         {
             Debug.Log("Begin mod init: RoleplayRealism");
 
@@ -95,19 +92,12 @@ namespace RoleplayRealism
                 GameManager.Instance.TransportManager.ShipAvailiable = IsShipAvailiable;
             }
 
-            if (rebalance)
-            {
-                ItemTemplate cart = itemHelper.GetItemTemplate(93);
-                cart.basePrice = 900;
-                itemHelper.SetItemTemplate(cart);
-            }
-
             Debug.Log("Finished mod init: RoleplayRealism");
         }
 
         private static void BedActivation(Transform transform)
         {
-            Debug.Log("zzzzzzzzzz!");
+            //Debug.Log("zzzzzzzzzz!");
             IUserInterfaceManager uiManager = DaggerfallUI.UIManager;
             uiManager.PushWindow(new DaggerfallRestWindow(uiManager, true));
         }

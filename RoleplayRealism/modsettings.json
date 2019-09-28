@@ -9,14 +9,14 @@
                 {
                     "Value": true,
                     "Name": "bedSleeping",
-                    "Description": "Allows sleep to be initiated by clicking on a bed",
+                    "Description": "Allows sleep to be initiated by clicking on a bed.",
                     "$version": "v1",
                     "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
                 },
                 {
                     "Value": true,
                     "Name": "advancedArchery",
-                    "Description": "Alters to-hit and damage done by arrows depending on the length of pull",
+                    "Description": "Alters to-hit and damage done by arrows depending on the length of draw.",
                     "$version": "v1",
                     "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
                 },
@@ -30,7 +30,21 @@
                 {
                     "Value": true,
                     "Name": "encumbranceEffects",
-                    "Description": "Provides speed and fatigue penalties when carrying too much",
+                    "Description": "Provides speed and fatigue penalties when carrying too much weight.",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
+                },
+                {
+                    "Value": true,
+                    "Name": "bandaging",
+                    "Description": "Allows bandages to be used for healing based on medical skill.",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
+                },
+                {
+                    "Value": true,
+                    "Name": "shipPorts",
+                    "Description": "Player can only board their ship when in a port town.",
                     "$version": "v1",
                     "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
                 }
