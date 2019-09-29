@@ -61,7 +61,6 @@ namespace DaggerfallWorkshop.Game
             if (!GameManager.IsGamePaused && playerMotor.IsRiding)
             {
                 // Sample angle of terrain
-                Ray ray = new Ray(transform.position, Vector3.down);
                 RaycastHit hit1, hit2;
                 Physics.Raycast(transform.position, Vector3.down, out hit1);
                 Physics.Raycast(transform.position + transform.forward, Vector3.down, out hit2);

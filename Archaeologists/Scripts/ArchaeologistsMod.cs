@@ -32,10 +32,11 @@ namespace Archaeologists
 
         void Awake()
         {
-            InitMod(true);
+            InitMod();
+            mod.IsReady = true;
         }
 
-        public static void InitMod(bool debug = false)
+        public static void InitMod()
         {
             Debug.Log("Begin mod init: Archaeologists");
 
@@ -45,6 +46,10 @@ namespace Archaeologists
                 // Register the Guild class
                 if (!GuildManager.RegisterCustomGuild(FactionFile.GuildGroups.GGroup0, typeof(ArchaeologistsGuild)))
                     throw new System.Exception("GuildGroup GGroup0 is already in use, unable to register Archaeologists Guild.");
+
+                // Register the quest list
+                if (!QuestListsManager.RegisterQuestList("Archaeologists"))
+                    throw new System.Exception("Quest list name is already in use, unable to register Archaeologists quest list.");
 
                 // Register the quest service id
                 Services.RegisterGuildService(1000, GuildServices.Quests);
@@ -64,10 +69,6 @@ namespace Archaeologists
                 Services.RegisterGuildService(1006, GuildServices.BuyPotions);
                 // Register the make potions service id
                 Services.RegisterGuildService(1007, GuildServices.MakePotions);
-
-                // Register the quest list
-                if (!debug)
-                    QuestListsManager.RegisterQuestList("Archaeologists");
             }
             else
                 throw new System.Exception("Faction id's are already in use, unable to register factions for Archaeologists Guild.");
