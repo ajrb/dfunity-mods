@@ -23,6 +23,7 @@ namespace Archaeologists
             properties.AllowedElements = EntityEffectBroker.ElementFlags_MagicOnly;
             properties.AllowedCraftingStations = MagicCraftingStations.PotionMaker;
             properties.ShowSpellIcon = false;
+            properties.DisableReflectiveEnumeration = true;
         }
 
         public override void SetPotionProperties()

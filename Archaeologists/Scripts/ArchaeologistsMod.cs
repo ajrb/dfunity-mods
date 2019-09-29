@@ -69,6 +69,9 @@ namespace Archaeologists
                 Services.RegisterGuildService(1006, GuildServices.BuyPotions);
                 // Register the make potions service id
                 Services.RegisterGuildService(1007, GuildServices.MakePotions);
+
+                // Register the Teleport potion
+                GameManager.Instance.EntityEffectBroker.RegisterEffectTemplate(new TeleportPotion(), true);
             }
             else
                 throw new System.Exception("Faction id's are already in use, unable to register factions for Archaeologists Guild.");
