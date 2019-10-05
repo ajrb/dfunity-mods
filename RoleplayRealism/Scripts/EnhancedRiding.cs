@@ -6,6 +6,7 @@
 using DaggerfallConnect;
 using DaggerfallWorkshop.Game.Entity;
 using DaggerfallWorkshop.Game.Formulas;
+using DaggerfallWorkshop.Utility;
 using System;
 using UnityEngine;
 
@@ -19,9 +20,13 @@ namespace DaggerfallWorkshop.Game
 
         const int nativeScreenHeight = 200;
         const int samples = 16;
+        const string horseNeckTextureName = "MRED00I1.CFA";
+        const string cartNeckTextureName = "MRED01I1.CFA";
 
         int sampleIdx = 0;
         float[] terrainAngles = new float[samples];
+        ImageData[] horseNeckTextures = new ImageData[4];
+        ImageData[] cartNeckTextures = new ImageData[4];
 
         PlayerMotor playerMotor;
         TransportManager transportManager;
@@ -53,6 +58,12 @@ namespace DaggerfallWorkshop.Game
                 throw new Exception("PlayerMouseLook not found.");
 
             GameManager.Instance.SpeedChanger.CanRun = CanRunUnlessRidingCart;
+
+            // Setup appropriate neck textures if availiable.
+            for (int i = 0; i < 4; i++)
+                horseNeckTextures[i] = ImageReader.GetImageData(horseNeckTextureName, 0, i, true, true);
+            for (int i = 0; i < 4; i++)
+                cartNeckTextures[i] = ImageReader.GetImageData(cartNeckTextureName, 0, i, true, true);
         }
 
         // Update the mouse look pitch limit when riding status changes.
@@ -195,9 +206,23 @@ namespace DaggerfallWorkshop.Game
                     float drawBottom = pos.y + pos.height - horseScaleY;
                     if (drawBottom < Screen.height)
                     {
-                        float yAdjExt = yAdj / 100;
-                        Rect posExt = new Rect(pos.x, drawBottom, (ridingTexture.width - 14) * horseScaleX, Screen.height - drawBottom + horseScaleY);
-                        GUI.DrawTextureWithTexCoords(posExt, ridingTexture.texture, new Rect(extX, 0.2f - yAdjExt, extW, yAdjExt));
+                        int frameIdx = transportManager.FrameIdx;
+                        ImageData[] neckTextures = (transportManager.TransportMode == TransportModes.Horse) ? horseNeckTextures : cartNeckTextures;
+                        if (neckTextures[frameIdx].texture.width == 0 || neckTextures[frameIdx].texture.height == 0)
+                        {
+                            // Duplicate a section of existing sprite.
+                            float yAdjNeck = yAdj / 100;
+                            Rect posNeck = new Rect(pos.x, drawBottom, (ridingTexture.width - 14) * horseScaleX, Screen.height - drawBottom + horseScaleY);
+                            GUI.DrawTextureWithTexCoords(posNeck, ridingTexture.texture, new Rect(extX, 0.2f - yAdjNeck, extW, yAdjNeck));
+                        }
+                        else
+                        {
+                            // Draw a secondary image.
+                            float yAdjNeck = yAdj / 20.8f;
+                            yAdjNeck = yAdjNeck > 0 ? yAdjNeck : 0.001f;
+                            Rect posNeck = new Rect(pos.x, drawBottom, ridingTexture.width * horseScaleX, Screen.height - drawBottom + horseScaleY);
+                            GUI.DrawTextureWithTexCoords(posNeck, neckTextures[frameIdx].texture, new Rect(0, 1-yAdjNeck, 1, yAdjNeck));
+                        }
                     }
                 }
             }
