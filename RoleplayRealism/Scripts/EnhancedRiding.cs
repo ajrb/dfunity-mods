@@ -177,7 +177,7 @@ namespace DaggerfallWorkshop.Game
             if (Event.current.type.Equals(EventType.Repaint) && !GameManager.IsGamePaused)
             {
                 ImageData ridingTexture = transportManager.RidingTexture;
-                int frameIdx = transportManager.FrameIdx;
+                int frameIdx = transportManager.FrameIndex;
                 if ((transportManager.TransportMode == TransportModes.Horse || transportManager.TransportMode == TransportModes.Cart) && ridingTexture.texture != null)
                 {
                     // Draw horse texture behind other HUD elements & weapons.
