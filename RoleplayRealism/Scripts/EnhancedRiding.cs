@@ -177,6 +177,7 @@ namespace DaggerfallWorkshop.Game
             if (Event.current.type.Equals(EventType.Repaint) && !GameManager.IsGamePaused)
             {
                 ImageData ridingTexture = transportManager.RidingTexture;
+                int frameIdx = transportManager.FrameIdx;
                 if ((transportManager.TransportMode == TransportModes.Horse || transportManager.TransportMode == TransportModes.Cart) && ridingTexture.texture != null)
                 {
                     // Draw horse texture behind other HUD elements & weapons.
@@ -206,7 +207,6 @@ namespace DaggerfallWorkshop.Game
                     float drawBottom = pos.y + pos.height - horseScaleY;
                     if (drawBottom < Screen.height)
                     {
-                        int frameIdx = transportManager.FrameIdx;
                         ImageData[] neckTextures = (transportManager.TransportMode == TransportModes.Horse) ? horseNeckTextures : cartNeckTextures;
                         if (neckTextures[frameIdx].texture.width == 0 || neckTextures[frameIdx].texture.height == 0)
                         {
