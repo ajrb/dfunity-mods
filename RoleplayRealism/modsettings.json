@@ -47,6 +47,13 @@
                     "Description": "Player can only board their ship when in a port town.",
                     "$version": "v1",
                     "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
+                },
+                {
+                    "Value": true,
+                    "Name": "underworldExpulsion",
+                    "Description": "Enables underworld guilds to expel members for poor performance.. with prejudice.",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
                 }
             ],
             "$version": "v1"

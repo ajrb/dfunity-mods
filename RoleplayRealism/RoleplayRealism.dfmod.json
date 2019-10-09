@@ -1,15 +1,17 @@
 {
     "ModTitle": "RoleplayRealism",
-    "ModVersion": "0.5",
+    "ModVersion": "0.6",
     "ModAuthor": "Hazelnut",
     "ContactInfo": "forums.dfworkshop.net",
-    "DFUnity_Version": "0.10.6+",
+    "DFUnity_Version": "0.10.8",
     "ModDescription": "Roleplay and realism modifications",
     "GUID": "d828b782-46e9-40e7-8ae6-19cde308032e",
     "Files": [
         "Assets/Game/Mods/RoleplayRealism/Scripts/EnhancedRiding.cs",
         "Assets/Game/Mods/RoleplayRealism/modsettings.json",
-        "Assets/Game/Mods/RoleplayRealism/Scripts/RoleplayRealism.cs"
+        "Assets/Game/Mods/RoleplayRealism/Scripts/RoleplayRealism.cs",
+        "Assets/Game/Mods/RoleplayRealism/Scripts/DarkBrotherhoodRR.cs",
+        "Assets/Game/Mods/RoleplayRealism/Scripts/ThievesGuildRR.cs"
     ],
     "Contributes": null
 }

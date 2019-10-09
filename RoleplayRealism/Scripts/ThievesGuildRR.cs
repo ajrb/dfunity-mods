@@ -10,15 +10,16 @@ using DaggerfallWorkshop.Utility;
 
 namespace DaggerfallWorkshop.Game.Guilds
 {
-    public class DarkBrotherhoodRR : DarkBrotherhood
+    public class ThievesGuildRR : ThievesGuild
     {
         protected static TextFile.Token newLine = TextFile.CreateFormatToken(TextFile.Formatting.JustifyCenter);
         protected static TextFile.Token[] expulsionTokens =
         {
-            TextFile.CreateTextToken("%pcn, you have disappointed us yet again, and you've not"), newLine,
-            TextFile.CreateTextToken("made powerful enough connections to save your reputation."), newLine, newLine,
-            TextFile.CreateTextToken("Our patience is limited and it's worn thin. Now your"), newLine,
-            TextFile.CreateTextToken("membership, and by extension your life, is forfeit!"), newLine,
+            TextFile.CreateTextToken("%pcn, you've disappointed us yet again with your bleedin'"), newLine,
+            TextFile.CreateTextToken("shoddy work and our patience has run as dry as a desert."), newLine,
+            TextFile.CreateTextToken("An' without bringing in nearly enough dough or gaining"), newLine,
+            TextFile.CreateTextToken("powerful connections, is not sufficient to save your skin."), newLine, newLine,
+            TextFile.CreateTextToken("You're bloody done as a thief, get 'em lads!"), newLine,
         };
 
         public override TextFile.Token[] TokensExpulsion()
@@ -28,7 +29,7 @@ namespace DaggerfallWorkshop.Game.Guilds
 
         protected override int AllowGuildExpulsion(PlayerEntity playerEntity, int newRank)
         {
-            // Allow Dark Brotherhood to expel members.
+            // Allow Thieves Guild to expel members.
             return newRank;
         }
 
@@ -36,7 +37,7 @@ namespace DaggerfallWorkshop.Game.Guilds
         {
             base.Join();
 
-            // Ensure DB reputation starts at at least 2 to give a 1 quest failure buffer.
+            // Ensure TG reputation starts at at least 2 to give a 1 quest failure buffer.
             PersistentFactionData factionData = GameManager.Instance.PlayerEntity.FactionData;
             if (factionData.GetReputation(FactionId) < 2)
                 factionData.SetReputation(FactionId, 2);
@@ -47,9 +48,9 @@ namespace DaggerfallWorkshop.Game.Guilds
             base.Leave();
 
             // When leaving they will try to forcibly 'retire' you!
-            int deathSquad = 4 + (GameManager.Instance.PlayerEntity.Level / 2);
-            GameObjectHelper.CreateFoeSpawner(false, MobileTypes.Assassin, deathSquad, 1, 5);
-            GameObjectHelper.CreateFoeSpawner(false, MobileTypes.Nightblade, deathSquad, 4, 16);
+            int deathSquad = 4 + (int)(GameManager.Instance.PlayerEntity.Level / 1.5);
+            GameObjectHelper.CreateFoeSpawner(false, MobileTypes.Rogue, deathSquad, 1, 8);
+            GameObjectHelper.CreateFoeSpawner(false, MobileTypes.Thief, deathSquad, 1, 4);
         }
     }
 }

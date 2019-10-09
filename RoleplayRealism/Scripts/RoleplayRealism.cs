@@ -44,13 +44,14 @@ namespace RoleplayRealism
             bool encumbrance = settings.GetBool("Modules", "encumbranceEffects");
             bool bandaging = settings.GetBool("Modules", "bandaging");
             bool shipPorts = settings.GetBool("Modules", "shipPorts");
+            bool expulsion = settings.GetBool("Modules", "underworldExpulsion");
 
-            InitMod(bedSleeping, archery, riding, encumbrance, bandaging, shipPorts);
+            InitMod(bedSleeping, archery, riding, encumbrance, bandaging, shipPorts, expulsion);
 
             mod.IsReady = true;
         }
 
-        public static void InitMod(bool bedSleeping, bool archery, bool riding, bool encumbrance, bool bandaging, bool shipPorts)
+        public static void InitMod(bool bedSleeping, bool archery, bool riding, bool encumbrance, bool bandaging, bool shipPorts, bool expulsion)
         {
             Debug.Log("Begin mod init: RoleplayRealism");
 
@@ -93,9 +94,15 @@ namespace RoleplayRealism
                 GameManager.Instance.TransportManager.ShipAvailiable = IsShipAvailiable;
             }
 
-            // Register the Guild class
-            if (!GuildManager.RegisterCustomGuild(FactionFile.GuildGroups.DarkBrotherHood, typeof(DarkBrotherhoodRR)))
-                throw new System.Exception("GuildGroup DarkBrotherHood is already overridden, unable to register DarkBrotherhoodRR guild class.");
+            if (expulsion)
+            {
+                // Register the TG/DB Guild classes
+                if (!GuildManager.RegisterCustomGuild(FactionFile.GuildGroups.GeneralPopulace, typeof(ThievesGuildRR)))
+                    throw new System.Exception("GuildGroup GeneralPopulace is already overridden, unable to register ThievesGuildRR guild class.");
+
+                if (!GuildManager.RegisterCustomGuild(FactionFile.GuildGroups.DarkBrotherHood, typeof(DarkBrotherhoodRR)))
+                    throw new System.Exception("GuildGroup DarkBrotherHood is already overridden, unable to register DarkBrotherhoodRR guild class.");
+            }
 
             Debug.Log("Finished mod init: RoleplayRealism");
         }
