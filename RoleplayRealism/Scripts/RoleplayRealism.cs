@@ -16,6 +16,8 @@ using DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings;
 using UnityEngine;
 using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game.Banking;
+using DaggerfallWorkshop.Game.Guilds;
+using DaggerfallConnect.Arena2;
 
 namespace RoleplayRealism
 {
@@ -90,6 +92,10 @@ namespace RoleplayRealism
             {
                 GameManager.Instance.TransportManager.ShipAvailiable = IsShipAvailiable;
             }
+
+            // Register the Guild class
+            if (!GuildManager.RegisterCustomGuild(FactionFile.GuildGroups.DarkBrotherHood, typeof(DarkBrotherhoodRR)))
+                throw new System.Exception("GuildGroup DarkBrotherHood is already overridden, unable to register DarkBrotherhoodRR guild class.");
 
             Debug.Log("Finished mod init: RoleplayRealism");
         }
