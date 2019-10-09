@@ -251,7 +251,7 @@ namespace DaggerfallWorkshop.Game.Guilds
             Debug.Log("Locator service.");
 
             // Get the guild instance.
-            Guild thisGuild = GameManager.Instance.GuildManager.GetGuild(FactionFile.GuildGroups.GGroup0);
+            IGuild thisGuild = GameManager.Instance.GuildManager.GetGuild(FactionFile.GuildGroups.GGroup0);
             // Check how many holy items the player has. Offer 16 if no limit.
             int holyCount = 16;
             if (thisGuild.Rank < 6)
