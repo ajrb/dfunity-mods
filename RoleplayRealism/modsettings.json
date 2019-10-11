@@ -57,6 +57,23 @@
                 }
             ],
             "$version": "v1"
+        },
+        {
+            "Name": "EnhancedRiding",
+            "Description": "Enhanced horse riding implementation settings.",
+            "IsAdvanced": false,
+            "Keys": [
+                {
+                    "Min": 0,
+                    "Max": 16,
+                    "Value": 8,
+                    "Name": "followTerrainSoftenFactor",
+                    "Description": "Scale factor to soften terrain gradient following. (0=none, 16=max soften)",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.SliderIntKey"
+                }
+            ],
+            "$version": "v1"
         }
     ]
 }

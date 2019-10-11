@@ -24,6 +24,7 @@ namespace DaggerfallWorkshop.Game
         const string cartNeckTextureName = "MRED01I1.CFA";
 
         int sampleIdx = 0;
+        int softenFollow = 0;
         float[] terrainAngles = new float[samples];
         ImageData[] horseNeckTextures = new ImageData[4];
         ImageData[] cartNeckTextures = new ImageData[4];
@@ -34,6 +35,11 @@ namespace DaggerfallWorkshop.Game
 
         GameObject cachedColliderHitObject;
 
+        public void SetFollowTerrainSoftenFactor(int softenFollow)
+        {
+            this.softenFollow = softenFollow;
+            Debug.Log("Set EnhancedRiding.FollowTerrainSoftenFactor to " + softenFollow);
+        }
 
         // Delegate for PlayerSpeedChanger - allows horse running.
         public bool CanRunUnlessRidingCart()
@@ -190,7 +196,7 @@ namespace DaggerfallWorkshop.Game
                     float terrainAngle = 0;
                     for (int i=0; i < samples; i++)
                         terrainAngle += terrainAngles[i];
-                    terrainAngle /= samples;
+                    terrainAngle /= samples + softenFollow;
                     // Set min look pitch and calc horse sprite y position adjustment
                     playerMouseLook.PitchMaxLimit = terrainAngle + 18;
                     float yAdj = (playerMouseLook.Pitch - terrainAngle - 10) * LookPitchRatio;

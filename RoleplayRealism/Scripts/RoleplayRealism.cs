@@ -74,7 +74,9 @@ namespace RoleplayRealism
                 GameObject playerAdvGO = GameObject.Find("PlayerAdvanced");
                 if (playerAdvGO)
                 {
-                    playerAdvGO.AddComponent<EnhancedRiding>();
+                    EnhancedRiding enhancedRiding = playerAdvGO.AddComponent<EnhancedRiding>();
+                    if (enhancedRiding != null)
+                        enhancedRiding.SetFollowTerrainSoftenFactor(mod.GetSettings().GetInt("EnhancedRiding", "followTerrainSoftenFactor"));
                 }
             }
 
