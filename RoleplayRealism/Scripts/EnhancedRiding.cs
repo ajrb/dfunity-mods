@@ -208,7 +208,7 @@ namespace DaggerfallWorkshop.Game
                     if (drawBottom < Screen.height)
                     {
                         ImageData[] neckTextures = (transportManager.TransportMode == TransportModes.Horse) ? horseNeckTextures : cartNeckTextures;
-                        if (neckTextures[frameIdx].texture.width == 0 || neckTextures[frameIdx].texture.height == 0)
+                        if (neckTextures[frameIdx].texture == null)
                         {
                             // Duplicate a section of existing sprite.
                             float yAdjNeck = yAdj / 100;
