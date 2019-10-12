@@ -7,6 +7,7 @@ using DaggerfallConnect;
 using DaggerfallWorkshop.Game.Entity;
 using DaggerfallWorkshop.Game.Formulas;
 using DaggerfallWorkshop.Utility;
+using DaggerfallWorkshop.Utility.AssetInjection;
 using System;
 using UnityEngine;
 
@@ -67,9 +68,9 @@ namespace DaggerfallWorkshop.Game
 
             // Setup appropriate neck textures if availiable.
             for (int i = 0; i < 4; i++)
-                horseNeckTextures[i] = ImageReader.GetImageData(horseNeckTextureName, 0, i, true, true);
+                TextureReplacement.TryImportCifRci(horseNeckTextureName, 0, i, false, out horseNeckTextures[i].texture);
             for (int i = 0; i < 4; i++)
-                cartNeckTextures[i] = ImageReader.GetImageData(cartNeckTextureName, 0, i, true, true);
+                TextureReplacement.TryImportCifRci(cartNeckTextureName, 0, i, false, out cartNeckTextures[i].texture);
         }
 
         // Update the mouse look pitch limit when riding status changes.
