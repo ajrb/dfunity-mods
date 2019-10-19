@@ -266,7 +266,8 @@ namespace DaggerfallWorkshop.Game.Guilds
             if (thisGuild.Rank >= 6 || holyCount > 0)
             {
                 // Show trade window and a popup message to inform player how many locators they can purchase.
-                DaggerfallTradeWindow tradeWindow = new DaggerfallTradeWindow(DaggerfallUI.UIManager, DaggerfallTradeWindow.WindowModes.Buy, null, thisGuild);
+                DaggerfallTradeWindow tradeWindow = (DaggerfallTradeWindow)
+                    UIWindowFactory.GetInstanceWithArgs(UIWindowType.Trade, new object[] { DaggerfallUI.UIManager, null, DaggerfallTradeWindow.WindowModes.Buy, thisGuild });
                 tradeWindow.MerchantItems = GetLocatorDevices(holyCount, RankLocatorCosts[thisGuild.Rank]);
                 DaggerfallUI.UIManager.PushWindow(tradeWindow);
 
