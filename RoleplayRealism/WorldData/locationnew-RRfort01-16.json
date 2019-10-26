@@ -1,12 +1,12 @@
 {
     "Loaded": true,
-    "Name": "Howster Fort",
+    "Name": "Northrock Fort",
     "RegionName": "Wrothgarian Mountains",
     "HasDungeon": false,
     "MapTableData": {
-        "MapId": 52937,
-        "Latitude": 57216,
-        "Longitude": 119936,
+        "MapId": 51938,
+        "Latitude": 57344,
+        "Longitude": 120064,
         "LocationType": "ReligionCult",
         "DungeonType": "NoDungeon",
         "Discovered": true,
@@ -15,30 +15,30 @@
     "Exterior": {
         "RecordElement": {
             "Header": {
-                "X": 30703616,
-                "Y": 14647296,
+                "X": 30736384,
+                "Y": 14680064,
                 "IsExterior": 32768,
                 "Unknown2": 0,
                 "LocationId": 29600,
                 "IsInterior": 0,
                 "ExteriorLocationId": 0,
-                "LocationName": "Howster Fort"
+                "LocationName": "Northrock Fort"
             }
         },
         "BuildingCount": 1,
         "Buildings": [
             {
-                "NameSeed": 6268,
-                "FactionId": 0,
-                "Sector": 4,
-                "LocationId": 29600,
-                "BuildingType": "House2",
+                "NameSeed": 6248,
+                "FactionId": 852,
+                "Sector": 0,
+                "LocationId": 29601,
+                "BuildingType": "House6",
                 "Quality": 11
             }
         ],
         "ExteriorData": {
-            "AnotherName": "Howster Fort",
-            "MapId": 52937,
+            "AnotherName": "Northrock Fort",
+            "MapId": 51938,
             "LocationId": 0,
             "Width": 1,
             "Height": 1,

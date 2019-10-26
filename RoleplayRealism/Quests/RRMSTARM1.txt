@@ -26,7 +26,7 @@ RefuseQuest:  [1001]
 
 AcceptQuest:  [1002]
 <ce>                Good show, %pct. We're convinced that this is worthwhile
-<ce>                investigating further. Head over to _palace_ in __palace_
+<ce>                investigating further. Head over to _fort_ in __fort_
 <ce>                and see what you can find.
 <ce>
 <ce>                Hopefully it will lead you to _armorer_.
@@ -44,15 +44,15 @@ QuestComplete:  [1004]
 <ce>                               give you.
 
 RumorsDuringQuest:  [1005]
-<ce>                The guards over at the _palace_
-<ce>                in __palace_ have such fancy 
+<ce>                The guards over at the _fort_
+<ce>                in __fort_ have such fancy 
 <ce>                armor. I wonder where they get such 
 <ce>                workmanship?
 
 RumorsPostsuccess:  [1007]
 <ce>                You're that %ra that rescued the master
 <ce>                armorer _armorer_ from 
-<ce>                __palace_. Bloody nobility, think
+<ce>                __fort_. Bloody nobility, think
 <ce>                they can treat commoners like dirt and
 <ce>                get away with it. Praise be for champions
 <ce>                like you.
@@ -72,12 +72,12 @@ On %qdt:
  told me of some rumors regarding a master armorer
  called _armorer_ who has not been seen 
  for a long time.
- I've decided to investigate the _palace_ at __palace_
+ I've decided to investigate the _fort_ at __fort_
  to see if I can find out what's going on and 
  whether or not it's connected with %g3 disapearance.
 
 Message: 1011
-<ce>                         _palace_ is dark and
+<ce>                         _fort_ is dark and
 <ce>                      ominous. It is certain that
 <ce>                        enemies lurk everywhere.
 
@@ -96,12 +96,16 @@ QBN:
 Person _armorer_ face 1 faction The_Merchants male
 Person _qgiver_ group Questor
 
-Place _palace_ remote palace
+Foe _guard1_ is Warrior
+
+Place _fort_ permanent Northrock_Fort
 
 -- Quest start-up:
-    place npc _armorer_ at _palace_
+    place npc _armorer_ at _fort_ marker 2
+    place foe _guard1_ at _fort_ marker 0
+    restrain foe _guard1_
     log 1010 step 0
-    pc at _palace_ set _enteredpalace_ saying 1011
+    pc at _fort_ set _enteredpalace_ saying 1011
 
 _rescue_ task:
     clicked npc _armorer_ say 1021

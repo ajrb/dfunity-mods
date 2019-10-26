@@ -215,6 +215,29 @@
                     "ZPos": 64,
                     "XRotation": 0,
                     "YRotation": 1540,
+                    "YRotation": -506,
+                    "ZRotation": 0
+                },
+                {
+                    "ModelId": "42557",
+                    "ModelIdNum": 42557,
+                    "ObjectType": 0,
+                    "XPos": 0,
+                    "YPos": -181,
+                    "ZPos": 375,
+                    "XRotation": 0,
+                    "YRotation": 0,
+                    "ZRotation": 0
+                },
+                {
+                    "ModelId": "42557",
+                    "ModelIdNum": 42557,
+                    "ObjectType": 0,
+                    "XPos": 243,
+                    "YPos": -181,
+                    "ZPos": 191,
+                    "XRotation": 0,
+                    "YRotation": -512,
                     "ZRotation": 0
                 }
             ],
