@@ -11,7 +11,12 @@
         "Assets/Game/Mods/RoleplayRealism/modsettings.json",
         "Assets/Game/Mods/RoleplayRealism/Scripts/RoleplayRealism.cs",
         "Assets/Game/Mods/RoleplayRealism/Scripts/DarkBrotherhoodRR.cs",
-        "Assets/Game/Mods/RoleplayRealism/Scripts/ThievesGuildRR.cs"
+        "Assets/Game/Mods/RoleplayRealism/Scripts/ThievesGuildRR.cs",
+        "Assets/Game/Mods/RoleplayRealism/Quests/QuestList-RoleplayRealism.txt",
+        "Assets/Game/Mods/RoleplayRealism/Quests/RRMSTARM1.txt",
+        "Assets/Game/Mods/RoleplayRealism/WorldData/ARMRAM03.RMB-765-building14_master.json",
+        "Assets/Game/Mods/RoleplayRealism/WorldData/RRFORT01.RMB.json",
+        "Assets/Game/Mods/RoleplayRealism/WorldData/locationnew-RRfort01-16.json"
     ],
     "Contributes": null
 }

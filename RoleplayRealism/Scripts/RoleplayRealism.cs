@@ -18,6 +18,7 @@ using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game.Banking;
 using DaggerfallWorkshop.Game.Guilds;
 using DaggerfallConnect.Arena2;
+using DaggerfallWorkshop.Game.Questing;
 
 namespace RoleplayRealism
 {
@@ -105,6 +106,9 @@ namespace RoleplayRealism
                 if (!GuildManager.RegisterCustomGuild(FactionFile.GuildGroups.DarkBrotherHood, typeof(DarkBrotherhoodRR)))
                     throw new System.Exception("GuildGroup DarkBrotherHood is already overridden, unable to register DarkBrotherhoodRR guild class.");
             }
+
+            if (!QuestListsManager.RegisterQuestList("RoleplayRealism"))
+                throw new System.Exception("Quest list name is already in use, unable to register RoleplayRealism quest list.");
 
             Debug.Log("Finished mod init: RoleplayRealism");
         }

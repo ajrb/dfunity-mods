@@ -1,0 +1,124 @@
+Quest: RRMSTARM1
+DisplayName: The Lost Master Armorer
+QRC:
+
+QuestorOffer:  [1000]
+<ce>                Rumors have reached the guild concerning a famed
+<ce>                master Armorer by the name of _armorer_.
+<ce>                Seems %g simply vanished a while back and no one
+<ce>                has heard anything of %g2 since. Recently some reports
+<ce>                have surfaced regarding a noble whos personal guard
+<ce>                have been seen wearing very high quality armor that 
+<ce>                the guild smiths think sounds very much like it could
+<ce>                very well be %g3 work which would be strange for someone
+<ce>                who's been missing for so long - something's fishy here.
+<ce> 
+<ce>                Maybe you could head over there and investigate?
+
+RefuseQuest:  [1001]
+<ce>                Well I suppose you're just too busy to drop
+<ce>                everything to go and investigate every silly
+<ce>                rumor that surfaces, but we really thought
+<ce>                this one was worth the effort to investigate 
+<ce>                otherwise we wouldn't have mentioned it.
+<ce>
+<ce>                I'm sure someone else will be interested.
+
+AcceptQuest:  [1002]
+<ce>                Good show, %pct. We're convinced that this is worthwhile
+<ce>                investigating further. Head over to _palace_ in __palace_
+<ce>                and see what you can find.
+<ce>
+<ce>                Hopefully it will lead you to _armorer_.
+
+QuestFail:  [1003]
+<ce>                   _armorer_? Where is %g? Why haven't
+<ce>                    you brought %g2 back yet? If you
+<ce>                      would save %g3 life, go now!
+
+QuestComplete:  [1004]
+<ce>                   _armorer_! You are alive and well!
+<ce>                    %pcf, I owe you a debt that can
+<ce>                   never be fully repaid. This modest
+<ce>                     reward is the least that I can
+<ce>                               give you.
+
+RumorsDuringQuest:  [1005]
+<ce>                The guards over at the _palace_
+<ce>                in __palace_ have such fancy 
+<ce>                armor. I wonder where they get such 
+<ce>                workmanship?
+
+RumorsPostsuccess:  [1007]
+<ce>                You're that %ra that rescued the master
+<ce>                armorer _armorer_ from 
+<ce>                __palace_. Bloody nobility, think
+<ce>                they can treat commoners like dirt and
+<ce>                get away with it. Praise be for champions
+<ce>                like you.
+
+QuestorPostsuccess:  [1008]
+<ce>                  The savior of my child! I thank you
+<ce>                   and _armorer_ thanks you for saving
+<ce>                       %g3 life. Bless you %pcf.
+
+QuestorPostfailure:  [1009]
+<ce>                   My child _armorer_ is dead because
+<ce>                 of you! Never darken my doorway again.
+
+QuestLogEntry: [1010]
+On %qdt:
+ _qgiver_ of the Fighters Guild in ___qgiver_
+ told me of some rumors regarding a master armorer
+ called _armorer_ who has not been seen 
+ for a long time.
+ I've decided to investigate the _palace_ at __palace_
+ to see if I can find out what's going on and 
+ whether or not it's connected with %g3 disapearance.
+
+Message: 1011
+<ce>                         _palace_ is dark and
+<ce>                      ominous. It is certain that
+<ce>                        enemies lurk everywhere.
+
+Message:  1020
+<ce>                No one messes with the Dark Brotherhood
+<ce>                               and lives!
+
+Message: 1021
+<ce>                 Are you here to rescue me? My name is
+<ce>                         _armorer_. I don't like
+<ce>                   these people. 
+
+QBN:
+-- PALABA03 - great fortified mansion house
+
+Person _armorer_ face 1 faction The_Merchants male
+Person _qgiver_ group Questor
+
+Place _palace_ remote palace
+
+-- Quest start-up:
+    place npc _armorer_ at _palace_
+    log 1010 step 0
+    pc at _palace_ set _enteredpalace_ saying 1011
+
+_rescue_ task:
+    clicked npc _armorer_ say 1021
+    worldupdate buildingAll ARMRAM03.RMB 14 variant _master
+    hide npc _armorer_ 
+	add _armorer_ face
+
+variable _enteredpalace_
+
+_handin_ task:
+    when _qgclicked_ and _rescue_
+    end quest saying 1004
+
+_qgclicked_ task:
+	clicked npc _qgiver_ 
+
+_clearclick_ task:
+	when _qgclicked_ and not _rescue_
+	say 1003
+	clear _qgclicked_ _clearclick_ 
