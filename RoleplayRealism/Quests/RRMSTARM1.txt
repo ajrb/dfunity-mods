@@ -72,49 +72,290 @@ On %qdt:
  told me of some rumors regarding a master armorer
  called _armorer_ who has not been seen 
  for a long time.
- I've decided to investigate the _fort_ at __fort_
+ I've decided to investigate __fort_ in 
+ ____fort_
  to see if I can find out what's going on and 
  whether or not it's connected with %g3 disapearance.
 
-Message: 1011
-<ce>                         _fort_ is dark and
-<ce>                      ominous. It is certain that
-<ce>                        enemies lurk everywhere.
-
-Message:  1020
-<ce>                No one messes with the Dark Brotherhood
-<ce>                               and lives!
+Message: 1020
+<ce>[A guard to your left speaks to you as you enter..]
+<ce>
+Hey, what are you doing here %ra? Yes, over here on your
+left. 
+You had better go and speak to the captain, _captain_, 
+immediately! He's further down this way, then to the
+right, in the big room.
 
 Message: 1021
-<ce>                 Are you here to rescue me? My name is
-<ce>                         _armorer_. I don't like
-<ce>                   these people. 
+<ce>[A guard behind you sees you speaking and shouts..]
+<ce>
+Hey, what are you doing in there here %ra? You have made
+a very big mistake, we don't take kindly to trespassing.
+You will not leave here alive...
+
+Message: 1022
+<ce>[As you slice through yet another of their number, the lord shouts..]
+<ce>
+Holy gods above, this %ra's a bloody Daedra in human form or
+something...  EVERYONE STOP!
+We surrender %pcn. 
+Take _armorer_ and go, he's not worth losing this many people
+for, no matter how good the armor is.
+
+Message: 1023
+Ouch. You're going to die for that, %ra!
+
+Message: 1024
+__fort_ is no longer on alert for you, and have locked the doors.
+You have failed to rescue _armorer_ from his predicament in the
+____fort_.
+
+
+-- Lord
+Message: 1030
+You dare to speak to me without permission? 
+Guards, chase this idiot out of here!
+
+Message: 1031
+So, you're here from the Fighters Guild %pcf? I'm sure my
+captain has told you to behave yourself, see that you do so
+else my guards get more training.
+Does the the guild need help from us with something?
+I might consider it for a large fee.
+Come on, what do you want? Out with it!
+
+Message: 1032
+Who makes our armor? Haha. Well, who made your armour, %ra?
+That's a bit of an impertinent question, but there's a simple
+answer: we have our own armorer, of course.
+Does that surprise you, that we have such a good smith all
+the way out here in the middle of nowhere? You city types
+are so arrogant. No, he doesn't want to work for anyone
+else, and I wont allow freelancing, sorry you're out of luck.
+
+Message: 1033
+Get lost.
+
+Message: 1034
+And what you gonna do bout it, %ra?
+I'll release _armorer_ for 150,000 gold. Haha.
+Can you afford him?
+
+Message:  1035
+Okay you can take _armorer_ with you, we're going to miss his
+craftmanship but I know when the game is up. 
+I suggest that you don't ever cross our path again, %pcf.
+
+
+-- Captain
+Message: 1040
+Who are you? What business do you have with us, %ra?
+You say you're a high ranking member of the Fighters Guild?
+Well we have no issues with the Fighters Guild, let's keep
+it that way, eh? 
+Okay, you may wander our fort freely and
+speak with our lord. But, %pcf, don't cause any trouble
+or do anything stupid as we wont hesitate to cut you down,
+representative of the guild or not.
+
+Message: 1041
+Where do we get such fine quality armor? Well you're a nosey 
+%ra aren't you? I'm not going to answer that, ask our lord, 
+but I suggest you tread carefully.
+
+Message: 1042
+You want _armorer_? No!
+
+Message:  1043
+Just take _armorer_ and leave us be. 
+I don't ever want to see you again.
+
+
+-- Armorer
+Message: 1050
+Who the hell are you? Go away, or you'll get us both killed.
+Heavens above leave damn you, before the guards see you.
+
+Message: 1051
+<ce>[He glances nervously over your shoulder as you speak..]
+<ce>
+Who the hell are you? Go away, or you'll get me into trouble.
+I don't want to be seen talking to you.
+
+Message: 1052
+ I'm _armorer_ and I'm trapped, help me!
+<explains the situation>
+
+Message: 1053
+My god %ra, you're crazy! You'll never beat a whole garrison
+by yourself. Dibella have mercy on your soul.
+
+Message: 1059
+Great, thanks %pcf. Let's get the hell out of here!
 
 QBN:
--- PALABA03 - great fortified mansion house
-
-Person _armorer_ face 1 faction The_Merchants male
-Person _qgiver_ group Questor
-
-Foe _guard1_ is Warrior
-
+-- fortified mansion house
 Place _fort_ permanent Northrock_Fort
 
+Person _qgiver_ group Questor
+Person _armorer_ face 1 faction The_Merchants male
+
+Person _lord_ faction Random_Ruler male
+Person _captain_ faction Random_Knight male
+
+Foe _doorGuard_ is Warrior
+Foe _guard1_ is Warrior
+
+Foe _soldiers_ is 8 Warrior
+
+Clock _killAll_ 07.00:00
+
+-- intro,ask,request,permit
+
 -- Quest start-up:
-    place npc _armorer_ at _fort_ marker 2
-    place foe _guard1_ at _fort_ marker 0
+    place npc _armorer_ at _fort_ marker 6
+    place npc _lord_ at _fort_ marker 1
+    place npc _captain_ at _fort_ marker 2
+    place foe _doorGuard_ at _fort_ marker 3
+    restrain foe _doorGuard_
+    place foe _guard1_ at _fort_ marker 4
     restrain foe _guard1_
     log 1010 step 0
-    pc at _fort_ set _enteredpalace_ saying 1011
+    pc at _fort_ set _enteredfort_ saying 1020
+
+variable _enteredfort_
+variable _hostile_
+variable _intro_
+variable _ask_
+variable _request_
+variable _permit_
+
+_stealthy_ task:
+    when skill Stealth is at least 70
+
+_clickedLord_ task:
+    clicked npc _lord_
+
+_clickedCaptain_ task:
+    clicked npc _captain_
+
+_clickedArmorer_ task:
+    clicked npc _armorer_
+
+_attackedGuard_ task:
+    injured _doorGuard_
+    injured _guard1_
+    say 1023
+    setvar _hostile_
+
+_makeHostile_ task:
+    when _hostile_ and _enteredfort_
+    start timer _killAll_
+    enemies makehostile
+    create foe _soldiers_ every 0 minutes 4 times with 100% success
+    create foe _soldiers_ every 1 minutes indefinitely with 100% success
+
+_submission_ task:
+    killed 60 _soldiers_ saying 1022
+    unset _clickedCaptain_
+    unset _clickedLord_
+    unset _hostile_
+    stop timer _killAll_
+    enemies clear
+    setvar _permit_
+
+_killAll_ task:
+    end quest saying 1024
+
+
+-- Lord speech
+_lordNoIntro_ task:
+    when _clickedLord_ and not _intro_
+    say 1030
+    setvar _hostile_
+
+_lordIntro_ task:
+    when _clickedLord_ and _intro_ and not _ask_ and not _hostile_
+    say 1031
+    say 1032
+    setvar _ask_
+    clear _clickedLord_
+
+_lordAsk_ task:
+    when _clickedLord_ and _intro_ and _ask_ and not _request_
+    say 1033
+    clear _clickedLord_
+
+_lordRequest_ task:
+    when _clickedLord_ and _request_ and not _permit_ and not _hostile_
+    say 1034
+    setvar _permit_
+    clear _clickedLord_
+
+_lordHavePermit_ task:
+    when _clickedLord_ and _request_ and _permit_ and not _hostile_
+    say 1035
+    clear _clickedLord_
+
+
+-- Captain speech:
+_captainNoIntro_ task:
+    when _clickedCaptain_ and not _intro_ and not _hostile_
+    say 1040
+    setvar _intro_
+    clear _clickedCaptain_
+
+_captainIntro_ task:
+    when _clickedCaptain_ and _intro_ and not _ask_
+    say 1041
+    clear _clickedCaptain_
+
+_captainAsk_ task:
+    when _clickedCaptain_ and _intro_ and _ask_ and not _request_
+    say 1042
+    clear _clickedCaptain_
+
+_captainHavePermit_ task:
+    when _clickedCaptain_ and _permit_ and not _hostile_
+    say 1043
+
+
+-- Armorer speech
+_armorerHostile_ task:
+    when _clickedArmorer_ and _hostile_
+    say 1053
+    clear _clickedArmorer_
+
+_armorerNoIntro_ task:
+    when _clickedArmorer_ and not _intro_ and not _hostile_ and not _permit_
+    say 1050
+    clear _clickedArmorer_
+
+_seenTrespassing_ task:
+    when _armorerNoIntro_ and not _stealthy_
+    setvar _hostile_
+    say 1021
+
+_armorerIntro_ task:
+    when _clickedArmorer_ and _intro_ and not _ask_
+    say 1051
+    clear _clickedArmorer_
+
+_armorerAsk_ task:
+    when _clickedArmorer_ and _intro_ and _ask_ and not _request_
+    say 1052
+    setvar _request_
+    clear _clickedArmorer_
 
 _rescue_ task:
-    clicked npc _armorer_ say 1021
+    when _clickedArmorer_ and _permit_ 
+    say 1059
     worldupdate buildingAll ARMRAM03.RMB 14 variant _master
     hide npc _armorer_ 
 	add _armorer_ face
 
-variable _enteredpalace_
 
+-- Return to questgiver
 _handin_ task:
     when _qgclicked_ and _rescue_
     end quest saying 1004
