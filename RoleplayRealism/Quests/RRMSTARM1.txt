@@ -138,7 +138,7 @@ Get lost.
 
 Message: 1034
 And what you gonna do bout it, %ra?
-I'll release _armorer_ for 150,000 gold. Haha.
+I'll release _armorer_ for 1,500,000 gold. Haha.
 Can you afford him?
 
 Message:  1035
@@ -269,20 +269,23 @@ to spend that much. Here you go:
 3) North East of the Masterhart Graveyard
 Good luck and let me know if you need any help once you
 find them and hopefully a bit more about the situation.
+Tread carefully, I doubt that they'll be very forgiving if 
+you anger them.
 
 Message: 1063
 Alright then, I'll get in touch with them and check they
-are not busy with another job. Please return in a couple
-of hours with the money.
+are not busy with another job. Please return with the 
+gold as soon as you can, if you want to proceed.
 
 Message: 1064
 Good news, %pcf, the trackers have agreed to take on this
-task for us and I'll paid them 1000 gold to cover expenses
+task for us and I've paid them 1000 gold to cover expenses
 to get started immediately.
 <ce>
 They'll get the remainder once they've discovered the 
 location for us. They reckon it will take a week, so
-please rest and prepare in the meantime.
+please rest and prepare in the meantime. I'll send a
+letter upon their return.
 
 Message:  1065
 <ce>             You're approached by a young boy who smiles in
@@ -313,7 +316,8 @@ existence at all.
     The place is called __fort_ and I've enclosed
 a map of how to reach it. Good luck and let me know if
 you need any help once you uncover a bit more about the 
-situation.
+situation. Tread carefully, I doubt that they'll be very
+forgiving if you anger them.
  
 <ce>                           Yours sincerely,
  
@@ -346,10 +350,12 @@ Foe _soldiers_ is 8 Warrior
 
 Item _letter1_ letter used 1066
 
-Clock _trackers_ 00.02:00
-Clock _killAll_ 05.00:00
+Clock _trackers_ 07.00:00
+Clock _killAll_ 02.00:00
 
--- intro,ask,request,permit
+-- rescues: 1.5Mg, kill 60 in 2 days, retrieve DB contract (steal, critKill, fight, highrep)
+-- db approaches: stealth,pickpocket or crit,streetwise or repDB - mess up & fight & costs 250k gp & -rep
+-- states: intro,ask,request,denied,permit
 
 -- Quest start-up:
     place npc _contact_ at _guild_
