@@ -1,0 +1,115 @@
+Quest: RRMSTARM0
+DisplayName: Rumors from the Mountains
+QRC:
+
+QuestorOffer:  [1000]
+<ce> Rumors have reached us from guild colleagues in the mountains
+<ce> concerning a famed smith who is a master of armor crafting.
+<ce>
+<ce> Seems that a while back %g just simply vanished and no one
+<ce> has heard anything of %g2 since. Recently some reports have
+<ce> been received from over in the ____guild_ regarding
+<ce> some noble whose soldiers and personal guard have been seen
+<ce> clad in very high quality armor by several locals. The guild 
+<ce> smiths think that the descriptions sound very similar in style
+<ce> to, and could very well be, the work of this missing armorer... 
+<ce> which would be quite strange for someone who's not been heard
+<ce> of for such a long time, don't you think?
+<ce> 
+<ce> So we suspect that there's something rather fishy going on here,
+<ce> and it's our opinion that it requires attention from a master of
+<ce> the guild, such as yourself %pcn.
+<ce>
+<ce> Would you be able to head over there to investigate and 
+<ce> deal with this situation before a member of lesser  
+<ce> experience makes a mess of things?
+
+RefuseQuest:  [1001]
+<ce> Okay, I understand that as a guild master you're too busy to 
+<ce> drop everything to go and investigate every silly rumor that
+<ce> surfaces. Of course we all respect that, however I really think 
+<ce> this is worth the attention of a guild master, otherwise I  
+<ce> wouldn't have mentioned it to you. Hopefully one of the other   
+<ce> guild masters will be willing to deal with it.
+
+AcceptQuest:  [1002]
+<ce> Great, thank you %pct. We're convinced that this is 
+<ce> worth further investigation. Please head over to the 
+<ce> guild hall in __guild_ in the ____guild_ to see 
+<ce> what you discover. There will be a contact waiting for you  
+<ce> there and they can bring you up to speed regarding the 
+<ce> situation. They'll wait for your arrival for six months, 
+<ce> after that they'll likely try to deal with the situation 
+<ce> themselves, and probably bungle it which is best avoided.
+<ce>
+<ce> Hopefully this will lead you to this lost master armorer.
+
+QuestFail:  [1003]
+<ce> The guild is disapointed that you were unable to find the time to
+<ce> investigate what was going on over in the ____guild_.
+<ce>
+<ce> Hopefully it was nothing unsavory, and the missing armorer is
+<ce> simply living out his days quietly somewhere.
+
+QuestLogEntry: [1010]
+On %qdt:
+ _qgiver_ of the Fighters Guild in ___qgiver_
+ informed me about some rumors regarding a master 
+ armorer who's not been seen for rather a long time.
+    I've agreed to investigate and need to travel  
+ to __guild_ in the ____guild_ to see if 
+ I can find out what's going on and whether or not 
+ it's actually connected with %g3 disappearance.
+
+Message: 1011
+On %qdt:
+ You were able to make time to head over to the guild
+ in __guild_ of the ____guild_ to investigate.
+ Hopefully it will lead to the missing armorer.
+
+Message: 1012
+On %qdt:
+ You were unable to find time to investigate out what
+ was going on over in the ____guild_.
+ Hopefully it was nothing, and the missing armorer is simply living
+ out his days somewhere quiet.
+
+Message: 1020
+<ce> Do you think you'll be able to go to __guild_ and investigate
+<ce> the rumors from ____guild_ soon, %pct?
+
+Message: 1021
+<ce> You have arrived at __guild_ where the rumors regarding 
+<ce> the lost armorer surfaced. You should head over to the
+<ce> local guild hall to meet the contact who's waiting for
+<ce> your arrival.
+
+QBN:
+
+-- Town west of Northrock_Fort 
+Place _guild_ permanent Aldleigh
+
+Person _qgiver_ group Questor
+
+Clock _investigate_ 182.00:00 
+
+-- Quest start-up:
+    log 1010 step 0
+    start timer _investigate_
+    pc at _guild_ do _beginInvestigation_ saying 1021
+
+_beginInvestigation_ task:
+    start quest RRMSTARM1
+    stop timer _investigate_
+    log 1011 step 1
+    give pc nothing
+    end quest
+
+_investigate_ task:
+    log 1012 step 1
+    end quest saying 1003
+
+-- Return to questgiver
+_qgclicked_ task:
+    clicked npc _qgiver_ say 1020
+    clear _qgclicked_

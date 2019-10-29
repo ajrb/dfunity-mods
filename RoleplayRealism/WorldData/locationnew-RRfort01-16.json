@@ -9,7 +9,7 @@
         "Longitude": 120064,
         "LocationType": "ReligionCult",
         "DungeonType": "NoDungeon",
-        "Discovered": true,
+        "Discovered": false,
         "Key": 0
     },
     "Exterior": {

@@ -9,4 +9,5 @@
 
 schema: *name, group, membership, minReq, flag, notes
 
-RRMSTARM1, FightersGuild, M, 4, 1, Lost armorer
+RRMSTARM0, FightersGuild, M, 4, 1, Rumors from the Mountains
+RRMSTARM1, FightersGuild, M, 101, 0, The Lost Master Armorer

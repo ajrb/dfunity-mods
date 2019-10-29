@@ -128,10 +128,10 @@ Message: 1032
 Who makes our armor? Haha. Well, who made your armour, %ra?
 That's a bit of an impertinent question, but there's a simple
 answer: we have our own armorer, of course.
-Does that surprise you, that we have such a good smith all
+Does that surprise you, that we have such a fine smith all
 the way out here in the middle of nowhere? You city types
 are so arrogant. No, he doesn't want to work for anyone
-else, and I wont allow freelancing, sorry you're out of luck.
+else, and I wont allow him to freelance. You're out of luck.
 
 Message: 1033
 Get lost.
@@ -151,12 +151,12 @@ I suggest that you don't ever cross our path again, %pcf.
 Message: 1040
 Who are you? What business do you have with us, %ra?
 You say you're a high ranking member of the Fighters Guild?
-Well we have no issues with the Fighters Guild, let's keep
+Well we have no issues with the guild so let's keep
 it that way, eh? 
-Okay, you may wander our fort freely and
+You may wander our fort freely and
 speak with our lord. But, %pcf, don't cause any trouble
 or do anything stupid as we wont hesitate to cut you down,
-representative of the guild or not.
+representative of the Fighters Guild or not.
 
 Message: 1041
 Where do we get such fine quality armor? Well you're a nosey 
@@ -183,21 +183,157 @@ Who the hell are you? Go away, or you'll get me into trouble.
 I don't want to be seen talking to you.
 
 Message: 1052
- I'm _armorer_ and I'm trapped, help me!
-<explains the situation>
+I overheard a guard saying that you were asking the lord about
+me. Franky, I'm amazed you're still alive, and even more surprised
+you can wander freely about the place. Seems like it might be safe
+to talk to you after all.
+I'm _armorer_ and I'm trapped here, %pcf. Been here for nearly
+two years now, making armor for these damned marauders. Oh, don't
+let them fool you, their 'lord' is no noble. No, he's led his
+band of renegades for years and they cleared out and setup camp
+in this fort a few years back. They use it as a base, since it's 
+pretty isolated up here in the mountains, they can operate from
+here with relative impunity.
 
 Message: 1053
+How did I end up trapped here you ask? Gambling and drinking.
+After my wife died and my daughter married, I decided to travel
+some while I still could. So I sold my forge, hung up my tools
+and travelled around for several months before ending up in
+these mountains. One night I was too deep in my cups, as I was
+missing my wife something fierce, and started gambling with
+some local lord. Seemed more like a ruffian, but he had money.
+Ended up with quite the debt to this 'lord' and we came to an
+arrangement where I would work crafting armor for him and his men
+to pay off the debt. 
+Three months, it was only supposed to be for
+three months. When the time was up and I started preparing to
+leave, they surrounded me and told me I was goin nowhere.
+I knew I couldn't fight my way out alone, so started to make
+plans to sneak out and escape, but the captain came and made
+it very clear that if I were to go missing, that my daughter
+would die. This cursed 'lord' has paid the Dark Brotherhood
+for a contract on her, to be carried out on his word if I go
+missing. That damnable cutthroat son of a bitch knew he had
+me, and I've been here ever since. 
+She's all I have left now since my wife died, and lives with
+her husband farming peacfully. I'll never let her come to harm
+which means I am trapped here in servitude until I die unless
+some miracle occurs.
+
+Message: 1058
 My god %ra, you're crazy! You'll never beat a whole garrison
 by yourself. Dibella have mercy on your soul.
 
 Message: 1059
 Great, thanks %pcf. Let's get the hell out of here!
 
+
+-- Contact
+Message: 1060
+Welcome to __guild_ master %pcn. My name is
+_contact_ and I'm very happy to see you indeed, 
+as the situation is a rather perplexing one to 
+say the least.
+<ce>
+We've been hearing rumors of a local noble whose soldiers 
+and personal guard have been seen clad in unusually fine 
+armor. Thing is no one knows anything much about
+this 'noble', where he resides or what family they're
+from. I've been looking into the matter for a while now,
+and have found three reliable locals who've seen them
+firsthand.
+
+Message: 1061
+I've taken the liberty of making inquiries with a local
+group of trackers about tracking down these soldiers and
+their mysterious leader. Unfortunately expertise like 
+this doesn't come cheap however, and it will cost 7000 gold 
+to engage their services. 
+<ce>
+Alternatively, you could try to search for the location
+yourself. I can tell you what the three reliable eye-witnesses 
+told me which is all we have to go on.
+<ce>
+So would you like me to employ the trackers? I'll obviously
+need you to provide the 7000 gold to cover their price.
+
+-arrange for you to meet the three 
+-witnesses and listen to their accounts firsthand.
+
+Message: 1062
+Alright then, it is a large sum so I understand not wanting
+to spend that much. Here you go:
+1) East of __guild_
+2) South of Hawkwing Orchard
+3) North East of the Masterhart Graveyard
+Good luck and let me know if you need any help once you
+find them and hopefully a bit more about the situation.
+
+Message: 1063
+Alright then, I'll get in touch with them and check they
+are not busy with another job. Please return in a couple
+of hours with the money.
+
+Message: 1064
+Good news, %pcf, the trackers have agreed to take on this
+task for us and I'll paid them 1000 gold to cover expenses
+to get started immediately.
+<ce>
+They'll get the remainder once they've discovered the 
+location for us. They reckon it will take a week, so
+please rest and prepare in the meantime.
+
+Message:  1065
+<ce>             You're approached by a young boy who smiles in
+<ce>             recognition and does't ask your name before handing
+<ce>             you a letter, then swiftly runs off into the town.
+                                     <--->
+<ce>             A letter is pressed into your hand. You spin
+<ce>            to see who gave it to you. You catch a glimpse
+<ce>                of livery that vanishes into the crowd.
+                                     <--->
+<ce>              A girl steps forward saying "Letter for you
+<ce>                     %pcn," and hands you a note.
+
+Message: 1066
+%pcn,
+ 
+    Great news, the trackers we employed have found where
+the noble and his warriors are. Turns out they've taken up
+residence in an old fortified mansion somewhere east of 
+__guild_. It's in the hills way off the beaten track, 
+and miles away from anywhere.
+<ce>
+    They must have re-built the place somewhat, as by all 
+accounts it's been rundown for several generations to the 
+point where most local people are not even aware of its 
+existence at all. 
+<ce>
+    The place is called __fort_ and I've enclosed
+a map of how to reach it. Good luck and let me know if
+you need any help once you uncover a bit more about the 
+situation.
+ 
+<ce>                           Yours sincerely,
+ 
+<ce>                            _contact_
+
+Message: 1067
+What? A Dark Brotherhood contract on his daughter?
+That's obcene!
+
+Message: 1068
+I have no idea what to do.
+
 QBN:
+
+-- locat guild hall
+Place _guild_ local fighters
 -- fortified mansion house
 Place _fort_ permanent Northrock_Fort
 
-Person _qgiver_ group Questor
+Person _contact_ faction The_Fighters_Guild
 Person _armorer_ face 1 faction The_Merchants male
 
 Person _lord_ faction Random_Ruler male
@@ -208,11 +344,15 @@ Foe _guard1_ is Warrior
 
 Foe _soldiers_ is 8 Warrior
 
-Clock _killAll_ 07.00:00
+Item _letter1_ letter used 1066
+
+Clock _trackers_ 00.02:00
+Clock _killAll_ 05.00:00
 
 -- intro,ask,request,permit
 
 -- Quest start-up:
+    place npc _contact_ at _guild_
     place npc _armorer_ at _fort_ marker 6
     place npc _lord_ at _fort_ marker 1
     place npc _captain_ at _fort_ marker 2
@@ -223,6 +363,39 @@ Clock _killAll_ 07.00:00
     log 1010 step 0
     pc at _fort_ set _enteredfort_ saying 1020
 
+-- Contact speech to find the fort
+_contactFirst_ task:
+    clicked npc _contact_ 
+    say 1060
+    prompt 1061 yes _negotiateTrackers_ no _talkToWitnesses_
+
+_talkToWitnesses_ task:
+    say 1062
+
+_negotiateTrackers_ task:
+    say 1063
+
+_employTrackers_ task:
+    clicked _contact_ and at least 7000 gold otherwise do _talkToWitnesses_
+    say 1064
+    start timer _trackers_
+
+_trackers_ task:
+    reveal _fort_
+    give pc _letter1_ notify 1065
+
+_clickedContact_ task:
+    clicked npc _contact_
+
+_contactAsk_ task:
+    when _clickedContact_ and _request_
+    say 1067
+
+_contactQuery_ task:
+    clicked npc _contact_ say 1068
+    clear _clickedContact_
+
+-variable _arrived_
 variable _enteredfort_
 variable _hostile_
 variable _intro_
@@ -267,6 +440,22 @@ _submission_ task:
 _killAll_ task:
     end quest saying 1024
 
+-_contactNoIntro_ task:
+-    when _clickedContact_ and not _intro_
+-    say 1030
+-    setvar _hostile_
+
+-_contactIntro_ task:
+-    when _clickedContact_ and _intro_ and not _ask_ and not _hostile_
+-    say 1031
+-    say 1032
+-    setvar _ask_
+-    clear _clickedContact_
+
+-_contactAsk_ task:
+-    when _clickedContact_ and _intro_ and _ask_ and not _request_
+-    say 1033
+-    clear _clickedContact_
 
 -- Lord speech
 _lordNoIntro_ task:
@@ -286,6 +475,7 @@ _lordAsk_ task:
     say 1033
     clear _clickedLord_
 
+-- request freedom
 _lordRequest_ task:
     when _clickedLord_ and _request_ and not _permit_ and not _hostile_
     say 1034
@@ -323,7 +513,7 @@ _captainHavePermit_ task:
 -- Armorer speech
 _armorerHostile_ task:
     when _clickedArmorer_ and _hostile_
-    say 1053
+    say 1058
     clear _clickedArmorer_
 
 _armorerNoIntro_ task:
@@ -344,6 +534,7 @@ _armorerIntro_ task:
 _armorerAsk_ task:
     when _clickedArmorer_ and _intro_ and _ask_ and not _request_
     say 1052
+    say 1053
     setvar _request_
     clear _clickedArmorer_
 
