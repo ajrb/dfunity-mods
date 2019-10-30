@@ -2,39 +2,10 @@ Quest: RRMSTARM1
 DisplayName: The Lost Master Armorer
 QRC:
 
-QuestorOffer:  [1000]
-<ce>                Rumors have reached the guild concerning a famed
-<ce>                master Armorer by the name of _armorer_.
-<ce>                Seems %g simply vanished a while back and no one
-<ce>                has heard anything of %g2 since. Recently some reports
-<ce>                have surfaced regarding a noble whos personal guard
-<ce>                have been seen wearing very high quality armor that 
-<ce>                the guild smiths think sounds very much like it could
-<ce>                very well be %g3 work which would be strange for someone
-<ce>                who's been missing for so long - something's fishy here.
-<ce> 
-<ce>                Maybe you could head over there and investigate?
-
-RefuseQuest:  [1001]
-<ce>                Well I suppose you're just too busy to drop
-<ce>                everything to go and investigate every silly
-<ce>                rumor that surfaces, but we really thought
-<ce>                this one was worth the effort to investigate 
-<ce>                otherwise we wouldn't have mentioned it.
-<ce>
-<ce>                I'm sure someone else will be interested.
-
-AcceptQuest:  [1002]
-<ce>                Good show, %pct. We're convinced that this is worthwhile
-<ce>                investigating further. Head over to _fort_ in __fort_
-<ce>                and see what you can find.
-<ce>
-<ce>                Hopefully it will lead you to _armorer_.
-
 QuestFail:  [1003]
-<ce>                   _armorer_? Where is %g? Why haven't
-<ce>                    you brought %g2 back yet? If you
-<ce>                      would save %g3 life, go now!
+__fort_ is no longer on alert for you, and have locked the doors.
+You have failed to rescue _armorer_ from his predicament in the
+____fort_.
 
 QuestComplete:  [1004]
 <ce>                   _armorer_! You are alive and well!
@@ -68,14 +39,62 @@ QuestorPostfailure:  [1009]
 
 QuestLogEntry: [1010]
 On %qdt:
- _qgiver_ of the Fighters Guild in ___qgiver_
- told me of some rumors regarding a master armorer
- called _armorer_ who has not been seen 
+ I met with _contact_ of the Fighters Guild
+ in ___contact_ who told me about the rumors regarding 
+ a master armorer called _armorer_ who has not been seen 
  for a long time.
- I've decided to investigate __fort_ in 
- ____fort_
- to see if I can find out what's going on and 
+ I'm investigating to see if I can find out where these
+ troops with fine armor are from, what's going on, and 
  whether or not it's connected with %g3 disapearance.
+
+Message: 1011
+on %qdt:
+ I have found the armorer, _armorer_. He is
+ trapped at __fort_ in servitude to a noble called
+ _lord_. He and his troops seem to be nothing
+ more than brigands and renegades, and you suspect this
+ lord is probably the discraced or iligitimate son of
+ some noble family somewhere. 
+ They are keeping the smith from leaving by threatening
+ his daughter by way of a contract with the Dark
+ Brotherhood. Fighting the entire garrison at the fort 
+ is unlikely to be possible so I need to get hold of 
+ this contract to free _armorer_ from the villanous 
+ clutches of _lord_. Alternatively, he has agreed to 
+ let the smith go if I pay the ridiculous sum of a 
+ million gold.
+
+ Message: 1012
+ on %qdt:
+  At a meeting with a representative of the Dark
+  Brotherhood arranged by _contact_,
+  I discovered that the contract is unsanctioned and
+  off the books, as the brotherhood are rarely
+  interested in contracts on peasant wormen to use
+  for blackmailing smiths. Due to my reputation with
+  them and my high rank in the Fighters Guild, they 
+  are going to get the contract to me within the week
+  after dealing with this renegate brother. They're
+  about to have a very bad day.
+
+Message: 1013
+ on %qdt:
+  At a meeting with a representative of the Dark
+  Brotherhood arranged by _contact_,
+  I discovered that the contract is unsanctioned and
+  off the books, as the brotherhood are rarely
+  interested in contracts on peasant wormen to use
+  for blackmailing smiths. They met with me out of
+  respect for my rank in the Fighters Guild, and they 
+  are going to deal with this renegate brother in
+  their own time. I have been permitted to retrieve
+  the contract myself on the understanding that I
+  do it quietly without hurting any other members
+  in the process. If I do, there will be costly
+  consequences.
+  I was told that I could find them at
+  __dbHideout_ in the _dbHideout_.
+ 
 
 Message: 1020
 <ce>[A guard to your left speaks to you as you enter..]
@@ -403,6 +422,7 @@ Foe _doorGuard_ is Warrior
 Foe _guard1_ is Warrior
 
 Foe _soldiers_ is 8 Warrior
+Foe _soldiersExt_ is 2 Warrior
 
 Item _letter1_ letter used 1066
 Item _contract_ letter used 1090
@@ -457,15 +477,15 @@ _clearContactClick_ task:
     clear _clickedContact_
 
 _contactQuery_ task:
-    when _clickedContact_ and _request_
+    when _clickedContact_ and _request_ and not _meetDB_
     say 1067
+    setvar _meetDB_
     place npc _dbContact_ at _dbTavern_
     repute with _dbContact_ exceeds 20 do _dbRepHigh_  
-    clear _clickedContact_
 
--_contactQuery_ task:
--    clicked npc _contact_ say 1068
--    clear _clickedContact_
+_contactMeetDB_ task:
+    clicked npc _contact_ say 1068
+    clear _clickedContact_
 
 -- DB contact speech
 _dbContactMeet_ task:
@@ -480,12 +500,14 @@ _dbContactHiRep_ task:
 _dbContactLoRep_ task:
     when _dbContactMeet_ and not _dbRepHigh_
     say 1082
+    log 1013 step 2
     place foe _darkBrother_ at _dbHideout_
     give item _contract_ to _darkBrother_
 
 _dbDeal_ task:
     give pc _contract_
     say 1065
+    log 1012 step 2
 
 
 variable _dbRepHigh_
@@ -495,6 +517,7 @@ variable _hostile_
 variable _intro_
 variable _ask_
 variable _request_
+variable _meetDB_
 variable _denied_
 variable _permit_
 
@@ -522,7 +545,8 @@ _makeHostile_ task:
 
 _chaseHostile_ task:
     when _hostile_ and not _enteredfort_ and _atFort_
-    create foe _soldiers_ every 0 minutes 2 times with 100% success
+    say 1025
+    create foe _soldiersExt_ every 1 minutes 4 times with 100% success
     -create foe _soldiers_ every 1 minutes 1 times with 100% success
 
 _submission_ task:
@@ -535,7 +559,7 @@ _submission_ task:
     setvar _permit_
 
 _killAll_ task:
-    end quest saying 1024
+    end quest saying 1004
 
 -_contactNoIntro_ task:
 -    when _clickedContact_ and not _intro_
@@ -647,6 +671,7 @@ _armorerAsk_ task:
     when _clickedArmorer_ and _intro_ and _ask_ and not _request_
     say 1052
     say 1053
+    log 1011 step 1
     setvar _request_
     clear _clickedArmorer_
 
