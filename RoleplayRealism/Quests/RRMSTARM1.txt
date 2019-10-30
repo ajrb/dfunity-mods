@@ -74,8 +74,8 @@ on %qdt:
   for blackmailing smiths. Due to my reputation with
   them and my high rank in the Fighters Guild, they 
   are going to get the contract to me within the week
-  after dealing with this renegate brother. They're
-  about to have a very bad day.
+  after dealing with this renegate brother. Whoever
+  they are, they're about to have a very bad day.
 
 Message: 1013
  on %qdt:
@@ -169,7 +169,8 @@ Get lost.
 
 Message: 1034
 And what you gonna do bout it, %ra?
-I'll release _armorer_ for 1,500,000 gold. Haha.
+I'll release _armorer_ for, say, a million gold. How about 
+that, haha.
 Can you afford him? Let's see if you can bring that much gold.
 
 Message: 1035
@@ -348,7 +349,7 @@ and miles away from anywhere.
     They must have re-built the place somewhat, as by all 
 accounts it's been rundown for several generations to the 
 point where most local people are not even aware of its 
-existence at all. 
+existence. 
 <ce>
     The place is called __fort_ and I've enclosed
 a map of how to reach it. Good luck and let me know if
@@ -363,15 +364,17 @@ forgiving if you anger them.
 Message: 1067
 What? A Dark Brotherhood contract on his daughter?
 That's obcene! I can setup a meeting for you with
-the brotherhood, but they do nothing for free, so
-make sure you have a few hundred gold on you.
+the brotherhood for you, as they should be willing
+to at least meet a master of our guild.
 Go to _dbTavern_ over in __dbTavern_, a representative
-will be there to meet you.
+will be waiting there for you. Be careful around 
+the dark brothers, they are not to be trifled with.
 
 Message: 1068
 I hope you're able to retrieve the contract and 
-free _armorer_, %pcf. Be careful around the dark
-brothers.
+free _armorer_, %pcf. Remember, be careful around
+the dark brothers, we want to keep on their good
+side for the sake of the guild.
 
 
 -- Dark Brother contact
