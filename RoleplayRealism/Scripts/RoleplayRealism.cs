@@ -19,6 +19,7 @@ using DaggerfallWorkshop.Game.Banking;
 using DaggerfallWorkshop.Game.Guilds;
 using DaggerfallConnect.Arena2;
 using DaggerfallWorkshop.Game.Questing;
+using System.Collections.Generic;
 
 namespace RoleplayRealism
 {
@@ -109,6 +110,7 @@ namespace RoleplayRealism
 
             if (!QuestListsManager.RegisterQuestList("RoleplayRealism"))
                 throw new System.Exception("Quest list name is already in use, unable to register RoleplayRealism quest list.");
+            RegisterFactionIds();
 
             Debug.Log("Finished mod init: RoleplayRealism");
         }
@@ -222,5 +224,59 @@ namespace RoleplayRealism
 
             return false;
         }
+
+        private static bool RegisterFactionIds()
+        {
+            bool success = FactionFile.RegisterCustomFaction(1020, new FactionFile.FactionData()
+            {
+                id = 1020,
+                parent = 0,
+                type = 4,
+                name = "Lord Verathon",
+                summon = -1,
+                region = 16,
+                power = 10,
+                face = 12,
+                race = 2,
+                flat1 = (183 << 7) + 20,
+                sgroup = 3,
+                ggroup = 0,
+                children = new List<int>() { 1021 }
+            });
+            success = FactionFile.RegisterCustomFaction(1021, new FactionFile.FactionData()
+            {
+                id = 1021,
+                parent = 1020,
+                type = 4,
+                name = "Captain Ulthega",
+                summon = -1,
+                region = 16,
+                power = 2,
+                face = 57,
+                race = 2,
+                flat1 = (180 << 7) + 2,
+                sgroup = 4,
+                ggroup = 0,
+                children = null
+            }) && success;
+            success = FactionFile.RegisterCustomFaction(1022, new FactionFile.FactionData()
+            {
+                id = 1022,
+                parent = 0,
+                type = 4,
+                name = "Fred Smith",
+                summon = -1,
+                region = 17,
+                power = 2,
+                face = 105,
+                race = 2,
+                flat1 = (334 << 7) + 14,
+                sgroup = 1,
+                ggroup = 0,
+                children = null
+            }) && success;
+            return success;
+        }
+
     }
 }

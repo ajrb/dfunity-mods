@@ -82,9 +82,8 @@ Message: 1020
 <ce>
 Hey, what are you doing here %ra? Yes, over here on your
 left. 
-You had better go and speak to the captain, _captain_, 
-immediately! He's further down this way, then to the
-right, in the big room.
+You had better go and speak to _captain_ immediately! 
+He's further down this way, then to the right, in the big room.
 
 Message: 1021
 <ce>[A guard behind you sees you speaking and shouts..]
@@ -110,6 +109,19 @@ __fort_ is no longer on alert for you, and have locked the doors.
 You have failed to rescue _armorer_ from his predicament in the
 ____fort_.
 
+Message: 1025
+The warriors of __fort_ and their leader are enraged and will
+be searching for you for the next couple of days
+
+Message: 1026
+You've arrived at __fort_ out here in the hills way off the
+beaten track and miles away from anywhere else. They must 
+have re-built the place from a semi-ruin, as you can see 
+signs of repairs everywhere. There are also indications that
+a large group are living at the fort, and some significant
+building work has taken place. You suspect the fort has had
+it's cellars converted to barracks. This place is likely to
+be more dangerous than it might appear at first glance.
 
 -- Lord
 Message: 1030
@@ -139,9 +151,15 @@ Get lost.
 Message: 1034
 And what you gonna do bout it, %ra?
 I'll release _armorer_ for 1,500,000 gold. Haha.
-Can you afford him?
+Can you afford him? Let's see if you can bring that much gold.
 
-Message:  1035
+Message: 1035
+Nice, I'm surprised you could get so much gold.
+
+Message: 1036
+WHat! How the hell did you get hold of that. Crap!
+
+Message: 1037
 Okay you can take _armorer_ with you, we're going to miss his
 craftmanship but I know when the game is up. 
 I suggest that you don't ever cross our path again, %pcf.
@@ -229,7 +247,7 @@ Message: 1059
 Great, thanks %pcf. Let's get the hell out of here!
 
 
--- Contact
+-- Guild Contact
 Message: 1060
 Welcome to __guild_ master %pcn. My name is
 _contact_ and I'm very happy to see you indeed, 
@@ -325,23 +343,61 @@ forgiving if you anger them.
 
 Message: 1067
 What? A Dark Brotherhood contract on his daughter?
-That's obcene!
+That's obcene! I can setup a meeting for you with
+the brotherhood, but they do nothing for free, so
+make sure you have a few hundred gold on you.
+Go to _dbTavern_ over in __dbTavern_, a representative
+will be there to meet you.
 
 Message: 1068
-I have no idea what to do.
+I hope you're able to retrieve the contract and 
+free _armorer_, %pcf. Be careful around the dark
+brothers.
+
+
+-- Dark Brother contact
+Message: 1080
+Hello.
+
+Message: 1081
+You are a friend of the brotherhood, so we'll deal 
+with this renegade swiftly and deliver the contract
+to you in a few days.
+
+Message: 1082
+We'll have to deal with this renegade brother at some point
+and the contract will be void, but we don't feel any urgency
+regarding the situation. There are many more important
+machinations and intrigues to deal with first. You will
+find this brother at _dbHideout_ in __dbHideout_, you've
+permission to go and deal with them yourself. Be warned, 
+don't harm any others of our order while doing this, else 
+we'll hunt you down to exact revenge.
+Given the circumstances we may make an exception for a
+hefty price, but if you can't pay then you will die.
+
+Message: 1090
+Kill the armorers daughter!
 
 QBN:
 
--- locat guild hall
+-- local guild hall
 Place _guild_ local fighters
 -- fortified mansion house
+Place _fortExt_ permanent Northrock_Fort_Ext
 Place _fort_ permanent Northrock_Fort
+-- remote tavern & pawn shop
+Place _dbTavern_ remote tavern
+Place _dbHideout_ remote pawnshop
 
 Person _contact_ faction The_Fighters_Guild
-Person _armorer_ face 1 faction The_Merchants male
+Person _armorer_ named Fred_Smith male
 
-Person _lord_ faction Random_Ruler male
-Person _captain_ faction Random_Knight male
+Person _lord_ named Lord_Verathon male
+Person _captain_ named Captain_Ulthega male
+
+Person _dbContact_ faction The_Dark_Brotherhood
+Foe _darkBrother_ is Nightblade
 
 Foe _doorGuard_ is Warrior
 Foe _guard1_ is Warrior
@@ -349,8 +405,10 @@ Foe _guard1_ is Warrior
 Foe _soldiers_ is 8 Warrior
 
 Item _letter1_ letter used 1066
+Item _contract_ letter used 1090
 
-Clock _trackers_ 07.00:00
+Clock _trackers_ 00.02:00
+Clock _dbDeal_ 00.02:00
 Clock _killAll_ 02.00:00
 
 -- rescues: 1.5Mg, kill 60 in 2 days, retrieve DB contract (steal, critKill, fight, highrep)
@@ -367,12 +425,13 @@ Clock _killAll_ 02.00:00
     place foe _guard1_ at _fort_ marker 4
     restrain foe _guard1_
     log 1010 step 0
+    pc at _fortExt_ set _atFort_ saying 1026
     pc at _fort_ set _enteredfort_ saying 1020
+    
 
--- Contact speech to find the fort
+-- Guild contact speech to find the fort & meet DB
 _contactFirst_ task:
-    clicked npc _contact_ 
-    say 1060
+    clicked npc _contact_ say 1060
     prompt 1061 yes _negotiateTrackers_ no _talkToWitnesses_
 
 _talkToWitnesses_ task:
@@ -393,24 +452,51 @@ _trackers_ task:
 _clickedContact_ task:
     clicked npc _contact_
 
-_contactAsk_ task:
-    when _clickedContact_ and _request_
-    say 1067
-
-_contactQuery_ task:
-    clicked npc _contact_ say 1068
+_clearContactClick_ task:
+    when _atFort_
     clear _clickedContact_
 
--variable _arrived_
+_contactQuery_ task:
+    when _clickedContact_ and _request_
+    say 1067
+    place npc _dbContact_ at _dbTavern_
+    repute with _dbContact_ exceeds 20 do _dbRepHigh_  
+    clear _clickedContact_
+
+-_contactQuery_ task:
+-    clicked npc _contact_ say 1068
+-    clear _clickedContact_
+
+-- DB contact speech
+_dbContactMeet_ task:
+    clicked npc _dbContact_ 
+    say 1080
+
+_dbContactHiRep_ task:
+    when _dbContactMeet_ and _dbRepHigh_
+    say 1081
+    start timer _dbDeal_
+
+_dbContactLoRep_ task:
+    when _dbContactMeet_ and not _dbRepHigh_
+    say 1082
+    place foe _darkBrother_ at _dbHideout_
+    give item _contract_ to _darkBrother_
+
+_dbDeal_ task:
+    give pc _contract_
+    say 1065
+
+
+variable _dbRepHigh_
+variable _atFort_
 variable _enteredfort_
 variable _hostile_
 variable _intro_
 variable _ask_
 variable _request_
+variable _denied_
 variable _permit_
-
-_stealthy_ task:
-    when skill Stealth is at least 70
 
 _clickedLord_ task:
     clicked npc _lord_
@@ -431,8 +517,13 @@ _makeHostile_ task:
     when _hostile_ and _enteredfort_
     start timer _killAll_
     enemies makehostile
-    create foe _soldiers_ every 0 minutes 4 times with 100% success
+    create foe _soldiers_ every 0 minutes 3 times with 100% success
     create foe _soldiers_ every 1 minutes indefinitely with 100% success
+
+_chaseHostile_ task:
+    when _hostile_ and not _enteredfort_ and _atFort_
+    create foe _soldiers_ every 0 minutes 2 times with 100% success
+    -create foe _soldiers_ every 1 minutes 1 times with 100% success
 
 _submission_ task:
     killed 60 _soldiers_ saying 1022
@@ -485,12 +576,27 @@ _lordAsk_ task:
 _lordRequest_ task:
     when _clickedLord_ and _request_ and not _permit_ and not _hostile_
     say 1034
+    setvar _denied_
+    -clear _clickedLord_
+
+_lordGoAway_ task:
+    say 1033
+
+- will need to allow LoCs here
+_lordForce_ task:
+    toting _contract_ and _lord_ clicked saying 1036
+    setvar _permit_
+    clear _clickedLord_
+
+_lordPay_ task:
+    clicked _lord_ and at least 70 gold otherwise do _lordGoAway_
+    say 1035
     setvar _permit_
     clear _clickedLord_
 
 _lordHavePermit_ task:
     when _clickedLord_ and _request_ and _permit_ and not _hostile_
-    say 1035
+    say 1037
     clear _clickedLord_
 
 
@@ -528,7 +634,7 @@ _armorerNoIntro_ task:
     clear _clickedArmorer_
 
 _seenTrespassing_ task:
-    when _armorerNoIntro_ and not _stealthy_
+    when _armorerNoIntro_ and not _stealth_
     setvar _hostile_
     say 1021
 
@@ -564,3 +670,23 @@ _clearclick_ task:
 	when _qgclicked_ and not _rescue_
 	say 1003
 	clear _qgclicked_ _clearclick_ 
+
+-- Skill checks
+_stealth_ task:
+    when skill Stealth is at least 60
+
+_pickpocket_ task:
+    when skill Pickpocket is at least 60
+
+_streetwise_ task:
+    when skill Streetwise is at least 60
+
+_crit_ task:
+    when skill CriticalStrike is at least 60
+
+_thief_ task:
+    when _stealth_ and _pickpocket_
+
+_quietKill_ task:
+    when _streetwise_ and _crit_
+
