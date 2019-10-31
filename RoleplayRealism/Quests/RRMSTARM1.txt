@@ -77,13 +77,13 @@ on %qdt:
  peasant wormen for the purpose of blackmailing
  a commoner of no real consequence, however 
  skilled he may be at making armor.
- However, due to my good standing with them in
- addition my high rank in the Fighters Guild, they 
- are going to get the contract to me within the week
- after dealing with this renegate brother. Whoever
- they are, they're about to regret ever having taken
- money from _lord_ against the code of the
- brotherhood.
+ Due to my good standing with the Dark Brotherhood,
+ they are going to deal with this renegade brother
+ swiftly, retrieving the contract and delivering it
+ to me within the week. Whoever this transgressing
+ member is, they're about to regret ever having
+ taken money from _lord_ against the code 
+ of the brotherhood!
 
 Message: 1014
 on %qdt:
@@ -104,8 +104,9 @@ on %qdt:
  do it quietly without hurting any other members
  in the process. If I do, there will be costly
  consequences.
- I was told that I could find the renegade at
- __dbHideout_ in the _dbHideout_.
+ I was told that I should be able to find the 
+ renegade member at __dbHideout_ 
+ in the _dbHideout_.
 
 Message: 1015
 on %qdt:
@@ -135,17 +136,23 @@ on %qdt:
 Message: 1020
 <ce>[A guard to your left speaks to you as you enter..]
 <ce>
-Hey, what are you doing here %ra? Yes, over here on your
-left. 
-You had better go and speak to _captain_ immediately! 
-He's further down this way, then to the right, in the big room.
+<ce>Hey, who are you? What are you doing here and what do
+<ce>you want %ra? Yes, over here on your left, are you deaf?
+<ce>
+<ce>You had better go and speak to _captain_ immediately!
+<ce> 
+<ce>Continue further down the hall this way, then go to the 
+<ce>right, in the big room. Keep your weapons sheathed and
+<ce>don't try any funny stuff, or we'll have your guts for
+<ce>garters.
 
 Message: 1021
 <ce>[A guard behind you sees you speaking and shouts..]
 <ce>
-Hey, what are you doing in there here %ra? You have made
-a very big mistake, we don't take kindly to trespassing.
-You will not leave here alive...
+<ce>Hey, what are you doing in there You've made a big 
+<ce>mistake, we don't take kindly to trespassing.
+<ce>
+<ce>You'Ll not leave here alive %ra...
 
 Message: 1022
 <ce>[As you slice through yet another of their number, the lord shouts..]
@@ -158,7 +165,7 @@ worth losing this many people for, no matter how good the
 armor he makes is.
 
 Message: 1023
-Ouch. You're going to die for that, %ra!
+Argghhh. You're going to pay in blood for that, %ra!
 
 Message: 1024
 __fort_ is no longer on alert for you, and have locked the doors.
@@ -512,7 +519,8 @@ hefty price, but if you can't pay then you will die.
 
 Message: 1090
 An unsanctioned Dark Brotherhood contract to Kill 
-_armorer_'s daughter if _lord_!
+_armorer_'s daughter if _lord_ reports that he's
+fled __fort_!
 
 Message: 1091
 <ce> Reaching into your pack for something,
@@ -544,6 +552,15 @@ Foe _darkBrother_ is Assassin
 
 Foe _doorGuard_ is Warrior
 Foe _guard1_ is Warrior
+Foe _guard2_ is Warrior
+Foe _guard3_ is Warrior
+Foe _guard4_ is Warrior
+Foe _guard5_ is Warrior
+Foe _guard6_ is Warrior
+Foe _guard7_ is Warrior
+Foe _guard8_ is Warrior
+Foe _guard9_ is Warrior
+Foe _guard10_ is Warrior
 
 Foe _soldiers_ is 8 Warrior
 Foe _soldiersChase_ is 2 Warrior
@@ -567,7 +584,25 @@ Clock _killAll_ 02.00:00
     place foe _doorGuard_ at _fort_ marker 3
     restrain foe _doorGuard_
     place foe _guard1_ at _fort_ marker 4
+    place foe _guard2_ at _fort_ marker 5
+    place foe _guard3_ at _fort_ marker 6
+    place foe _guard4_ at _fort_ marker 7
+    place foe _guard5_ at _fort_ marker 8
+    place foe _guard6_ at _fort_ marker 9
+    place foe _guard7_ at _fort_ marker 10
+    place foe _guard8_ at _fort_ marker 11
+    place foe _guard9_ at _fort_ marker 12
+    place foe _guard10_ at _fort_ marker 13
     restrain foe _guard1_
+    restrain foe _guard2_
+    restrain foe _guard3_
+    restrain foe _guard4_
+    restrain foe _guard5_
+    restrain foe _guard6_
+    restrain foe _guard7_
+    restrain foe _guard8_
+    restrain foe _guard9_
+    restrain foe _guard10_
     log 1010 step 0
     pc at _fortExt_ set _atFort_ saying 1026
     pc at _fort_ set _insideFort_ saying 1020
@@ -670,6 +705,7 @@ _dbContactMeet_ task:
 _dbContactHiRep_ task:
     when _dbContactMeet_ and _dbRepHigh_
     say 1081
+    log 1013 step 2
     start timer _dbDeal_
 
 _dbContactLoRep_ task:
@@ -682,7 +718,6 @@ _dbContactLoRep_ task:
 _dbDeal_ task:
     destroy _dbContact_
     give pc _dbContract_ notify 1091
-    log 1013 step 2
 
 
 variable _dbRepHigh_
@@ -709,6 +744,15 @@ _clickedArmorer_ task:
 _attackedGuard_ task:
     injured _doorGuard_
     injured _guard1_
+    injured _guard2_
+    injured _guard3_
+    injured _guard4_
+    injured _guard5_
+    injured _guard6_
+    injured _guard7_
+    injured _guard8_
+    injured _guard9_
+    injured _guard10_
     say 1023
     setvar _hostile_
 
@@ -863,8 +907,14 @@ _streetwise_ task:
 _crit_ task:
     when skill CriticalStrike is at least 60
 
+_backstab_ task:
+    when skill Backstabbing is at least 60
+
 _thief_ task:
     when _stealth_ and _pickpocket_
+
+_backKill_ task:
+    when _stealth_ and _backstab_
 
 _quietKill_ task:
     when _streetwise_ and _crit_
