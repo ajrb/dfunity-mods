@@ -214,7 +214,6 @@
                     "YPos": 2,
                     "ZPos": 64,
                     "XRotation": 0,
-                    "YRotation": 1540,
                     "YRotation": -506,
                     "ZRotation": 0
                 },
@@ -515,9 +514,9 @@
                     "Position": 2,
                     "XPos": 164,
                     "YPos": 0,
-                    "ZPos": 292,
+                    "ZPos": 122,
                     "TextureArchive": 182,
-                    "TextureRecord": 49,
+                    "TextureRecord": 19,
                     "FactionID": 510,
                     "Flags": 13
                 }
