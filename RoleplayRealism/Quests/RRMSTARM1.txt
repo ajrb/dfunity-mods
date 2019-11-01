@@ -384,16 +384,18 @@ you anger them.
 Message: 1063
 Alright then, I'll get in touch with them and check they
 are not busy with another job. Please return with the 
-gold as soon as you can, if you want to proceed.
+money as soon as you can, assuming you still want to 
+proceed. They don't accept letters of credit so you need
+to bring me gold pieces.
 
 Message: 1064
 Thanks for bringing the gold, %pcf. Good news, the trackers
 have agreed to take on this task for us and I've paid them 
-1000 gold to cover expenses to get started immediately.
+1000 gold to them so they will start immediately.
 <ce>
 They'll get the remainder once they've discovered the 
-location for us. They reckon it will take a week, so
-please rest and prepare in the meantime. I'll send a
+location for us. They reckon it will take up to a week, 
+so please rest and prepare in the meantime. I'll send a
 letter upon their return.
 
 Message:  1065
@@ -633,7 +635,7 @@ Place _dbTavern_ remote tavern
 Place _dbHideout_ remote pawnshop
 
 Person _contact_ faction The_Fighters_Guild
-Person _armorer_ named Fred_Smith male
+Person _armorer_ named Orthus_Dharjen male
 
 Person _lord_ named Lord_Verathon male
 Person _captain_ named Captain_Ulthega male
@@ -739,7 +741,7 @@ _contactQuery_ task:
     log 1012 step 3
     setvar _meetDB_
     place npc _dbContact_ at _dbTavern_
-    repute with _dbContact_ exceeds 30 do _dbRepHigh_  
+    repute with _dbContact_ exceeds 50 do _dbRepHigh_  
 
 _contactContract_ task:
     toting _dbContract_ and _contact_ clicked saying 1069
@@ -865,7 +867,7 @@ _injuredDBfriend_ task:
     injured _dbFriend1_
     injured _dbFriend2_
     start timer _dbAngered_
-    change repute with _dbContact_ by -30
+    change repute with _dbContact_ by -20
     say 1095
 
 _dbAngered_ task:
@@ -1059,7 +1061,7 @@ _rescue_ task:
     say 1059
     hide npc _armorer_ 
 	add _armorer_ face
-    change repute with _armorer_ by +70
+    change repute with _armorer_ by +80
     setvar _rescued_
     clear _clickedContact_
     unset _contactMeetDB_

@@ -27,6 +27,20 @@ namespace RoleplayRealism
     {
         public static float EncEffectScaleFactor = 2f;
 
+        protected static string[] placesTable =
+        {
+            "Aldleigh,              0x3181, 1, -1",
+            "Northrock_Fort_Ext,    0x73A0, 1, -1",
+            "Northrock_Fort,        0x73A1, 1, -1"
+        };
+        protected static string[] factionsTable =
+        {
+            "Lord_Verathon,         0, -1, 1020",
+            "Captain_Ulthega,       0, -1, 1021",
+            "Orthus_Dharjen,        0, -1, 1022"
+        };
+
+
         static Mod mod;
 
         [Invoke(StateManager.StateTypes.Start, 0)]
@@ -111,6 +125,10 @@ namespace RoleplayRealism
             if (!QuestListsManager.RegisterQuestList("RoleplayRealism"))
                 throw new System.Exception("Quest list name is already in use, unable to register RoleplayRealism quest list.");
             RegisterFactionIds();
+            // Add additional data into the quest machine for the quests
+            QuestMachine questMachine = GameManager.Instance.QuestMachine;
+            questMachine.PlacesTable.AddIntoTable(placesTable);
+            questMachine.FactionsTable.AddIntoTable(factionsTable);
 
             Debug.Log("Finished mod init: RoleplayRealism");
         }
@@ -264,7 +282,7 @@ namespace RoleplayRealism
                 id = 1022,
                 parent = 0,
                 type = 4,
-                name = "Fred Smith",
+                name = "Orthus Dharjen",
                 summon = -1,
                 region = 17,
                 power = 2,
