@@ -389,9 +389,10 @@ proceed. They don't accept letters of credit so you need
 to bring me gold pieces.
 
 Message: 1064
-Thanks for bringing the gold, %pcf. Good news, the trackers
-have agreed to take on this task for us and I've paid them 
-1000 gold to them so they will start immediately.
+Good news, the trackers have agreed to take on this task
+for us and I've paid them 1000 gold for them to start 
+immediately. Thanks for bringing me the gold, I knew you
+wouldn't leave me out of pocket Master %pcl.
 <ce>
 They'll get the remainder once they've discovered the 
 location for us. They reckon it will take up to a week, 
