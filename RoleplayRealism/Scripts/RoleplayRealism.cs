@@ -268,7 +268,7 @@ namespace RoleplayRealism
                 summon = -1,
                 region = 17,
                 power = 2,
-                face = 105,
+                face = 380,
                 race = 2,
                 flat1 = (334 << 7) + 14,
                 sgroup = 1,

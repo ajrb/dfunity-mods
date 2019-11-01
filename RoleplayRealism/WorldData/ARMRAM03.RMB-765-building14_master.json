@@ -512,12 +512,12 @@
                 },
                 {
                     "Position": 2,
-                    "XPos": 164,
+                    "XPos": 56,
                     "YPos": 0,
-                    "ZPos": 122,
+                    "ZPos": -172,
                     "TextureArchive": 182,
-                    "TextureRecord": 19,
-                    "FactionID": 510,
+                    "TextureRecord": 7,
+                    "FactionID": 1022,
                     "Flags": 13
                 }
             ],

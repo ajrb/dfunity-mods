@@ -35,7 +35,7 @@ AcceptQuest:  [1002]
 <ce> worth further investigation. Please head over to the 
 <ce> guild hall in __guild_ in the ____guild_ to see 
 <ce> what you discover. There will be a contact waiting for you  
-<ce> there whoy will bring you up to speed regarding the 
+<ce> there who will bring you up to speed regarding the 
 <ce> situation. They'll wait for your arrival for six months, 
 <ce> after that they'll likely try to deal with the situation 
 <ce> themselves, and probably bungle it which is best avoided.
