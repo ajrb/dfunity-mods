@@ -20,6 +20,8 @@ using DaggerfallWorkshop.Game.Guilds;
 using DaggerfallConnect.Arena2;
 using DaggerfallWorkshop.Game.Questing;
 using System.Collections.Generic;
+using System;
+using DaggerfallConnect.FallExe;
 
 namespace RoleplayRealism
 {
@@ -130,7 +132,70 @@ namespace RoleplayRealism
             questMachine.PlacesTable.AddIntoTable(placesTable);
             questMachine.FactionsTable.AddIntoTable(factionsTable);
 
+            // Register the custom armor service
+            Services.RegisterMerchantService(1022, CustomArmorService, "Custom Armor");
+
             Debug.Log("Finished mod init: RoleplayRealism");
+        }
+
+        public static ArmorMaterialTypes[] customArmorMaterials = {
+            ArmorMaterialTypes.Mithril, ArmorMaterialTypes.Adamantium, ArmorMaterialTypes.Ebony, ArmorMaterialTypes.Orcish, ArmorMaterialTypes.Daedric
+        };
+
+        public static void CustomArmorService(IUserInterfaceWindow window)
+        {
+            Debug.Log("Custom Armor service.");
+
+            PlayerEntity playerEntity = GameManager.Instance.PlayerEntity;
+            ItemCollection armorItems = new ItemCollection();
+            Array armorTypes = DaggerfallUnity.Instance.ItemHelper.GetEnumArray(ItemGroups.Armor);
+            foreach (ArmorMaterialTypes material in customArmorMaterials)
+            {
+                if (playerEntity.Level < 10 ||
+                    (playerEntity.Level < 12 && material >= ArmorMaterialTypes.Adamantium) ||
+                    (playerEntity.Level < 15 && material >= ArmorMaterialTypes.Orcish) ||
+                    (playerEntity.Level < 18 && material >= ArmorMaterialTypes.Daedric))
+                    break;
+
+                for (int i = 0; i < armorTypes.Length; i++)
+                {
+                    Armor armorType = (Armor)armorTypes.GetValue(i);
+                    ItemTemplate itemTemplate = DaggerfallUnity.Instance.ItemHelper.GetItemTemplate(ItemGroups.Armor, i);
+                    int vs = 0;
+                    int vf = 0;
+                    switch (armorType)
+                    {
+                        case Armor.Cuirass:
+                        case Armor.Left_Pauldron:
+                        case Armor.Right_Pauldron:
+                            vs = 1;
+                            vf = 3;
+                            break;
+                        case Armor.Greaves:
+                            vs = 2;
+                            vf = 5;
+                            break;
+                        case Armor.Gauntlets:
+                        case Armor.Boots:
+                            vs = 1;
+                            vf = 1;
+                            break;
+                        case Armor.Helm:
+                            vs = 1;
+                            vf = itemTemplate.variants-1;
+                            break;
+                        default:
+                            continue;
+                    }
+                    for (int v = vs; v <= vf; v++)
+                        armorItems.AddItem(ItemBuilder.CreateArmor(playerEntity.Gender, playerEntity.Race, armorType, material, v));
+                }
+            }
+
+            DaggerfallTradeWindow tradeWindow = (DaggerfallTradeWindow)
+                UIWindowFactory.GetInstanceWithArgs(UIWindowType.Trade, new object[] { DaggerfallUI.UIManager, null, DaggerfallTradeWindow.WindowModes.Buy, null });
+            tradeWindow.MerchantItems = armorItems;
+            DaggerfallUI.UIManager.PushWindow(tradeWindow);
         }
 
         private static void BedActivation(Transform transform)
