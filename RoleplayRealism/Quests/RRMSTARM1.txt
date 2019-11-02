@@ -12,11 +12,16 @@ QuestComplete:  [1004]
 _armorer_ from __fort_ out here in the
 ____fort_. I feel much better now that the
 sitution has been resolved so well.
+<ce>
 It's been an absolute privilege to watch someone 
 of your experience and expertise at work, Master 
 %pcl. I can see why you're a master of the guild. 
 Please do pop in and say hello if you're ever up in
 these mountains again wont you?
+<ce>
+You make a note of where _armorer_ said
+he was headed to in your journal, so you can travel
+there to visit him when you're ready.
 
 RumorsDuringQuest:  [1005]
 <ce> The guards over at the __fort_
@@ -243,6 +248,11 @@ Okay you can take _armorer_ with you, we're going to miss his
 craftmanship but I know when the game is up. 
 I suggest that you don't ever cross our path again, %pcf.
 
+Message: 1038
+You were warned to not approach _lord_ before
+speaking to _captain_ first.
+Do you want to ignore this advice?
+
 -- Captain & guards
 Message: 1040
 Who are you? What business do you have with us, %ra?
@@ -391,8 +401,8 @@ to bring me gold pieces.
 Message: 1064
 Good news, the trackers have agreed to take on this task
 for us and I've paid them 1000 gold for them to start 
-immediately. Thanks for bringing me the gold, I knew you
-wouldn't leave me out of pocket Master %pcl.
+immediately. Thank you for bringing me the gold, I knew
+that you wouldn't leave me out of pocket Master %pcl.
 <ce>
 They'll get the remainder once they've discovered the 
 location for us. They reckon it will take up to a week, 
@@ -529,6 +539,7 @@ Tigonus. Please drop by any time you're in the area or
 when you need some specifc armor making. You will always 
 be welcome at my home.
 
+
 -- Dark Brother contact
 Message: 1080
 Hello. blah blah
@@ -543,10 +554,11 @@ We'll have to deal with this renegade brother at some point
 and the contract will be void, but we don't feel any urgency
 regarding the situation. There are many more important
 machinations and intrigues to deal with first. You will
-find this brother at _dbHideout_ in __dbHideout_, you've
-permission to go and deal with them. Be warned however, 
-don't harm any others of our order while doing this, else 
-we'll hunt you down and exact revenge. 
+find this brother at _dbHideout_ in __dbHideout_,
+you've permission to go and deal with them. Be warned
+however, don't harm any others of our order while doing this,
+else we'll hunt you down and exact revenge.
+<ce>
 Given the circumstances we may make an exception for a
 hefty price, but if you can't pay then you will die.
 
@@ -586,6 +598,8 @@ floor. No one else has been alerted, so now you can now
 retrieve the contract and leave. 
 
 Message: 1094
+[You try to catch the renegade out, but are not skilled enough]
+<ce>
 You should not have come here. I don't like unexpected
 guests. My mates and I will cut you into little pieces.
 
@@ -623,6 +637,17 @@ You need to pay us 100,000 gold to compensate for the
 members you murdered when retrieving the contract.
 No negotiations, just get the money otherwise you'll
 be hounded to your grave, %pcn.
+
+-- Journal notes
+Message: 1105
+After being rescued _armorer_ went to Pjiga in Mournoth.
+
+Message: 1106
+After being rescued _armorer_ went to Penmore in Glenpoint. 
+
+Message: 1107
+After being rescued _armorer_ went to Paponirea in Tigonus. 
+
 
 QBN:
 
@@ -776,6 +801,7 @@ _headS_ task:
     worldupdate building ARMRAM03.RMB 14 at 240 in region 52 variant _master
     say 1075
     log 1015 step 5
+    journal note 1105
     drop _armorer_ face
     give pc nothing
     end quest
@@ -784,6 +810,7 @@ _headW_ task:
     worldupdate building ARMRAM03.RMB 14 at 33 in region 18 variant _master
     say 1076
     log 1016 step 5
+    journal note 1106
     drop _armorer_ face
     give pc nothing
     end quest
@@ -792,6 +819,7 @@ _headSW_ task:
     worldupdate building ARMRAM03.RMB 14 at 44 in region 48 variant _master
     say 1077
     log 1017 step 5
+    journal note 1107
     drop _armorer_ face
     give pc nothing
     end quest
@@ -842,14 +870,14 @@ _clickedBrother_ task:
     clicked foe _darkBrother_
     clear _clickedDbContact_
 
-_brotherThief_ task:
-    when _clickedBrother_ and _thief_ and not _critKill_ and not _backKill_
-    get item _dbContract_ saying 1092
-    
 _brotherCritKill_ task:
-    when _clickedBrother_ and _critKill_ and not _thief_ and not _backKill_
+    when _clickedBrother_ and _critKill_
     say 1091
     kill foe _darkBrother_
+    
+_brotherThief_ task:
+    when _clickedBrother_ and _thief_ and not _critKill_
+    get item _dbContract_ saying 1092
     
 _brotherBackstab_ task:
     when _clickedBrother_ and _backKill_ and not _thief_ and not _critKill_
@@ -937,13 +965,20 @@ _chaseHostile_ task:
 
 _submission_ task:
     killed 60 _soldiers_ saying 1022
-    unset _clickedCaptain_
-    unset _clickedLord_
-    unset _lordPaid_
-    unset _hostile_
+    unset _clickedCaptain_ _clickedLord_ _lordPaid_ _hostile_
     stop timer _killAll_
     enemies clear
     setvar _permit_
+
+_cancelHostile_ task:
+    when _permit_ and _hostile_ 
+    stop timer _killAll_
+    enemies clear
+    unset _hostile_
+
+_cancelKillAll_ task:
+    when _rescued_ and _hostile_ and _atFort_
+    stop timer _killAll_
 
 _killAll_ task:
     end quest saying 1003
@@ -952,8 +987,18 @@ _killAll_ task:
 -- Lord speech
 _lordNoIntro_ task:
     when _clickedLord_ and not _intro_
+    prompt 1038 yes _lordAnger_ no _lordAvoid_
+
+_lordAvoid_ task:
+    clear _clickedLord_
+
+_lordAnger_ task:
     say 1030
     setvar _hostile_
+
+_lordNoIntro2_ task:
+    when _clickedLord_ and not _intro_ and _lordAvoid_
+    start task _lordAnger_
 
 _lordIntro_ task:
     when _clickedLord_ and _intro_ and not _ask_ and not _hostile_
@@ -975,8 +1020,8 @@ _lordRequest_ task:
 
 _lordForce_ task:
     toting _dbContract_ and _lord_ clicked saying 1036
+    clear _clickedLord_ _clickedArmorer_
     setvar _permit_
-    clear _clickedLord_
 
 _lordPay_ task:
     clicked npc _lord_
@@ -990,12 +1035,6 @@ _lordPaid_ task:
     say 1035
     clear _clickedCaptain_ _clickedLord_ _clickedArmorer_
     setvar _permit_
-
-_lordPermitUnhostile_ task:
-    when _permit_ and _hostile_ 
-    stop timer _killAll_
-    enemies clear
-    unset _hostile_
 
 _lordHavePermit_ task:
     when _clickedLord_ and _request_ and _permit_ and not _hostile_
@@ -1026,7 +1065,7 @@ _captainHavePermit_ task:
 
 -- Armorer speech
 _armorerHostile_ task:
-    when _clickedArmorer_ and _hostile_
+    when _clickedArmorer_ and _hostile_ and not _permit_
     say 1058
     clear _clickedArmorer_
 
@@ -1065,10 +1104,7 @@ _rescue_ task:
     change repute with _armorer_ by +80
     setvar _rescued_
     clear _clickedContact_
-    unset _contactMeetDB_
-    unset _contactContract_
-    unset _killAll_
-
+    unset _contactMeetDB_ _contactContract_ _killAll_
 
 -- Skill checks
 _stealth_ task:
