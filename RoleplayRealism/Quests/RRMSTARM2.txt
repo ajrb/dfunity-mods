@@ -1,0 +1,127 @@
+Quest: RRMSTARM2
+DisplayName: A Careless Price
+QRC:
+
+QuestComplete:  [1004]
+<ce>You have paid your debt to the Dark Brotherhood and they
+have stopped sending assasins.
+
+RumorsDuringQuest:  [1005]
+<ce> I hear the Dark Brotherhood are angry with FG.
+
+QuestLogEntry: [1010]
+on %qdt:
+ While retrieving a contract I hurt some other members
+ in the process. The DB will be after me, hopefully I
+ can pay them off.
+
+-- Dark Brother contact
+Message: 1080
+Hello. blah blah
+
+Message: 1081
+You are a good friend of the brotherhood, so we'll deal 
+with this renegade swiftly and deliver the contract 
+directly to you within a few days.
+
+Message: 1082
+We'll have to deal with this renegade brother at some point
+and the contract will be void, but we don't feel any urgency
+regarding the situation. There are many more important
+machinations and intrigues to deal with first. You will
+find this brother at _dbHideout_ in __dbHideout_,
+you've permission to go and deal with them. Be warned
+however, don't harm any others of our order while doing this,
+else we'll hunt you down and exact revenge.
+<ce>
+Given the circumstances we may make an exception for a
+hefty price, but if you can't pay then you will die.
+
+Message: 1083
+<ce> Reaching into your pack for something,
+<ce> you spy a note that wasn't there before.
+        <--->
+<ce> You feel a parchment slip into your hand and hear
+<ce> the sound of footsteps scampering away. There is 
+<ce> no other sign of the mysterious courier.
+
+Message: 1090
+You have injured another member of the Dark Brotherhood
+which you were warned against doing. They will be coming
+for you to exact a price. Master of a guild or not, you
+don't cross the brotherhood. You'd better visit a bank
+after finishing up here to ensure you can pay with gold 
+rather than your blood! (100,000 gold should cover it)
+
+Message: 1096
+An enforcer from the Dark Brotherhood corners you and
+requests you pay 100,000 gold to compensate for the
+members you murdered when retrieving the contract.
+You are glad you had the money to pay, as having the
+brotherhood after you is not a pleasant situation.
+
+Message: 1097
+An enforcer from the Dark Brotherhood corners you and
+requests you pay 100,000 gold to compensate for the
+members you murdered when retrieving the contract.
+Since you can't pay, they signal their nearby comrades
+to attack.
+
+Message: 1098
+Thank you for compensating the brotherhood with 100,000 
+gold, I should be able to smooth things over and call
+off the enforcers. Your reputation with us has still 
+been damaged, so I suggest you keep out of our way from
+now on Master %pcl.
+
+Message: 1099
+You need to pay us 100,000 gold to compensate for the
+members you murdered when retrieving the contract.
+No negotiations, just get the money otherwise you'll
+be hounded to your grave, %pcn.
+
+QBN:
+
+Place _dbFront_ remote clothingshop
+
+Person _dbContact_ faction The_Dark_Brotherhood male
+Foe _dbEnforcers_ is 4 Assassin
+
+Clock _dbAngered_ 10.00:00
+
+-- Quest start-up:
+    place npc _dbContact_ at _dbFront_
+    change repute with _dbContact_ by -20
+    start timer _dbAngered_
+    log 1010 step 0
+    
+_notify_ task:
+    when pc exits anywhere
+    say 1090
+
+_dbAngered_ task:
+    pay 100000 money do _dbPaid_ otherwise do _dbEnforce_
+
+_dbPaid_ task:
+    say 1096
+    give pc nothing
+    end quest saying 1004
+
+_dbEnforce_ task:
+    send _dbEnforcers_ every 10 minutes with 100% success
+    say 1097
+    -prompt: will you pay?
+
+_dbContactPay_ task:
+    clicked npc _dbContact_ 
+    pay 100000 money do _dbContactPaid_ otherwise do _dbContactNoPay_
+
+_dbContactPaid_ task:
+    say 1098
+    enemies clear
+    give pc nothing
+    end quest saying 1004
+
+_dbContactNoPay_ task:
+    say 1099
+    clear _dbContactPay_

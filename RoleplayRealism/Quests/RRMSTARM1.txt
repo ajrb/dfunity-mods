@@ -56,14 +56,17 @@ on %qdt:
  more than brigands and renegades, and you suspect this
  lord is probably the discraced or iligitimate son of
  some noble family somewhere. 
-    They are keeping the smith from leaving by 
- threatening his daughter by way of a contract with the
- Dark Brotherhood. Fighting the entire garrison at the 
- fort is unlikely to be possible so I need to get hold 
- of this contract to free _armorer_ from the villanous 
- clutches of _lord_. Alternatively, he has agreed to 
- let the smith go if I pay the ridiculous sum of a 
- million gold pieces.
+    They are keeping the smith trapped by taking out a 
+ contract with the Dark Brotherhood and threatening his 
+ daughter with death. Fighting the entire garrison at the 
+ fort is unlikely to be possible so I need to get hold of 
+ this contract to free _armorer_ from the villanous 
+ clutches of _lord_. Maybe I should pay my guild
+ contact in __guild_ a visit and see if a meeting with 
+ the Dark Brotherhood can be arranged.
+    Alternatively, _lord_ has agreed to release
+the smith go if I pay the ridiculous sum of a million 
+gold pieces.
 
 Message: 1012
 on %qdt:
@@ -603,40 +606,6 @@ Message: 1094
 You should not have come here. I don't like unexpected
 guests. My mates and I will cut you into little pieces.
 
-Message: 1095
-You have injured another member of the Dark Brotherhood
-which you were warned against doing. They will be coming
-for you to exact a price. Master of a guild or not, you
-don't cross the brotherhood. You'd better visit a bank
-after finishing up here to ensure you can pay with gold 
-rather than your blood! (100,000 gold should cover it)
-
-Message: 1096
-An enforcer from the Dark Brotherhood corners you and
-requests you pay 100,000 gold to compensate for the
-members you murdered when retrieving the contract.
-You are glad you had the money to pay, as having the
-brotherhood after you is not a pleasant situation.
-
-Message: 1097
-An enforcer from the Dark Brotherhood corners you and
-requests you pay 100,000 gold to compensate for the
-members you murdered when retrieving the contract.
-Since you can't pay, they signal their nearby comrades
-to attack.
-
-Message: 1098
-Thank you for compensating the brotherhood with 100,000 
-gold, I should be able to smooth things over and call
-off the enforcers. Your reputation with us has still 
-been damaged, so I suggest you keep out of our way from
-now on Master %pcl.
-
-Message: 1099
-You need to pay us 100,000 gold to compensate for the
-members you murdered when retrieving the contract.
-No negotiations, just get the money otherwise you'll
-be hounded to your grave, %pcn.
 
 -- Journal notes
 Message: 1105
@@ -658,7 +627,7 @@ Place _fortExt_ permanent Northrock_Fort_Ext
 Place _fort_ permanent Northrock_Fort
 -- remote tavern & pawn shop
 Place _dbTavern_ remote tavern
-Place _dbHideout_ remote pawnshop
+Place _dbHideout_ remote clothingshop
 
 Person _contact_ faction The_Fighters_Guild
 Person _armorer_ named Orthus_Dharjen male
@@ -670,7 +639,6 @@ Person _dbContact_ faction The_Dark_Brotherhood male
 Foe _darkBrother_ is Assassin
 Foe _dbFriend1_ is Thief
 Foe _dbFriend2_ is Nightblade
-Foe _dbEnforcers_ is 4 Assassin
 
 Foe _doorGuard_ is Warrior
 Foe _guard1_ is Warrior
@@ -693,7 +661,6 @@ Item _dbContract_ letter used 1090
 Clock _trackers_ 00.02:00
 Clock _dbDeal_ 00.02:00
 Clock _killAll_ 02.00:00
-Clock _dbAngered_ 00.02:00
 
 -- rescues: 1Mill, kill 60 within 2 days, retrieve DB contract (steal, critKill, backstab, fight, highrep)
 -- db renegade solutions: stealth+pickpocket or crit+streetwise or stealth+backstab - mess up & fight & costs 100k gp & -rep if hit comrades
@@ -728,7 +695,10 @@ Clock _dbAngered_ 00.02:00
     restrain foe _guard10_
     pc at _fortExt_ set _atFort_ saying 1026
     pc at _fort_ set _insideFort_ saying 1020
-    
+    pc at _dbHideout_ set _inHideout_
+    give item _dbContract_ to _darkBrother_
+    have _dbContract_ set _haveContract_
+
 
 -- Guild contact speech to find the fort & meet DB
 _contactFirst_ task:
@@ -767,10 +737,12 @@ _contactQuery_ task:
     log 1012 step 3
     setvar _meetDB_
     place npc _dbContact_ at _dbTavern_
-    repute with _dbContact_ exceeds 50 do _dbRepHigh_  
+    repute with _dbContact_ exceeds 50 do _dbRepHigh_
+    clear _clickedContact_
 
 _contactContract_ task:
-    toting _dbContract_ and _contact_ clicked saying 1069
+    when _clickedContact_ and _haveContract_
+    say 1069
     unset _contactMeetDB_
     clear _clickedContact_
 
@@ -842,76 +814,53 @@ _dbContactLoRep_ task:
     log 1014 step 4
     place foe _darkBrother_ at _dbHideout_
     restrain foe _darkBrother_
-    give item _dbContract_ to _darkBrother_
 
 _dbDeal_ task:
     destroy _dbContact_
     give pc _dbContract_ notify 1083
 
-_clickedDbContact_ task:
-    clicked npc _dbContact_ 
-
-_dbContactPay_ task:
-    when _clickedDbContact_ and _injuredDBfriend_
-    pay 100000 money do _dbContactPaid_ otherwise do _dbContactNoPay_
-
-_dbContactPaid_ task:
-    say 1098
-    stop timer _dbAngered_
-    unset _dbEnforce_ _dbContactPay_
-    enemies clear
-
-_dbContactNoPay_ task:
-    say 1099
-    clear _clickedDbContact_
-
 -- Renegade brother
 _clickedBrother_ task:
     clicked foe _darkBrother_
-    clear _clickedDbContact_
 
-_brotherCritKill_ task:
+_inHideout_ task:
+    destroy _dbContact_
+
+_dbCritKill_ task:
     when _clickedBrother_ and _critKill_
     say 1091
     kill foe _darkBrother_
     
-_brotherThief_ task:
+_dbThief_ task:
     when _clickedBrother_ and _thief_ and not _critKill_
     get item _dbContract_ saying 1092
     
-_brotherBackstab_ task:
+_dbBackstab_ task:
     when _clickedBrother_ and _backKill_ and not _thief_ and not _critKill_
     say 1093
     kill foe _darkBrother_
     
-_brotherFight_ task:
+_dbStartFight_ task:
     when _clickedBrother_ and not _thief_ and not _critKill_ and not _backKill_
+    unset _dbCritKill_ _dbThief_ _dbBackstab_
     injured _darkBrother_
     say 1094
+
+_dbFight_ task:
+    when _inHideout_ and _dbStartFight_
     enemies makehostile
-    create foe _dbFriend1_ every 0 minutes 2 times with 100% success
+    create foe _dbFriend1_ every 0 minutes 1 times with 100% success
+    create foe _dbFriend1_ every 0 minutes 1 times with 100% success
     create foe _dbFriend2_ every 0 minutes 1 times with 100% success
 
 _injuredDBfriend_ task:
     injured _dbFriend1_
     injured _dbFriend2_
-    start timer _dbAngered_
-    change repute with _dbContact_ by -20
-    say 1095
-
-_dbAngered_ task:
-    pay 100000 money do _dbPaid_ otherwise do _dbEnforce_
-
-_dbPaid_ task:
-    say 1096
-    unset _dbEnforce_
-
-_dbEnforce_ task:
-    send _dbEnforcers_ every 10 minutes with 100% success
-    say 1097
+    start quest RRMSTARM2
 
 variable _dbRepHigh_
 variable _meetDB_
+variable _haveContract_
 variable _atFort_
 variable _insideFort_
 variable _hostile_
@@ -1014,22 +963,24 @@ _lordAsk_ task:
 
 -- request freedom
 _lordRequest_ task:
-    when _clickedLord_ and _request_ and not _permit_ and not _hostile_ and not _denied_
+    when _clickedLord_ and _request_ and not _permit_ and not _hostile_ and not _denied_ and not _haveContract_
     say 1034
     setvar _denied_
+    clear _clickedLord_
 
 _lordForce_ task:
-    toting _dbContract_ and _lord_ clicked saying 1036
-    clear _clickedLord_ _clickedArmorer_
+    when _clickedLord_ and _haveContract_ and not _permit_
+    say 1036
+    clear _clickedLord_ _clickedArmorer_ _clickedCaptain_
     setvar _permit_
 
 _lordPay_ task:
-    clicked npc _lord_
+    when _clickedLord_ and _denied_ and not _haveContract_ and not _permit_
     pay 1000000 money do _lordPaid_ otherwise do _lordGoAway_
 
 _lordGoAway_ task:
     say 1033
-    clear _lordPay_ _lordGoAway_
+    clear _lordPay_ _clickedLord_
 
 _lordPaid_ task:
     say 1035
@@ -1091,9 +1042,11 @@ _armorerAsk_ task:
     say 1054
     log 1011 step 2
     setvar _request_
+    clear _clickedArmorer_
 
 _armorerContract_ task:
-    toting _dbContract_ and _armorer_ clicked saying 1055
+    when _clickedArmorer_ and _haveContract_ and not _permit_
+    say 1055
     clear _clickedArmorer_
 
 _rescue_ task:
