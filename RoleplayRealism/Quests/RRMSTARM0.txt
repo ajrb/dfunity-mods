@@ -1,5 +1,5 @@
 Quest: RRMSTARM0
-DisplayName: Rumors from the Mountains
+DisplayName: Mountain Rumors
 QRC:
 
 QuestorOffer:  [1000]

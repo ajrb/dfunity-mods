@@ -1,5 +1,5 @@
 Quest: RRMSTARM1
-DisplayName: The Lost Master Armorer
+DisplayName: The Master Armorer
 QRC:
 
 QuestFail:  [1003]
@@ -420,7 +420,7 @@ immediately. Thank you for bringing me the gold, I knew
 that you wouldn't leave me out of pocket Master %pcl.
 <ce>
 They'll get the remainder once they've discovered the 
-location for us. They reckon it will take up to a week, 
+location for us. They reckon it may take up to a week, 
 so please rest and prepare in the meantime. I'll send a
 letter upon their return.
 
@@ -673,8 +673,8 @@ Foe _soldiersChase_ is 2 Warrior
 Item _letter1_ letter used 1066
 Item _dbContract_ letter used 1090
 
-Clock _trackers_ 00.02:00
-Clock _dbDeal_ 00.02:00
+Clock _trackers_ 05.03:00
+Clock _dbDeal_ 06.05:00
 Clock _killAll_ 02.00:00
 
 -- rescues: 1Mill, kill 60 within 2 days, retrieve DB contract (steal, critKill, backstab, fight, highrep)
@@ -683,7 +683,7 @@ Clock _killAll_ 02.00:00
 
 -- Quest start-up:
     place npc _contact_ at _guild_
-    place npc _armorer_ at _fort_ marker 6
+    place npc _armorer_ at _fort_ marker 0
     place npc _lord_ at _fort_ marker 1
     place npc _captain_ at _fort_ marker 2
     place foe _doorGuard_ at _fort_ marker 3
@@ -1082,16 +1082,16 @@ _rescue_ task:
 
 -- Skill checks
 _stealth_ task:
-    when skill Stealth is at least 60
-
-_pickpocket_ task:
-    when skill Pickpocket is at least 60
+    when skill Stealth is at least 80
 
 _streetwise_ task:
     when skill Streetwise is at least 60
 
+_pickpocket_ task:
+    when skill Pickpocket is at least 50
+
 _crit_ task:
-    when skill CriticalStrike is at least 60
+    when skill CriticalStrike is at least 70
 
 _backstab_ task:
     when skill Backstabbing is at least 60
