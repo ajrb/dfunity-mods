@@ -8,20 +8,20 @@ You have failed to rescue _armorer_ from his predicament in the
 ____fort_.
 
 QuestComplete:  [1004]
-<ce>Excellent work Master, you were able rescue 
-_armorer_ from __fort_ out here in the
+<ce>Excellent work Master, I'm so pleased that 
+you managed to rescue _armorer_ from 
+__fort_ all the way out here in the
 ____fort_. I feel much better now that the
-sitution has been resolved so well.
+sitution has been resolved so satisfactorily.
 <ce>
 It's been an absolute privilege to watch someone 
 of your experience and expertise at work, Master 
 %pcl. I can see why you're a master of the guild. 
 Please do pop in and say hello if you're ever up in
-these mountains again wont you?
+these mountains again, wont you?
 <ce>
-You make a note of where _armorer_ said
-he was headed to in your journal, so you can travel
-there to visit him when you're ready.
+[You make a note of where _armorer_ said he was 
+headed to in your notebook, and say goodbye]
 
 RumorsDuringQuest:  [1005]
 <ce> The guards over at the __fort_
@@ -276,14 +276,26 @@ Message: 1042
 You want _armorer_? No!
 
 Message:  1043
-Just take _armorer_ and leave us be. 
+Just take _armorer_ and leave us. 
 I don't ever want to see you again.
+
+Message: 1044
+Where did you get that from? Damn you, _lord_
+is going to be in a bad mood for weeks. Curses on you
+and your pox ridden guild. 
 
 Message: 1048
 <ce>What are you looking at?
 <ce>
 <ce>We're watching you, come on, just give us an excuse... 
 <ce>we like a good fight.
+
+Message: 1049
+on %qdt:
+ Thankfully I was able to release _armorer_ from
+ his entrapment by _lord_ at __fort_.
+ I'm taking him back to the _guild_ in 
+ __guild_ so we can discuss what comes next.
 
 -- Armorer
 Message: 1050
@@ -485,25 +497,28 @@ Master %pcl, we will help him get back on his feet and
 set up home with a new forge in a small town somewhere 
 nice and quiet.
 <ce>
-So, where would you like to settle down, _armorer_? 
-We're assuming far away from the ____guild_..
+So, where would you like to settle down, _armorer_?
+<ce>
+We're assuming someplace far away from the 
+____guild_...
 
 Message: 1071
 I'm not sure. To tell you the truth I'm just grateful
 to be out of the cursed place and out of 
 _lord_'s clutches at last.
 <ce>
-I'm forever in your debt Master %pcn!
+For this I'm forever in your debt Master %pcn!
 <ce>
-Yes, I think that I will settle somewhere peaceful at
-a new forge and finally take on an apprentice to pass
-my skills on to before I get too old. I'm certainly tired 
-of crafting armor myself after the past couple of years.
+Hmm, I think that I will settle somewhere peaceful with
+a new forge and finally take on an apprentice. I really
+should pass on my skills before I get too old you know. 
+I'm certainly tired of crafting armor myself after the 
+past couple of years, and teaching will make a nice change.
 <ce>
-I will always make an exception for you though %pcf.
-I may not ever be able to repay you for rescuing me, 
-however I can forge custom armor for you once I'm settled. 
-Drop by anytime.
+I can always make an exception for you though %pcf.
+Although I can't ever repay you for rescuing me, I can 
+forge custom armor for you once I'm settled down. Please
+drop by and see me anytime.
 <ce>
 So which direction shall I go? Hmmm, what do you think, 
 Master %pcl?
@@ -729,7 +744,7 @@ _clickedContact_ task:
 
 _clearNpcClicks_ task:
     when _atFort_
-    clear _clickedContact_
+    clear _clickedContact_ _clickedCaptain_
 
 _contactQuery_ task:
     when _clickedContact_ and _request_ and not _meetDB_ and not _rescued_
@@ -920,7 +935,7 @@ _submission_ task:
     setvar _permit_
 
 _cancelHostile_ task:
-    when _permit_ and _hostile_ 
+    when _permit_ and _hostile_ and not _rescue_
     stop timer _killAll_
     enemies clear
     unset _hostile_
@@ -980,7 +995,7 @@ _lordPay_ task:
 
 _lordGoAway_ task:
     say 1033
-    clear _lordPay_ _clickedLord_
+    clear _lordPay_ _clickedLord_ _lordGoAway_
 
 _lordPaid_ task:
     say 1035
@@ -1007,6 +1022,11 @@ _captainIntro_ task:
 _captainAsk_ task:
     when _clickedCaptain_ and _intro_ and _ask_ and not _request_
     say 1042
+    clear _clickedCaptain_
+
+_captainShow_ task:
+    when _clickedCaptain_ and _request_ and _haveContract_ and not _permit_
+    say 1044
     clear _clickedCaptain_
 
 _captainHavePermit_ task:
@@ -1052,12 +1072,13 @@ _armorerContract_ task:
 _rescue_ task:
     when _clickedArmorer_ and _permit_ 
     say 1059
+    log 1049 step 5
     hide npc _armorer_ 
 	add _armorer_ face
     change repute with _armorer_ by +80
     setvar _rescued_
     clear _clickedContact_
-    unset _contactMeetDB_ _contactContract_ _killAll_
+    unset _contactMeetDB_ _contactContract_
 
 -- Skill checks
 _stealth_ task:
@@ -1083,4 +1104,3 @@ _backKill_ task:
 
 _critKill_ task:
     when _streetwise_ and _crit_
-
