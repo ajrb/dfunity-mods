@@ -191,9 +191,11 @@ Message: 1023
 Argghhh. You're going to pay in blood for that, %ra!
 
 Message: 1024
-__fort_ is no longer on alert for you, and have locked the doors.
-You have failed to rescue _armorer_ from his predicament in the
-____fort_.
+You've arrived back at __fort_ but you failed to retrieve the
+contract from the renegade Dark Brother. You only have two
+options left to rescue _armorer_, either pay the 1 million gold 
+or fight an entire garrison of soldiers. Neither are particularly
+appealing.
 
 Message: 1025
 The warriors of __fort_ and their leader are enraged and will
@@ -872,6 +874,10 @@ _injuredDBfriend_ task:
     injured _dbFriend1_
     injured _dbFriend2_
     start quest RRMSTARM2
+
+_noContract_ task:
+    when _clickedBrother_ and _atFort_ and not _haveContract_
+    say 1024
 
 variable _dbRepHigh_
 variable _meetDB_
