@@ -223,8 +223,9 @@ Message: 1027
 
 -- Lord
 Message: 1030
-You dare to speak to me without permission? 
-Guards, chase this idiot out of here!
+What this, a %ra?
+You think you can just barge in here?
+Captain, have the guards chase this idiot out of here!
 
 Message: 1031
 So, you're here from the Fighters Guild? I'm sure my
@@ -244,13 +245,19 @@ are so arrogant. No, he doesn't want to work for anyone
 else, and I won't allow him to freelance. You're out of luck.
 
 Message: 1033
-Stop bothering me if you have nothing new to say.
+Do you have something new to discuss? No?
+Then get out of my face and stop bothering me, %ra.
 
 Message: 1034
-And what you gonna do 'bout it, %ra?
-I'll release _armorer_ for, say, a million gold. How about 
-that, haha.
-Can you afford him? Let's see if you can bring that much gold.
+So _armorer_ wishes to leave does he? Bah! Who would craft
+our armor then, I ask you? How would we protect ourselves 
+from invaders, eh? No, %ra, he's staying right where he is.
+Tell you what. I'm not an unreasonable man. If you cover 
+the expense of hiring a new armorer, then I'll release him.
+I'd say about 1 million gold would suffice. That will be 
+difficult you say? Don't worry, I take credit notes.
+<ce>
+[He smirks and waves you away]
 
 Message: 1035
 What? You actually got... hmmm, yes, that's about enough. 
@@ -260,12 +267,15 @@ bargain there guildmaster! Now take him and get out of here.
 [He can barely contain his amusement and mirth]
 
 Message: 1036
-What? How the hell did you get hold of that? Curse the damn
-brotherhood. Okay, fine, take _armorer_ with you! We're going 
-to miss his craftmanship but I know when the game is up.
-Your seniority within the Fighters Guild is the only reason 
-you’re leaving here alive. I suggest that you don't ever 
-cross our path again, %ra.
+What! How the hell did you get hold of that? 
+%oth! The Brotherhood has failed me, curse them.
+Damnation, I underestimated you %ra. 
+Okay, fine then, take _armorer_ with you! 
+We're going to miss his craftmanship but I know when the 
+game is up. Just know that your seniority within the 
+Fighters Guild is the only reason you’re even leaving 
+here alive. I suggest that you don't ever cross our path 
+again, %ra.
 
 Message: 1037
 Get out of here. Begone!
@@ -644,9 +654,11 @@ Message: 1083
 <ce>She hands you a note before sprinting away.
 
 Message: 1090
-An unsanctioned Dark Brotherhood contract to kill 
-_armorer_'s daughter if _lord_ reports that he has
-fled __fort_!
+A contract between _lord_ and the Dark 
+Brotherhood.
+It stipulates conditions for _lord_ to have
+_armorer_'s daughter murdered in the case of him leaving 
+_fort_ without _lord_'s permission.
 
 Message: 1091
 You engage the renegade in conversation, putting them at
