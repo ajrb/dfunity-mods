@@ -3,25 +3,26 @@ DisplayName: The Master Armorer
 QRC:
 
 QuestFail:  [1003]
-__fort_ is no longer on alert for you, and have locked the doors.
-You have failed to rescue _armorer_ from his predicament in the
-____fort_.
+<ce>__fort_ is no longer on alert for you, and have locked the doors.
+<ce>You have failed to rescue _armorer_ from his predicament in the
+<ce>____fort_.
 
 QuestComplete:  [1004]
 <ce>Excellent work Master, I'm so pleased that 
-you managed to rescue _armorer_ from 
-__fort_ all the way out here in the
-____fort_. I feel much better now that the
-sitution has been resolved so satisfactorily.
+<ce>you managed to rescue _armorer_ from 
+<ce>__fort_ all the way out here in the
+<ce>____fort_. I feel much better now 
+<ce>that the sitution has been resolved
+<ce>so satisfactorily.
 <ce>
-It's been an absolute privilege to watch someone 
-of your experience and expertise at work, Master 
-%pcl. I can see why you're a master of the guild. 
-Please do pop in and say hello if you're ever up in
-these mountains again, won't you?
+<ce>It's been an absolute privilege to watch someone 
+<ce>of your experience and expertise at work, Master 
+<ce>%pcl. I can certainly see why you're a master of 
+<ce>the guild. Please do pop in and say hello if you're
+<ce>ever up in these mountains again, won't you?
 <ce>
-[You make a note of where _armorer_ said he was 
-headed to in your notebook, and say goodbye]
+<ce>[You make a note of where _armorer_ said he  
+<ce> was headed to in your notebook, and say goodbye]
 
 RumorsDuringQuest:  [1005]
 <ce> The guards over at the __fort_
@@ -50,12 +51,12 @@ On %qdt:
 
 Message: 1011
 on %qdt:
- I have found the armorer, _armorer_. He is
- trapped at __fort_ in servitude to a noble called
+ I have found the armorer, _armorer_. He is trapped 
+ at __fort_ in servitude to a noble called
  _lord_. He and his troops seem to be nothing
- more than brigands and renegades, and you suspect this
- lord is probably the disgraced or illegitimate son of
- some noble family somewhere. 
+ more than brigands and renegades, and you suspect 
+ this lord is probably the disgraced or illegitimate
+ son of some noble family somewhere. 
     They are keeping the smith trapped by taking out a 
  contract with the Dark Brotherhood and threatening his 
  daughter with death. Fighting the entire garrison at the 
@@ -65,8 +66,8 @@ on %qdt:
  contact in __guild_ a visit to see if a meeting with 
  the Dark Brotherhood can be arranged.
     Alternatively, _lord_ has agreed to release
-the smith if I pay the ridiculous sum of a million 
-gold pieces.
+ the smith if I pay the ridiculous sum of a million 
+ gold pieces.
 
 Message: 1012
 on %qdt:
@@ -109,7 +110,7 @@ on %qdt:
 Message: 1015
 on %qdt:
  Thankfully I was able to release _armorer_ from
- his entrapment by _lord_ at _fort_.
+ his entrapment by _lord_ at __fort_.
  He has headed south to a small town called Pjiga in
  the Mournoth region to set up a new forge and teach
  an apprentice.
@@ -133,10 +134,11 @@ on %qdt:
 Message: 1018
 on %qdt:
  My guild contact in __guild_, _contact_, 
- has employed some local trackers to locate the source of 
- these well-armored warriors the locals are talking about.
- My contact will send me a letter once the trackers return,
- which should be in around 5 days time.
+ has employed some local rangers to locate the source
+ of these well-armored warriors the locals are talking
+ about.
+    My contact will send me a letter once the trackers
+ return, which should be in around 5 days time.
 
 Message: 1019
 on %qdt:
@@ -148,16 +150,17 @@ on %qdt:
 Message: 1020
 <ce>[A guard to your left speaks to you as you enter]
 <ce>
-<ce>Hey, who are you? What are you doing here and what do you
-<ce>want %ra? Yes, over here on your left, are you deaf?
+<ce>Hey, who're you? What're ya doing 'ere an' 
+<ce>whaddya ya want %ra? 
+<ce>Yeah, over 'ere on your left! Oy, you deaf?
 <ce>
-<ce>You had better go and speak to _captain_ immediately!
+<ce>You'd best go 'n speak to _captain_ immediately!
 <ce> 
-<ce>Continue further down the hall this way, then go to the 
-<ce>right, into the large hall. He wears a yellow tunic with
-<ce>a red cape, you can't miss him. Keep your weapons sheathed
-<ce>and don't try any funny stuff, or we'll have your guts
-<ce>for garters.
+<ce>Continue further down this way, go to the right,
+<ce>an' into the large hall. He wears a yellow tunic 
+<ce>an' red cape, you can't miss 'im. Keep ya weapons 
+<ce>sheathed and don't try any funny stuff, or we'll 
+<ce>'ave your guts fer garters.
 
 Message: 1021
 <ce>[A guard behind you sees you speaking and calls out]
@@ -168,158 +171,181 @@ Message: 1021
 <ce>You'll not leave here alive %ra...
 
 Message: 1022
-<ce>[As you slice through yet another of their number, the lord shouts]
+<ce>[As you slice through yet another of their number, 
+<ce> the lord shouts]
 <ce>
-Holy gods above, this bloody %ra's a Daedra in human form or
-something...  EVERYONE STOP!
+<ce>%oth! This bloody %ra's a Daedra in human form or
+<ce>form orsomething...  
+<ce>EVERYONE STOP!
 <ce>
-We surrender Master %pcl. 
+<ce>We surrender Master %pcl. 
 <ce>
-Take _armorer_ and just leave, he's not worth the
-loss of so many warriors for, no matter how good the 
-armor he makes is.
+<ce>Take _armorer_ and just leave, he's not worth the
+<ce>loss of so many warriors for, no matter how good the 
+<ce>armor he makes is.
 
 Message: 1023
-Argghhh. You're going to pay in blood for that, %ra!
+<ce>Argghhh. You're going to pay in blood for that, %ra!
 
 Message: 1024
-You've arrived back at __fort_ but you failed to retrieve the
-contract from the renegade Dark Brother. You only have two
-options left to rescue _armorer_, either pay the 1 million gold 
-or fight an entire garrison of soldiers. Neither option is
-particularly appealing.
+<ce>You've arrived back at __fort_ but you failed to retrieve the
+<ce>contract from the renegade Dark Brother. You only have two
+<ce>options left to rescue _armorer_, either pay the 1 million gold 
+<ce>gold or fight an entire garrison of soldiers. Neither option is
+<ce>particularly appealing.
 
 Message: 1025
-The warriors of __fort_ and their leader are enraged and will
-be searching for you for the next couple of days
+<ce>The warriors of __fort_ and their leader are enraged and will
+<ce>be searching for you for the next couple of days
 
 Message: 1026
-You've arrived at __fort_ out here in the hills, way off the
-beaten track and miles away from anywhere else. They must 
-have rebuilt the place from an old ruin, as you can see 
-signs of repairs everywhere. There are also indications that
-a large group is living at the fort, and some significant
-construction has taken place. You suspect the fort has had
-its cellars converted to a barracks. This place is likely to
-be more dangerous than it might appear at first glance.
+<ce>You've arrived at __fort_ out here in the hills, way off
+<ce>the beaten track and miles away from anywhere else. They 
+<ce>must have rebuilt the place from an old ruin, as you can 
+<ce>see signs of repairs. There are also indications that a
+<ce>large group is living at the fort, and some significant
+<ce>construction has taken place. You suspect the fort has 
+<ce>had its cellars converted to a barracks. This place is 
+<ce>likely to be more dangerous than it might first appear.
 
 Message: 1027
 <ce>Eyewitness reports regarding the finely armored warriors 
 <ce>seen in the region recently from _contact_.
 <ce>
-<ce>1: While out with his sheep, a shepherd from Moorton Farm
-<ce>had a few sheep 'confiscated' by a group of well-armored 
-<ce>'knights'. The sheep pastures are to the east of their
-<ce>farm and the warriors headed off that way.
+1: While out with his sheep, a shepherd from Moorton Farm
+  had a few sheep 'confiscated' by a group of well-armored 
+  'knights'. The sheep pastures are to the east of their
+  farm and the warriors headed off that way.
 <ce>
-<ce>2: A well dressed, but rude '_captain_' insisted on 
-<ce>buying all the wine from the Hawking Orchard cheaply. He 
-<ce>was backed up by several rough looking men in fine armor. 
-<ce>They appeared to take the wine barrels towards the south.
+2: A well dressed, but rude '_captain_' insisted on 
+  buying all the wine from the Hawking Orchard cheaply. He 
+  was backed up by several rough looking men in fine armor. 
+  They appeared to take the wine barrels towards the south.
 <ce>
-<ce>3: A funeral procession headed for the Masterhart Graveyard
-<ce>was forced off the road by a unit of well-armed men heading
-<ce>northeast. They showed absolutely no concern or respect.
+3: A funeral procession headed for the Masterhart Graveyard
+  was forced off the road by a unit of well-armed men 
+  heading northeast. They showed absolutely no concern or 
+  respect for either the funeral goers, or the deceased.
+<ce>
 
 -- Lord
 Message: 1030
-What this, a %ra?
-You think you can just barge in here?
-Captain, have the guards chase this idiot out of here!
+<ce>What's this, a mangy %ra?
+<ce>
+<ce>You think you can just barge in here and speak to me?
+<ce>
+<ce>Captain, have the guards chase this idiot out of here!
 
 Message: 1031
-So, you're here from the Fighters Guild? I'm sure my
-captain has told you to behave yourself, see that you do so
-else my guards get more training.
-Does the guild need help from us with something?
-I might consider it for a large fee.
-Come on, what do you want? Out with it!
+<ce>So, you're here from the Fighters Guild? I'm sure my
+<ce>captain has told you to behave yourself, see that you
+<ce>do so else my guards get some free training.
+<ce>
+<ce>Does the guild need help from us with something?
+<ce>I might consider it for a large fee.
+<ce>
+<ce>Come on, what do you want? Out with it!
 
 Message: 1032
-Who makes our armor? Haha. Well, who made your armor, %ra?
-That's a bit of an impertinent question, but there's a simple
-answer: we have our own armorer, of course.
-Does that surprise you, that we have such a fine smith all
-the way out here in the middle of nowhere? You city types
-are so arrogant. No, he doesn't want to work for anyone
-else, and I won't allow him to freelance. You're out of luck.
+<ce>Who makes our armor? Haha. 
+<ce>Well, who made your armor, %ra?
+<ce>
+<ce>That's a bit of an impertinent question, but there's a 
+<ce>simple answer. We have our own armorer, of course.
+<ce>
+<ce>Does that surprise you, that we have such a fine smith all
+<ce>the way out here in the middle of nowhere? You city types
+<ce>are so arrogant. No, he doesn't want to work for anyone
+<ce>else, and I won't allow him to freelance.
+<ce>
+<ce>You're out of luck.
 
 Message: 1033
-Do you have something new to discuss? No?
-Then get out of my face and stop bothering me, %ra.
+<ce>Do you have something else to discuss with me? No?
+<ce>Then get out of my face and stop bothering me, %ra.
 
 Message: 1034
-So _armorer_ wishes to leave does he? Bah! Who would craft
-our armor then, I ask you? How would we protect ourselves 
-from invaders, eh? No, %ra, he's staying right where he is.
-Tell you what. I'm not an unreasonable man. If you cover 
-the expense of hiring a new armorer, then I'll release him.
-I'd say about 1 million gold would suffice. That will be 
-difficult you say? Don't worry, I take credit notes.
+<ce>So _armorer_ wishes to leave does he? Bah! 
+<ce>Who would craft our armor then, I ask you? How would we 
+<ce>protect ourselves from invaders, eh? No, %ra, 
+<ce>he's staying right where he is.
 <ce>
-[He smirks and waves you away]
+<ce>Tell you what. I'm not an unreasonable man. If you cover 
+<ce>the expense of hiring a new armorer, then I'll release him.
+<ce>I'd say about 1 million gold would suffice. That will be 
+<ce>rather difficult you say? Don't worry, I take credit notes.
+<ce>
+<ce>[He smirks and waves you away]
 
 Message: 1035
-What? You actually got... hmmm, yes, that's about enough. 
-All right then, I’ll release _armorer_. You got quite the
-bargain there guildmaster! Now take him and get out of here.
+<ce>What? You actually got... hmmm, yes, that's about enough.
+<ce> 
+<ce>All right then, I’ll release _armorer_. You got quite the
+<ce>bargain there guildmaster! Now take him and get out of here.
 <ce>
-[He can barely contain his amusement and mirth]
+<ce>[He can barely contain his amusement and mirth]
 
 Message: 1036
-What! How the hell did you get hold of that? 
-%oth! The Brotherhood has failed me, curse them.
-Damnation, I underestimated you %ra. 
-Okay, fine then, take _armorer_ with you! 
-We're going to miss his craftmanship but I know when the 
-game is up. Just know that your seniority within the 
-Fighters Guild is the only reason you’re even leaving 
-here alive. I suggest that you don't ever cross our path 
-again, %ra.
+<ce>What! How the hell did you get hold of that? 
+<ce>%oth! The Brotherhood has failed me, curse them.
+<ce>Damnation, I underestimated you %ra. 
+<ce>Okay, fine then, take _armorer_ with you! 
+<ce>We're going to miss his craftmanship but I know when the 
+<ce>game is up. Just know that your seniority within the 
+<ce>Fighters Guild is the only reason you’re even leaving 
+<ce>here alive. I suggest that you don't ever cross our path 
+<ce>again, %ra.
 
 Message: 1037
-Get out of here. Begone!
+<ce>Get out of here. Begone!
 
 Message: 1038
-You were warned to not approach _lord_ before
-speaking to _captain_ first.
-Do you want to ignore this advice?
+<ce>You were warned to not approach _lord_ before
+<ce>before speaking to _captain_ first.
+<ce>
+<ce>Do you want to ignore this advice?
 
 -- Captain & guards
 Message: 1040
-Who are you? What business do you have with us, %ra?
-Well, well, a Master from the Fighters Guild you say?
-We have no issues with the guild so let's keep
-it that way, eh? 
-You may wander our fort freely and
-speak with our lord. But, %pcf, don't cause any trouble
-or do anything stupid as we won't hesitate to cut you down,
-representative of the Fighters Guild or not.
+<ce>Who on earth are you?
+<ce>What business do you have with us, %ra?
+<ce>
+<ce>Well, well. A Master of the Fighters Guild you say?
+<ce>
+<ce>We have no issues with the Fighters Guild, 
+<ce>so let's keep it that way, eh?
+<ce>
+<ce>You may move around our fortress freely and speak
+<ce>with our lord. But, don't cause any trouble or do
+<ce>anything stupid as we won't hesitate to cut you
+<ce>down, representative of the Fighters Guild or not.
 
 Message: 1041
-Where do we get such fine quality armor? Well you're a nosey 
-%ra aren't you? I'm not going to answer that, ask our lord, 
-but I suggest you tread carefully.
+<ce>Where do we get such fine quality armor? Well you're 
+<ce>a nosey %ra aren't you? I'm not going to answer that,  
+<ce>ask our lord, but I suggest you tread carefully.
 
 Message: 1042
-You want _armorer_? I warn you, _lord_ has become
-quite attached to our smith and his craftmanship.
+<ce>You want _armorer_? I warn you, _lord_ 
+<ce>has become quite attached to our armorer  
+<ce>and his craftmanship.
 
 Message:  1043
-If not for the beef we would start with the Fighters Guild, 
-I would have my men carve you open like a pig. Just take
-the damn smith and get out. I don't ever want to see you again.
+<ce>If not for the beef we would start with the Fighters Guild, 
+<ce>I'd the men carve you open like a pig. Just take the damn
+<ce>smith and get out. I don't ever want to see you again.
 
 Message: 1044
-Where did you get that from? Damn you, _lord_
-is going to be in a bad mood for weeks. Curses on you
-and your pox ridden guild. 
+<ce>Where did you get that from? Damn you, _lord_
+<ce>is going to be in a bad mood for weeks. Curses on you
+<ce>and your pox ridden guild. 
 
 Message: 1048
-<ce>What are you looking at?
+<ce>What ya looking at?
 <ce>
-<ce>We're watching you, come on, just give us an excuse... 
-<ce>We like a good fight.
+<ce>We're watching ya, so come on, jus' giv'us an excuse... 
+<ce>We like fightin' folk like you, hell, any folk what
+<ce>get in our way.
 
 Message: 1049
 on %qdt:
@@ -330,65 +356,70 @@ on %qdt:
 
 -- Armorer
 Message: 1050
-Who the hell are you? Go away, or you'll get us both killed.
-Heavens above leave damn you! Before the guards see you.
+<ce>Who the hell are you? Go away, or you'll get us both killed.
+<ce>Heavens above leave damn you! Before the guards see you.
 
 Message: 1051
 <ce>[He glances nervously over your shoulder as you speak..]
 <ce>
-Who the hell are you? Go away, or you'll get me into trouble.
-I can't want to be seen talking to you.
+<ce>Who the hell are you? Go away, or you'll get me into trouble.
+<ce>I can't want to be seen talking to you.
 
 Message: 1052
-I overheard a guard saying that you were asking the lord about
-me. Franky, I'm amazed you're still alive, and even more surprised
-you can wander freely about the place. Seems like it might be safe
-to talk to you after all.
-I'm _armorer_ and I'm trapped here, Master %pcl. 
+<ce>I overheard a guard saying that you were asking the lord 
+<ce>about me. Franky, I'm amazed you're still alive, and even 
+<ce>more surprised you're able to wander freely about the 
+<ce>place. Seems like it might be safe to talk to you then.
 <ce>
-Been here for nearly
-two years now, making armor for these damned bandits. Oh, don't
-let them fool you, their 'lord' is no noble. No, he's led his
-band of renegades for years and they cleared out and setup camp
-in this fort a few years back. They use it as a base, since it's 
-pretty isolated up here in the mountains, they can operate from
-here with relative impunity.
+<ce>I'm _armorer_ and I'm trapped here, Master %pcl. 
+<ce>
+<ce>Been here for nearly two years now, making armor for these
+<ce>damned bandits. Oh, don't let them fool you, their 'lord' 
+<ce>is not noble in any way. No, he's led this band of renegades
+<ce>and cut-throats for years and they cleared out and setup
+<ce>in this fort a few years back. They use it as a base, since 
+<ce>it's pretty isolated up here in the mountains, they can 
+<ce>operate from here with relative impunity.
 
 Message: 1053
-How did I end up trapped here you ask? Gambling and drinking.
-After my wife died and my daughter married, I decided to travel
-some while I still could. So, I sold my forge, hung up my tools
-and travelled around for several months before ending up in
-these mountains. One night I was too deep in my cups, as I was
-missing my wife something fierce, and started gambling with
-some local lord. Seemed more like a ruffian, but he had money.
-Ended up with quite the debt to this 'lord' and we came to an
-arrangement where I would work crafting armor for him and his men
-to pay off the debt.
+<ce>How did I end up trapped here you ask? Gambling and drinking.
+<ce>
+<ce>After my wife died and my daughter married, I decided to travel
+<ce>some while I still could. So, I sold my forge, hung up my tools
+<ce>and travelled around for several months before ending up in
+<ce>these mountains. One night I was too deep in my cups, as I was
+<ce>missing my wife something fierce, and started gambling with
+<ce>some local lord. Seemed more like a ruffian, but he had money.
+<ce>Ended up with quite the debt to this 'lord' and we came to an
+<ce>arrangement where I would work crafting armor for him and his 
+<ce>men to pay off the debt.
 
 Message: 1054
-Three months! It was only supposed to be for three months. 
-But when the time was up, and I started preparing to
-leave, they surrounded me and told me I was going nowhere.
-I knew I couldn't fight my way out alone, so started to make
-plans to sneak out and escape, but the captain came and made
-it very clear that if I were to go missing, that my daughter
-would die. This cursed 'lord' has paid the Dark Brotherhood
-for a contract on her, to be carried out on his word if I go
-missing. That damnable cutthroat son of a bitch knew he had
-me, and I've been here ever since.
-She's all I have left now, after my wife passed away, and she
-lives with her husband, farming peacefully. I'll never let her 
-come to harm, which means I am trapped here in servitude until
-I die, unless some miracle occurs.
+<ce>Three months! It was only supposed to be for three months.
+<ce>
+<ce>But when the time was up, and I started preparing to
+<ce>leave, they surrounded me and told me I was going 
+<ce>nowhere. I knew I couldn't fight my way out alone, so I
+<ce>began to make plans to sneak out and escape, but the 
+<ce>captain came and made it very clear that if I were to go 
+<ce>missing, that my daughter would die. This cursed 'lord' 
+<ce>has paid the Dark Brotherhood for a contract on her, to 
+<ce>be carried out on his word if I go missing. That damnable 
+<ce>cut-throat son of a bitch knew he had me, and I've been
+<ce>here ever since.
+<ce>
+<ce>My daughter's all I have left now, since my wife passed. 
+<ce>She lives with her husband, farming peacefully. I'll never  
+<ce>let her come to harm, which means I am trapped here in 
+<ce>servitude until I die, unless some miracle occurs.
 
 Message: 1055
-How on earth did you get hold of the contract, %pcf?
-Bloody hell, that doesn't matter - maybe tell me later, the 
-important thing is you've given me my freedom back. Thank 
-the heavens, you're my savior. I'll be ready to leave just
-as soon as you've shown it to _lord_, so he 
-knows his scheme is dead and buried then we can be on our way.
+<ce>How on earth did you get hold of the contract, %pcf?
+<ce>Bloody hell, that doesn't matter - maybe tell me later, the 
+<ce>important thing is you've given me my freedom back. Thank 
+<ce>the heavens, you're my savior. I'll be ready to leave just
+<ce>as soon as you've shown it to _lord_, so he 
+<ce>knows his scheme is dead and buried then we can be on our way.
 
 Message: 1058
 <ce>%oth %ra, you're crazy! 
@@ -396,78 +427,84 @@ Message: 1058
 <ce>Dibella have mercy on your soul.
 
 Message: 1059
-<ce>Great, thank you %pcf. 
+<ce>%oth! Thank you so much, %pcf. 
+<ce>
 <ce>I never thought the day would come!
-<ce>Let's get the hell out of here.
+<ce>Come on, let's get the hell out of here.
 
 -- Guild Contact
 Message: 1060
-Welcome to __guild_ Master %pcl. My name is
-_contact_ and I'm very happy to see you indeed, 
-as the situation is a rather perplexing one to 
-say the least.
+<ce>Welcome to __guild_, Master %pcl.
+<ce> 
+<ce>My name is _contact_ and I'm very pleased
+<ce>to see you hereindeed, since the situation we have   
+<ce>is a rather perplexing one to say the least.
 <ce>
-We've been hearing rumors of a local noble whose soldiers 
-and personal guard have been seen clad in unusually fine 
-armor. Thing is, no one knows anything much about
-this 'noble'. Not where he resides or what family he's
-from. I've been looking into the matter for a while now,
-and have found three reliable locals who've seen them
-firsthand.
+<ce>We've been hearing rumors of a local noble whose soldiers 
+<ce>and personal guard have been seen clad in unusually fine 
+<ce>armor. Thing is, no one knows anything much about this
+<ce> 'noble'. Not where he resides or what family he's from.
+<ce>
+<ce>I've been looking into the matter for a while now, and
+<ce>have found three reliable locals who've witnessed 
+<ce>them firsthand and gathered their accounts.
 
 Message: 1061
-I've taken the liberty of making inquiries with a local
-group of trackers about tracking down these soldiers and
-their mysterious leader. Unfortunately, expertise like 
-this doesn't come cheap however, and it will cost 7000 gold 
-to engage their services. 
+<ce>I've taken the liberty of making inquiries with a 
+<ce>local group of rangers about tracking down these  
+<ce>soldiers and their mysterious leader. Unfortunately,   
+<ce>expertise like this doesn't come cheap, and it will 
+<ce>cost 7000 gold pieces to engage their services. 
 <ce>
-Alternatively, you could try to search for the location
-yourself. I can tell you what the three reliable eye-witnesses 
-told me, which is all we have to go on.
+<ce>Alternatively, you could try to search for the 
+<ce>location yourself. I can give you my notes with    
+<ce>accounts provided by the three reliable local
+<ce>eye-witnesses, which is all we have to go on.
 <ce>
-So, would you like me to employ the trackers? I'll obviously
-need you to provide the 7000 gold to cover their price.
+<ce>So, would you like me to employ the trackers? 
+<ce>I'll obviously need you to provide the 7000 
+<ce>gold to cover their price, if that's okay?
 
 Message: 1062
-Fair enough, it's not a trivial sum so I understand not 
-wanting to spend that much. Here you go, here are my
-notes made when speaking to the three witnesses.
+<ce>Fair enough, it's not a trivial sum so I understand not 
+<ce>wanting to spend that much. Here you go, here are my
+<ce>notes made when speaking to the three witnesses.
 <ce>
-Good luck and let me know if you need any help once you
-track down these troops and their leader, and hopefully 
-also discover a bit more about the situation. Do tread 
-carefully, I doubt that they'll be very forgiving if you 
-anger them from the sound of the reports.
+<ce>Good luck and let me know if you need any help once you
+<ce>track down these troops and their leader, and hopefully 
+<ce>also discover a bit more about the situation. Do tread 
+<ce>carefully, I doubt that they'll be very forgiving if you 
+<ce>anger them from the sound of the reports.
 
 Message: 1063
-Alright then, I'll get in touch with the trackers and have
-them start as soon as you return with the money, assuming 
-you still want to proceed. They don't accept letters of 
-credit, so you need to bring me gold pieces.
+<ce>Alright then, I'll get in touch with the trackers and have
+<ce>them start as soon as you return with the money, assuming 
+<ce>you still want to proceed. They don't accept letters of 
+<ce>credit, so you need to bring me real gold pieces.
 
 Message: 1064
-Thank you Master %pcl. I was afraid I would have to cover
-the expenses out of my own meagre pocket.
+<ce>Thank you for bringing the gold, Master %pcl. I'm glad
+<ce>not to have to cover the cost from my own meagre pocket.
 <ce>
-I will contact the trackers and have them start their search 
-immediately. They said that with the vague directions and 
-such a large and inhospitable area to cover, it would likely
-take about a week to cover the area. Once I hear from them,
-I will send you a letter with their findings.
+<ce>I'll contact the trackers and have them start their search 
+<ce>immediately. They said that with the vague directions and 
+<ce>such a large and inhospitable area to cover, it would likely
+<ce>take about a week to cover the area. Once I hear from 
+<ce>them, I shall send you a letter with their findings.
 
 Message:  1065
-<ce>A youthful redguard, wearing mismatched pieces of worn 
-<ce>armor, steps confidently upto you with a letter in his
-<ce>calloused hand. 
+<ce>A youthful redguard, wearing mismatched pieces of 
+<ce>of worn armor, steps confidently up to you with a
+<ce>letter in his calloused hand.
+<ce>
 <ce>"Letter from the Guild, Master %pcl."
         <--->
 <ce>A scarred nord woman briskly walks up to you. She shifts
 <ce>one of her many weapons aside, pulls out a crumpled letter
 <ce>and thrusts it into your hands before striding away.
         <--->
-<ce>An armored argonian slithers up to you. They hold up a
-<ce>letter in one claw and hiss at you,
+<ce>An armored argonian slithers up to you. They hold 
+<ce>hold up a letter in one claw and hiss at you,
 <ce>"I erect the spine of greeting, Master %pcl." 
 <ce>before passing you the letter. They take a pace
 <ce>back, bow, and then swiftly disappear into the crowd.
@@ -481,7 +518,7 @@ residence in an old fortified monastery somewhere east of
 __guild_. It is in the hills, way off the beaten track, 
 and miles away from anywhere.
 <ce>
-    They must have re-built the place somewhat, as by all 
+    They must have rebuilt the place somewhat, as by all 
 accounts it's been rundown for several generations to the 
 point where most local people are not even aware of its 
 existence. 
@@ -497,105 +534,109 @@ forgiving if you anger them.
 <ce>                            _contact_
 
 Message: 1067
-What? A Dark Brotherhood contract on his daughter?
-That's obscene! 
-I will setup a meeting for you with the brotherhood,
-as they should be willing to at least meet with a 
-master of our guild out of respect. Whether they
-will help you is another matter entirely.
-Go to _dbTavern_ over in __dbTavern_, I'll
-ensure that a representative will be waiting for 
-you. Be careful around the dark brothers, they 
-are not to be trifled with.
+<ce>What? A Dark Brotherhood contract on his daughter?
+<ce>That's obscene! 
+<ce>I will setup a meeting for you with the brotherhood,
+<ce>as they should be willing to at least meet with a 
+<ce>master of our guild out of respect. Whether they
+<ce>will help you is another matter entirely.
+<ce>Go to _dbTavern_ over in __dbTavern_, I'll
+<ce>ensure that a representative will be waiting for 
+<ce>you. Be careful around the dark brothers, they 
+<ce>are not to be trifled with.
 
 Message: 1068
-I hope you're able to retrieve the contract and 
-free _armorer_, %pcf. Remember, be careful around
-the dark brothers, we want to keep on their good
-side for the sake of the guild.
+<ce>I hope you're able to retrieve the contract and 
+<ce>free _armorer_, %pcf. Remember, be careful around
+<ce>the dark brothers, we want to keep on their good
+<ce>side for the sake of the guild.
 
 Message: 1069
-Excellent work Master %pcl! 
+<ce>Excellent work Master %pcl! 
 <ce>
-So you have retrieved the contract and now you can free
-_armorer_. That's fantastic news.
+<ce>So you have retrieved the contract and now you can free
+<ce>_armorer_. That's fantastic news.
 <ce>
-Bring him here, so we can help arrange a nice quiet 
-place for him to live. I'm sure we can find somewhere
-suitable.
+<ce>Bring him here, so we can help arrange a nice quiet 
+<ce>place for him to live. I'm sure we can find somewhere
+<ce>suitable.
 
 -- Rescued armorer
 Message: 1070
-Welcome to __guild_, _armorer_. Please accept our help
-after your ordeal.
+<ce>Welcome to __guild_, _armorer_. 
+<ce>Please accept our help after your ordeal.
 <ce>
-Master %pcl, we will help him get back on his feet and
-set up home with a new forge in a small town somewhere 
-nice and quiet.
+<ce>Master %pcl, we will help him get back on his 
+<ce>feet and set up home with a new forge in a small 
+<ce>town somewhere nice and quiet.
 <ce>
-So, where would you like to settle down, _armorer_?
+<ce>Where would you like to settle down, _armorer_?
 <ce>
-We're assuming someplace far away from the 
-____guild_...
+<ce>We're assuming someplace far away from the 
+<ce>____guild_...
 
 Message: 1071
-I'm not sure. To tell you the truth I'm just grateful
-to be out of the cursed place and out of 
-_lord_'s clutches at last.
+<ce>I'm not sure. To tell you the truth I'm just 
+<ce>grateful to be away from that cursed place and 
+<ce>out of _lord_'s clutches at last.
 <ce>
-I'm forever in your debt Master %pcl!
+<ce>I'm forever in your debt Master %pcl!
 <ce>
-Hmm, I think that I will settle somewhere peaceful with
-a new forge and finally take on an apprentice. I really
-should pass on my skills before I get too old, you know. 
-I'm certainly tired of crafting armor myself after the 
-past couple of years, and teaching will make a nice change.
+<ce>Hmm, I think that I will settle somewhere peaceful with
+<ce>a new forge and finally take on an apprentice. I really
+<ce>should pass on my skills before I get too old, you know. 
+<ce>I'm certainly tired of crafting armor myself after the 
+<ce>past couple of years. Teaching will make a nice change.
 <ce>
-I can always make an exception for you though %pcf.
-Although I can't ever repay you for rescuing me, I can 
-forge custom armor for you once I'm settled down. Please
-drop by and see me anytime.
+<ce>I can always make an exception for you though, %pcf.
+<ce>Although I can't ever repay you for rescuing me, I  
+<ce>can forge custom armor for you once I'm settled down.
+<ce>Please drop by and see me anytime.
 <ce>
-So which direction shall I go? Hmmm, what do you think, 
-Master %pcl?
+<ce>So which direction shall I go?
+<ce>Hmmm, what do you think, Master %pcl?
 <ce>
-Shall I head West, South, or maybe to the warmer South West?
+<ce>Shall I head West, South, or maybe 
+<ce>to the warmer South West?
 
 Message: 1072
-So do you think I should head South to find 
-a place to settle?
+<ce>So do you think I should head South to  
+<ce>find a place to settle?
 
 Message: 1073
-What do you think about me heading West to find 
-somewhere to settle?
+<ce>What do you think about me heading West to  
+<ce>find somewhere to settle?
 
 Message: 1074
-Okay then maybe I should head South-West and find
-somewhere nice and warm to settle?
+<ce>Okay then maybe I should head South-West and 
+<ce>find somewhere nice and warm to settle?
 
 Message: 1075
-Okay then %pcf, I'm going to head south and settle in
-a small town called Pjiga in the Mournoth region. Please
-drop by any time you're in the area or if you need some
-particular armor crafted. You will always be welcome in
-my forge.
-Goodbye and thanks again!
+<ce>Okay then %pcf, I'm going to head south and settle in
+<ce>a small town called Pjiga in the Mournoth region. Please
+<ce>drop by any time you're in the area or if you need some
+<ce>particular armor crafted. You will always be welcome in
+<ce>my forge.
+<ce>
+<ce>Goodbye and thanks again!
 
 Message: 1076
-Okay then %pcf, I'm going to head west and settle in
-a small town called Penmore in Glenpoint. Please do 
-drop by any time you're in the area or if you need some
-particular armor crafted. You will always be welcome at
-my forge.
-Goodbye and thanks again!
+<ce>Okay then %pcf, I'm going to head west and settle in
+<ce>a small town called Penmore in Glenpoint. Please do 
+<ce>drop by any time you're in the area or if you need some
+<ce>particular armor crafted. You will always be welcome at
+<ce>my forge.
+<ce>
+<ce>Goodbye and thanks again!
 
 Message: 1077
-Okay then %pcf, I'm going to head south west to the sun
-and sand to settle in a small place called Paponirea in
-Tigonus. Please drop by any time you're in the area or 
-when you need some specifc armor crafted. You will always 
-be welcome at my home.
-Goodbye and thanks again!
+<ce>Okay then %pcf, I'm going to head south west to the sun
+<ce>and sand to settle in a small place called Paponirea in
+<ce>Tigonus. Please drop by any time you're in the area or 
+<ce>when you need some specifc armor crafted. You will always 
+<ce>be welcome at my home.
+<ce>
+<ce>Goodbye and thanks again!
 
 
 -- Dark Brother contact
@@ -619,27 +660,27 @@ Message: 1080
 <ce>unsanctioned contracts in the name of the Brotherhood.
 
 Message: 1081
-You do not need to sully your own blade with this renegades’
-blood, %pcn. For you, as you're a good friend of the 
-brotherhood, we will deal with this matter swiftly
-and deliver the heretical contract to you within the next
-few days. We ask simply that when you have no more need of 
-this document, you will destroy this affront to our order.
+<ce>You do not need to sully your own blade with this renegades’
+<ce>blood, %pcn. For you, as you're a good friend of the 
+<ce>brotherhood, we will deal with this matter swiftly
+<ce>and deliver the heretical contract to you within the next
+<ce>few days. We ask simply that when you have no more need of 
+<ce>this document, you will destroy this affront to our order.
 
 Message: 1082
-We will have to deal with this renegade brother at some point
-and the contract will be void, but we do not feel any urgency
-regarding the situation. There are many more important 
-machinations and intrigues to deal with more urgently. 
-You will find this brother at _dbHideout_ 
-in __dbHideout_.
-You have our permission to go and deal with our wayard member. 
-Be warned, however, do not harm any others of our order while
-doing this, else we will hunt you down and exact vengence.
+<ce>We will have to deal with this renegade brother at some point
+<ce>and the contract will be void, but we do not feel any urgency
+<ce>regarding the situation. There are many more important 
+<ce>machinations and intrigues to deal with more urgently. 
+<ce>You will find this brother at _dbHideout_ 
+<ce>in __dbHideout_.
+<ce>You have our permission to go and deal with our wayard member. 
+<ce>Be warned, however, do not harm any others of our order while
+<ce>doing this, else we will hunt you down and exact vengence.
 <ce>
-Given the circumstances, we may make an exception for a hefty
-price, but if you are unable to pay, then there's nothing we
-can do and you will die.
+<ce>Given the circumstances, we may make an exception for a hefty
+<ce>price, but if you are unable to pay, then there's nothing we
+<ce>can do and you will die.
 
 Message: 1083
 <ce> Reaching into your pack for something,
@@ -654,39 +695,39 @@ Message: 1083
 <ce>She hands you a note before sprinting away.
 
 Message: 1090
-A contract between _lord_ and the Dark 
-Brotherhood.
-It stipulates conditions for _lord_ to have
-_armorer_'s daughter murdered in the case of him leaving 
-_fort_ without _lord_'s permission.
+<ce>A contract between _lord_ and the Dark 
+<ce>Brotherhood.
+<ce>It stipulates conditions for _lord_ to have
+<ce>_armorer_'s daughter murdered in the case of him leaving 
+<ce>_fort_ without _lord_'s permission.
 
 Message: 1091
-You engage the renegade in conversation, putting them at
-ease using your knowledge of street level language and
-customs. As soon as their guard drops, you skillfully
-make a blindingly fast strike to the throat, crushing
-their windpipe. As the body sags, you catch it and
-quietly lower it to the floor. No one else has been
-alerted, so now you can retrieve the contract and leave. 
+<ce>You engage the renegade in conversation, putting them at
+<ce>ease using your knowledge of street level language and
+<ce>customs. As soon as their guard drops, you skillfully
+<ce>make a blindingly fast strike to the throat, crushing
+<ce>their windpipe. As the body sags, you catch it and
+<ce>quietly lower it to the floor. No one else has been
+<ce>alerted, so now you can retrieve the contract and leave. 
 
 Message: 1092
-You sneak behind the renegade without them seeing you.
-As soon as you are close enough, you skillfully pilfer
-the contract without detection.
+<ce>You sneak behind the renegade without them seeing you.
+<ce>As soon as you are close enough, you skillfully pilfer
+<ce>the contract without detection.
 
 Message: 1093
-You sneak behind the renegade without them detecting you.
-As soon as you are close enough, you skillfully stab
-them through the throat. As they sag to the floor,
-gurgling blood, you catch it and quietly lower it to the
-floor. No one else has been alerted, so now you can now
-retrieve the contract and leave. 
+<ce>You sneak behind the renegade without them detecting you.
+<ce>As soon as you are close enough, you skillfully stab
+<ce>them through the throat. As they sag to the floor,
+<ce>gurgling blood, you catch it and quietly lower it to the
+<ce>floor. No one else has been alerted, so now you can now
+<ce>retrieve the contract and leave. 
 
 Message: 1094
-[You try to catch the renegade out, but are not skilled enough]
+<ce>[You try to catch the renegade out, but are not skilled enough]
 <ce>
-You should not have come here. I don't like unexpected
-guests. My mates and I will cut you into little pieces.
+<ce>You should not have come here. I don't like unexpected
+<ce>guests. My mates and I will cut you into little pieces.
 
 
 -- Journal notes
@@ -741,7 +782,7 @@ Item _letter1_ letter used 1066
 Item _reports_ letter used 1027
 Item _dbContract_ letter used 1090
 
-Clock _trackers_ 05.03:00
+Clock _trackers_ 00.03:00
 Clock _dbDeal_ 06.05:00
 Clock _killAll_ 02.00:00
 
