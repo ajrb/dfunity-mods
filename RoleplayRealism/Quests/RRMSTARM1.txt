@@ -170,11 +170,10 @@ Message: 1021
 <ce>You'll not leave here alive %ra...
 
 Message: 1022
-<ce>[As you slice through yet another of their number, 
-<ce> the lord shouts]
+<ce>[As you slice through yet another of their number, the lord shouts]
 <ce>
-<ce>%oth! This bloody %ra's a Daedra in human form or
-<ce>form orsomething...  
+<ce>%oth! This bloody %ra's a Daedra in human form or something...  
+<ce>
 <ce>EVERYONE STOP!
 <ce>
 <ce>We surrender Master %pcl. 
@@ -881,7 +880,8 @@ _contactContract_ task:
     clear _clickedContact_
 
 _contactMeetDB_ task:
-    clicked npc _contact_ say 1068
+    when _clickedContact_ and _request_ and _meetDB_ and not _rescued_ and not _haveContract_
+    say 1068
     clear _clickedContact_
 
 -- Successfully rescued, direction to settle?
