@@ -17,8 +17,8 @@ QuestComplete:  [1004]
 <ce>
 <ce>It's been an absolute privilege to watch someone 
 <ce>of your experience and expertise at work, Master 
-<ce>%pcl. I can certainly see why you're a master of 
-<ce>the guild. Please do pop in and say hello if you're
+<ce>%pcl. I can certainly see why you're a master  
+<ce>of the guild. Please do pop in and say hello if you're
 <ce>ever up in these mountains again, won't you?
 <ce>
 <ce>[You make a note of where _armorer_ said he  
@@ -51,13 +51,13 @@ On %qdt:
 
 Message: 1011
 on %qdt:
- I have found the armorer, _armorer_. He is trapped 
- at __fort_ in servitude to a noble called
+ I have found the armorer, _armorer_. He is  
+ trapped at __fort_ in servitude to a noble called
  _lord_. He and his troops seem to be nothing
  more than brigands and renegades, and you suspect 
  this lord is probably the disgraced or illegitimate
  son of some noble family somewhere. 
-    They are keeping the smith trapped by taking out a 
+    They have kept the smith trapped by taking out a 
  contract with the Dark Brotherhood and threatening his 
  daughter with death. Fighting the entire garrison at the 
  fort is unlikely to be possible, so I need to get hold of 
@@ -72,9 +72,9 @@ on %qdt:
 Message: 1012
 on %qdt:
  My guild contact in __guild_, _contact_, 
- has arranged a meeting for me with the Dark Brotherhood
- over in __dbTavern_.
-    They will wait for you in the tavern called
+ has arranged a meeting for me with the Dark 
+ Brotherhood over in __dbTavern_. 
+    They will wait for me in a tavern called 
  _dbTavern_. Look for someone called 
  _dbContact_.
 
@@ -88,7 +88,7 @@ on %qdt:
  and delivering it directly to me within the week. 
  Whoever this transgressing member is, they're 
  about to regret ever having taken money from 
- _lord_ against the code of the brotherhood!
+ _lord_ against the code of their order!
 
 Message: 1014
 on %qdt:
@@ -150,9 +150,8 @@ on %qdt:
 Message: 1020
 <ce>[A guard to your left speaks to you as you enter]
 <ce>
-<ce>Hey, who're you? What're ya doing 'ere an' 
-<ce>whaddya ya want %ra? 
-<ce>Yeah, over 'ere on your left! Oy, you deaf?
+<ce>Hey, who're you? What're ya doing 'ere an' whaddya ya 
+<ce>want %ra? Yeah, over 'ere on your left! Oy, you deaf?
 <ce>
 <ce>You'd best go 'n speak to _captain_ immediately!
 <ce> 
@@ -238,8 +237,8 @@ Message: 1030
 
 Message: 1031
 <ce>So, you're here from the Fighters Guild? I'm sure my
-<ce>captain has told you to behave yourself, see that you
-<ce>do so else my guards get some free training.
+<ce>captain has told you to behave yourself, see that 
+<ce>you do so else my guards get some free training.
 <ce>
 <ce>Does the guild need help from us with something?
 <ce>I might consider it for a large fee.
@@ -266,8 +265,8 @@ Message: 1033
 
 Message: 1034
 <ce>So _armorer_ wishes to leave does he? Bah! 
-<ce>Who would craft our armor then, I ask you? How would we 
-<ce>protect ourselves from invaders, eh? No, %ra, 
+<ce>Who would craft our armor then, I ask you? How would  
+<ce>we protect ourselves from invaders, eh? No, %ra, 
 <ce>he's staying right where he is.
 <ce>
 <ce>Tell you what. I'm not an unreasonable man. If you cover 
@@ -286,13 +285,16 @@ Message: 1035
 <ce>[He can barely contain his amusement and mirth]
 
 Message: 1036
-<ce>What! How the hell did you get hold of that? 
-<ce>%oth! The Brotherhood has failed me, curse them.
-<ce>Damnation, I underestimated you %ra. 
-<ce>Okay, fine then, take _armorer_ with you! 
+<ce>%oth! How the hell did you get hold of that? 
+<ce>
+<ce>The Brotherhood has failed me, curse them. Seems I  
+<ce>underestimated you %ra. 
+<ce>
+<ce>Okay, fine then, take _armorer_ with you!
+<ce>
 <ce>We're going to miss his craftmanship but I know when the 
 <ce>game is up. Just know that your seniority within the 
-<ce>Fighters Guild is the only reason you’re even leaving 
+<ce>Fighters Guild is the only reason you're even leaving 
 <ce>here alive. I suggest that you don't ever cross our path 
 <ce>again, %ra.
 
@@ -307,7 +309,6 @@ Message: 1038
 
 -- Captain & guards
 Message: 1040
-<ce>Who on earth are you?
 <ce>What business do you have with us, %ra?
 <ce>
 <ce>Well, well. A Master of the Fighters Guild you say?
@@ -331,9 +332,11 @@ Message: 1042
 <ce>and his craftmanship.
 
 Message:  1043
-<ce>If not for the beef we would start with the Fighters Guild, 
-<ce>I'd the men carve you open like a pig. Just take the damn
-<ce>smith and get out. I don't ever want to see you again.
+<ce>If not for the beef it would start with the Fighters  
+<ce>Guild, I'd have the men carve you open like a pig.  
+<ce>Just take the damn smith and get out of here. 
+<ce>
+<ce>We don't ever want to see you again.
 
 Message: 1044
 <ce>Where did you get that from? Damn you, _lord_
@@ -374,10 +377,10 @@ Message: 1052
 <ce>I'm _armorer_ and I'm trapped here, Master %pcl. 
 <ce>
 <ce>Been here for nearly two years now, making armor for these
-<ce>damned bandits. Oh, don't let them fool you, their 'lord' 
-<ce>is not noble in any way. No, he's led this band of renegades
+<ce>damned bandits. Oh, don't let them fool you, their 'lord' is
+<ce>not noble in any way. No, he's led this band of renegades
 <ce>and cut-throats for years and they cleared out and setup
-<ce>in this fort a few years back. They use it as a base, since 
+<ce>in this fort a few years back. They use it as a base, as 
 <ce>it's pretty isolated up here in the mountains, they can 
 <ce>operate from here with relative impunity.
 
@@ -419,7 +422,8 @@ Message: 1055
 <ce>important thing is you've given me my freedom back. Thank 
 <ce>the heavens, you're my savior. I'll be ready to leave just
 <ce>as soon as you've shown it to _lord_, so he 
-<ce>knows his scheme is dead and buried then we can be on our way.
+<ce>knows that his scheme is dead and buried then we can
+<ce>be on our way.
 
 Message: 1058
 <ce>%oth %ra, you're crazy! 
@@ -535,11 +539,13 @@ forgiving if you anger them.
 
 Message: 1067
 <ce>What? A Dark Brotherhood contract on his daughter?
-<ce>That's obscene! 
+<ce>That's obscene!
+<ce>
 <ce>I will setup a meeting for you with the brotherhood,
 <ce>as they should be willing to at least meet with a 
-<ce>master of our guild out of respect. Whether they
-<ce>will help you is another matter entirely.
+<ce>master of our guild out of respect. However, whether 
+<ce>they will help you is another matter entirely.
+<ce>
 <ce>Go to _dbTavern_ over in __dbTavern_, I'll
 <ce>ensure that a representative will be waiting for 
 <ce>you. Be careful around the dark brothers, they 
@@ -554,12 +560,12 @@ Message: 1068
 Message: 1069
 <ce>Excellent work Master %pcl! 
 <ce>
-<ce>So you have retrieved the contract and now you can free
-<ce>_armorer_. That's fantastic news.
+<ce>So you have retrieved the contract and now you 
+<ce>can free _armorer_. That's fantastic news.
 <ce>
-<ce>Bring him here, so we can help arrange a nice quiet 
-<ce>place for him to live. I'm sure we can find somewhere
-<ce>suitable.
+<ce>Bring him back here, so we can help arrange a nice  
+<ce>quiet place for him to live. I'm sure we can find 
+<ce>somewhere suitable.
 
 -- Rescued armorer
 Message: 1070
@@ -591,10 +597,10 @@ Message: 1071
 <ce>I can always make an exception for you though, %pcf.
 <ce>Although I can't ever repay you for rescuing me, I  
 <ce>can forge custom armor for you once I'm settled down.
-<ce>Please drop by and see me anytime.
+<ce>down. Please do drop in and see me anytime.
 <ce>
-<ce>So which direction shall I go?
-<ce>Hmmm, what do you think, Master %pcl?
+<ce>Hmmm, so which direction shall I go?
+<ce>What do you think, Master %pcl?
 <ce>
 <ce>Shall I head West, South, or maybe 
 <ce>to the warmer South West?
@@ -612,7 +618,7 @@ Message: 1074
 <ce>find somewhere nice and warm to settle?
 
 Message: 1075
-<ce>Okay then %pcf, I'm going to head south and settle in
+<ce>Okay then %pcf, I've decided to head south and settle in
 <ce>a small town called Pjiga in the Mournoth region. Please
 <ce>drop by any time you're in the area or if you need some
 <ce>particular armor crafted. You will always be welcome in
@@ -641,11 +647,11 @@ Message: 1077
 
 -- Dark Brother contact
 Message: 1080
-<ce>Greetings Master %pcl. Thanks to you and your guild 
+<ce>Greetings Master %pcl. Thank you, and your guild also,
 <ce>for bringing this to our attention. We were previously 
-<ce>unaware of this contract which you say has been taken 
+<ce>unaware of this contract, which you say has been taken 
 <ce>out on a peasant woman as a means of blackmailing her
-<ce>father, another commoner of no real consequence, 
+<ce>father who's another commoner of no real consequence, 
 <ce>however skilled he may be at crafting armor. 
 <ce>
 <ce>Although the uninformed may think the Dark Brotherhood
@@ -660,27 +666,30 @@ Message: 1080
 <ce>unsanctioned contracts in the name of the Brotherhood.
 
 Message: 1081
-<ce>You do not need to sully your own blade with this renegades’
-<ce>blood, %pcn. For you, as you're a good friend of the 
-<ce>brotherhood, we will deal with this matter swiftly
-<ce>and deliver the heretical contract to you within the next
+<ce>You do not need to sully your own blade with this renegades
+<ce>blood, %pcn. Since you're a good friend of the brotherhood, 
+<ce>we will deal with this matter swiftly for you, and deliver
+<ce>the heretical contract directly to you within the next
 <ce>few days. We ask simply that when you have no more need of 
 <ce>this document, you will destroy this affront to our order.
 
 Message: 1082
-<ce>We will have to deal with this renegade brother at some point
-<ce>and the contract will be void, but we do not feel any urgency
-<ce>regarding the situation. There are many more important 
-<ce>machinations and intrigues to deal with more urgently. 
-<ce>You will find this brother at _dbHideout_ 
-<ce>in __dbHideout_.
-<ce>You have our permission to go and deal with our wayard member. 
-<ce>Be warned, however, do not harm any others of our order while
-<ce>doing this, else we will hunt you down and exact vengence.
+<ce>We will deal with this renegade brother at some point
+<ce>and the contract will be void, but we do not feel any 
+<ce>urgency regarding the situation. There are many more  
+<ce>important machinations and intrigues to deal with first. 
+<ce>
+<ce>You have our permission to go and deal with our wayard 
+<ce>member in the meantime. Be warned, however, do not harm
+<ce>any others of our order while doing this, else we will 
+<ce>hunt you down and exact vengence.
 <ce>
 <ce>Given the circumstances, we may make an exception for a hefty
 <ce>price, but if you are unable to pay, then there's nothing we
 <ce>can do and you will die.
+<ce>
+<ce>You will find this greedy traitor at _dbHideout_ 
+<ce>in __dbHideout_.
 
 Message: 1083
 <ce> Reaching into your pack for something,
@@ -695,11 +704,10 @@ Message: 1083
 <ce>She hands you a note before sprinting away.
 
 Message: 1090
-<ce>A contract between _lord_ and the Dark 
-<ce>Brotherhood.
+<ce>A contract between _lord_ and the Dark Brotherhood.
 <ce>It stipulates conditions for _lord_ to have
 <ce>_armorer_'s daughter murdered in the case of him leaving 
-<ce>_fort_ without _lord_'s permission.
+<ce>leaving _fort_ without _lord_'s permission.
 
 Message: 1091
 <ce>You engage the renegade in conversation, putting them at
@@ -718,9 +726,10 @@ Message: 1092
 Message: 1093
 <ce>You sneak behind the renegade without them detecting you.
 <ce>As soon as you are close enough, you skillfully stab
-<ce>them through the throat. As they sag to the floor,
-<ce>gurgling blood, you catch it and quietly lower it to the
-<ce>floor. No one else has been alerted, so now you can now
+<ce>them through the back of the neck, severing the spine
+<ce>and straight through the throat. As they sag to the floor,
+<ce>gurgling blood, you catch the body and quietly lower it.
+<ce> No one else has been alerted, so now you can now
 <ce>retrieve the contract and leave. 
 
 Message: 1094
@@ -1049,7 +1058,7 @@ _submission_ task:
     setvar _permit_
 
 _cancelHostile_ task:
-    when _permit_ and _hostile_ and not _rescue_
+    when _permit_ and _hostile_ and not _rescued_
     stop timer _killAll_
     enemies clear
     unset _hostile_
@@ -1179,7 +1188,7 @@ _armorerAsk_ task:
     clear _clickedArmorer_
 
 _armorerContract_ task:
-    when _clickedArmorer_ and _haveContract_ and not _permit_
+    when _clickedArmorer_ and _insideFort_ and _haveContract_ and not _permit_
     say 1055
     clear _clickedArmorer_
 
