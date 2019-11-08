@@ -197,14 +197,14 @@ Message: 1025
 <ce>be searching for you for the next couple of days
 
 Message: 1026
-<ce>You've arrived at __fort_ out here in the hills, way off
-<ce>the beaten track and miles away from anywhere else. They 
-<ce>must have rebuilt the place from an old ruin, as you can 
-<ce>see signs of repairs. There are also indications that a
-<ce>large group is living at the fort, and some significant
-<ce>construction has taken place. You suspect the fort has 
-<ce>had its cellars converted to a barracks. This place is 
-<ce>likely to be more dangerous than it might first appear.
+<ce>You've found __fort_ out here in the hills, way off the
+<ce>beaten track and miles away from anywhere else. They must
+<ce>have rebuilt the place from an old ruin, as you can see
+<ce>signs of repairs. There are also indications that a large
+<ce>group is living at the fort, and significant construction
+<ce>has taken place relatively recentlu. You suspect the fort 
+<ce>cellars have been converted to a barracks. This place is 
+<ce>likely to be more dangerous than it might appear at first.
 
 Message: 1027
 <ce>Eyewitness reports regarding the finely armored warriors 
