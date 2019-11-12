@@ -3,104 +3,221 @@ DisplayName: A Careless Price
 QRC:
 
 QuestComplete:  [1004]
-<ce>You have paid your debt to the Dark Brotherhood and they
-have stopped sending assasins.
+<ce>You've paid your debt to the Dark Brotherhood and 
+<ce>they have forgiven your transgressions. You can now stop 
+<ce>looking over your shoulder for assassins.
 
 RumorsDuringQuest:  [1005]
-<ce> I hear the Dark Brotherhood are angry with FG.
+<ce> I hear the Dark Brotherhood are angry with one of the
+<ce> Masters of the Fighters Guild.
 
 QuestLogEntry: [1010]
 on %qdt:
  While retrieving a contract I hurt some other members
  in the process. The DB will be after me, hopefully I
- can pay them off.
+ can pay them off with money instead of my own blood.
 
--- Dark Brother contact
-Message: 1080
-Hello. blah blah
+Message:  1011
+on %qdt:
+ I failed to pay my debt to _dbContact_.
+ They suggested I may be able to pay off their enforcers
+ but the amount is now doubled at 200,000 gold. I had
+ better visit a bank and keep one eye over my shoulder.
 
-Message: 1081
-You are a good friend of the brotherhood, so we'll deal 
-with this renegade swiftly and deliver the contract 
-directly to you within a few days.
+Message:  1012
+on %qdt:
+ I failed to pay my debt to the Dark Brotherhood twice
+ now. They must be asbsolutely furious, and will likely
+ keep sending assassins until I am dead. Maybe if I
+ ensure I travel with a lot of money, I might get one 
+ last chance to pay them off if I am lucky.
 
-Message: 1082
-We'll have to deal with this renegade brother at some point
-and the contract will be void, but we don't feel any urgency
-regarding the situation. There are many more important
-machinations and intrigues to deal with first. You will
-find this brother at _dbHideout_ in __dbHideout_,
-you've permission to go and deal with them. Be warned
-however, don't harm any others of our order while doing this,
-else we'll hunt you down and exact revenge.
+Message:  1020
+ %pcn
+ 
+    The Dark Brotherhood gave you clear instructions
+ not to harm any other of our members when retrieving
+ that contract from the renegade. You did not comply,
+ whether this was through carelessness or simple
+ indifference matters not to us.
 <ce>
-Given the circumstances we may make an exception for a
-hefty price, but if you can't pay then you will die.
+    You owe us a price, one for which usually the only
+ coin acceptable to us is that of blood. However, out 
+ of respect for your rank within your guild, and also 
+ in thanks for informing us of that blasphemous contract 
+ in the first place, we will accept a gold substitute.
+<ce>
+    Find _dbContact_ and pay 100,000 
+ within three weeks if you wish to accept this unusually
+ generous offer and live. You will find them over in 
+ __dbFront_ at _dbFront_
+ in the ____dbFront_. 
+<ce>
+    If you have not paid after three weeks, then
+ the debt must be paid with your blood.
 
-Message: 1083
+Message: 1021
+<ce>You have injured another member of the Dark Brotherhood
+<ce>which you were warned against doing. They will be coming
+<ce>for you to exact a price. Master of a guild or not, you
+<ce>don't cross the brotherhood. You hope that you can pay 
+<ce>with gold, rather than your blood! Best to keep alert.
+
+Message: 1022
+<ce>You have run out of time to pay the debt to _dbContact_.
+<ce>The only hope left is to ensure you have at least 200,000
+<ce>on you when their assassins inevitably track you down.
+
+Message: 1030
 <ce> Reaching into your pack for something,
 <ce> you spy a note that wasn't there before.
         <--->
 <ce> You feel a parchment slip into your hand and hear
 <ce> the sound of footsteps scampering away. There is 
 <ce> no other sign of the mysterious courier.
+        <--->
+<ce>A young street urchin presses a letter into your
+<ce>hand. As you attempt to question him, it becomes
+<ce>obvious that he is both deaf and mute. With a 
+<ce>wave of frustration you send him on his way.
 
-Message: 1090
-You have injured another member of the Dark Brotherhood
-which you were warned against doing. They will be coming
-for you to exact a price. Master of a guild or not, you
-don't cross the brotherhood. You'd better visit a bank
-after finishing up here to ensure you can pay with gold 
-rather than your blood! (100,000 gold should cover it)
+
+-- Dark Brother contact
+Message: 1080
+<ce>Well, hello there Master %pcl.
+<ce>
+<ce>Here to pay your debt to the Brotherhood I hope?
+
+Message: 1081
+<ce>You have disappointed the Dark Brotherhood in not
+<ce>paying the price, which is not wise.
+<ce>
+<ce>Why have you wasted your one chance to pay me the  
+<ce>gold as requested? You need to pay your debt to us to  
+<ce>compensate for the members you hurt! The Brotherhood 
+<ce>does not let things go, so do not mistake the boon 
+<ce>granted in this instance with some kind of leniency.
+<ce>
+<ce>I suggest you ensure you have double the original amount
+<ce>on you when our enforcers track you down and hope they
+<ce>accept it. No negotiations, just get the money otherwise 
+<ce>you'll be hounded to your grave, %pcl.
+<ce>
+<ce>Now, get out of here before I give in to my desire to
+<ce>teach you the proper respect due the Brotherhood.
+
+Message: 1082
+<ce>Thank you for compensating the brotherhood with this 
+<ce>gold, I should now be able to smooth things over and 
+<ce>call off the enforcers. Your reputation with us has 
+<ce>still been damaged though, so I suggest you keep out 
+<ce>of our way from for a while Master %pcl. 
+<ce>
+<ce>The blessings of Mephala be upon you.
+
+Message: 1083
+<ce>You havn't got enough money to pay! 
+<ce>What the hell are you trying to pull here, %ra?
 
 Message: 1096
-An enforcer from the Dark Brotherhood corners you and
-requests you pay 100,000 gold to compensate for the
-members you murdered when retrieving the contract.
-You are glad you had the money to pay, as having the
-brotherhood after you is not a pleasant situation.
+<ce>An enforcer from the Dark Brotherhood corners you and
+<ce>demands you pay 200,000 gold to compensate for the
+<ce>brothers you harmed while retrieving the contract.
+<ce>
+<ce>You are glad you had the money to pay, as having the
+<ce>brotherhood after you is not a pleasant situation,
+<ce>and quite detrimental to your health.
 
 Message: 1097
-An enforcer from the Dark Brotherhood corners you and
-requests you pay 100,000 gold to compensate for the
-members you murdered when retrieving the contract.
-Since you can't pay, they signal their nearby comrades
-to attack.
+<ce>An enforcer from the Dark Brotherhood corners you and
+<ce>demands you pay 200,000 gold to compensate for the
+<ce>brothers you harmed while retrieving the contract.
+<ce>
+<ce>Since you can't pay, they signal the nearby assassins
+<ce>to attack.
 
 Message: 1098
-Thank you for compensating the brotherhood with 100,000 
-gold, I should be able to smooth things over and call
-off the enforcers. Your reputation with us has still 
-been damaged, so I suggest you keep out of our way from
-now on Master %pcl.
+<ce>An enforcer from the Dark Brotherhood corners you and
+<ce>demands you pay 300,000 gold in compensation, saying
+<ce>that this is your last chance.
+<ce>
+<ce>You are glad you had the money to pay, as having the
+<ce>brotherhood after you is not a pleasant situation,
+<ce>and quite detrimental to your health.
 
 Message: 1099
-You need to pay us 100,000 gold to compensate for the
-members you murdered when retrieving the contract.
-No negotiations, just get the money otherwise you'll
-be hounded to your grave, %pcn.
+<ce>An enforcer from the Dark Brotherhood corners you and
+<ce>demands you pay 300,000 gold in compensation, saying
+<ce>that this is your last chance.
+<ce>
+<ce>Since you can't pay, they signal the multiple groups
+<ce>of nearby assassins waiting to ambush you to attack.
+
 
 QBN:
 
-Place _dbFront_ remote clothingshop
+Item _letter1_ letter used 1020
+
+Place _dbFront_ remote apothecary
 
 Person _dbContact_ faction The_Dark_Brotherhood male
-Foe _dbEnforcers_ is 4 Assassin
 
+Foe _dbEnforcers_ is 6 Assassin
+Foe _dbKillSquad_ is 10 Assassin
+
+Clock _dbLetterDel_ 3.00:00
+Clock _dbWindow_ 26.00:00
 Clock _dbAngered_ 10.00:00
+Clock _dbFurious_ 30.00:00
 
 -- Quest start-up:
     place npc _dbContact_ at _dbFront_
-    change repute with _dbContact_ by -20
-    start timer _dbAngered_
+    change repute with _dbContact_ by -10
+    start timer _dbLetterDel_
     log 1010 step 0
     
 _notify_ task:
     when pc exits anywhere
-    say 1090
+    say 1021
+
+_dbLetterDel_ task:
+    give pc _letter1_ notify 1030
+    start timer _dbWindow_
+
+_dbWindow_ task:
+    say 1022
+    log 1011 step 1
+    change repute with _dbContact_ by -30
+    destroy _dbContact_
+    start timer _dbAngered_
+
+_dbContactPay_ task:
+    clicked npc _dbContact_
+    prompt 1080 yes _dbContactMoney_ no _dbContactNoPay_
+
+_dbContactMoney_ task:
+    pay 100000 money do _dbContactPaid_ otherwise do _dbContactNoMoney_
+
+_dbContactNoMoney_ task:
+    say 1083
+    start task _dbContactNoPay_
+
+_dbContactPaid_ task:
+    say 1082
+    enemies clear
+    give pc nothing
+    end quest saying 1004
+
+_dbContactNoPay_ task:
+    say 1081
+    log 1011 step 1
+    change repute with _dbContact_ by -20
+    destroy _dbContact_
+    stop timer _dbWindow_
+    start timer _dbAngered_
 
 _dbAngered_ task:
-    pay 100000 money do _dbPaid_ otherwise do _dbEnforce_
+    pay 200000 money do _dbPaid_ otherwise do _dbEnforce_
 
 _dbPaid_ task:
     say 1096
@@ -108,20 +225,22 @@ _dbPaid_ task:
     end quest saying 1004
 
 _dbEnforce_ task:
-    send _dbEnforcers_ every 10 minutes with 100% success
+    create foe _dbEnforcers_ every 0 minutes 1 times with 100% success
+    send _dbEnforcers_ every 900 minutes with 100% success
     say 1097
-    -prompt: will you pay?
+    log 1012 step 2
+    start timer _dbFurious_
 
-_dbContactPay_ task:
-    clicked npc _dbContact_ 
-    pay 100000 money do _dbContactPaid_ otherwise do _dbContactNoPay_
+_dbFurious_ task:
+    pay 300000 money do _dbPaid2_ otherwise do _dbKillYou_
 
-_dbContactPaid_ task:
+_dbPaid2_ task:
     say 1098
-    enemies clear
     give pc nothing
     end quest saying 1004
 
-_dbContactNoPay_ task:
+_dbKillYou_ task:
+    create foe _dbKillSquad_ every 2 minutes indefinitely with 100% success
+    create foe _dbEnforcers_ every 1 minutes indefinitely with 100% success
     say 1099
-    clear _dbContactPay_
+

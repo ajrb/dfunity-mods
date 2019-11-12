@@ -790,7 +790,7 @@ Item _letter1_ letter used 1066
 Item _reports_ letter used 1027
 Item _dbContract_ letter used 1090
 
-Clock _trackers_ 00.03:00
+Clock _trackers_ 05.03:00
 Clock _dbDeal_ 06.05:00
 Clock _killAll_ 02.00:00
 
@@ -870,7 +870,7 @@ _contactQuery_ task:
     log 1012 step 3
     setvar _meetDB_
     place npc _dbContact_ at _dbTavern_
-    repute with _dbContact_ exceeds 50 do _dbRepHigh_
+    repute with _dbContact_ exceeds 30 do _dbRepHigh_
     clear _clickedContact_
 
 _contactContract_ task:
