@@ -5,16 +5,6 @@
     "Type": "Rmb",
     "RmbBlock": {
         "FldHeader": {
-            "NumBlockDataRecords": 1,
-            "NumMisc3dObjectRecords": 0,
-            "NumMiscFlatObjectRecords": 2,
-            "BlockPositions": [
-                {
-                    "XPos": 1984,
-                    "ZPos": 768,
-                    "YRotation": 0
-                }
-            ],
             "BuildingDataList": [
                 {
                     "NameSeed": 0,
@@ -24,9 +14,6 @@
                     "BuildingType": "House6",
                     "Quality": 18
                 }
-            ],
-            "BlockDataSizes": [
-                3525
             ],
             "GroundData": {
                 "Header": [
@@ -8251,12 +8238,5 @@
                 "Flags": 0
             }
         ]
-    },
-    "RdbBlock": {
-        "ModelReferenceList": null,
-        "ObjectRootList": null
-    },
-    "RdiBlock": {
-        "Data": null
     }
 }
