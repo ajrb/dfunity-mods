@@ -1,5 +1,6 @@
 [{
    "Name": "ArchGuildHalls.TXT",
-   "Title": "Archaeologists Guild Halls",
-   "ID": 250
+   "Title": "Archaeologists Guild Hall Locations",
+   "ID": 1000,
+   "IsUnique": true
 }]

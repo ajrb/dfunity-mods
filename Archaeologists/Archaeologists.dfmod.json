@@ -1,9 +1,9 @@
 {
     "ModTitle": "Archaeologists",
-    "ModVersion": "0.9",
+    "ModVersion": "0.10",
     "ModAuthor": "Hazelnut",
     "ContactInfo": "forums.dfworkshop.net",
-    "DFUnity_Version": "0.10.8",
+    "DFUnity_Version": "0.10.12",
     "ModDescription": "Archaeologists guild with quest target locator device and language skill rework",
     "GUID": "5054c2f4-7679-41d5-803e-da737caa69ef",
     "Files": [
@@ -34,7 +34,14 @@
         "Assets/Game/Mods/Archaeologists/Scripts/LocatorDevice.cs",
         "Assets/Game/Mods/Archaeologists/Scripts/ArchaeologistsMod.cs",
         "Assets/Game/Mods/Archaeologists/WorldData/RESIAM10.RMB-543-building10.json",
-        "Assets/Game/Mods/Archaeologists/WorldData/PAWNAL03.RMB-857-building3.json"
+        "Assets/Game/Mods/Archaeologists/WorldData/PAWNAL03.RMB-857-building3.json",
+        "Assets/Game/Mods/Archaeologists/Books/Mapping/ArchsGuildBooks.json",
+        "Assets/Game/Mods/Archaeologists/Books/ArchGuildHalls.TXT"
     ],
-    "Contributes": null
+    "Contributes": {
+        "BooksMapping": [
+            "ArchsGuildBooks"
+        ],
+        "SpellIcons": null
+    }
 }

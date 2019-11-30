@@ -44,7 +44,8 @@ namespace DaggerfallWorkshop.Game.Guilds
             TextFile.CreateTextToken("of %lev, however, with hard work and dedication, "), newLine,
             TextFile.CreateTextToken("I'm sure that you'll be recognised for promotion soon enough. "), newLine,
             TextFile.CreateTextToken("Please ensure you make use of our training facilities to "), newLine,
-            TextFile.CreateTextToken("study and improve your skills, and accept this Mark of Recall. "), newLine,
+            TextFile.CreateTextToken("study and improve your skills. Here is a book containing "), newLine,
+            TextFile.CreateTextToken("all our guild hall locations, and also a Mark of Recall. "), newLine,
         };
 
         protected static TextFile.Token[] eligibleTokens =
@@ -473,6 +474,8 @@ namespace DaggerfallWorkshop.Game.Guilds
             item.shortName = "%it of Recall";
             item.IdentifyItem();
             GameManager.Instance.PlayerEntity.Items.AddItem(item);
+
+            GameManager.Instance.PlayerEntity.Items.AddItem(ItemBuilder.CreateBook(1000));
         }
 
         public override bool IsEligibleToJoin(PlayerEntity playerEntity)
