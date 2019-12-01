@@ -705,7 +705,7 @@ Message: 1083
 Message: 1090
 <ce>A contract between _lord_ and the Dark Brotherhood.
 <ce>It stipulates conditions for _lord_ to have
-<ce>_armorer_'s daughter murdered in the case of him leaving 
+<ce>_armorer_'s daughter murdered in the case of him 
 <ce>leaving _fort_ without _lord_'s permission.
 
 Message: 1091
