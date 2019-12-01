@@ -3,42 +3,46 @@ DisplayName: Mountain Rumors
 QRC:
 
 QuestorOffer:  [1000]
-<ce> Rumors have reached us from guild colleagues in the mountains
-<ce> concerning a famed smith who is a master of armor crafting.
+<ce> Rumors have reached us from some of our guild colleagues in  
+<ce> the mountains concerning a famed master of armor crafting.
 <ce>
-<ce> It seems that a while back %g just simply vanished and no one
-<ce> has heard anything of %g2 since. Recently some reports have
-<ce> been received from over in the ____guild_ regarding
-<ce> some noble whose soldiers and personal guard have been seen
-<ce> clad in impressive armor by several locals. The guild smiths
-<ce> think that the descriptions sound very similar in style to,
-<ce> and could very well be, the work of this missing master
-<ce> armor smith.
+<ce> It seems that %g just simply vanished a while back and no 
+<ce> one has heard anything of %g2 since. Recently some reports 
+<ce> have been received from over in the ____guild_ 
+<ce> regarding some noble whose soldiers and personal guard  
+<ce> have been seen clad in some rather impressive armor by 
+<ce> several locals. The guild smiths think that the descriptions 
+<ce> sound very similar in style to, and could very well be, the  
+<ce> work of this missing master armor-smith.
 <ce> 
-<ce> So we suspect that there's something rather fishy going on here,
-<ce> and our opinion is that it requires attention from a guild master.
+<ce> We suspect that there's something rather fishy going on 
+<ce> here, and our opinion is that it requires attention from
+<ce> a guild master.
 <ce>
 <ce> Would you be willing to head over there to investigate and
-<ce> deal with the situation, before a guild member with less skill
-<ce> and experience makes a mess of things?
+<ce> deal with the situation, before a guild member with less 
+<ce> skill and experience makes a mess of things?
 
 RefuseQuest:  [1001]
-<ce> Okay, I understand that as a guild master you're too busy
-<ce> to drop everything to investigate every silly rumor that
+<ce> Okay, I understand that as a guild master you're too 
+<ce> busy to drop everything to investigate every rumor that
 <ce> surfaces. Of course we all respect that, however I really
-<ce> think this is worth the attention of a guild master, otherwise
-<ce> I wouldn't have mentioned it to you. Hopefully one of the
-<ce> other guild masters will be willing to deal with it.
+<ce> think this one is worth the attention of a guild master, 
+<ce> otherwise I wouldn't have mentioned it to you. Hopefully 
+<ce> one of the other guild masters will be willing to help out.
 
 AcceptQuest:  [1002]
-<ce> Great, thank you Master %pct. We're convinced that this is 
-<ce> worth further investigation. Please head over to the 
-<ce> guild hall in __guild_ in the ____guild_ to see 
-<ce> what you discover. There will be a contact waiting for you  
-<ce> there who will bring you up to speed regarding the 
-<ce> situation. They'll wait for your arrival for six months, 
-<ce> after that they'll likely try to deal with the situation 
-<ce> themselves, and probably bungle it which is best avoided.
+<ce> Great, thank you Master %pcl. We're convinced  
+<ce> that this is worth further investigation. Please head  
+<ce> over to the guild hall at __guild_ in the
+<ce> ____guild_ to see what you can discover.
+<ce> 
+<ce> There will be a contact waiting for you there who can
+<ce> bring you up to speed regarding the situation. They
+<ce> will wait for your arrival for six months, after that
+<ce> the local members will likely try to deal with the  
+<ce> situation themselves, and probably bungle it which 
+<ce> I think you'd agree is best avoided.
 <ce>
 <ce> Hopefully this will lead you to this lost master armorer.
 

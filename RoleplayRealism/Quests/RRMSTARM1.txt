@@ -440,7 +440,7 @@ Message: 1060
 <ce>Welcome to __guild_, Master %pcl.
 <ce> 
 <ce>My name is _contact_ and I'm very pleased
-<ce>to see you hereindeed, since the situation we have   
+<ce>to see you here indeed, since the situation we have   
 <ce>is a rather perplexing one to say the least.
 <ce>
 <ce>We've been hearing rumors of a local noble whose soldiers 
