@@ -78,7 +78,7 @@ On %qdt:
 
 Message: 1020
 <ce> Do you think you'll be able to go to __guild_ and investigate
-<ce> the rumors from ____guild_ soon, Master %pct?
+<ce> the rumors from ____guild_ soon, Master %pcl?
 
 Message: 1021
 <ce> You have arrived at __guild_ where the rumors regarding 
