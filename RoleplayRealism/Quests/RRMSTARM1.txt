@@ -202,7 +202,7 @@ Message: 1026
 <ce>have rebuilt the place from an old ruin, as you can see
 <ce>signs of repairs. There are also indications that a large
 <ce>group is living at the fort, and significant construction
-<ce>has taken place relatively recentlu. You suspect the fort 
+<ce>has taken place relatively recently. You suspect the fort 
 <ce>cellars have been converted to a barracks. This place is 
 <ce>likely to be more dangerous than it might appear at first.
 
@@ -657,7 +657,7 @@ Message: 1080
 <ce>a simple group of killers for hire, nothing could be
 <ce>farther from the truth. A contract is a holy communion
 <ce>between us and our Dark Queen. To allow it to be used 
-<ce>for leverage in labor dispute is beneath us.
+<ce>for leverage in a labor dispute is beneath us.
 <ce>
 <ce>Our wayward member will have known this and, if they  
 <ce>truly followed our code, would have refused the money.
