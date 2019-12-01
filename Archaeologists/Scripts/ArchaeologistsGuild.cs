@@ -27,6 +27,7 @@ namespace DaggerfallWorkshop.Game.Guilds
         const int notEnoughGoldId = 454;
         const int recallEffectId = 94;
         private const int replaceMarkCost = 10000;
+        private const int ArchGuildLocationsBookId = 1000;
 
         #endregion
 
@@ -389,7 +390,25 @@ namespace DaggerfallWorkshop.Game.Guilds
                 }
                 else if (cost == 0)
                 {
-                    DaggerfallUI.MessageBox("Your Mark of Recall shows no signs of wear that I can see.");
+                    if (HasLocationsBook())
+                    {
+                        DaggerfallUI.MessageBox("Your Mark of Recall shows no signs of wear that I can see.");
+                    }
+                    else
+                    {
+                        DaggerfallMessageBox replaceBookBox = new DaggerfallMessageBox(DaggerfallUI.UIManager, window, true);
+                        string[] message = {
+                            "Your Mark of Recall shows no signs of wear that I can see.",
+                            "",
+                            "  However, you do appear to have misplaced your guild hall",
+                            "      locations book. Would you like a replacement?"
+                        };
+                        replaceBookBox.SetText(message);
+                        replaceBookBox.AddButton(DaggerfallMessageBox.MessageBoxButtons.Yes);
+                        replaceBookBox.AddButton(DaggerfallMessageBox.MessageBoxButtons.No, true);
+                        replaceBookBox.OnButtonClick += ReplaceBookBox_OnButtonClick;
+                        replaceBookBox.Show();
+                    }
                 }
                 else
                 {
@@ -398,7 +417,6 @@ namespace DaggerfallWorkshop.Game.Guilds
                     confirmRepairBox.OnButtonClick += ConfirmRepairBox_OnButtonClick;
                     confirmRepairBox.Show();
                 }
-                    
             }
         }
 
@@ -429,6 +447,16 @@ namespace DaggerfallWorkshop.Game.Guilds
             }
         }
 
+        static void ReplaceBookBox_OnButtonClick(DaggerfallMessageBox sender, DaggerfallMessageBox.MessageBoxButtons messageBoxButton)
+        {
+            sender.CloseWindow();
+            if (messageBoxButton == DaggerfallMessageBox.MessageBoxButtons.Yes)
+            {
+                GivePlayerLocationsBook();
+                DaggerfallUI.MessageBox("Here's your replacement guild hall locations book.");
+            }
+        }
+
         private static DaggerfallUnityItem FindRecallMark()
         {
             List<DaggerfallUnityItem> marks = GameManager.Instance.PlayerEntity.Items.SearchItems(ItemGroups.Jewellery, (int)Jewellery.Mark);
@@ -440,6 +468,23 @@ namespace DaggerfallWorkshop.Game.Guilds
                                 return item;
 
             return null;
+        }
+
+        private static bool HasLocationsBook()
+        {
+            List<DaggerfallUnityItem> books = GameManager.Instance.PlayerEntity.Items.SearchItems(ItemGroups.Books, (int)Books.Book0);
+            if (books.Count > 0)
+                foreach (DaggerfallUnityItem item in books)
+                    if (item.message == ArchGuildLocationsBookId)
+                        return true;
+
+            books = GameManager.Instance.PlayerEntity.WagonItems.SearchItems(ItemGroups.Books, (int)Books.Book0);
+            if (books.Count > 0)
+                foreach (DaggerfallUnityItem item in books)
+                    if (item.message == ArchGuildLocationsBookId)
+                        return true;
+
+            return false;
         }
 
         private static int CalculateRepairCost(DaggerfallUnityItem markOfRecall)
@@ -456,8 +501,10 @@ namespace DaggerfallWorkshop.Game.Guilds
         override public void Join()
         {
             base.Join();
-            // Give recall item
+            // Give a mark of recall item.
             GivePlayerMarkOfRecall();
+            // Give a guild hall locations book.
+            GivePlayerLocationsBook();
         }
 
         private static void GivePlayerMarkOfRecall()
@@ -474,8 +521,11 @@ namespace DaggerfallWorkshop.Game.Guilds
             item.shortName = "%it of Recall";
             item.IdentifyItem();
             GameManager.Instance.PlayerEntity.Items.AddItem(item);
+        }
 
-            GameManager.Instance.PlayerEntity.Items.AddItem(ItemBuilder.CreateBook(1000));
+        private static void GivePlayerLocationsBook()
+        {
+            GameManager.Instance.PlayerEntity.Items.AddItem(ItemBuilder.CreateBook(ArchGuildLocationsBookId));
         }
 
         public override bool IsEligibleToJoin(PlayerEntity playerEntity)
