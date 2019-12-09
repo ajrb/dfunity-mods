@@ -300,7 +300,9 @@ namespace RoleplayRealism
         private static void EncumbranceEffects_OnNewMagicRound()
         {
             PlayerEntity playerEntity = GameManager.Instance.PlayerEntity;
-            if (playerEntity.CurrentHealth > 0 && playerEntity.EntityBehaviour.enabled && !playerEntity.IsResting &&
+            if (!GameManager.IsGamePaused &&
+                !playerEntity.IsResting &&
+                playerEntity.CurrentHealth > 0 &&
                 !GameManager.Instance.EntityEffectBroker.SyntheticTimeIncrease)
             {
                 float encPc = playerEntity.CarriedWeight / playerEntity.MaxEncumbrance;
@@ -309,7 +311,7 @@ namespace RoleplayRealism
                 {
                     int speedEffect = (int)(playerEntity.Stats.PermanentSpeed * encOver);
                     int fatigueEffect = (int)(encOver * 100);
-                    //Debug.LogFormat("Encumbrance {0}, over {1} = effects: {2} speed, {3} fatigue", encPc, encOver, speedEffect, fatigueEffect);
+                    Debug.LogFormat("Encumbrance {0}, over {1} = effects: {2} speed, {3} fatigue", encPc, encOver, speedEffect, fatigueEffect);
 
                     playerEntity.DecreaseFatigue(fatigueEffect, false);
 
