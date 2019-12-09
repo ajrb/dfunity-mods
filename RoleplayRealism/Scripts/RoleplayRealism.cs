@@ -63,13 +63,14 @@ namespace RoleplayRealism
             bool bandaging = settings.GetBool("Modules", "bandaging");
             bool shipPorts = settings.GetBool("Modules", "shipPorts");
             bool expulsion = settings.GetBool("Modules", "underworldExpulsion");
+            bool climbing = settings.GetBool("Modules", "climbingRestriction");
 
-            InitMod(bedSleeping, archery, riding, encumbrance, bandaging, shipPorts, expulsion);
+            InitMod(bedSleeping, archery, riding, encumbrance, bandaging, shipPorts, expulsion, climbing);
 
             mod.IsReady = true;
         }
 
-        public static void InitMod(bool bedSleeping, bool archery, bool riding, bool encumbrance, bool bandaging, bool shipPorts, bool expulsion)
+        public static void InitMod(bool bedSleeping, bool archery, bool riding, bool encumbrance, bool bandaging, bool shipPorts, bool expulsion, bool climbing)
         {
             Debug.Log("Begin mod init: RoleplayRealism");
 
@@ -94,7 +95,10 @@ namespace RoleplayRealism
                 {
                     EnhancedRiding enhancedRiding = playerAdvGO.AddComponent<EnhancedRiding>();
                     if (enhancedRiding != null)
+                    {
+                        enhancedRiding.TerrainFollowing = mod.GetSettings().GetBool("EnhancedRiding", "followTerrainEnabled");
                         enhancedRiding.SetFollowTerrainSoftenFactor(mod.GetSettings().GetInt("EnhancedRiding", "followTerrainSoftenFactor"));
+                    }
                 }
             }
 
@@ -124,6 +128,12 @@ namespace RoleplayRealism
                     throw new System.Exception("GuildGroup DarkBrotherHood is already overridden, unable to register DarkBrotherhoodRR guild class.");
             }
 
+            if (climbing)
+            {
+                // Override default formula
+                FormulaHelper.formula_2de_2i.Add("CalculateClimbingChance", CalculateClimbingChance);
+            }
+
             if (!QuestListsManager.RegisterQuestList("RoleplayRealism"))
                 throw new System.Exception("Quest list name is already in use, unable to register RoleplayRealism quest list.");
             RegisterFactionIds();
@@ -136,6 +146,38 @@ namespace RoleplayRealism
             Services.RegisterMerchantService(1022, CustomArmorService, "Custom Armor");
 
             Debug.Log("Finished mod init: RoleplayRealism");
+        }
+
+        private static int CalculateClimbingChance(DaggerfallEntity de1, DaggerfallEntity na1, int basePercentSuccess, int na2, DaggerfallUnityItem na3)
+        {
+            // Fail to climb if weapon not sheathed.
+            if (!GameManager.Instance.WeaponManager.Sheathed)
+            {
+                DaggerfallUI.SetMidScreenText("You can't climb whilst holding your weapon.", 1f);
+                return 0;
+            }
+
+            PlayerEntity player = (PlayerEntity)de1;
+            int climbing = player.Skills.GetLiveSkillValue(DFCareer.Skills.Climbing);
+            int luck = player.Stats.GetLiveStatValue(DFCareer.Stats.Luck);
+            int skill = climbing;
+            if (player.Race == Races.Khajiit)
+                skill += 30;
+
+            // Climbing effect states "target can climb twice as well" - doubling effective skill after racial applied
+            if (player.IsEnhancedClimbing)
+                skill *= 2;
+
+            // Clamp skill range
+            skill = Mathf.Clamp(skill, 5, 95);
+            float luckFactor = Mathf.Lerp(0, 10, luck * 0.01f);
+
+            // Skill Check
+            int chance = (int)(Mathf.Lerp(basePercentSuccess, 100, skill * .01f) + luckFactor);
+
+            Debug.LogFormat("RoleplayRealism CalculateClimbingChance = {0} with basePcSuccess={1}, climbing skill={2}, luck={3}", chance, basePercentSuccess, skill, luck);
+
+            return chance;
         }
 
         public static ArmorMaterialTypes[] customArmorMaterials = {

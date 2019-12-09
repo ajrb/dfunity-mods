@@ -54,6 +54,13 @@
                     "Description": "Enables underworld guilds to expel members for poor performance.. with prejudice.",
                     "$version": "v1",
                     "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
+                },
+                {
+                    "Value": true,
+                    "Name": "climbingRestriction",
+                    "Description": "Prevents climbing with a weapon drawn.",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
                 }
             ],
             "$version": "v1"
@@ -64,11 +71,18 @@
             "IsAdvanced": false,
             "Keys": [
                 {
+                    "Value": true,
+                    "Name": "followTerrainEnabled",
+                    "Description": "Enables terrain following when riding.",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
+                },
+                {
                     "Min": 0,
-                    "Max": 16,
+                    "Max": 32,
                     "Value": 8,
                     "Name": "followTerrainSoftenFactor",
-                    "Description": "Scale factor to soften terrain gradient following. (0=none, 16=max soften)",
+                    "Description": "Scale factor to soften terrain gradient following. (0=none, 32=max soften)",
                     "$version": "v1",
                     "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.SliderIntKey"
                 }

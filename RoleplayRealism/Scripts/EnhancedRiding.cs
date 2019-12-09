@@ -36,6 +36,8 @@ namespace DaggerfallWorkshop.Game
 
         GameObject cachedColliderHitObject;
 
+        public bool TerrainFollowing { get; set; }
+
         public void SetFollowTerrainSoftenFactor(int softenFollow)
         {
             this.softenFollow = softenFollow;
@@ -195,9 +197,12 @@ namespace DaggerfallWorkshop.Game
 
                     // Calculate average terrain angle
                     float terrainAngle = 0;
-                    for (int i=0; i < samples; i++)
-                        terrainAngle += terrainAngles[i];
-                    terrainAngle /= samples + softenFollow;
+                    if (TerrainFollowing)
+                    {
+                        for (int i = 0; i < samples; i++)
+                            terrainAngle += terrainAngles[i];
+                        terrainAngle /= samples + softenFollow;
+                    }
                     // Set min look pitch and calc horse sprite y position adjustment
                     playerMouseLook.PitchMaxLimit = terrainAngle + 18;
                     float yAdj = (playerMouseLook.Pitch - terrainAngle - 10) * LookPitchRatio;
