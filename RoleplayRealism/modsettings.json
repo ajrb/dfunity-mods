@@ -61,6 +61,13 @@
                     "Description": "Prevents climbing with a weapon drawn.",
                     "$version": "v1",
                     "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
+                },
+                {
+                    "Value": true,
+                    "Name": "weaponSpeed",
+                    "Description": "Moderates DPS of weapons for characters with high speed attributes.",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
                 }
             ],
             "$version": "v1"

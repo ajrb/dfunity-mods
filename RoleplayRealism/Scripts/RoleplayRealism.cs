@@ -64,13 +64,14 @@ namespace RoleplayRealism
             bool shipPorts = settings.GetBool("Modules", "shipPorts");
             bool expulsion = settings.GetBool("Modules", "underworldExpulsion");
             bool climbing = settings.GetBool("Modules", "climbingRestriction");
+            bool weaponSpeed = settings.GetBool("Modules", "weaponSpeed");
 
-            InitMod(bedSleeping, archery, riding, encumbrance, bandaging, shipPorts, expulsion, climbing);
+            InitMod(bedSleeping, archery, riding, encumbrance, bandaging, shipPorts, expulsion, climbing, weaponSpeed);
 
             mod.IsReady = true;
         }
 
-        public static void InitMod(bool bedSleeping, bool archery, bool riding, bool encumbrance, bool bandaging, bool shipPorts, bool expulsion, bool climbing)
+        public static void InitMod(bool bedSleeping, bool archery, bool riding, bool encumbrance, bool bandaging, bool shipPorts, bool expulsion, bool climbing, bool weaponSpeed)
         {
             Debug.Log("Begin mod init: RoleplayRealism");
 
@@ -134,9 +135,17 @@ namespace RoleplayRealism
                 FormulaHelper.RegisterOverride(mod, "CalculateClimbingChance", (Func<PlayerEntity, int, int>)CalculateClimbingChance);
             }
 
+            if (weaponSpeed)
+            {
+                // Override default formula
+                FormulaHelper.RegisterOverride(mod, "GetMeleeWeaponAnimTime", (Func<PlayerEntity, WeaponTypes, ItemHands, float>)GetMeleeWeaponAnimTime);
+            }
+
             if (!QuestListsManager.RegisterQuestList("RoleplayRealism"))
-                throw new System.Exception("Quest list name is already in use, unable to register RoleplayRealism quest list.");
+                throw new Exception("Quest list name is already in use, unable to register RoleplayRealism quest list.");
+
             RegisterFactionIds();
+
             // Add additional data into the quest machine for the quests
             QuestMachine questMachine = GameManager.Instance.QuestMachine;
             questMachine.PlacesTable.AddIntoTable(placesTable);
@@ -178,6 +187,42 @@ namespace RoleplayRealism
 
             return chance;
         }
+
+        public static float GetMeleeWeaponAnimTime(PlayerEntity player, WeaponTypes weaponType, ItemHands weaponHands)
+        {
+            float spdRatio = 0.8f;
+            float strRatio = 0.2f;
+            float capRatio = 0.08f;
+            if (weaponHands == ItemHands.Both)
+            {
+                spdRatio = 0.5f;
+                strRatio = 0.5f;
+                capRatio = 0.15f;
+            }
+            else if (weaponType == WeaponTypes.Dagger || weaponType == WeaponTypes.Dagger_Magic)
+            {
+                spdRatio = 0.9f;
+                strRatio = 0.1f;
+                capRatio = 0.03f;
+            }
+            else if (weaponType == WeaponTypes.Melee)
+            {
+                spdRatio = 1f;
+                strRatio = 0f;
+                capRatio = 0f;
+            }
+            float speed = player.Stats.LiveSpeed;
+            float strength = player.Stats.LiveStrength;
+            if (speed > 70)
+                spdRatio -= capRatio;
+            if (strength > 70)
+                strRatio -= capRatio;
+
+            float frameSpeed = 3 * (115 - ((speed * spdRatio) + (strength * strRatio)));
+            Debug.LogFormat("anim= {0}ms/frame, speed={1} strength={2}", frameSpeed / FormulaHelper.classicFrameUpdate, speed * spdRatio, strength * strRatio);
+            return frameSpeed / FormulaHelper.classicFrameUpdate;
+        }
+
 
         public static ArmorMaterialTypes[] customArmorMaterials = {
             ArmorMaterialTypes.Mithril, ArmorMaterialTypes.Adamantium, ArmorMaterialTypes.Ebony, ArmorMaterialTypes.Orcish, ArmorMaterialTypes.Daedric
