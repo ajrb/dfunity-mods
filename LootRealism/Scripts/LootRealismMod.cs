@@ -10,6 +10,7 @@ using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Items;
 using DaggerfallWorkshop.Game.Utility.ModSupport;
 using DaggerfallWorkshop.Utility;
+using DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings;
 
 namespace LootRealism
 {
@@ -28,7 +29,11 @@ namespace LootRealism
 
         void Awake()
         {
-            InitMod();
+            ModSettings settings = mod.GetSettings();
+            bool lootRebalance = settings.GetBool("Modules", "lootRebalance");
+
+            if (lootRebalance)
+                InitMod();
 
             mod.IsReady = true;
         }
@@ -92,11 +97,11 @@ namespace LootRealism
             new LootChanceMatrix() {key = "Q",   MinGold = 10,  MaxGold = 40,   P1 = 2, P2 = 2, C1 = 4, C2 = 4, C3 = 4, M1 = 2, AM = 0,  WP = 0,  MI = 2, CL = 70,BK = 5, M2 = 3, RL = 5 }, //Vampires
             new LootChanceMatrix() {key = "R",   MinGold = 2,   MaxGold = 10,   P1 = 0, P2 = 0, C1 = 3, C2 = 3, C3 = 3, M1 = 5, AM = 0,  WP = 0,  MI = 1, CL = 0, BK = 0, M2 = 2, RL = 0 }, //Water monsters
             new LootChanceMatrix() {key = "S",   MinGold = 30,  MaxGold = 70,   P1 = 5, P2 = 5, C1 = 5, C2 = 5, C3 = 5, M1 = 15,AM = 0,  WP = 0,  MI = 8, CL = 5, BK = 5, M2 = 2, RL = 10 },//Dragon Loot, Daedras
-            new LootChanceMatrix() {key = "T",   MinGold = 10,  MaxGold = 50,   P1 = 0, P2 = 0, C1 = 0, C2 = 0, C3 = 0, M1 = 0, AM = 80, WP = 40, MI = 0, CL = 50,BK = 10,M2 = 0, RL = 10},//Knight Orc Warlord
+            new LootChanceMatrix() {key = "T",   MinGold = 10,  MaxGold = 50,   P1 = 0, P2 = 0, C1 = 0, C2 = 0, C3 = 0, M1 = 0, AM = 80, WP = 40, MI = 0, CL = 50,BK = 10,M2 = 0, RL = 10}, //Knight Orc Warlord
             new LootChanceMatrix() {key = "U",   MinGold = 0,   MaxGold = 40,   P1 = 5, P2 = 5, C1 = 5, C2 = 5, C3 = 5, M1 = 10,AM = 20, WP = 20, MI = 4, CL = 20,BK = 90,M2 = 5, RL = 70 },//Laboratory Loot
-            new LootChanceMatrix() {key = "LR1", MinGold = 0,   MaxGold = 20,   P1 = 0, P2 = 0, C1 = 1, C2 = 1, C3 = 1, M1 = 0, AM = 60, WP = 50, MI = 1, CL = 50,BK = 0, M2 = 1, RL = 5 },   //Warrior, Barbarian
-            new LootChanceMatrix() {key = "LR2", MinGold = 0,   MaxGold = 5,    P1 = 3, P2 = 3, C1 = 1, C2 = 1, C3 = 1, M1 = 1, AM = 0,  WP = 20, MI = 1, CL = 30,BK = 10,M2 = 1, RL = 0 },    //Healer, Orc Shaman
-            new LootChanceMatrix() {key = "LR3", MinGold = 0,   MaxGold = 30,   P1 = 3, P2 = 3, C1 = 1, C2 = 1, C3 = 1, M1 = 1, AM = 0,  WP = 40, MI = 1, CL = 80,BK = 70,M2 = 2, RL = 10 },  //Spellcasters
+            new LootChanceMatrix() {key = "LR1", MinGold = 0,   MaxGold = 20,   P1 = 0, P2 = 0, C1 = 1, C2 = 1, C3 = 1, M1 = 0, AM = 60, WP = 50, MI = 1, CL = 50,BK = 0, M2 = 1, RL = 5 }, //Warrior, Barbarian
+            new LootChanceMatrix() {key = "LR2", MinGold = 0,   MaxGold = 5,    P1 = 3, P2 = 3, C1 = 1, C2 = 1, C3 = 1, M1 = 1, AM = 0,  WP = 20, MI = 1, CL = 30,BK = 10,M2 = 1, RL = 0 }, //Healer, Orc Shaman
+            new LootChanceMatrix() {key = "LR3", MinGold = 0,   MaxGold = 30,   P1 = 3, P2 = 3, C1 = 1, C2 = 1, C3 = 1, M1 = 1, AM = 0,  WP = 40, MI = 1, CL = 80,BK = 70,M2 = 2, RL = 10 },//Spellcasters
         };
     }
 }

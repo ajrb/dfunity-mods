@@ -183,7 +183,7 @@ namespace RoleplayRealism
             // Skill Check
             int chance = (int)(Mathf.Lerp(basePercentSuccess, 100, skill * .01f) + luckFactor);
 
-            Debug.LogFormat("RoleplayRealism CalculateClimbingChance = {0} with basePcSuccess={1}, climbing skill={2}, luck={3}", chance, basePercentSuccess, skill, luck);
+            //Debug.LogFormat("RoleplayRealism CalculateClimbingChance = {0} with basePcSuccess={1}, climbing skill={2}, luck={3}", chance, basePercentSuccess, skill, luck);
 
             return chance;
         }
@@ -219,7 +219,7 @@ namespace RoleplayRealism
                 strRatio -= capRatio;
 
             float frameSpeed = 3 * (115 - ((speed * spdRatio) + (strength * strRatio)));
-            Debug.LogFormat("anim= {0}ms/frame, speed={1} strength={2}", frameSpeed / FormulaHelper.classicFrameUpdate, speed * spdRatio, strength * strRatio);
+            //Debug.LogFormat("anim= {0}ms/frame, speed={1} strength={2}", frameSpeed / FormulaHelper.classicFrameUpdate, speed * spdRatio, strength * strRatio);
             return frameSpeed / FormulaHelper.classicFrameUpdate;
         }
 
@@ -355,7 +355,7 @@ namespace RoleplayRealism
                 {
                     int speedEffect = (int)(playerEntity.Stats.PermanentSpeed * encOver);
                     int fatigueEffect = (int)(encOver * 100);
-                    Debug.LogFormat("Encumbrance {0}, over {1} = effects: {2} speed, {3} fatigue", encPc, encOver, speedEffect, fatigueEffect);
+                    //Debug.LogFormat("Encumbrance {0}, over {1} = effects: {2} speed, {3} fatigue", encPc, encOver, speedEffect, fatigueEffect);
 
                     playerEntity.DecreaseFatigue(fatigueEffect, false);
 
