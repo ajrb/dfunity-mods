@@ -1,0 +1,14 @@
+{
+    "ModTitle": "LootRealism",
+    "ModVersion": "0.1",
+    "ModAuthor": "Hazelnut & Ralzar",
+    "ContactInfo": null,
+    "DFUnity_Version": "0.10.15",
+    "ModDescription": "Loot rebalance and realism changes",
+    "GUID": "b1b15c90-e2e1-46c6-96d8-000ecc282bbd",
+    "Files": [
+        "Assets/Game/Mods/LootRealism/Assets/ItemTemplates.json",
+        "Assets/Game/Mods/LootRealism/Scripts/LootRealismMod.cs"
+    ],
+    "Contributes": null
+}

@@ -1,0 +1,43 @@
+[
+    {
+        "index": 93,
+        "baseWeight": 600.0,
+        "basePrice": 4000,
+    },
+    {
+        "index": 94,
+        "basePrice": 6000,
+    },
+    {
+        "index": 131,
+        "baseWeight": 0.1,
+    },
+    {
+        "index": 140,
+        "baseWeight": 0.1,
+    },
+    {
+        "index": 247,
+        "baseWeight": 0.35,
+    },
+    {
+        "index": 249,
+        "baseWeight": 0.15,
+    },
+    {
+        "index": 252,
+        "baseWeight": 0.15,
+    },
+    {
+        "index": 275,
+        "baseWeight": 0.1,
+    },
+    {
+        "index": 278,
+        "baseWeight": 0.1,
+    },
+    {
+        "index": 279,
+        "baseWeight": 0.1,
+    },
+]
