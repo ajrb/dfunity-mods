@@ -84,8 +84,8 @@ namespace RoleplayRealism
             if (archery)
             {
                 // Override adjust to hit and damage formulas
-                FormulaHelper.formula_2de_2i.Add("AdjustWeaponHitChanceMod", AdjustWeaponHitChanceMod);
-                FormulaHelper.formula_2de_2i.Add("AdjustWeaponAttackDamage", AdjustWeaponAttackDamage);
+                FormulaHelper.RegisterOverride(mod, "AdjustWeaponHitChanceMod", (Func<DaggerfallEntity, DaggerfallEntity, int, int, DaggerfallUnityItem, int>)AdjustWeaponHitChanceMod);
+                FormulaHelper.RegisterOverride(mod, "AdjustWeaponAttackDamage", (Func<DaggerfallEntity, DaggerfallEntity, int, int, DaggerfallUnityItem, int>)AdjustWeaponAttackDamage);
             }
 
             if (riding)
@@ -122,16 +122,16 @@ namespace RoleplayRealism
             {
                 // Register the TG/DB Guild classes
                 if (!GuildManager.RegisterCustomGuild(FactionFile.GuildGroups.GeneralPopulace, typeof(ThievesGuildRR)))
-                    throw new System.Exception("GuildGroup GeneralPopulace is already overridden, unable to register ThievesGuildRR guild class.");
+                    throw new Exception("GuildGroup GeneralPopulace is already overridden, unable to register ThievesGuildRR guild class.");
 
                 if (!GuildManager.RegisterCustomGuild(FactionFile.GuildGroups.DarkBrotherHood, typeof(DarkBrotherhoodRR)))
-                    throw new System.Exception("GuildGroup DarkBrotherHood is already overridden, unable to register DarkBrotherhoodRR guild class.");
+                    throw new Exception("GuildGroup DarkBrotherHood is already overridden, unable to register DarkBrotherhoodRR guild class.");
             }
 
             if (climbing)
             {
                 // Override default formula
-                FormulaHelper.formula_2de_2i.Add("CalculateClimbingChance", CalculateClimbingChance);
+                FormulaHelper.RegisterOverride(mod, "CalculateClimbingChance", (Func<PlayerEntity, int, int>)CalculateClimbingChance);
             }
 
             if (!QuestListsManager.RegisterQuestList("RoleplayRealism"))
@@ -148,7 +148,7 @@ namespace RoleplayRealism
             Debug.Log("Finished mod init: RoleplayRealism");
         }
 
-        private static int CalculateClimbingChance(DaggerfallEntity de1, DaggerfallEntity na1, int basePercentSuccess, int na2, DaggerfallUnityItem na3)
+        private static int CalculateClimbingChance(PlayerEntity player, int basePercentSuccess)
         {
             // Fail to climb if weapon not sheathed.
             if (!GameManager.Instance.WeaponManager.Sheathed)
@@ -157,7 +157,6 @@ namespace RoleplayRealism
                 return 0;
             }
 
-            PlayerEntity player = (PlayerEntity)de1;
             int climbing = player.Skills.GetLiveSkillValue(DFCareer.Skills.Climbing);
             int luck = player.Stats.GetLiveStatValue(DFCareer.Stats.Luck);
             int skill = climbing;

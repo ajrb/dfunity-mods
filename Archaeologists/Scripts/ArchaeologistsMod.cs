@@ -13,6 +13,7 @@ using DaggerfallWorkshop.Game.Items;
 using DaggerfallWorkshop.Game.MagicAndEffects.MagicEffects;
 using DaggerfallWorkshop.Game.Questing;
 using DaggerfallWorkshop.Game.Utility.ModSupport;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -77,7 +78,7 @@ namespace Archaeologists
                 throw new System.Exception("Faction id's are already in use, unable to register factions for Archaeologists Guild.");
 
             // Override default formula
-            FormulaHelper.formula_1pe_1sk.Add("CalculateEnemyPacification", CalculateEnemyPacification);
+            FormulaHelper.RegisterOverride(mod, "CalculateEnemyPacification", (Func<PlayerEntity, DFCareer.Skills, bool>)CalculateEnemyPacification);
 
             // Add locator device object to scene and attach script
             GameObject go = new GameObject("LocatorDevice");
@@ -234,7 +235,7 @@ namespace Archaeologists
             if (languagesEffect != null)
                 chance += languagesEffect.ChanceValue();
 
-            int roll = Random.Range(0, 130);
+            int roll = UnityEngine.Random.Range(0, 130);
             bool success = (roll < chance);
 
             if (success)
