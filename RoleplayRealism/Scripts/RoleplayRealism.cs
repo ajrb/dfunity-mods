@@ -22,6 +22,7 @@ using DaggerfallWorkshop.Game.Questing;
 using System.Collections.Generic;
 using System;
 using DaggerfallConnect.FallExe;
+using DaggerfallWorkshop.Game.Utility;
 
 namespace RoleplayRealism
 {
@@ -65,13 +66,14 @@ namespace RoleplayRealism
             bool expulsion = settings.GetBool("Modules", "underworldExpulsion");
             bool climbing = settings.GetBool("Modules", "climbingRestriction");
             bool weaponSpeed = settings.GetBool("Modules", "weaponSpeed");
+            bool equipDamage = settings.GetBool("Modules", "equipDamage");
 
-            InitMod(bedSleeping, archery, riding, encumbrance, bandaging, shipPorts, expulsion, climbing, weaponSpeed);
+            InitMod(bedSleeping, archery, riding, encumbrance, bandaging, shipPorts, expulsion, climbing, weaponSpeed, equipDamage);
 
             mod.IsReady = true;
         }
 
-        public static void InitMod(bool bedSleeping, bool archery, bool riding, bool encumbrance, bool bandaging, bool shipPorts, bool expulsion, bool climbing, bool weaponSpeed)
+        public static void InitMod(bool bedSleeping, bool archery, bool riding, bool encumbrance, bool bandaging, bool shipPorts, bool expulsion, bool climbing, bool weaponSpeed, bool equipDamage)
         {
             Debug.Log("Begin mod init: RoleplayRealism");
 
@@ -131,16 +133,20 @@ namespace RoleplayRealism
 
             if (climbing)
             {
-                // Override default formula
                 FormulaHelper.RegisterOverride(mod, "CalculateClimbingChance", (Func<PlayerEntity, int, int>)CalculateClimbingChance);
             }
 
             if (weaponSpeed)
             {
-                // Override default formula
                 FormulaHelper.RegisterOverride(mod, "GetMeleeWeaponAnimTime", (Func<PlayerEntity, WeaponTypes, ItemHands, float>)GetMeleeWeaponAnimTime);
             }
 
+            if (equipDamage)
+            {
+                FormulaHelper.RegisterOverride(mod, "ApplyConditionDamageThroughPhysicalHit", (Func<DaggerfallUnityItem, DaggerfallEntity, int, bool>)ApplyConditionDamageThroughPhysicalHit);
+            }
+
+            // Initialise the FG master quest.
             if (!QuestListsManager.RegisterQuestList("RoleplayRealism"))
                 throw new Exception("Quest list name is already in use, unable to register RoleplayRealism quest list.");
 
@@ -188,7 +194,7 @@ namespace RoleplayRealism
             return chance;
         }
 
-        public static float GetMeleeWeaponAnimTime(PlayerEntity player, WeaponTypes weaponType, ItemHands weaponHands)
+        private static float GetMeleeWeaponAnimTime(PlayerEntity player, WeaponTypes weaponType, ItemHands weaponHands)
         {
             float spdRatio = 0.8f;
             float strRatio = 0.2f;
@@ -223,6 +229,18 @@ namespace RoleplayRealism
             return frameSpeed / FormulaHelper.classicFrameUpdate;
         }
 
+        private static bool ApplyConditionDamageThroughPhysicalHit(DaggerfallUnityItem item, DaggerfallEntity owner, int damage)
+        {
+            if (item.ItemGroup == ItemGroups.Armor)
+            {
+                int amount = item.IsShield ? damage / 2 : damage;
+                item.LowerCondition(amount, owner);
+                if (owner == GameManager.Instance.PlayerEntity)
+                    Debug.LogFormat("Damaged {0} by {1} from dmg {3}, cond={2}", item.ItemName, amount, item.currentCondition, damage);
+                return true;
+            }
+            return false;
+        }
 
         public static ArmorMaterialTypes[] customArmorMaterials = {
             ArmorMaterialTypes.Mithril, ArmorMaterialTypes.Adamantium, ArmorMaterialTypes.Ebony, ArmorMaterialTypes.Orcish, ArmorMaterialTypes.Daedric
