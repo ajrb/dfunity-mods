@@ -110,10 +110,9 @@ namespace RoleplayRealism
                 EntityEffectBroker.OnNewMagicRound += EncumbranceEffects_OnNewMagicRound;
             }
 
-            ItemHelper itemHelper = DaggerfallUnity.Instance.ItemHelper;
             if (bandaging)
             {
-                itemHelper.RegisterItemUseHander((int)UselessItems2.Bandage, UseBandage);
+                DaggerfallUnity.Instance.ItemHelper.RegisterItemUseHander((int)UselessItems2.Bandage, UseBandage);
             }
 
             if (shipPorts)
