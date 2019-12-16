@@ -1,9 +1,9 @@
 {
     "ModTitle": "RoleplayRealism",
-    "ModVersion": "0.6",
+    "ModVersion": "0.7",
     "ModAuthor": "Hazelnut",
     "ContactInfo": "forums.dfworkshop.net",
-    "DFUnity_Version": "0.10.13",
+    "DFUnity_Version": "0.10.15",
     "ModDescription": "Roleplay and realism modifications",
     "GUID": "d828b782-46e9-40e7-8ae6-19cde308032e",
     "Files": [
@@ -20,5 +20,6 @@
         "Assets/Game/Mods/RoleplayRealism/Quests/RRMSTARM0.txt",
         "Assets/Game/Mods/RoleplayRealism/Quests/RRMSTARM2.txt"
     ],
-    "Contributes": null
+    "Contributes": null,
+    "Dependencies": null
 }

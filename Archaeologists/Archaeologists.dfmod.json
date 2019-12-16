@@ -1,9 +1,9 @@
 {
     "ModTitle": "Archaeologists",
-    "ModVersion": "0.10",
+    "ModVersion": "0.11",
     "ModAuthor": "Hazelnut",
     "ContactInfo": "forums.dfworkshop.net",
-    "DFUnity_Version": "0.10.12",
+    "DFUnity_Version": "0.10.15",
     "ModDescription": "Archaeologists guild with quest target locator device and language skill rework",
     "GUID": "5054c2f4-7679-41d5-803e-da737caa69ef",
     "Files": [

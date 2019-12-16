@@ -237,12 +237,12 @@ namespace Archaeologists
 
             int roll = UnityEngine.Random.Range(0, 130);
             bool success = (roll < chance);
-
+/*
             if (success)
                 player.TallySkill(languageSkill, 3);    // Increased skill uses from (assumed) 1 in classic on success to make raising language skills easier
             else if (languageSkill != DFCareer.Skills.Etiquette && languageSkill != DFCareer.Skills.Streetwise)
                 player.TallySkill(languageSkill, 1);
-
+*/
             Debug.LogFormat("Archaeologists Pacification {3} using {0} skill: chance= {1}  roll= {2}", languageSkill, chance, roll, success ? "success" : "failure");
             return success;
         }

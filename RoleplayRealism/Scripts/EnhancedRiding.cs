@@ -108,7 +108,7 @@ namespace DaggerfallWorkshop.Game
                 if (mobileNpc)
                 {
                     Debug.Log("Rode over an NPC trampling them!");
-                    if (!mobileNpc.Billboard.IsUsingGuardTexture)
+                    if (!mobileNpc.IsGuard)
                     {
                         EnemyBlood blood = npcTransform.GetComponent<EnemyBlood>();
                         if (blood)
