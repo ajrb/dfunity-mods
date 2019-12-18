@@ -11,6 +11,10 @@ using DaggerfallWorkshop.Game.Items;
 using DaggerfallWorkshop.Game.Utility.ModSupport;
 using DaggerfallWorkshop.Utility;
 using DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings;
+using DaggerfallWorkshop.Game.Entity;
+using DaggerfallConnect;
+using DaggerfallWorkshop.Game.Formulas;
+using System;
 
 namespace LootRealism
 {
@@ -31,28 +35,58 @@ namespace LootRealism
         {
             ModSettings settings = mod.GetSettings();
             bool lootRebalance = settings.GetBool("Modules", "lootRebalance");
+            bool bandaging = settings.GetBool("Modules", "bandaging");
 
-            if (lootRebalance)
-                InitMod();
+            InitMod(lootRebalance, bandaging);
 
             mod.IsReady = true;
         }
 
-        private static void InitMod()
+        private static void InitMod(bool lootRebalance, bool bandaging)
         {
             Debug.Log("Begin mod init: LootRealism");
 
-            // Iterate over the new mob enemy data array and load into DFU enemies data.
-            foreach (int mobDataId in MobLootKeys.Keys)
+            if (lootRebalance)
             {
-                // Log a message indicating the enemy mob being updated and update the loot key.
-                Debug.LogFormat("Updating enemy loot key for {0} to {1}.", EnemyBasics.Enemies[mobDataId].Name, MobLootKeys[mobDataId]);
-                EnemyBasics.Enemies[mobDataId].LootTableKey = MobLootKeys[mobDataId];
+                // Iterate over the new mob enemy data array and load into DFU enemies data.
+                foreach (int mobDataId in MobLootKeys.Keys)
+                {
+                    // Log a message indicating the enemy mob being updated and update the loot key.
+                    Debug.LogFormat("Updating enemy loot key for {0} to {1}.", EnemyBasics.Enemies[mobDataId].Name, MobLootKeys[mobDataId]);
+                    EnemyBasics.Enemies[mobDataId].LootTableKey = MobLootKeys[mobDataId];
+                }
+                // Replace the default loot matrix table with custom data.
+                LootTables.DefaultLootTables = LootRealismTables;
             }
-            // Replace the default loot matrix table with custom data.
-            LootTables.DefaultLootTables = LootRealismTables;
+
+            if (bandaging)
+            {
+                if (DaggerfallUnity.Instance.ItemHelper.RegisterItemUseHander((int)UselessItems2.Bandage, UseBandage))
+                    FormulaHelper.RegisterOverride(mod, "IsItemStackable", (Func<DaggerfallUnityItem, bool>)IsItemStackable);
+                else
+                    Debug.LogWarning("LootRealism: Unable to register bandage use handler.");
+            }
 
             Debug.Log("Finished mod init: LootRealism");
+        }
+
+        public static bool IsItemStackable(DaggerfallUnityItem item)
+        {
+            return item.IsOfTemplate(ItemGroups.UselessItems2, (int)UselessItems2.Bandage);
+        }
+
+        private static bool UseBandage(DaggerfallUnityItem item, ItemCollection collection)
+        {
+            if (collection != null)
+            {
+                PlayerEntity playerEntity = GameManager.Instance.PlayerEntity;
+                int medical = playerEntity.Skills.GetLiveSkillValue(DFCareer.Skills.Medical);
+                int heal = (int)Mathf.Min(medical / 3, playerEntity.MaxHealth * 0.4f);
+                collection.RemoveOne(item);
+                playerEntity.IncreaseHealth(heal);
+                Debug.LogFormat("Applied a Bandage and healed {0} health.", heal);
+            }
+            return true;
         }
 
         static Dictionary<int, string> MobLootKeys = new Dictionary<int, string>()

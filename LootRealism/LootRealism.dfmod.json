@@ -7,9 +7,10 @@
     "ModDescription": "Loot rebalance and item realism changes",
     "GUID": "b1b15c90-e2e1-46c6-96d8-000ecc282bbd",
     "Files": [
-        "Assets/Game/Mods/LootRealism/Assets/ItemTemplates.json",
         "Assets/Game/Mods/LootRealism/Scripts/LootRealismMod.cs",
-        "Assets/Game/Mods/LootRealism/modsettings.json"
+        "Assets/Game/Mods/LootRealism/modsettings.json",
+        "Assets/Game/Mods/LootRealism/Assets/ItemTemplates.json"
     ],
-    "Contributes": null
+    "Contributes": null,
+    "Dependencies": null
 }

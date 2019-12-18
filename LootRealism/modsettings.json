@@ -12,6 +12,13 @@
                     "Description": "Rebalances loot on mobs and in piles.",
                     "$version": "v1",
                     "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
+                },
+                {
+                    "Value": true,
+                    "Name": "bandaging",
+                    "Description": "Allows bandages to stack, and to be used for healing based on medical skill.",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
                 }
             ],
             "$version": "v1"

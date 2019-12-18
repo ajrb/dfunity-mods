@@ -110,9 +110,11 @@ namespace RoleplayRealism
                 EntityEffectBroker.OnNewMagicRound += EncumbranceEffects_OnNewMagicRound;
             }
 
-            if (bandaging)
+            Mod lootRealism = ModManager.Instance.GetMod("LootRealism");
+            if (lootRealism == null && bandaging)
             {
-                DaggerfallUnity.Instance.ItemHelper.RegisterItemUseHander((int)UselessItems2.Bandage, UseBandage);
+                if (!DaggerfallUnity.Instance.ItemHelper.RegisterItemUseHander((int)UselessItems2.Bandage, UseBandage))
+                    Debug.LogWarning("RoleplayRealism: Unable to register bandage use handler.");
             }
 
             if (shipPorts)
