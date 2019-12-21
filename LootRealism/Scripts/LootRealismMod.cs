@@ -3,7 +3,6 @@
 // License:         MIT License (http://www.opensource.org/licenses/mit-license.php)
 // Authors:         Hazelnut & Ralzar
 
-using System.Collections.Generic;
 using UnityEngine;
 using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
@@ -15,6 +14,7 @@ using DaggerfallWorkshop.Game.Entity;
 using DaggerfallConnect;
 using DaggerfallWorkshop.Game.Formulas;
 using System;
+using System.Collections;
 
 namespace LootRealism
 {
@@ -53,7 +53,7 @@ namespace LootRealism
                 {
                     // Log a message indicating the enemy mob being updated and update the loot key.
                     Debug.LogFormat("Updating enemy loot key for {0} to {1}.", EnemyBasics.Enemies[mobDataId].Name, MobLootKeys[mobDataId]);
-                    EnemyBasics.Enemies[mobDataId].LootTableKey = MobLootKeys[mobDataId];
+                    EnemyBasics.Enemies[mobDataId].LootTableKey = (string) MobLootKeys[mobDataId];
                 }
                 // Replace the default loot matrix table with custom data.
                 LootTables.DefaultLootTables = LootRealismTables;
@@ -89,7 +89,7 @@ namespace LootRealism
             return true;
         }
 
-        static Dictionary<int, string> MobLootKeys = new Dictionary<int, string>()
+        static IDictionary MobLootKeys = new Hashtable()
         {
             {9, "F"},       // Giant
             {10, "B"},      // Nymph

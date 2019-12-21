@@ -190,7 +190,7 @@ namespace RoleplayRealism
             // Skill Check
             int chance = (int)(Mathf.Lerp(basePercentSuccess, 100, skill * .01f) + luckFactor);
 
-            //Debug.LogFormat("RoleplayRealism CalculateClimbingChance = {0} with basePcSuccess={1}, climbing skill={2}, luck={3}", chance, basePercentSuccess, skill, luck);
+            Debug.LogFormat("RoleplayRealism CalculateClimbingChance = {0} with basePcSuccess={1}, climbing skill={2}, luck={3}", chance, basePercentSuccess, skill, luck);
 
             return chance;
         }

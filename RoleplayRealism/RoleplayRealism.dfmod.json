@@ -1,10 +1,10 @@
 {
     "ModTitle": "RoleplayRealism",
-    "ModVersion": "0.7",
+    "ModVersion": "0.8",
     "ModAuthor": "Hazelnut",
     "ContactInfo": "forums.dfworkshop.net",
-    "DFUnity_Version": "0.10.15",
-    "ModDescription": "Roleplay and realism modifications",
+    "DFUnity_Version": "0.10.16",
+    "ModDescription": "Modular roleplay and realism gameplay modifications",
     "GUID": "d828b782-46e9-40e7-8ae6-19cde308032e",
     "Files": [
         "Assets/Game/Mods/RoleplayRealism/Scripts/EnhancedRiding.cs",
