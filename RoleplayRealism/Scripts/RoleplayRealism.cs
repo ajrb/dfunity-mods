@@ -19,8 +19,9 @@ using DaggerfallWorkshop.Game.Banking;
 using DaggerfallWorkshop.Game.Guilds;
 using DaggerfallConnect.Arena2;
 using DaggerfallWorkshop.Game.Questing;
-using System.Collections.Generic;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using DaggerfallConnect.FallExe;
 using DaggerfallWorkshop.Game.Utility;
 
@@ -28,6 +29,85 @@ namespace RoleplayRealism
 {
     public class RoleplayRealism : MonoBehaviour
     {
+        /* TODO: move this into a text table file!
+         * 
+         * Keys are in the following format, and if a key is not present no msg is displayed.
+         *  Inside dungeon: <dungeonType><0-9>
+         *  Outside:        <locType><climate><weather><dayNight><0-9>
+         * Where:
+         *  dungeonType = Crypt,OrcStronghold,HumanStronghold,Prison,DesecratedTemple,Mine,NaturalCave,Coven,VampireHaunt,Laboratory,HarpyNest,RuinedCastle,SpiderNest,GiantStronghold,DragonsDen,BarbarianStronghold,VolcanicCaves,ScorpionNest,Cemetery
+         *  locType = None,TownCity,TownHamlet,TownVillage,HomeFarms,DungeonLabyrinth,ReligionTemple,Tavern,DungeonKeep,HomeWealthy,ReligionCult,DungeonRuin,HomePoor,Graveyard,Coven,HomeYourShips
+         *  climate = Desert, Swamp, Woods, Mountains, Ocean
+         *  weather = Clear, Cloudy, Rainy, Snowy
+         *  dayNight = Day, Night
+         */
+        static IDictionary AmbientTexts = new Hashtable()
+        {
+            // None-Desert-Clear
+            { "NoneDesertClearDay0", "There are scorpion tracks here." },
+            { "NoneDesertClearDay1", "Is that werewolf fur?" },
+            { "NoneDesertClearDay2", "You see some footprints in the sand." },
+            { "NoneDesertClearNight0", "?" },
+
+            // None-Desert-Cloudy
+            { "NoneDesertCloudyDay0", "?" },
+            { "NoneDesertCloudyNight0", "?" },
+
+            // None-Desert-Rainy
+            { "NoneDesertRainyDay0", "?" },
+            { "NoneDesertRainyNight0", "?" },
+
+            // None-Desert-Snowy
+            { "NoneDesertSnowyDay0", "?" },
+            { "NoneDesertSnowyNight0", "?" },
+
+            // City-Desert-Clear
+            { "TownCityDesertClearDay0", "You hear a child crying somewhere." },
+            { "TownCityDesertClearDay1", "The heat of the day bears down on you." },
+            { "TownCityDesertClearNight0", "The smell of burning fireplaces fills the air." },
+
+            // City-Desert-Cloudy
+            { "TownCityDesertCloudyDay0", "?" },
+            { "TownCityDesertCloudyNight0", "?" },
+
+            // City-Desert-Rainy
+            { "TownCityDesertRainyDay0", "?" },
+            { "TownCityDesertRainyNight0", "?" },
+
+            // City-Desert-Snowy
+            { "TownCityDesertSnowyDay0", "?" },
+            { "TownCityDesertSnowyNight0", "?" },
+
+            // City-Swamp-Clear
+            { "TownCitySwampClearDay0", "?" },
+            { "TownCitySwampClearNight0", "?" },
+
+            // City-Swamp-Cloudy
+            { "TownCitySwampCloudyDay0", "?" },
+            { "TownCitySwampCloudyNight0", "?" },
+
+            // City-Swamp-Rainy
+            { "TownCitySwampRainyDay0", "?" },
+            { "TownCitySwampRainyNight0", "?" },
+
+            // City-Swamp-Snowy
+            { "TownCitySwampSnowyDay0", "?" },
+            { "TownCitySwampSnowyNight0", "?" },
+
+            // Dungeon: Prison
+            { "Prison0", "Scrawlings nearby plead for release." },
+            { "Prison1", "You see tormented scribblings nearby." },
+            { "Prison2", "The scent of a rotting corpse gathers here." },
+            { "Prison3", "A broken key lies on the ground." },
+            { "Prison4", "You notice tally marks scratched nearby." },
+            { "Prison5", "Was that someone calling for help?" },
+            { "Prison6", "You feel as if someone is watching you." },
+            { "Prison7", "You could swear you just heard movement from afar." },
+            { "Prison8", "Someone tried digging here." },
+            { "Prison9", "Someone scratched an inaccurate map here." },
+
+        };
+
         public static float EncEffectScaleFactor = 2f;
 
         protected static string[] placesTable =
@@ -43,8 +123,19 @@ namespace RoleplayRealism
             "Orthus_Dharjen,        0, -1, 1022"
         };
 
-
         static Mod mod;
+
+        DaggerfallUnity dfUnity;
+        PlayerEnterExit playerEnterExit;
+
+        bool ambientText = false;
+        float lastTickTime;
+        float tickTimeInterval;
+        int textChance = 95;
+        int textDelay = 3;
+        const float stdInterval = 2f;
+        const float textInterval = 4f;
+
 
         [Invoke(StateManager.StateTypes.Start, 0)]
         public static void Init(InitParams initParams)
@@ -70,8 +161,109 @@ namespace RoleplayRealism
 
             InitMod(bedSleeping, archery, riding, encumbrance, bandaging, shipPorts, expulsion, climbing, weaponSpeed, equipDamage);
 
+            // Modules using update.
+            ambientText = settings.GetBool("Modules", "ambientText");
+
             mod.IsReady = true;
         }
+
+        void Start()
+        {
+            dfUnity = DaggerfallUnity.Instance;
+            playerEnterExit = GameManager.Instance.PlayerEnterExit;
+            lastTickTime = Time.unscaledTime;
+            tickTimeInterval = stdInterval;
+        }
+
+        void Update()
+        {
+            if (!dfUnity.IsReady || !playerEnterExit || GameManager.IsGamePaused || playerEnterExit.IsPlayerInsideBuilding || !ambientText)
+                return;
+
+            if (Time.unscaledTime > lastTickTime + tickTimeInterval)
+            {
+                lastTickTime = Time.unscaledTime;
+                tickTimeInterval = stdInterval;
+                Debug.Log("tick");
+
+                if (Dice100.SuccessRoll(textChance))
+                {
+                    string textMsg = SelectAmbientText();
+                    if (textMsg != null)
+                    {
+                        Debug.Log(textMsg);
+                        DaggerfallUI.AddHUDText(textMsg, textDelay);
+                        tickTimeInterval = textInterval;
+                    }
+                }
+            }
+        }
+
+        string SelectAmbientText()
+        {
+            // Index (0-9)
+            int index = UnityEngine.Random.Range(0, 10);
+            string textKey;
+
+            if (playerEnterExit.IsPlayerInsideDungeon)
+            {
+                // Handle dungeon interiors
+                DFRegion.DungeonTypes dungeonType = playerEnterExit.Dungeon.Summary.DungeonType;
+
+                textKey = string.Format("{0}{1}", dungeonType.ToString(), index);
+            }
+            else
+            {
+                // Handle exteriors - wilderness and locations based on climate, locationtype, weather, day/night
+                PlayerGPS playerGPS = GameManager.Instance.PlayerGPS;
+                DFRegion.LocationTypes locationType = playerGPS.IsPlayerInLocationRect ? playerGPS.CurrentLocationType : DFRegion.LocationTypes.None;
+
+                // Weather
+                string weather = "Clear";
+                WeatherManager weatherManager = GameManager.Instance.WeatherManager;
+                if (weatherManager.IsRaining || weatherManager.IsStorming)
+                    weather = "Rainy";
+                else if (weatherManager.IsOvercast)
+                    weather = "Cloudy";
+                else if (weatherManager.IsSnowing)
+                    weather = "Snowy";
+
+                // Day / Night
+                string dayNight = DaggerfallUnity.Instance.WorldTime.Now.IsDay ? "Day" : "Night";
+
+                // Climate
+                textKey = string.Format("{0}{1}{2}{3}{4}", locationType.ToString(), ClimateKey(), weather, dayNight, index);
+            }
+
+            if (AmbientTexts.Contains(textKey))
+                return (string) AmbientTexts[textKey];
+            else
+                // TODO: return null;
+                return textKey;
+        }
+
+        string ClimateKey()
+        {
+            switch (GameManager.Instance.PlayerGPS.CurrentClimateIndex)
+            {
+                case (int)MapsFile.Climates.Desert2:
+                case (int)MapsFile.Climates.Desert:
+                case (int)MapsFile.Climates.Subtropical:
+                    return "Desert";
+                case (int)MapsFile.Climates.Rainforest:
+                case (int)MapsFile.Climates.Swamp:
+                    return "Swamp";
+                case (int)MapsFile.Climates.Woodlands:
+                case (int)MapsFile.Climates.HauntedWoodlands:
+                case (int)MapsFile.Climates.MountainWoods:
+                    return "Woods";
+                case (int)MapsFile.Climates.Mountain:
+                    return "Mountains";
+                default:
+                    return "Ocean";
+            }
+        }
+
 
         public static void InitMod(bool bedSleeping, bool archery, bool riding, bool encumbrance, bool bandaging, bool shipPorts, bool expulsion, bool climbing, bool weaponSpeed, bool equipDamage)
         {
