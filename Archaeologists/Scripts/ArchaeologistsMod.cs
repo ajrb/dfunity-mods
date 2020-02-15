@@ -46,11 +46,11 @@ namespace Archaeologists
             {
                 // Register the Guild class
                 if (!GuildManager.RegisterCustomGuild(FactionFile.GuildGroups.GGroup0, typeof(ArchaeologistsGuild)))
-                    throw new System.Exception("GuildGroup GGroup0 is already in use, unable to register Archaeologists Guild.");
+                    throw new Exception("GuildGroup GGroup0 is already in use, unable to register Archaeologists Guild.");
 
                 // Register the quest list
                 if (!QuestListsManager.RegisterQuestList("Archaeologists"))
-                    throw new System.Exception("Quest list name is already in use, unable to register Archaeologists quest list.");
+                    throw new Exception("Quest list name is already in use, unable to register Archaeologists quest list.");
 
                 // Register the quest service id
                 Services.RegisterGuildService(1000, GuildServices.Quests);
@@ -75,7 +75,7 @@ namespace Archaeologists
                 GameManager.Instance.EntityEffectBroker.RegisterEffectTemplate(new TeleportPotion(), true);
             }
             else
-                throw new System.Exception("Faction id's are already in use, unable to register factions for Archaeologists Guild.");
+                throw new Exception("Faction id's are already in use, unable to register factions for Archaeologists Guild.");
 
             // Override default formula
             FormulaHelper.RegisterOverride(mod, "CalculateEnemyPacification", (Func<PlayerEntity, DFCareer.Skills, bool>)CalculateEnemyPacification);
