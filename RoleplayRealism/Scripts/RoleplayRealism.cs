@@ -43,6 +43,26 @@ namespace RoleplayRealism
          */
         static IDictionary AmbientTexts = new Hashtable()
         {
+            // General texts:
+
+            { "NoneDesert0", "?" },
+            { "NoneDesert1", "?" },
+            { "NoneSwamp0", "?" },
+            { "NoneSwamp1", "?" },
+            { "NoneWoods0", "?" },
+            { "NoneMountains0", "?" },
+            { "NoneOcean0", "?" },
+
+            { "TownCityDesert0", "?" },
+            { "TownCityDesert1", "?" },
+            { "TownCitySwamp0", "?" },
+            { "TownCitySwamp1", "?" },
+            { "TownCityWoods0", "?" },
+            { "TownCityMountains0", "?" },
+            { "TownCityOcean0", "?" },
+
+            // Specific texts:
+
             // None-Desert-Clear
             { "NoneDesertClearDay0", "There are scorpion tracks here." },
             { "NoneDesertClearDay1", "Is that werewolf fur?" },
@@ -94,6 +114,8 @@ namespace RoleplayRealism
             { "TownCitySwampSnowyDay0", "?" },
             { "TownCitySwampSnowyNight0", "?" },
 
+            // Dungeon texts:
+
             // Dungeon: Prison
             { "Prison0", "Scrawlings nearby plead for release." },
             { "Prison1", "You see tormented scribblings nearby." },
@@ -132,10 +154,10 @@ namespace RoleplayRealism
         float lastTickTime;
         float tickTimeInterval;
         int textChance = 95;
-        int textDelay = 3;
-        const float stdInterval = 2f;
-        const float textInterval = 4f;
-
+        int textSpecificChance = 50;
+        float stdInterval = 2f;
+        float postTextInterval = 4f;
+        int textDisplayTime = 3;
 
         [Invoke(StateManager.StateTypes.Start, 0)]
         public static void Init(InitParams initParams)
@@ -148,21 +170,29 @@ namespace RoleplayRealism
         void Awake()
         {
             ModSettings settings = mod.GetSettings();
-            bool bedSleeping = settings.GetBool("Modules", "bedSleeping");
-            bool archery = settings.GetBool("Modules", "advancedArchery");
-            bool riding = settings.GetBool("Modules", "enhancedRiding");
-            bool encumbrance = settings.GetBool("Modules", "encumbranceEffects");
-            bool bandaging = settings.GetBool("Modules", "bandaging");
-            bool shipPorts = settings.GetBool("Modules", "shipPorts");
-            bool expulsion = settings.GetBool("Modules", "underworldExpulsion");
-            bool climbing = settings.GetBool("Modules", "climbingRestriction");
-            bool weaponSpeed = settings.GetBool("Modules", "weaponSpeed");
-            bool equipDamage = settings.GetBool("Modules", "equipDamage");
+            bool bedSleeping    = settings.GetBool("Modules", "bedSleeping");
+            bool archery        = settings.GetBool("Modules", "advancedArchery");
+            bool riding         = settings.GetBool("Modules", "enhancedRiding");
+            bool encumbrance    = settings.GetBool("Modules", "encumbranceEffects");
+            bool bandaging      = settings.GetBool("Modules", "bandaging");
+            bool shipPorts      = settings.GetBool("Modules", "shipPorts");
+            bool expulsion      = settings.GetBool("Modules", "underworldExpulsion");
+            bool climbing       = settings.GetBool("Modules", "climbingRestriction");
+            bool weaponSpeed    = settings.GetBool("Modules", "weaponSpeed");
+            bool equipDamage    = settings.GetBool("Modules", "equipDamage");
 
             InitMod(bedSleeping, archery, riding, encumbrance, bandaging, shipPorts, expulsion, climbing, weaponSpeed, equipDamage);
 
-            // Modules using update.
+            // Modules using update method.
             ambientText = settings.GetBool("Modules", "ambientText");
+/*            if (ambientText)
+            {
+                textChance          = mod.GetSettings().GetInt("AmbientText", "textChance");
+                textSpecificChance  = mod.GetSettings().GetInt("AmbientText", "textSpecificChance");
+                stdInterval         = mod.GetSettings().GetInt("AmbientText", "interval");
+                postTextInterval    = mod.GetSettings().GetInt("AmbientText", "postTextInterval");
+                textDisplayTime     = mod.GetSettings().GetInt("AmbientText", "textDisplayTime");
+            }*/
 
             mod.IsReady = true;
         }
@@ -177,10 +207,12 @@ namespace RoleplayRealism
 
         void Update()
         {
-            if (!dfUnity.IsReady || !playerEnterExit || GameManager.IsGamePaused || playerEnterExit.IsPlayerInsideBuilding || !ambientText)
+            if (!dfUnity.IsReady || !playerEnterExit || GameManager.IsGamePaused)
                 return;
 
-            if (Time.unscaledTime > lastTickTime + tickTimeInterval)
+            // Ambient text module.
+            if (ambientText && !playerEnterExit.IsPlayerInsideBuilding &&
+                Time.unscaledTime > lastTickTime + tickTimeInterval)
             {
                 lastTickTime = Time.unscaledTime;
                 tickTimeInterval = stdInterval;
@@ -192,8 +224,8 @@ namespace RoleplayRealism
                     if (textMsg != null)
                     {
                         Debug.Log(textMsg);
-                        DaggerfallUI.AddHUDText(textMsg, textDelay);
-                        tickTimeInterval = textInterval;
+                        DaggerfallUI.AddHUDText(textMsg, textDisplayTime);
+                        tickTimeInterval = postTextInterval;
                     }
                 }
             }
@@ -218,21 +250,29 @@ namespace RoleplayRealism
                 PlayerGPS playerGPS = GameManager.Instance.PlayerGPS;
                 DFRegion.LocationTypes locationType = playerGPS.IsPlayerInLocationRect ? playerGPS.CurrentLocationType : DFRegion.LocationTypes.None;
 
-                // Weather
-                string weather = "Clear";
-                WeatherManager weatherManager = GameManager.Instance.WeatherManager;
-                if (weatherManager.IsRaining || weatherManager.IsStorming)
-                    weather = "Rainy";
-                else if (weatherManager.IsOvercast)
-                    weather = "Cloudy";
-                else if (weatherManager.IsSnowing)
-                    weather = "Snowy";
+                if (Dice100.SuccessRoll(textSpecificChance))
+                {
+                    // Weather
+                    string weather = "Clear";
+                    WeatherManager weatherManager = GameManager.Instance.WeatherManager;
+                    if (weatherManager.IsRaining || weatherManager.IsStorming)
+                        weather = "Rainy";
+                    else if (weatherManager.IsOvercast)
+                        weather = "Cloudy";
+                    else if (weatherManager.IsSnowing)
+                        weather = "Snowy";
 
-                // Day / Night
-                string dayNight = DaggerfallUnity.Instance.WorldTime.Now.IsDay ? "Day" : "Night";
+                    // Day / Night
+                    string dayNight = DaggerfallUnity.Instance.WorldTime.Now.IsDay ? "Day" : "Night";
 
-                // Climate
-                textKey = string.Format("{0}{1}{2}{3}{4}", locationType.ToString(), ClimateKey(), weather, dayNight, index);
+                    // Specific message key: LocationType & Climate & Weather & DayNight
+                    textKey = string.Format("{0}{1}{2}{3}{4}", locationType.ToString(), ClimateKey(), weather, dayNight, index);
+                }
+                else
+                {
+                    // General message key: LocationType & Climate
+                    textKey = string.Format("{0}{1}{2}", locationType.ToString(), ClimateKey(), index);
+                }
             }
 
             if (AmbientTexts.Contains(textKey))
