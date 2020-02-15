@@ -17,6 +17,9 @@ using DaggerfallWorkshop.Game.Entity;
 using DaggerfallWorkshop.Game.Formulas;
 using DaggerfallWorkshop.Game.Player;
 using DaggerfallWorkshop.Game.Utility;
+using DaggerfallConnect.Save;
+using DaggerfallWorkshop.Game.MagicAndEffects;
+using DaggerfallWorkshop.Game.MagicAndEffects.MagicEffects;
 
 namespace LootRealism
 {
@@ -74,7 +77,11 @@ namespace LootRealism
             StartGameBehaviour startGameBehaviour = GameManager.Instance.StartGameBehaviour;
             if (skillStartEquip)
             {
-                startGameBehaviour.AllocateStartingEquipment = AssignStartingEquipment;
+                startGameBehaviour.AssignStartingEquipment = AssignSkillEquipment;
+            }
+            if (skillStartSpells)
+            {
+                startGameBehaviour.AssignStartingSpells = AssignSkillSpellbook;
             }
 
             Debug.Log("Finished mod init: LootRealism");
@@ -99,7 +106,7 @@ namespace LootRealism
             return true;
         }
 
-        static void AssignStartingEquipment(PlayerEntity playerEntity, CharacterDocument characterDocument)
+        static void AssignSkillEquipment(PlayerEntity playerEntity, CharacterDocument characterDocument)
         {
             Debug.Log("Starting Equipment: Assigning Based on Skills");
 
@@ -220,6 +227,83 @@ namespace LootRealism
                     return;
             }
         }
+
+        static void AssignSkillSpellbook(PlayerEntity playerEntity, CharacterDocument characterDocument)
+        {
+            Debug.Log("Starting Spells: Assigning Based on Skills");
+
+            // Skill based items
+            AssignSkillSpells(playerEntity, playerEntity.Career.PrimarySkill1);
+            AssignSkillSpells(playerEntity, playerEntity.Career.PrimarySkill2);
+            AssignSkillSpells(playerEntity, playerEntity.Career.PrimarySkill3);
+
+            AssignSkillSpells(playerEntity, playerEntity.Career.MajorSkill1);
+            AssignSkillSpells(playerEntity, playerEntity.Career.MajorSkill2);
+            AssignSkillSpells(playerEntity, playerEntity.Career.MajorSkill3);
+
+            Debug.Log("Starting Spells: Assigning Finished");
+        }
+
+        static void AssignSkillSpells(PlayerEntity playerEntity, DFCareer.Skills skill)
+        {
+            ItemCollection items = playerEntity.Items;
+            Genders gender = playerEntity.Gender;
+            Races race = playerEntity.Race;
+
+            switch (skill)
+            {
+                // Classic spell indexes are on https://en.uesp.net/wiki/Daggerfall:SPELLS.STD_indices under Spell Catalogue
+                case DFCareer.Skills.Alteration:
+                    playerEntity.AddSpell(GetClassicSpell(37)); // Slowfalling
+                    playerEntity.AddSpell(GetClassicSpell(38)); // Jumping
+                    return;
+                case DFCareer.Skills.Destruction:
+                    playerEntity.AddSpell(GetClassicSpell(8));  // Shock
+                    playerEntity.AddSpell(minorShockSpell);     // Minor shock
+                    return;
+                case DFCareer.Skills.Illusion:
+                    playerEntity.AddSpell(GetClassicSpell(44));  // Chameleon
+                    return;
+                case DFCareer.Skills.Mysticism:
+                    playerEntity.AddSpell(GetClassicSpell(1));  // Fenrik's Door Jam
+                    return;
+                case DFCareer.Skills.Restoration:
+                    playerEntity.AddSpell(GetClassicSpell(97));  // Balyna's Balm
+                    return;
+                case DFCareer.Skills.Thaumaturgy:
+                    playerEntity.AddSpell(GetClassicSpell(2));  // Buoyancy
+                    return;
+            }
+        }
+
+        static EffectBundleSettings GetClassicSpell(int spellId)
+        {
+            SpellRecord.SpellRecordData spellData;
+            GameManager.Instance.EntityEffectBroker.GetClassicSpellRecord(spellId, out spellData);
+            EffectBundleSettings bundle;
+            GameManager.Instance.EntityEffectBroker.ClassicSpellRecordDataToEffectBundleSettings(spellData, BundleTypes.Spell, out bundle);
+            return bundle;
+        }
+
+        // Example new spell definition: Minor Shock.
+        static EffectBundleSettings minorShockSpell = new EffectBundleSettings()
+        {
+            Name = "Minor Shock",
+            Version = EntityEffectBroker.CurrentSpellVersion,
+            BundleType = BundleTypes.Spell,
+            TargetType = TargetTypes.ByTouch,
+            ElementType = ElementTypes.Shock,
+            Icon = new SpellIcon() { index = 37 },
+            Effects = new EffectEntry[]
+            {   // Uses damage health effect class which needs magnitude defined in settings.
+                new EffectEntry(DamageHealth.EffectKey, new EffectSettings() {
+                        // 2-10 + 1-2 per 1 lev
+                        MagnitudeBaseMin = 2, MagnitudeBaseMax = 10,
+                        MagnitudePlusMin = 1, MagnitudePlusMax = 2, MagnitudePerLevel = 1
+                    }
+                )
+            },
+        };
 
         static IDictionary MobLootKeys = new Hashtable()
         {
