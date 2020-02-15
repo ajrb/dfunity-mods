@@ -3,18 +3,20 @@
 // License:         MIT License (http://www.opensource.org/licenses/mit-license.php)
 // Authors:         Hazelnut & Ralzar
 
+using System;
+using System.Collections;
 using UnityEngine;
+using DaggerfallConnect;
 using DaggerfallWorkshop;
+using DaggerfallWorkshop.Utility;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Items;
 using DaggerfallWorkshop.Game.Utility.ModSupport;
-using DaggerfallWorkshop.Utility;
 using DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings;
 using DaggerfallWorkshop.Game.Entity;
-using DaggerfallConnect;
 using DaggerfallWorkshop.Game.Formulas;
-using System;
-using System.Collections;
+using DaggerfallWorkshop.Game.Player;
+using DaggerfallWorkshop.Game.Utility;
 
 namespace LootRealism
 {
@@ -36,13 +38,15 @@ namespace LootRealism
             ModSettings settings = mod.GetSettings();
             bool lootRebalance = settings.GetBool("Modules", "lootRebalance");
             bool bandaging = settings.GetBool("Modules", "bandaging");
+            bool skillStartEquip = settings.GetBool("Modules", "skillBasedStartingEquipment");
+            bool skillStartSpells = settings.GetBool("Modules", "skillBasedStartingSpells");
 
-            InitMod(lootRebalance, bandaging);
+            InitMod(lootRebalance, bandaging, skillStartEquip, skillStartSpells);
 
             mod.IsReady = true;
         }
 
-        private static void InitMod(bool lootRebalance, bool bandaging)
+        private static void InitMod(bool lootRebalance, bool bandaging, bool skillStartEquip, bool skillStartSpells)
         {
             Debug.Log("Begin mod init: LootRealism");
 
@@ -67,6 +71,12 @@ namespace LootRealism
                     Debug.LogWarning("LootRealism: Unable to register bandage use handler.");
             }
 
+            StartGameBehaviour startGameBehaviour = GameManager.Instance.StartGameBehaviour;
+            if (skillStartEquip)
+            {
+                startGameBehaviour.AllocateStartingEquipment = AssignStartingEquipment;
+            }
+
             Debug.Log("Finished mod init: LootRealism");
         }
 
@@ -75,7 +85,7 @@ namespace LootRealism
             return item.IsOfTemplate(ItemGroups.UselessItems2, (int)UselessItems2.Bandage);
         }
 
-        private static bool UseBandage(DaggerfallUnityItem item, ItemCollection collection)
+        static bool UseBandage(DaggerfallUnityItem item, ItemCollection collection)
         {
             if (collection != null)
             {
@@ -87,6 +97,128 @@ namespace LootRealism
                 Debug.LogFormat("Applied a Bandage and healed {0} health.", heal);
             }
             return true;
+        }
+
+        static void AssignStartingEquipment(PlayerEntity playerEntity, CharacterDocument characterDocument)
+        {
+            Debug.Log("Starting Equipment: Assigning Based on Skills");
+
+            // Skill based items
+            AssignSkillItems(playerEntity, playerEntity.Career.PrimarySkill1);
+            AssignSkillItems(playerEntity, playerEntity.Career.PrimarySkill2);
+            AssignSkillItems(playerEntity, playerEntity.Career.PrimarySkill3);
+
+            AssignSkillItems(playerEntity, playerEntity.Career.MajorSkill1);
+            AssignSkillItems(playerEntity, playerEntity.Career.MajorSkill2);
+            AssignSkillItems(playerEntity, playerEntity.Career.MajorSkill3);
+
+            // Starting clothes are gender-specific, randomise shirt dye and pants variant
+            DaggerfallUnityItem shortShirt = null;
+            DaggerfallUnityItem casualPants = null;
+            if (playerEntity.Gender == Genders.Female)
+            {
+                shortShirt = ItemBuilder.CreateWomensClothing(WomensClothing.Short_shirt_closed, playerEntity.Race, 0, ItemBuilder.RandomClothingDye());
+                casualPants = ItemBuilder.CreateWomensClothing(WomensClothing.Casual_pants, playerEntity.Race);
+            }
+            else
+            {
+                shortShirt = ItemBuilder.CreateMensClothing(MensClothing.Short_shirt, playerEntity.Race, 0, ItemBuilder.RandomClothingDye());
+                casualPants = ItemBuilder.CreateMensClothing(MensClothing.Casual_pants, playerEntity.Race);
+            }
+            ItemBuilder.RandomizeClothingVariant(casualPants);
+            playerEntity.Items.AddItem(shortShirt);
+            playerEntity.Items.AddItem(casualPants);
+
+            // Add spellbook, all players start with one - also a little gold
+            playerEntity.Items.AddItem(ItemBuilder.CreateItem(ItemGroups.MiscItems, (int)MiscItems.Spellbook));
+            playerEntity.Items.AddItem(ItemBuilder.CreateGoldPieces(UnityEngine.Random.Range(10, 20)));
+
+            // Add some torches and candles if player torch is from items setting enabled
+            if (DaggerfallUnity.Settings.PlayerTorchFromItems)
+            {
+                for (int i = 0; i < 2; i++)
+                    playerEntity.Items.AddItem(ItemBuilder.CreateItem(ItemGroups.UselessItems2, (int)UselessItems2.Torch));
+                for (int i = 0; i < 4; i++)
+                    playerEntity.Items.AddItem(ItemBuilder.CreateItem(ItemGroups.UselessItems2, (int)UselessItems2.Candle));
+            }
+
+            Debug.Log("Starting Equipment: Assigning Finished");
+        }
+
+        static void AssignSkillItems(PlayerEntity playerEntity, DFCareer.Skills skill)
+        {
+            ItemCollection items = playerEntity.Items;
+            Genders gender = playerEntity.Gender;
+            Races race = playerEntity.Race;
+
+            switch (skill)
+            {
+                case DFCareer.Skills.Archery:
+                    items.AddItem(ItemBuilder.CreateWeapon(Weapons.Short_Bow, WeaponMaterialTypes.Iron));
+                    DaggerfallUnityItem arrowPile = ItemBuilder.CreateWeapon(Weapons.Arrow, WeaponMaterialTypes.Iron);
+                    arrowPile.stackCount = 30;
+                    items.AddItem(arrowPile);
+                    return;
+                case DFCareer.Skills.Axe:
+                    items.AddItem(ItemBuilder.CreateWeapon(Weapons.Battle_Axe, WeaponMaterialTypes.Iron)); return;
+                case DFCareer.Skills.Backstabbing:
+                    items.AddItem(ItemBuilder.CreateArmor(gender, race, Armor.Right_Pauldron, ArmorMaterialTypes.Leather)); return;
+                case DFCareer.Skills.BluntWeapon:
+                    items.AddItem(ItemBuilder.CreateWeapon(Dice100.SuccessRoll(50) ? Weapons.Mace : Weapons.Flail, WeaponMaterialTypes.Iron)); return;
+                case DFCareer.Skills.Climbing:
+                    items.AddItem(ItemBuilder.CreateArmor(gender, race, Armor.Helm, ArmorMaterialTypes.Leather, -1)); return;
+                case DFCareer.Skills.CriticalStrike:
+                    items.AddItem(ItemBuilder.CreateArmor(gender, race, Armor.Right_Pauldron, ArmorMaterialTypes.Leather)); return;
+                case DFCareer.Skills.Dodging:
+                    items.AddItem((gender == Genders.Male) ? ItemBuilder.CreateMensClothing(MensClothing.Casual_cloak, race) : ItemBuilder.CreateWomensClothing(WomensClothing.Casual_cloak, race)); return;
+                case DFCareer.Skills.Etiquette:
+                    items.AddItem((gender == Genders.Male) ? ItemBuilder.CreateMensClothing(MensClothing.Formal_tunic, race) : ItemBuilder.CreateWomensClothing(WomensClothing.Evening_gown, race)); return;
+                case DFCareer.Skills.HandToHand:
+                    items.AddItem(ItemBuilder.CreateArmor(gender, race, Armor.Gauntlets, ArmorMaterialTypes.Leather)); return;
+                case DFCareer.Skills.Jumping:
+                    items.AddItem(ItemBuilder.CreateArmor(gender, race, Armor.Boots, ArmorMaterialTypes.Leather)); return;
+                case DFCareer.Skills.Lockpicking:
+                    items.AddItem(ItemBuilder.CreateRandomPotion()); return;
+                case DFCareer.Skills.LongBlade:
+                    items.AddItem(ItemBuilder.CreateWeapon(Dice100.SuccessRoll(50) ? Weapons.Saber : Weapons.Broadsword, WeaponMaterialTypes.Iron)); return;
+                case DFCareer.Skills.Medical:
+                    DaggerfallUnityItem bandages = ItemBuilder.CreateItem(ItemGroups.UselessItems2, (int)UselessItems2.Bandage);
+                    bandages.stackCount = 4;
+                    items.AddItem(bandages);
+                    return;
+                case DFCareer.Skills.Mercantile:
+                    items.AddItem(ItemBuilder.CreateGoldPieces(UnityEngine.Random.Range(50, 250))); return;
+                case DFCareer.Skills.Pickpocket:
+                    items.AddItem(ItemBuilder.CreateRandomGem()); return;
+                case DFCareer.Skills.Running:
+                    items.AddItem((gender == Genders.Male) ? ItemBuilder.CreateMensClothing(MensClothing.Shoes, race) : ItemBuilder.CreateWomensClothing(WomensClothing.Shoes, race)); return;
+                case DFCareer.Skills.ShortBlade:
+                    items.AddItem(ItemBuilder.CreateWeapon(Weapons.Dagger, WeaponMaterialTypes.Iron)); return;
+                case DFCareer.Skills.Stealth:
+                    items.AddItem((gender == Genders.Male) ? ItemBuilder.CreateMensClothing(MensClothing.Khajiit_suit, race) : ItemBuilder.CreateWomensClothing(WomensClothing.Khajiit_suit, race)); return;
+                case DFCareer.Skills.Streetwise:
+                    items.AddItem(ItemBuilder.CreateArmor(gender, race, Armor.Greaves, ArmorMaterialTypes.Leather)); return;
+                case DFCareer.Skills.Swimming:
+                    items.AddItem((gender == Genders.Male) ? ItemBuilder.CreateMensClothing(MensClothing.Loincloth, race) : ItemBuilder.CreateWomensClothing(WomensClothing.Loincloth, race)); return;
+
+                case DFCareer.Skills.Daedric:
+                case DFCareer.Skills.Dragonish:
+                case DFCareer.Skills.Giantish:
+                case DFCareer.Skills.Harpy:
+                case DFCareer.Skills.Impish:
+                case DFCareer.Skills.Orcish:
+                    items.AddItem(ItemBuilder.CreateRandomBook());
+                    for (int i = 0; i < 4; i++)
+                        items.AddItem(ItemBuilder.CreateRandomIngredient(ItemGroups.CreatureIngredients1));
+                    return;
+                case DFCareer.Skills.Centaurian:
+                case DFCareer.Skills.Nymph:
+                case DFCareer.Skills.Spriggan:
+                    items.AddItem(ItemBuilder.CreateRandomBook());
+                    for (int i = 0; i < 4; i++)
+                        items.AddItem(ItemBuilder.CreateRandomIngredient(ItemGroups.PlantIngredients1));
+                    return;
+            }
         }
 
         static IDictionary MobLootKeys = new Hashtable()
