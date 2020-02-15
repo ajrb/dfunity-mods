@@ -252,11 +252,16 @@ namespace RoleplayRealism
             Debug.Log("Custom Armor service.");
 
             PlayerEntity playerEntity = GameManager.Instance.PlayerEntity;
+            if (playerEntity.Level < 9)
+            {
+                DaggerfallUI.MessageBox("Sorry I have not yet sourced enough rare materials to make you armor.");
+                return;
+            }
             ItemCollection armorItems = new ItemCollection();
             Array armorTypes = DaggerfallUnity.Instance.ItemHelper.GetEnumArray(ItemGroups.Armor);
             foreach (ArmorMaterialTypes material in customArmorMaterials)
             {
-                if (playerEntity.Level < 10 ||
+                if (playerEntity.Level < 9 ||
                     (playerEntity.Level < 12 && material >= ArmorMaterialTypes.Adamantium) ||
                     (playerEntity.Level < 15 && material >= ArmorMaterialTypes.Orcish) ||
                     (playerEntity.Level < 18 && material >= ArmorMaterialTypes.Daedric))
