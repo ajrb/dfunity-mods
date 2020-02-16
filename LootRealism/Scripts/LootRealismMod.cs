@@ -110,6 +110,12 @@ namespace LootRealism
         {
             Debug.Log("Starting Equipment: Assigning Based on Skills");
 
+            // Set condition of ebony dagger if player has one from char creation questions
+            IList daggers = playerEntity.Items.SearchItems(ItemGroups.Weapons, (int)Weapons.Dagger);
+            foreach (DaggerfallUnityItem dagger in daggers)
+                if (dagger.NativeMaterialValue > (int)WeaponMaterialTypes.Steel)
+                    dagger.currentCondition = (int)(dagger.maxCondition * 0.15);
+
             // Skill based items
             AssignSkillItems(playerEntity, playerEntity.Career.PrimarySkill1);
             AssignSkillItems(playerEntity, playerEntity.Career.PrimarySkill2);
@@ -157,7 +163,7 @@ namespace LootRealism
         {
             playerEntity.Items.AddItem(item);
             if (item.ItemGroup == ItemGroups.Armor || item.ItemGroup == ItemGroups.Weapons)
-                item.currentCondition = (int) (UnityEngine.Random.Range(0.4f, 0.8f) * item.maxCondition);
+                item.currentCondition = (int) (UnityEngine.Random.Range(0.3f, 0.7f) * item.maxCondition);
             else
                 playerEntity.ItemEquipTable.EquipItem(item);
         }
