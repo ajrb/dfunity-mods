@@ -133,12 +133,13 @@ namespace LootRealism
                 casualPants = ItemBuilder.CreateMensClothing(MensClothing.Casual_pants, playerEntity.Race);
             }
             ItemBuilder.RandomizeClothingVariant(casualPants);
-            playerEntity.Items.AddItem(shortShirt);
-            playerEntity.Items.AddItem(casualPants);
+            EquipItem(playerEntity, shortShirt);
+            EquipItem(playerEntity, casualPants);
 
-            // Add spellbook, all players start with one - also a little gold
+            // Add spellbook, all players start with one - also a little gold and a crappy iron dagger for those with no weapon skills.
             playerEntity.Items.AddItem(ItemBuilder.CreateItem(ItemGroups.MiscItems, (int)MiscItems.Spellbook));
-            playerEntity.Items.AddItem(ItemBuilder.CreateGoldPieces(UnityEngine.Random.Range(10, 20)));
+            playerEntity.Items.AddItem(ItemBuilder.CreateGoldPieces(UnityEngine.Random.Range(5, playerEntity.Career.Luck)));
+            playerEntity.Items.AddItem(ItemBuilder.CreateWeapon(Weapons.Dagger, WeaponMaterialTypes.Iron));
 
             // Add some torches and candles if player torch is from items setting enabled
             if (DaggerfallUnity.Settings.PlayerTorchFromItems)
@@ -152,59 +153,77 @@ namespace LootRealism
             Debug.Log("Starting Equipment: Assigning Finished");
         }
 
+        static void EquipItem(PlayerEntity playerEntity, DaggerfallUnityItem item)
+        {
+            playerEntity.Items.AddItem(item);
+            playerEntity.ItemEquipTable.EquipItem(item);
+        }
+
         static void AssignSkillItems(PlayerEntity playerEntity, DFCareer.Skills skill)
         {
             ItemCollection items = playerEntity.Items;
             Genders gender = playerEntity.Gender;
             Races race = playerEntity.Race;
 
+            bool upgrade = Dice100.SuccessRoll(playerEntity.Career.Luck < 52 ? playerEntity.Career.Luck / 2 : playerEntity.Career.Luck);
+            WeaponMaterialTypes weaponMaterial = WeaponMaterialTypes.Iron;
+            if ((upgrade && !playerEntity.Career.IsMaterialForbidden(DFCareer.MaterialFlags.Steel)) || playerEntity.Career.IsMaterialForbidden(DFCareer.MaterialFlags.Iron))
+            {
+                weaponMaterial = WeaponMaterialTypes.Steel;
+            }
+            ArmorMaterialTypes armorMaterial = ArmorMaterialTypes.Leather;
+            if ((upgrade && !playerEntity.Career.IsArmorForbidden(DFCareer.ArmorFlags.Chain)) || playerEntity.Career.IsArmorForbidden(DFCareer.ArmorFlags.Leather))
+            {
+                armorMaterial = ArmorMaterialTypes.Chain;
+            }
+
             switch (skill)
             {
                 case DFCareer.Skills.Archery:
-                    items.AddItem(ItemBuilder.CreateWeapon(Weapons.Short_Bow, WeaponMaterialTypes.Iron));
+                    items.AddItem(ItemBuilder.CreateWeapon(Weapons.Short_Bow, weaponMaterial));
                     DaggerfallUnityItem arrowPile = ItemBuilder.CreateWeapon(Weapons.Arrow, WeaponMaterialTypes.Iron);
                     arrowPile.stackCount = 30;
                     items.AddItem(arrowPile);
                     return;
                 case DFCareer.Skills.Axe:
-                    items.AddItem(ItemBuilder.CreateWeapon(Weapons.Battle_Axe, WeaponMaterialTypes.Iron)); return;
+                    items.AddItem(ItemBuilder.CreateWeapon(Dice100.SuccessRoll(50) ? Weapons.Battle_Axe : Weapons.War_Axe, weaponMaterial)); return;
                 case DFCareer.Skills.Backstabbing:
-                    items.AddItem(ItemBuilder.CreateArmor(gender, race, Armor.Right_Pauldron, ArmorMaterialTypes.Leather)); return;
+                    items.AddItem(ItemBuilder.CreateArmor(gender, race, Armor.Right_Pauldron, armorMaterial)); return;
                 case DFCareer.Skills.BluntWeapon:
-                    items.AddItem(ItemBuilder.CreateWeapon(Dice100.SuccessRoll(50) ? Weapons.Mace : Weapons.Flail, WeaponMaterialTypes.Iron)); return;
+                    items.AddItem(ItemBuilder.CreateWeapon(Dice100.SuccessRoll(50) ? Weapons.Mace : Weapons.Flail, weaponMaterial)); return;
                 case DFCareer.Skills.Climbing:
-                    items.AddItem(ItemBuilder.CreateArmor(gender, race, Armor.Helm, ArmorMaterialTypes.Leather, -1)); return;
+                    items.AddItem(ItemBuilder.CreateArmor(gender, race, Armor.Helm, armorMaterial, -1)); return;
                 case DFCareer.Skills.CriticalStrike:
-                    items.AddItem(ItemBuilder.CreateArmor(gender, race, Armor.Right_Pauldron, ArmorMaterialTypes.Leather)); return;
+                    items.AddItem(ItemBuilder.CreateArmor(gender, race, Armor.Right_Pauldron, armorMaterial)); return;
                 case DFCareer.Skills.Dodging:
                     items.AddItem((gender == Genders.Male) ? ItemBuilder.CreateMensClothing(MensClothing.Casual_cloak, race) : ItemBuilder.CreateWomensClothing(WomensClothing.Casual_cloak, race)); return;
                 case DFCareer.Skills.Etiquette:
                     items.AddItem((gender == Genders.Male) ? ItemBuilder.CreateMensClothing(MensClothing.Formal_tunic, race) : ItemBuilder.CreateWomensClothing(WomensClothing.Evening_gown, race)); return;
                 case DFCareer.Skills.HandToHand:
-                    items.AddItem(ItemBuilder.CreateArmor(gender, race, Armor.Gauntlets, ArmorMaterialTypes.Leather)); return;
+                    items.AddItem(ItemBuilder.CreateArmor(gender, race, Armor.Gauntlets, armorMaterial)); return;
                 case DFCareer.Skills.Jumping:
-                    items.AddItem(ItemBuilder.CreateArmor(gender, race, Armor.Boots, ArmorMaterialTypes.Leather)); return;
+                    items.AddItem(ItemBuilder.CreateArmor(gender, race, Armor.Boots, armorMaterial)); return;
                 case DFCareer.Skills.Lockpicking:
                     items.AddItem(ItemBuilder.CreateRandomPotion()); return;
                 case DFCareer.Skills.LongBlade:
-                    items.AddItem(ItemBuilder.CreateWeapon(Dice100.SuccessRoll(50) ? Weapons.Saber : Weapons.Broadsword, WeaponMaterialTypes.Iron)); return;
+                    items.AddItem(ItemBuilder.CreateWeapon(Dice100.SuccessRoll(50) ? Weapons.Saber : Weapons.Broadsword, weaponMaterial)); return;
                 case DFCareer.Skills.Medical:
                     DaggerfallUnityItem bandages = ItemBuilder.CreateItem(ItemGroups.UselessItems2, (int)UselessItems2.Bandage);
                     bandages.stackCount = 4;
                     items.AddItem(bandages);
                     return;
                 case DFCareer.Skills.Mercantile:
-                    items.AddItem(ItemBuilder.CreateGoldPieces(UnityEngine.Random.Range(50, 250))); return;
+                    items.AddItem(ItemBuilder.CreateGoldPieces(UnityEngine.Random.Range(playerEntity.Career.Luck, playerEntity.Career.Luck * 4))); return;
                 case DFCareer.Skills.Pickpocket:
                     items.AddItem(ItemBuilder.CreateRandomGem()); return;
                 case DFCareer.Skills.Running:
                     items.AddItem((gender == Genders.Male) ? ItemBuilder.CreateMensClothing(MensClothing.Shoes, race) : ItemBuilder.CreateWomensClothing(WomensClothing.Shoes, race)); return;
                 case DFCareer.Skills.ShortBlade:
-                    items.AddItem(ItemBuilder.CreateWeapon(Weapons.Dagger, WeaponMaterialTypes.Iron)); return;
+                    items.AddItem(ItemBuilder.CreateWeapon(Dice100.SuccessRoll(50) ? Weapons.Shortsword : Weapons.Tanto, weaponMaterial)); return;
                 case DFCareer.Skills.Stealth:
                     items.AddItem((gender == Genders.Male) ? ItemBuilder.CreateMensClothing(MensClothing.Khajiit_suit, race) : ItemBuilder.CreateWomensClothing(WomensClothing.Khajiit_suit, race)); return;
                 case DFCareer.Skills.Streetwise:
-                    items.AddItem(ItemBuilder.CreateArmor(gender, race, Armor.Greaves, ArmorMaterialTypes.Leather)); return;
+                    items.AddItem(ItemBuilder.CreateArmor(gender, race, Armor.Greaves, armorMaterial)); return;
                 case DFCareer.Skills.Swimming:
                     items.AddItem((gender == Genders.Male) ? ItemBuilder.CreateMensClothing(MensClothing.Loincloth, race) : ItemBuilder.CreateWomensClothing(WomensClothing.Loincloth, race)); return;
 
@@ -233,9 +252,9 @@ namespace LootRealism
             Debug.Log("Starting Spells: Assigning Based on Skills");
 
             // Skill based items
-            AssignSkillSpells(playerEntity, playerEntity.Career.PrimarySkill1);
-            AssignSkillSpells(playerEntity, playerEntity.Career.PrimarySkill2);
-            AssignSkillSpells(playerEntity, playerEntity.Career.PrimarySkill3);
+            AssignSkillSpells(playerEntity, playerEntity.Career.PrimarySkill1, true);
+            AssignSkillSpells(playerEntity, playerEntity.Career.PrimarySkill2, true);
+            AssignSkillSpells(playerEntity, playerEntity.Career.PrimarySkill3, true);
 
             AssignSkillSpells(playerEntity, playerEntity.Career.MajorSkill1);
             AssignSkillSpells(playerEntity, playerEntity.Career.MajorSkill2);
@@ -244,7 +263,7 @@ namespace LootRealism
             Debug.Log("Starting Spells: Assigning Finished");
         }
 
-        static void AssignSkillSpells(PlayerEntity playerEntity, DFCareer.Skills skill)
+        static void AssignSkillSpells(PlayerEntity playerEntity, DFCareer.Skills skill, bool primary = false)
         {
             ItemCollection items = playerEntity.Items;
             Genders gender = playerEntity.Gender;
@@ -254,24 +273,35 @@ namespace LootRealism
             {
                 // Classic spell indexes are on https://en.uesp.net/wiki/Daggerfall:SPELLS.STD_indices under Spell Catalogue
                 case DFCareer.Skills.Alteration:
-                    playerEntity.AddSpell(GetClassicSpell(37)); // Slowfalling
-                    playerEntity.AddSpell(GetClassicSpell(38)); // Jumping
+                    playerEntity.AddSpell(gentleFallSpell);         // Gentle Fall
+                    if (primary)
+                        playerEntity.AddSpell(GetClassicSpell(38)); // Jumping
                     return;
                 case DFCareer.Skills.Destruction:
-                    playerEntity.AddSpell(GetClassicSpell(8));  // Shock
-                    playerEntity.AddSpell(minorShockSpell);     // Minor shock
+                    playerEntity.AddSpell(arcaneArrowSpell);        // Arcane Arrow
+                    if (primary)
+                        playerEntity.AddSpell(minorShockSpell);     // Minor shock
                     return;
                 case DFCareer.Skills.Illusion:
-                    playerEntity.AddSpell(GetClassicSpell(44));  // Chameleon
+                    playerEntity.AddSpell(candleSpell);             // Candle
+                    if (primary)
+                        playerEntity.AddSpell(GetClassicSpell(44)); // Chameleon
                     return;
                 case DFCareer.Skills.Mysticism:
-                    playerEntity.AddSpell(GetClassicSpell(1));  // Fenrik's Door Jam
+                    playerEntity.AddSpell(GetClassicSpell(1));      // Fenrik's Door Jam
+                    playerEntity.AddSpell(knickKnackSpell);         // Knick-Knack
+                    if (primary)
+                        playerEntity.AddSpell(GetClassicSpell(94)); // Recall!
                     return;
                 case DFCareer.Skills.Restoration:
-                    playerEntity.AddSpell(GetClassicSpell(97));  // Balyna's Balm
+                    playerEntity.AddSpell(healBruiseSpell);         // Heal Bruise
+                    if (primary)
+                        playerEntity.AddSpell(GetClassicSpell(97)); // Balyna's Balm
                     return;
                 case DFCareer.Skills.Thaumaturgy:
-                    playerEntity.AddSpell(GetClassicSpell(2));  // Buoyancy
+                    playerEntity.AddSpell(GetClassicSpell(2));      // Buoyancy
+                    if (primary)
+                        playerEntity.AddSpell(riseSpell);           // Rise
                     return;
             }
         }
@@ -285,7 +315,7 @@ namespace LootRealism
             return bundle;
         }
 
-        // Example new spell definition: Minor Shock.
+        // New spell definitions:
         static EffectBundleSettings minorShockSpell = new EffectBundleSettings()
         {
             Name = "Minor Shock",
@@ -300,8 +330,98 @@ namespace LootRealism
                         // 2-10 + 1-2 per 1 lev
                         MagnitudeBaseMin = 2, MagnitudeBaseMax = 10,
                         MagnitudePlusMin = 1, MagnitudePlusMax = 2, MagnitudePerLevel = 1
-                    }
-                )
+                    })
+            },
+        };
+        static EffectBundleSettings arcaneArrowSpell = new EffectBundleSettings()
+        {
+            Name = "Arcane Arrow",
+            Version = EntityEffectBroker.CurrentSpellVersion,
+            BundleType = BundleTypes.Spell,
+            TargetType = TargetTypes.SingleTargetAtRange,
+            ElementType = ElementTypes.Magic,
+            Icon = new SpellIcon() { index = 57 },
+            Effects = new EffectEntry[]
+            {
+                new EffectEntry(DamageHealth.EffectKey, new EffectSettings() {
+                    MagnitudeBaseMin = 5, MagnitudeBaseMax = 6,
+                    MagnitudePlusMin = 1, MagnitudePlusMax = 1, MagnitudePerLevel = 2
+                })
+            },
+        };
+        static EffectBundleSettings gentleFallSpell = new EffectBundleSettings()
+        {
+            Name = "Gentle Fall",
+            Version = EntityEffectBroker.CurrentSpellVersion,
+            BundleType = BundleTypes.Spell,
+            TargetType = TargetTypes.CasterOnly,
+            ElementType = ElementTypes.Magic,
+            Icon = new SpellIcon() { index = 31 },
+            Effects = new EffectEntry[]
+            {
+                new EffectEntry(Slowfall.EffectKey, new EffectSettings() {
+                        DurationBase = 2, DurationPlus = 1, DurationPerLevel = 2
+                    })
+            },
+        };
+        static EffectBundleSettings candleSpell = new EffectBundleSettings()
+        {
+            Name = "Candle",
+            Version = EntityEffectBroker.CurrentSpellVersion,
+            BundleType = BundleTypes.Spell,
+            TargetType = TargetTypes.CasterOnly,
+            ElementType = ElementTypes.Magic,
+            Icon = new SpellIcon() { index = 22 },
+            Effects = new EffectEntry[]
+            {
+                new EffectEntry(LightNormal.EffectKey, new EffectSettings() {
+                    DurationBase = 4, DurationPlus = 4, DurationPerLevel = 1
+                })
+            },
+        };
+        static EffectBundleSettings knickKnackSpell = new EffectBundleSettings()
+        {
+            Name = "Knick-Knack",
+            Version = EntityEffectBroker.CurrentSpellVersion,
+            BundleType = BundleTypes.Spell,
+            TargetType = TargetTypes.CasterOnly,
+            ElementType = ElementTypes.Magic,
+            Icon = new SpellIcon() { index = 26 },
+            Effects = new EffectEntry[]
+            {
+                new EffectEntry(CreateItem.EffectKey, new EffectSettings() {
+                    DurationBase = 4, DurationPlus = 1, DurationPerLevel = 2
+                })
+            },
+        };
+        static EffectBundleSettings healBruiseSpell = new EffectBundleSettings()
+        {
+            Name = "Heal Bruise",
+            Version = EntityEffectBroker.CurrentSpellVersion,
+            BundleType = BundleTypes.Spell,
+            TargetType = TargetTypes.CasterOnly,
+            ElementType = ElementTypes.Magic,
+            Icon = new SpellIcon() { index = 13 },
+            Effects = new EffectEntry[]
+            {
+                new EffectEntry(HealHealth.EffectKey, new EffectSettings() {
+                    MagnitudeBaseMin = 4, MagnitudeBaseMax = 5, MagnitudePerLevel = 1
+                })
+             },
+        };
+        static EffectBundleSettings riseSpell = new EffectBundleSettings()
+        {
+            Name = "Rise",
+            Version = EntityEffectBroker.CurrentSpellVersion,
+            BundleType = BundleTypes.Spell,
+            TargetType = TargetTypes.CasterOnly,
+            ElementType = ElementTypes.Magic,
+            Icon = new SpellIcon() { index = 13 },
+            Effects = new EffectEntry[]
+            {
+                new EffectEntry(Levitate.EffectKey, new EffectSettings() {
+                    DurationBase = 1, DurationPlus = 1, DurationPerLevel = 2
+                })
             },
         };
 
