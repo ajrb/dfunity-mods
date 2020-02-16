@@ -291,10 +291,12 @@ namespace LootRealism
                         playerEntity.AddSpell(GetClassicSpell(44)); // Chameleon
                     return;
                 case DFCareer.Skills.Mysticism:
-                    playerEntity.AddSpell(GetClassicSpell(1));      // Fenrik's Door Jam
+                    playerEntity.AddSpell(knockSpell);              // Knock
                     playerEntity.AddSpell(knickKnackSpell);         // Knick-Knack
-                    if (primary)
+                    if (primary) {
+                        playerEntity.AddSpell(GetClassicSpell(1));  // Fenrik's Door Jam
                         playerEntity.AddSpell(GetClassicSpell(94)); // Recall!
+                    }
                     return;
                 case DFCareer.Skills.Restoration:
                     playerEntity.AddSpell(salveBruiseSpell);         // Salve Bruise
@@ -421,7 +423,7 @@ namespace LootRealism
             BundleType = BundleTypes.Spell,
             TargetType = TargetTypes.CasterOnly,
             ElementType = ElementTypes.Magic,
-            Icon = new SpellIcon() { index = 13 },
+            Icon = new SpellIcon() { index = 10 },
             Effects = new EffectEntry[]
             {
                 new EffectEntry(HealFatigue.EffectKey, new EffectSettings() {
@@ -441,6 +443,21 @@ namespace LootRealism
             {
                 new EffectEntry(Levitate.EffectKey, new EffectSettings() {
                     DurationBase = 1, DurationPlus = 1, DurationPerLevel = 2
+                })
+            },
+        };
+        static EffectBundleSettings knockSpell = new EffectBundleSettings()
+        {
+            Name = "Knock",
+            Version = EntityEffectBroker.CurrentSpellVersion,
+            BundleType = BundleTypes.Spell,
+            TargetType = TargetTypes.CasterOnly,
+            ElementType = ElementTypes.Magic,
+            Icon = new SpellIcon() { index = 3 },
+            Effects = new EffectEntry[]
+            {
+                new EffectEntry(Open.EffectKey, new EffectSettings() {
+                    DurationBase = 1, DurationPlus = 1, ChanceBase = 8, ChancePerLevel = 2
                 })
             },
         };
