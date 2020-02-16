@@ -133,8 +133,8 @@ namespace LootRealism
                 casualPants = ItemBuilder.CreateMensClothing(MensClothing.Casual_pants, playerEntity.Race);
             }
             ItemBuilder.RandomizeClothingVariant(casualPants);
-            EquipItem(playerEntity, shortShirt);
-            EquipItem(playerEntity, casualPants);
+            AddAndDmgOrEquipItem(playerEntity, shortShirt);
+            AddAndDmgOrEquipItem(playerEntity, casualPants);
 
             // Add spellbook, all players start with one - also a little gold and a crappy iron dagger for those with no weapon skills.
             playerEntity.Items.AddItem(ItemBuilder.CreateItem(ItemGroups.MiscItems, (int)MiscItems.Spellbook));
@@ -153,10 +153,13 @@ namespace LootRealism
             Debug.Log("Starting Equipment: Assigning Finished");
         }
 
-        static void EquipItem(PlayerEntity playerEntity, DaggerfallUnityItem item)
+        static void AddAndDmgOrEquipItem(PlayerEntity playerEntity, DaggerfallUnityItem item)
         {
             playerEntity.Items.AddItem(item);
-            playerEntity.ItemEquipTable.EquipItem(item);
+            if (item.ItemGroup == ItemGroups.Armor || item.ItemGroup == ItemGroups.Weapons)
+                item.currentCondition = (int) (UnityEngine.Random.Range(0.4f, 0.8f) * item.maxCondition);
+            else
+                playerEntity.ItemEquipTable.EquipItem(item);
         }
 
         static void AssignSkillItems(PlayerEntity playerEntity, DFCareer.Skills skill)
@@ -165,7 +168,7 @@ namespace LootRealism
             Genders gender = playerEntity.Gender;
             Races race = playerEntity.Race;
 
-            bool upgrade = Dice100.SuccessRoll(playerEntity.Career.Luck < 52 ? playerEntity.Career.Luck / 2 : playerEntity.Career.Luck);
+            bool upgrade = Dice100.SuccessRoll(playerEntity.Career.Luck / (playerEntity.Career.Luck < 56 ? 2 : 1));
             WeaponMaterialTypes weaponMaterial = WeaponMaterialTypes.Iron;
             if ((upgrade && !playerEntity.Career.IsMaterialForbidden(DFCareer.MaterialFlags.Steel)) || playerEntity.Career.IsMaterialForbidden(DFCareer.MaterialFlags.Iron))
             {
@@ -180,33 +183,33 @@ namespace LootRealism
             switch (skill)
             {
                 case DFCareer.Skills.Archery:
-                    items.AddItem(ItemBuilder.CreateWeapon(Weapons.Short_Bow, weaponMaterial));
+                    AddAndDmgOrEquipItem(playerEntity, ItemBuilder.CreateWeapon(Weapons.Short_Bow, weaponMaterial));
                     DaggerfallUnityItem arrowPile = ItemBuilder.CreateWeapon(Weapons.Arrow, WeaponMaterialTypes.Iron);
                     arrowPile.stackCount = 30;
                     items.AddItem(arrowPile);
                     return;
                 case DFCareer.Skills.Axe:
-                    items.AddItem(ItemBuilder.CreateWeapon(Dice100.SuccessRoll(50) ? Weapons.Battle_Axe : Weapons.War_Axe, weaponMaterial)); return;
+                    AddAndDmgOrEquipItem(playerEntity, ItemBuilder.CreateWeapon(Dice100.SuccessRoll(50) ? Weapons.Battle_Axe : Weapons.War_Axe, weaponMaterial)); return;
                 case DFCareer.Skills.Backstabbing:
-                    items.AddItem(ItemBuilder.CreateArmor(gender, race, Armor.Right_Pauldron, armorMaterial)); return;
+                    AddAndDmgOrEquipItem(playerEntity, ItemBuilder.CreateArmor(gender, race, Armor.Right_Pauldron, armorMaterial)); return;
                 case DFCareer.Skills.BluntWeapon:
-                    items.AddItem(ItemBuilder.CreateWeapon(Dice100.SuccessRoll(50) ? Weapons.Mace : Weapons.Flail, weaponMaterial)); return;
+                    AddAndDmgOrEquipItem(playerEntity, ItemBuilder.CreateWeapon(Dice100.SuccessRoll(50) ? Weapons.Mace : Weapons.Flail, weaponMaterial)); return;
                 case DFCareer.Skills.Climbing:
-                    items.AddItem(ItemBuilder.CreateArmor(gender, race, Armor.Helm, armorMaterial, -1)); return;
+                    AddAndDmgOrEquipItem(playerEntity, ItemBuilder.CreateArmor(gender, race, Armor.Helm, armorMaterial, -1)); return;
                 case DFCareer.Skills.CriticalStrike:
-                    items.AddItem(ItemBuilder.CreateArmor(gender, race, Armor.Right_Pauldron, armorMaterial)); return;
+                    AddAndDmgOrEquipItem(playerEntity, ItemBuilder.CreateArmor(gender, race, Armor.Right_Pauldron, armorMaterial)); return;
                 case DFCareer.Skills.Dodging:
-                    items.AddItem((gender == Genders.Male) ? ItemBuilder.CreateMensClothing(MensClothing.Casual_cloak, race) : ItemBuilder.CreateWomensClothing(WomensClothing.Casual_cloak, race)); return;
+                    AddAndDmgOrEquipItem(playerEntity, (gender == Genders.Male) ? ItemBuilder.CreateMensClothing(MensClothing.Casual_cloak, race) : ItemBuilder.CreateWomensClothing(WomensClothing.Casual_cloak, race)); return;
                 case DFCareer.Skills.Etiquette:
-                    items.AddItem((gender == Genders.Male) ? ItemBuilder.CreateMensClothing(MensClothing.Formal_tunic, race) : ItemBuilder.CreateWomensClothing(WomensClothing.Evening_gown, race)); return;
+                    AddAndDmgOrEquipItem(playerEntity, (gender == Genders.Male) ? ItemBuilder.CreateMensClothing(MensClothing.Formal_tunic, race) : ItemBuilder.CreateWomensClothing(WomensClothing.Evening_gown, race)); return;
                 case DFCareer.Skills.HandToHand:
-                    items.AddItem(ItemBuilder.CreateArmor(gender, race, Armor.Gauntlets, armorMaterial)); return;
+                    AddAndDmgOrEquipItem(playerEntity, ItemBuilder.CreateArmor(gender, race, Armor.Gauntlets, armorMaterial)); return;
                 case DFCareer.Skills.Jumping:
-                    items.AddItem(ItemBuilder.CreateArmor(gender, race, Armor.Boots, armorMaterial)); return;
+                    AddAndDmgOrEquipItem(playerEntity, ItemBuilder.CreateArmor(gender, race, Armor.Boots, armorMaterial)); return;
                 case DFCareer.Skills.Lockpicking:
                     items.AddItem(ItemBuilder.CreateRandomPotion()); return;
                 case DFCareer.Skills.LongBlade:
-                    items.AddItem(ItemBuilder.CreateWeapon(Dice100.SuccessRoll(50) ? Weapons.Saber : Weapons.Broadsword, weaponMaterial)); return;
+                    AddAndDmgOrEquipItem(playerEntity, ItemBuilder.CreateWeapon(Dice100.SuccessRoll(50) ? Weapons.Saber : Weapons.Broadsword, weaponMaterial)); return;
                 case DFCareer.Skills.Medical:
                     DaggerfallUnityItem bandages = ItemBuilder.CreateItem(ItemGroups.UselessItems2, (int)UselessItems2.Bandage);
                     bandages.stackCount = 4;
@@ -217,13 +220,13 @@ namespace LootRealism
                 case DFCareer.Skills.Pickpocket:
                     items.AddItem(ItemBuilder.CreateRandomGem()); return;
                 case DFCareer.Skills.Running:
-                    items.AddItem((gender == Genders.Male) ? ItemBuilder.CreateMensClothing(MensClothing.Shoes, race) : ItemBuilder.CreateWomensClothing(WomensClothing.Shoes, race)); return;
+                    AddAndDmgOrEquipItem(playerEntity, (gender == Genders.Male) ? ItemBuilder.CreateMensClothing(MensClothing.Shoes, race) : ItemBuilder.CreateWomensClothing(WomensClothing.Shoes, race)); return;
                 case DFCareer.Skills.ShortBlade:
-                    items.AddItem(ItemBuilder.CreateWeapon(Dice100.SuccessRoll(50) ? Weapons.Shortsword : Weapons.Tanto, weaponMaterial)); return;
+                    AddAndDmgOrEquipItem(playerEntity, ItemBuilder.CreateWeapon(Dice100.SuccessRoll(50) ? Weapons.Shortsword : Weapons.Tanto, weaponMaterial)); return;
                 case DFCareer.Skills.Stealth:
-                    items.AddItem((gender == Genders.Male) ? ItemBuilder.CreateMensClothing(MensClothing.Khajiit_suit, race) : ItemBuilder.CreateWomensClothing(WomensClothing.Khajiit_suit, race)); return;
+                    AddAndDmgOrEquipItem(playerEntity, (gender == Genders.Male) ? ItemBuilder.CreateMensClothing(MensClothing.Khajiit_suit, race) : ItemBuilder.CreateWomensClothing(WomensClothing.Khajiit_suit, race)); return;
                 case DFCareer.Skills.Streetwise:
-                    items.AddItem(ItemBuilder.CreateArmor(gender, race, Armor.Greaves, armorMaterial)); return;
+                    AddAndDmgOrEquipItem(playerEntity, ItemBuilder.CreateArmor(gender, race, Armor.Greaves, armorMaterial)); return;
                 case DFCareer.Skills.Swimming:
                     items.AddItem((gender == Genders.Male) ? ItemBuilder.CreateMensClothing(MensClothing.Loincloth, race) : ItemBuilder.CreateWomensClothing(WomensClothing.Loincloth, race)); return;
 
