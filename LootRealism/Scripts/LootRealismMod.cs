@@ -294,9 +294,11 @@ namespace LootRealism
                         playerEntity.AddSpell(GetClassicSpell(94)); // Recall!
                     return;
                 case DFCareer.Skills.Restoration:
-                    playerEntity.AddSpell(healBruiseSpell);         // Heal Bruise
-                    if (primary)
+                    playerEntity.AddSpell(salveBruiseSpell);         // Salve Bruise
+                    if (primary) {
+                        playerEntity.AddSpell(smellingSaltsSpell);  // Smelling Salts
                         playerEntity.AddSpell(GetClassicSpell(97)); // Balyna's Balm
+                    }
                     return;
                 case DFCareer.Skills.Thaumaturgy:
                     playerEntity.AddSpell(GetClassicSpell(2));      // Buoyancy
@@ -394,9 +396,9 @@ namespace LootRealism
                 })
             },
         };
-        static EffectBundleSettings healBruiseSpell = new EffectBundleSettings()
+        static EffectBundleSettings salveBruiseSpell = new EffectBundleSettings()
         {
-            Name = "Heal Bruise",
+            Name = "Salve Bruise",
             Version = EntityEffectBroker.CurrentSpellVersion,
             BundleType = BundleTypes.Spell,
             TargetType = TargetTypes.CasterOnly,
@@ -405,7 +407,22 @@ namespace LootRealism
             Effects = new EffectEntry[]
             {
                 new EffectEntry(HealHealth.EffectKey, new EffectSettings() {
-                    MagnitudeBaseMin = 4, MagnitudeBaseMax = 5, MagnitudePerLevel = 1
+                    MagnitudeBaseMin = 3, MagnitudeBaseMax = 6, MagnitudePerLevel = 1
+                })
+             },
+        };
+        static EffectBundleSettings smellingSaltsSpell = new EffectBundleSettings()
+        {
+            Name = "Smelling Salts",
+            Version = EntityEffectBroker.CurrentSpellVersion,
+            BundleType = BundleTypes.Spell,
+            TargetType = TargetTypes.CasterOnly,
+            ElementType = ElementTypes.Magic,
+            Icon = new SpellIcon() { index = 13 },
+            Effects = new EffectEntry[]
+            {
+                new EffectEntry(HealFatigue.EffectKey, new EffectSettings() {
+                    MagnitudeBaseMin = 3, MagnitudeBaseMax = 6, MagnitudePerLevel = 1
                 })
              },
         };
