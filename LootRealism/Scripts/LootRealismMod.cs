@@ -41,15 +41,16 @@ namespace LootRealism
             ModSettings settings = mod.GetSettings();
             bool lootRebalance = settings.GetBool("Modules", "lootRebalance");
             bool bandaging = settings.GetBool("Modules", "bandaging");
+            bool conditionBasedPrices = settings.GetBool("Modules", "conditionBasedPrices");
             bool skillStartEquip = settings.GetBool("Modules", "skillBasedStartingEquipment");
             bool skillStartSpells = settings.GetBool("Modules", "skillBasedStartingSpells");
 
-            InitMod(lootRebalance, bandaging, skillStartEquip, skillStartSpells);
+            InitMod(lootRebalance, bandaging, conditionBasedPrices, skillStartEquip, skillStartSpells);
 
             mod.IsReady = true;
         }
 
-        private static void InitMod(bool lootRebalance, bool bandaging, bool skillStartEquip, bool skillStartSpells)
+        private static void InitMod(bool lootRebalance, bool bandaging, bool conditionBasedPrices, bool skillStartEquip, bool skillStartSpells)
         {
             Debug.Log("Begin mod init: LootRealism");
 
@@ -72,6 +73,12 @@ namespace LootRealism
                     FormulaHelper.RegisterOverride(mod, "IsItemStackable", (Func<DaggerfallUnityItem, bool>)IsItemStackable);
                 else
                     Debug.LogWarning("LootRealism: Unable to register bandage use handler.");
+            }
+
+            if (conditionBasedPrices)
+            {
+                FormulaHelper.RegisterOverride(mod, "ModifyFoundLootItems", (Func<DaggerfallUnityItem[], int>)RandomConditionFoundLootItems);
+                FormulaHelper.RegisterOverride(mod, "CalculateCost", (Func<int, int, int, int>)CalculateConditionCost);
             }
 
             StartGameBehaviour startGameBehaviour = GameManager.Instance.StartGameBehaviour;
@@ -104,6 +111,38 @@ namespace LootRealism
                 Debug.LogFormat("Applied a Bandage and healed {0} health.", heal);
             }
             return true;
+        }
+
+        public static int RandomConditionFoundLootItems(DaggerfallUnityItem[] lootItems)
+        {
+            int changes = 0;
+            for (int i = 0; i < lootItems.Length; i++)
+            {
+                DaggerfallUnityItem item = lootItems[i];
+                if ((item.ItemGroup == ItemGroups.Armor || item.ItemGroup == ItemGroups.Weapons || item.ItemGroup == ItemGroups.Books) && !item.IsArtifact)
+                {
+                    // Apply a random condition between 20% and 80%.
+                    float conditionMod = UnityEngine.Random.Range(0.2f, 0.8f);
+                    item.currentCondition = (int)(item.maxCondition * conditionMod);
+                    changes++;
+                }
+            }
+            return changes;
+        }
+
+        public static int CalculateConditionCost(int baseValue, int shopQuality, int conditionPercentage = -1)
+        {
+            float conditionMod = (conditionPercentage == -1) ? 1f : Mathf.Max((float)conditionPercentage / 100, 0.2f);
+
+            int cost = (int)(baseValue * conditionMod);
+
+            if (cost < 1)
+                cost = 1;
+
+            cost = FormulaHelper.ApplyRegionalPriceAdjustment(cost);
+            cost = 2 * (cost * (shopQuality - 10) / 100 + cost);
+
+            return cost;
         }
 
         static void AssignSkillEquipment(PlayerEntity playerEntity, CharacterDocument characterDocument)
