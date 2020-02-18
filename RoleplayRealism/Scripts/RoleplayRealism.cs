@@ -378,7 +378,8 @@ namespace RoleplayRealism
             if (!GameManager.IsGamePaused &&
                 !playerEntity.IsResting &&
                 playerEntity.CurrentHealth > 0 &&
-                !GameManager.Instance.EntityEffectBroker.SyntheticTimeIncrease)
+                !GameManager.Instance.EntityEffectBroker.SyntheticTimeIncrease &&
+                !DaggerfallUI.Instance.FadeBehaviour.FadeInProgress)
             {
                 float encPc = playerEntity.CarriedWeight / playerEntity.MaxEncumbrance;
                 float encOver = Mathf.Max(encPc - 0.75f, 0f) * EncEffectScaleFactor;

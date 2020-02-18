@@ -22,6 +22,13 @@
                 },
                 {
                     "Value": true,
+                    "Name": "conditionBasedPrices",
+                    "Description": "Item prices are based on condition and loot you find can be quite worn out",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
+                },
+                {
+                    "Value": true,
                     "Name": "skillBasedStartingEquipment",
                     "Description": "Starting equipment based on skills",
                     "$version": "v1",
