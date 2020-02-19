@@ -198,8 +198,11 @@ namespace LootRealism
         static void AddOrEquipWornItem(DaggerfallEntity entity, DaggerfallUnityItem item, bool equip = false)
         {
             entity.Items.AddItem(item);
-            if (item.ItemGroup == ItemGroups.Armor || item.ItemGroup == ItemGroups.Weapons)
+            if (item.ItemGroup == ItemGroups.Armor || item.ItemGroup == ItemGroups.Weapons ||
+                item.ItemGroup == ItemGroups.MensClothing || item.ItemGroup == ItemGroups.WomensClothing)
+            {
                 item.currentCondition = (int)(UnityEngine.Random.Range(0.3f, 0.7f) * item.maxCondition);
+            }
             if (equip)
                 entity.ItemEquipTable.EquipItem(item, true, false);
         }
@@ -274,6 +277,7 @@ namespace LootRealism
                 case MobileTypes.Assassin:
                 case MobileTypes.Bard:
                 case MobileTypes.Burglar:
+                case MobileTypes.Nightblade:
                 case MobileTypes.Rogue:
                 case MobileTypes.Thief:
                     AddOrEquipWornItem(enemyEntity, ItemBuilder.CreateWeapon((enemyEntity.MobileEnemy.ID == (int)MobileTypes.Rogue) ? RandomLongblade() : RandomShortblade(), ItemBuilder.RandomMaterial(itemLevel)), true);
