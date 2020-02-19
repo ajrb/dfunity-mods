@@ -29,15 +29,22 @@
                 },
                 {
                     "Value": true,
+                    "Name": "realisticEnemyEquipment",
+                    "Description": "Enemy equipment is realistic for their class and can be variable condition",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
+                },
+                {
+                    "Value": true,
                     "Name": "skillBasedStartingEquipment",
-                    "Description": "Starting equipment based on skills",
+                    "Description": "Player starting equipment is based on skills",
                     "$version": "v1",
                     "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
                 },
                 {
                     "Value": true,
                     "Name": "skillBasedStartingSpells",
-                    "Description": "Starting spells based on skills",
+                    "Description": "Player starting spells are based on skills",
                     "$version": "v1",
                     "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
                 }
