@@ -247,12 +247,12 @@ namespace LootRealism
                         // left-hand weapon?
                         else if (Dice100.SuccessRoll(chance))
                             AddOrEquipWornItem(enemyEntity, ItemBuilder.CreateWeapon(SecondaryWeapon(), ItemBuilder.RandomMaterial(itemLevel)));
-                        chance = 65;
+                        chance = 60;
                     }
                     else
                     {
                         AddOrEquipWornItem(enemyEntity, ItemBuilder.CreateWeapon(RandomTwoHander(), ItemBuilder.RandomMaterial(itemLevel)), true);
-                        chance = 80;
+                        chance = 75;
                     }
                     if (enemyEntity.MobileEnemy.ID == (int)MobileTypes.Barbarian)
                         chance -= 30;   // Barbies tend to forgo armor
