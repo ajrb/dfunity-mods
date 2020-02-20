@@ -23,6 +23,8 @@ namespace DaggerfallWorkshop.Game
         const int samples = 16;
         const string horseNeckTextureName = "MRED00I1.CFA";
         const string cartNeckTextureName = "MRED01I1.CFA";
+        const SoundClips trampleMale = SoundClips.BretonMalePain3;
+        const SoundClips trampleFemale = SoundClips.BretonFemalePain3;
 
         int sampleIdx = 0;
         int softenFollow = 0;
@@ -33,8 +35,11 @@ namespace DaggerfallWorkshop.Game
         PlayerMotor playerMotor;
         TransportManager transportManager;
         PlayerMouseLook playerMouseLook;
+        DaggerfallAudioSource dfAudioSource;
 
         GameObject cachedColliderHitObject;
+        AudioClip trampleMaleClip;
+        AudioClip trampleFemaleClip;
 
         public bool TerrainFollowing { get; set; }
 
@@ -65,6 +70,13 @@ namespace DaggerfallWorkshop.Game
             playerMouseLook = GameManager.Instance.PlayerMouseLook;
             if (!playerMouseLook)
                 throw new Exception("PlayerMouseLook not found.");
+
+            dfAudioSource = GetComponent<DaggerfallAudioSource>();
+            if (!dfAudioSource)
+                throw new Exception("DaggerfallAudioSource not found.");
+
+            trampleMaleClip = dfAudioSource.GetAudioClip((int)trampleMale);
+            trampleFemaleClip = dfAudioSource.GetAudioClip((int)trampleFemale);
 
             GameManager.Instance.SpeedChanger.CanRun = CanRunUnlessRidingCart;
 
@@ -113,6 +125,8 @@ namespace DaggerfallWorkshop.Game
                         EnemyBlood blood = npcTransform.GetComponent<EnemyBlood>();
                         if (blood)
                             blood.ShowBloodSplash(0, BloodPos());
+                        AudioClip trampleClip = mobileNpc.Gender == Genders.Male ? trampleMaleClip : trampleFemaleClip;
+                        dfAudioSource.AudioSource.PlayOneShot(trampleClip, GameManager.Instance.TransportManager.RidingVolumeScale * DaggerfallUnity.Settings.SoundVolume);
                         playerEntity.SpawnCityGuards(true);
                     }
                     else
