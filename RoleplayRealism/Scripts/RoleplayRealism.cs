@@ -1,10 +1,19 @@
 // Project:         RoleplayRealism mod for Daggerfall Unity (http://www.dfworkshop.net)
-// Copyright:       Copyright (C) 2019 Hazelnut
+// Copyright:       Copyright (C) 2020 Hazelnut
 // License:         MIT License (http://www.opensource.org/licenses/mit-license.php)
 // Author:          Hazelnut
 
+using System;
+using System.Collections.Generic;
+using UnityEngine;
 using DaggerfallConnect;
+using DaggerfallConnect.Arena2;
+using DaggerfallConnect.FallExe;
+using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
+using DaggerfallWorkshop.Game.Banking;
+using DaggerfallWorkshop.Game.Guilds;
+using DaggerfallWorkshop.Game.Questing;
 using DaggerfallWorkshop.Game.Entity;
 using DaggerfallWorkshop.Game.Formulas;
 using DaggerfallWorkshop.Game.Items;
@@ -13,22 +22,14 @@ using DaggerfallWorkshop.Game.UserInterface;
 using DaggerfallWorkshop.Game.UserInterfaceWindows;
 using DaggerfallWorkshop.Game.Utility.ModSupport;
 using DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings;
-using UnityEngine;
-using DaggerfallWorkshop;
-using DaggerfallWorkshop.Game.Banking;
-using DaggerfallWorkshop.Game.Guilds;
-using DaggerfallConnect.Arena2;
-using DaggerfallWorkshop.Game.Questing;
-using System.Collections.Generic;
-using System;
-using DaggerfallConnect.FallExe;
-using DaggerfallWorkshop.Game.Utility;
+using DaggerfallWorkshop.Utility;
 
 namespace RoleplayRealism
 {
     public class RoleplayRealism : MonoBehaviour
     {
         public static float EncEffectScaleFactor = 2f;
+        const int G = 85;   // Mob Array Gap from 42 .. 128 = 85
 
         protected static string[] placesTable =
         {
@@ -67,13 +68,14 @@ namespace RoleplayRealism
             bool climbing = settings.GetBool("Modules", "climbingRestriction");
             bool weaponSpeed = settings.GetBool("Modules", "weaponSpeed");
             bool equipDamage = settings.GetBool("Modules", "equipDamage");
+            bool enemyAppearance = settings.GetBool("Modules", "enemyAppearance");
 
-            InitMod(bedSleeping, archery, riding, encumbrance, bandaging, shipPorts, expulsion, climbing, weaponSpeed, equipDamage);
+            InitMod(bedSleeping, archery, riding, encumbrance, bandaging, shipPorts, expulsion, climbing, weaponSpeed, equipDamage, enemyAppearance);
 
             mod.IsReady = true;
         }
 
-        public static void InitMod(bool bedSleeping, bool archery, bool riding, bool encumbrance, bool bandaging, bool shipPorts, bool expulsion, bool climbing, bool weaponSpeed, bool equipDamage)
+        public static void InitMod(bool bedSleeping, bool archery, bool riding, bool encumbrance, bool bandaging, bool shipPorts, bool expulsion, bool climbing, bool weaponSpeed, bool equipDamage, bool enemyAppearance)
         {
             Debug.Log("Begin mod init: RoleplayRealism");
 
@@ -145,6 +147,11 @@ namespace RoleplayRealism
             if (equipDamage)
             {
                 FormulaHelper.RegisterOverride(mod, "ApplyConditionDamageThroughPhysicalHit", (Func<DaggerfallUnityItem, DaggerfallEntity, int, bool>)ApplyConditionDamageThroughPhysicalHit);
+            }
+
+            if (enemyAppearance)
+            {
+                UpdateEnemyClassAppearances();
             }
 
             // Initialise the FG master quest.
@@ -471,6 +478,71 @@ namespace RoleplayRealism
                 children = null
             }) && success;
             return success;
+        }
+
+        static void UpdateEnemyClassAppearances()
+        {
+            EnemyBasics.Enemies[(int)MobileTypes.Sorcerer - G].MaleTexture = 476;
+            EnemyBasics.Enemies[(int)MobileTypes.Sorcerer - G].FemaleTexture = 475;
+            EnemyBasics.Enemies[(int)MobileTypes.Sorcerer - G].HasRangedAttack1 = false;
+            EnemyBasics.Enemies[(int)MobileTypes.Sorcerer - G].CastsMagic = true;
+            EnemyBasics.Enemies[(int)MobileTypes.Sorcerer - G].PrimaryAttackAnimFrames = new int[] { 0, 1, -1, 2, 3, 4, 5 };
+            EnemyBasics.Enemies[(int)MobileTypes.Sorcerer - G].ChanceForAttack2 = 33;
+            EnemyBasics.Enemies[(int)MobileTypes.Sorcerer - G].PrimaryAttackAnimFrames2 = new int[] { 5, 4, 3, -1, 2, 1, 0 };
+            EnemyBasics.Enemies[(int)MobileTypes.Sorcerer - G].ChanceForAttack3 = 33;
+            EnemyBasics.Enemies[(int)MobileTypes.Sorcerer - G].PrimaryAttackAnimFrames3 = new int[] { 0, 1, -1, 2, 2, 1, 0 };
+            EnemyBasics.Enemies[(int)MobileTypes.Sorcerer - G].HasSpellAnimation = true;
+            EnemyBasics.Enemies[(int)MobileTypes.Sorcerer - G].SpellAnimFrames = new int[] { 0, 1, 2, 3, 3 };
+
+            EnemyBasics.Enemies[(int)MobileTypes.Bard - G].MaleTexture = 482;
+            EnemyBasics.Enemies[(int)MobileTypes.Bard - G].FemaleTexture = 481;
+            EnemyBasics.Enemies[(int)MobileTypes.Bard - G].PrimaryAttackAnimFrames = new int[] { 0, 1, -1, 2, 3, 4, -1, 5 };
+            EnemyBasics.Enemies[(int)MobileTypes.Bard - G].ChanceForAttack2 = 50;
+            EnemyBasics.Enemies[(int)MobileTypes.Bard - G].PrimaryAttackAnimFrames2 = new int[] { 3, 4, -1, 5, 0 };
+            EnemyBasics.Enemies[(int)MobileTypes.Bard - G].ChanceForAttack3 = 0;
+
+            EnemyBasics.Enemies[(int)MobileTypes.Rogue - G].MaleTexture = 488;
+            EnemyBasics.Enemies[(int)MobileTypes.Rogue - G].FemaleTexture = 487;
+            EnemyBasics.Enemies[(int)MobileTypes.Rogue - G].PrimaryAttackAnimFrames = new int[] { 0, 0, 1, -1, 2, 2, 1, 0 };
+            EnemyBasics.Enemies[(int)MobileTypes.Rogue - G].PrimaryAttackAnimFrames2 = new int[] { 0, 1, -1, 2, 3, 4, 5 };
+            EnemyBasics.Enemies[(int)MobileTypes.Rogue - G].PrimaryAttackAnimFrames3 = new int[] { 5, 5, 3, -1, 2, 1, 0 };
+
+            EnemyBasics.Enemies[(int)MobileTypes.Archer - G].MaleTexture = 480;
+            EnemyBasics.Enemies[(int)MobileTypes.Archer - G].FemaleTexture = 479;
+            EnemyBasics.Enemies[(int)MobileTypes.Archer - G].PrimaryAttackAnimFrames = new int[] { 0, 1, -1, 2, 3, 4, -1, 5, 0 };
+            EnemyBasics.Enemies[(int)MobileTypes.Archer - G].ChanceForAttack2 = 33;
+            EnemyBasics.Enemies[(int)MobileTypes.Archer - G].PrimaryAttackAnimFrames2 = new int[] { 4, 4, -1, 5, 0, 0 };
+            EnemyBasics.Enemies[(int)MobileTypes.Archer - G].ChanceForAttack3 = 33;
+            EnemyBasics.Enemies[(int)MobileTypes.Archer - G].PrimaryAttackAnimFrames3 = new int[] { 4, -1, 5, 0, 0, 1, -1, 2, 3, 4, -1, 5, 0 };
+
+            EnemyBasics.Enemies[(int)MobileTypes.Ranger - G].MaleTexture = 480;
+            EnemyBasics.Enemies[(int)MobileTypes.Ranger - G].FemaleTexture = 479;
+            EnemyBasics.Enemies[(int)MobileTypes.Ranger - G].PrimaryAttackAnimFrames = new int[] { 0, 1, -1, 2, 3, 4, -1, 5, 0 };
+            EnemyBasics.Enemies[(int)MobileTypes.Ranger - G].ChanceForAttack2 = 33;
+            EnemyBasics.Enemies[(int)MobileTypes.Ranger - G].PrimaryAttackAnimFrames2 = new int[] { 4, 4, -1, 5, 0, 0 };
+            EnemyBasics.Enemies[(int)MobileTypes.Ranger - G].ChanceForAttack3 = 33;
+            EnemyBasics.Enemies[(int)MobileTypes.Ranger - G].PrimaryAttackAnimFrames3 = new int[] { 4, -1, 5, 0, 0, 1, -1, 2, 3, 4, -1, 5, 0 };
+
+            EnemyBasics.Enemies[(int)MobileTypes.Barbarian - G].MaleTexture = 482;
+            EnemyBasics.Enemies[(int)MobileTypes.Barbarian - G].FemaleTexture = 481;
+            EnemyBasics.Enemies[(int)MobileTypes.Barbarian - G].PrimaryAttackAnimFrames = new int[] { 0, 1, -1, 2, 3, 4, -1, 5 };
+            EnemyBasics.Enemies[(int)MobileTypes.Barbarian - G].ChanceForAttack2 = 50;
+            EnemyBasics.Enemies[(int)MobileTypes.Barbarian - G].PrimaryAttackAnimFrames2 = new int[] { 3, 4, -1, 5, 0 };
+            EnemyBasics.Enemies[(int)MobileTypes.Barbarian - G].ChanceForAttack3 = 0;
+
+            EnemyBasics.Enemies[(int)MobileTypes.Warrior - G].MaleTexture = 478;
+            EnemyBasics.Enemies[(int)MobileTypes.Warrior - G].FemaleTexture = 477;
+            EnemyBasics.Enemies[(int)MobileTypes.Warrior - G].PrimaryAttackAnimFrames = new int[] { 0, 1, 2, -1, 3, 4, 5 };
+            EnemyBasics.Enemies[(int)MobileTypes.Warrior - G].ChanceForAttack2 = 50;
+            EnemyBasics.Enemies[(int)MobileTypes.Warrior - G].PrimaryAttackAnimFrames2 = new int[] { 4, 5, -1, 3, 2, 1, 0 };
+            EnemyBasics.Enemies[(int)MobileTypes.Warrior - G].ChanceForAttack3 = 0;
+
+            EnemyBasics.Enemies[(int)MobileTypes.Knight - G].MaleTexture = 478;
+            EnemyBasics.Enemies[(int)MobileTypes.Knight - G].FemaleTexture = 477;
+            EnemyBasics.Enemies[(int)MobileTypes.Knight - G].PrimaryAttackAnimFrames = new int[] { 0, 1, 2, -1, 3, 4, 5 };
+            EnemyBasics.Enemies[(int)MobileTypes.Knight - G].ChanceForAttack2 = 50;
+            EnemyBasics.Enemies[(int)MobileTypes.Knight - G].PrimaryAttackAnimFrames2 = new int[] { 4, 5, -1, 3, 2, 1, 0 };
+            EnemyBasics.Enemies[(int)MobileTypes.Knight - G].ChanceForAttack3 = 0;
         }
 
     }
