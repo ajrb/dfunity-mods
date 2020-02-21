@@ -251,7 +251,7 @@ namespace LootRealism
             Races playerRace = playerEntity.Race;
             int chance = 50;
 
-            // Held weapon(s) and shield:
+            // Held weapon(s) and shield/secondary:
             switch ((MobileTypes)enemyEntity.MobileEnemy.ID)
             {
                 // Ranged specialists:
@@ -319,7 +319,7 @@ namespace LootRealism
                     break;
             }
 
-            // cuirass (everyone gets a >50% chance)
+            // cuirass (everyone gets at least a 50% chance)
             if (Dice100.SuccessRoll(Mathf.Max(chance, 50)))
                 AddOrEquipWornItem(enemyEntity, ItemBuilder.CreateArmor(playerGender, playerRace, Armor.Cuirass, ItemBuilder.RandomArmorMaterial(itemLevel)), true);
             // greaves (Barbarians always get them)
@@ -334,6 +334,7 @@ namespace LootRealism
 
             if (chance > 50)
             {
+                chance -= 10;
                 // right pauldron
                 if (Dice100.SuccessRoll(chance))
                     AddOrEquipWornItem(enemyEntity, ItemBuilder.CreateArmor(playerGender, playerRace, Armor.Right_Pauldron, ItemBuilder.RandomArmorMaterial(itemLevel)), true);
