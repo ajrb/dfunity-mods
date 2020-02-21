@@ -1,12 +1,13 @@
 // Project:         Archaeologists Guild for Daggerfall Unity (http://www.dfworkshop.net)
-// Copyright:       Copyright (C) 2018 Hazelnut
+// Copyright:       Copyright (C) 2020 Hazelnut
 // License:         MIT License (http://www.opensource.org/licenses/mit-license.php)
 // Author:          Hazelnut
 
+using UnityEngine;
+using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Items;
 using DaggerfallWorkshop.Game.Serialization;
-using UnityEngine;
 
 namespace Archaeologists
 {
@@ -15,7 +16,7 @@ namespace Archaeologists
         internal const int INACTIVE = 1;
         internal const int ACTIVATED = 2;
 
-        internal const int BASEVALUE = 800;             // Base value of a locator device. Actual cost will depend on guild rank.
+        internal const int BASEVALUE = 800;                 // Base value of a locator device. Actual cost will depend on guild rank.
         internal const int BASEACTIVATION_EXPLORATION = 20; // Percentage of dungeon that must be explored before device will activate.
 
         internal const string NAME = "Locator device";
@@ -67,6 +68,8 @@ namespace Archaeologists
                         if (!locatorDevice.enabled)
                         {
                             int requiredExploration = (value * BASEACTIVATION_EXPLORATION) / BASEVALUE;
+                            if (DaggerfallUnity.Settings.SmallerDungeons)
+                                requiredExploration *= 2;
                             Debug.LogFormat("Explored: {0}  Required: {1}", exploredPercent, requiredExploration);
                             if (exploredPercent < requiredExploration)
                             {

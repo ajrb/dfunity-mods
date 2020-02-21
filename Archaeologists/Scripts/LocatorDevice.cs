@@ -1,8 +1,10 @@
 // Project:         Archaeologists Guild for Daggerfall Unity (http://www.dfworkshop.net)
-// Copyright:       Copyright (C) 2018 Hazelnut
+// Copyright:       Copyright (C) 2020 Hazelnut
 // License:         MIT License (http://www.opensource.org/licenses/mit-license.php)
 // Author:          Hazelnut
 
+using UnityEngine;
+using System.Collections.Generic;
 using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Guilds;
@@ -10,14 +12,13 @@ using DaggerfallWorkshop.Game.Items;
 using DaggerfallWorkshop.Game.Questing;
 using DaggerfallWorkshop.Game.Serialization;
 using DaggerfallWorkshop.Utility;
-using System.Collections.Generic;
-using UnityEngine;
 
 namespace Archaeologists
 {
     public class LocatorDevice : MonoBehaviour
     {
         const string indicatorFilename = "SUN_00I0.IMG";
+        internal const string SMALLDUNGEON_MSG = "Actually that dungeon is really small, so you wont be needing a locator device.";
 
         private Vector3 questTargetPos = Vector3.zero;
 
@@ -113,7 +114,10 @@ namespace Archaeologists
                 {
                     if (place.SiteDetails.siteType == SiteTypes.Dungeon)
                     {
-                        GameManager.Instance.PlayerEntity.Items.AddItem(new LocatorItem(), ItemCollection.AddPosition.DontCare, true);
+                        if (DaggerfallUnity.Settings.SmallerDungeons)
+                            DaggerfallUI.MessageBox(SMALLDUNGEON_MSG);
+                        else
+                            GameManager.Instance.PlayerEntity.Items.AddItem(new LocatorItem(), ItemCollection.AddPosition.DontCare, true);
                         break;
                     }
                 }

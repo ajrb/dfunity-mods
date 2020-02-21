@@ -1,18 +1,18 @@
 // Project:         Archaeologists Guild for Daggerfall Unity (http://www.dfworkshop.net)
-// Copyright:       Copyright (C) 2019 Hazelnut
+// Copyright:       Copyright (C) 2020 Hazelnut
 // License:         MIT License (http://www.opensource.org/licenses/mit-license.php)
 // Author:          Hazelnut
 
 using System.Collections.Generic;
+using UnityEngine;
 using DaggerfallConnect;
 using DaggerfallConnect.Arena2;
-using DaggerfallWorkshop.Game.Entity;
-using UnityEngine;
-using DaggerfallWorkshop.Game.UserInterfaceWindows;
-using DaggerfallWorkshop.Game.Items;
-using Archaeologists;
 using DaggerfallConnect.FallExe;
+using DaggerfallWorkshop.Game.Entity;
+using DaggerfallWorkshop.Game.Items;
 using DaggerfallWorkshop.Game.UserInterface;
+using DaggerfallWorkshop.Game.UserInterfaceWindows;
+using Archaeologists;
 
 namespace DaggerfallWorkshop.Game.Guilds
 {

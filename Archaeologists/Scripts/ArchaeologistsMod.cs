@@ -1,8 +1,11 @@
 // Project:         Archaeologists Guild for Daggerfall Unity (http://www.dfworkshop.net)
-// Copyright:       Copyright (C) 2018 Hazelnut
+// Copyright:       Copyright (C) 2020 Hazelnut
 // License:         MIT License (http://www.opensource.org/licenses/mit-license.php)
 // Author:          Hazelnut
 
+using System;
+using System.Collections.Generic;
+using UnityEngine;
 using DaggerfallConnect;
 using DaggerfallConnect.Arena2;
 using DaggerfallWorkshop.Game;
@@ -13,9 +16,6 @@ using DaggerfallWorkshop.Game.Items;
 using DaggerfallWorkshop.Game.MagicAndEffects.MagicEffects;
 using DaggerfallWorkshop.Game.Questing;
 using DaggerfallWorkshop.Game.Utility.ModSupport;
-using System;
-using System.Collections.Generic;
-using UnityEngine;
 
 namespace Archaeologists
 {
