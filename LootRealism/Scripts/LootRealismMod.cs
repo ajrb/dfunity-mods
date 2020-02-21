@@ -151,25 +151,38 @@ namespace LootRealism
             return cost;
         }
 
+        static bool CoinFlip()
+        {
+            return UnityEngine.Random.Range(0, 2) == 0;
+        }
         static Armor RandomShield()
         {
             return (Armor)UnityEngine.Random.Range((int)Armor.Buckler, (int)Armor.Round_Shield + 1);
         }
-        static Weapons RandomTwoHander()
+        static Weapons RandomLongblade()
         {
-            return (Weapons)UnityEngine.Random.Range((int)Weapons.Claymore, (int)Weapons.Battle_Axe + 1);
+            return (Weapons)UnityEngine.Random.Range((int)Weapons.Broadsword, (int)Weapons.Katana + 1);
+        }
+        static Weapons RandomBigWeapon()
+        {
+            return (Weapons)UnityEngine.Random.Range((int)Weapons.Claymore, (int)Weapons.War_Axe + 1);
         }
         static Weapons RandomBlunt()
         {
             return (Weapons)UnityEngine.Random.Range((int)Weapons.Mace, (int)Weapons.Warhammer + 1);
         }
+        static Weapons RandomAxe()
+        {
+            return (Weapons)UnityEngine.Random.Range((int)Weapons.Battle_Axe, (int)Weapons.War_Axe + 1);
+        }
+        private static Weapons RandomAxeOrBlade()
+        {
+            return CoinFlip() ? RandomAxe() : RandomLongblade();
+        }
+
         static Weapons RandomBow()
         {
             return (Weapons)UnityEngine.Random.Range((int)Weapons.Short_Bow, (int)Weapons.Long_Bow + 1);
-        }
-        static Weapons RandomLongblade()
-        {
-            return (Weapons)UnityEngine.Random.Range((int)Weapons.Broadsword, (int)Weapons.Longsword + 1);
         }
         static Weapons RandomShortblade()
         {
@@ -193,6 +206,22 @@ namespace LootRealism
                 return Weapons.Short_Bow;
             else
                 return RandomShortblade();
+        }
+        static Weapons GetCombatClassWeapon(MobileTypes enemyType)
+        {
+            switch (enemyType)
+            {
+                case MobileTypes.Barbarian:
+                    return RandomBigWeapon();
+                case MobileTypes.Knight:
+                    return CoinFlip() ? RandomBlunt() : RandomLongblade();
+                case MobileTypes.Knight_CityWatch:
+                    return RandomAxeOrBlade();
+                case MobileTypes.Monk:
+                    return RandomBlunt();
+                default:
+                    return RandomLongblade();
+            }
         }
 
         static void AddOrEquipWornItem(DaggerfallEntity entity, DaggerfallUnityItem item, bool equip = false)
@@ -230,20 +259,23 @@ namespace LootRealism
                 case MobileTypes.Ranger:
                     AddOrEquipWornItem(enemyEntity, ItemBuilder.CreateWeapon(RandomBow(), ItemBuilder.RandomMaterial(itemLevel)), true);
                     AddOrEquipWornItem(enemyEntity, ItemBuilder.CreateWeapon((enemyEntity.MobileEnemy.ID == (int)MobileTypes.Ranger) ? RandomLongblade() : RandomShortblade(), ItemBuilder.RandomMaterial(itemLevel)));
+                    DaggerfallUnityItem arrowPile = ItemBuilder.CreateWeapon(Weapons.Arrow, WeaponMaterialTypes.Iron);
+                    arrowPile.stackCount = UnityEngine.Random.Range(4, 17);
+                    enemyEntity.Items.AddItem(arrowPile);
                     chance = 55;
                     break;
 
                 // Combat classes:
                 case MobileTypes.Barbarian:
-                case MobileTypes.Battlemage:
                 case MobileTypes.Knight:
                 case MobileTypes.Knight_CityWatch:
                 case MobileTypes.Monk:
                 case MobileTypes.Spellsword:
                 case MobileTypes.Warrior:
+                case MobileTypes.Rogue:
                     if (variant == 0)
                     {
-                        AddOrEquipWornItem(enemyEntity, ItemBuilder.CreateWeapon((enemyEntity.MobileEnemy.ID == (int)MobileTypes.Monk) ? RandomBlunt() : RandomLongblade(), ItemBuilder.RandomMaterial(itemLevel)), true);
+                        AddOrEquipWornItem(enemyEntity, ItemBuilder.CreateWeapon(GetCombatClassWeapon((MobileTypes)enemyEntity.MobileEnemy.ID), ItemBuilder.RandomMaterial(itemLevel)), true);
                         // Left hand shield?
                         if (Dice100.SuccessRoll(chance))
                             AddOrEquipWornItem(enemyEntity, ItemBuilder.CreateArmor(playerGender, playerRace, RandomShield(), ItemBuilder.RandomArmorMaterial(itemLevel)), true);
@@ -254,7 +286,7 @@ namespace LootRealism
                     }
                     else
                     {
-                        AddOrEquipWornItem(enemyEntity, ItemBuilder.CreateWeapon(RandomTwoHander(), ItemBuilder.RandomMaterial(itemLevel)), true);
+                        AddOrEquipWornItem(enemyEntity, ItemBuilder.CreateWeapon(RandomBigWeapon(), ItemBuilder.RandomMaterial(itemLevel)), true);
                         chance = 75;
                     }
                     if (enemyEntity.MobileEnemy.ID == (int)MobileTypes.Barbarian)
@@ -278,11 +310,11 @@ namespace LootRealism
                 case MobileTypes.Bard:
                 case MobileTypes.Burglar:
                 case MobileTypes.Nightblade:
-                case MobileTypes.Rogue:
                 case MobileTypes.Thief:
-                    AddOrEquipWornItem(enemyEntity, ItemBuilder.CreateWeapon((enemyEntity.MobileEnemy.ID == (int)MobileTypes.Rogue) ? RandomLongblade() : RandomShortblade(), ItemBuilder.RandomMaterial(itemLevel)), true);
+                case MobileTypes.Battlemage:
+                    AddOrEquipWornItem(enemyEntity, ItemBuilder.CreateWeapon((enemyEntity.MobileEnemy.ID == (int)MobileTypes.Battlemage) ? RandomAxeOrBlade() : RandomShortblade(), ItemBuilder.RandomMaterial(itemLevel)), true);
                     if (Dice100.SuccessRoll(chance))
-                        AddOrEquipWornItem(enemyEntity, ItemBuilder.CreateWeapon(SecondaryWeapon(), ItemBuilder.RandomMaterial(itemLevel)), true);
+                        AddOrEquipWornItem(enemyEntity, ItemBuilder.CreateWeapon(SecondaryWeapon(), ItemBuilder.RandomMaterial(itemLevel/2)), true);
                     chance = 50;
                     break;
             }
@@ -710,7 +742,7 @@ namespace LootRealism
             new LootChanceMatrix() {key = "-",   MinGold = 0,   MaxGold = 0,    P1 = 0, P2 = 0, C1 = 0, C2 = 0, C3 = 0, M1 = 0, AM = 0,  WP = 0,  MI = 0, CL = 0, BK = 0, M2 = 0, RL = 0 }, //None
             new LootChanceMatrix() {key = "A",   MinGold = 0,   MaxGold = 5,    P1 = 0, P2 = 0, C1 = 1, C2 = 1, C3 = 1, M1 = 0, AM = 1,  WP = 5,  MI = 1, CL = 5, BK = 0, M2 = 1, RL = 0 }, //Orcs
             new LootChanceMatrix() {key = "B",   MinGold = 0,   MaxGold = 0,    P1 = 5, P2 = 5, C1 = 0, C2 = 0, C3 = 0, M1 = 0, AM = 0,  WP = 0,  MI = 0, CL = 0, BK = 0, M2 = 0, RL = 0 }, //Nature
-            new LootChanceMatrix() {key = "C",   MinGold = 0,   MaxGold = 10,   P1 = 5, P2 = 5, C1 = 3, C2 = 3, C3 = 3, M1 = 3, AM = 10, WP = 40, MI = 1, CL = 50,BK = 2, M2 = 2, RL = 1 }, //Rangers
+            new LootChanceMatrix() {key = "C",   MinGold = 0,   MaxGold = 10,   P1 = 5, P2 = 5, C1 = 3, C2 = 3, C3 = 3, M1 = 3, AM = 10, WP = 20, MI = 1, CL = 50,BK = 2, M2 = 2, RL = 1 }, //Rangers
             new LootChanceMatrix() {key = "D",   MinGold = 0,   MaxGold = 0,    P1 = 2, P2 = 2, C1 = 2, C2 = 2, C3 = 2, M1 = 2, AM = 0,  WP = 0,  MI = 0, CL = 0, BK = 0, M2 = 0, RL = 0 }, //Harpy
             new LootChanceMatrix() {key = "E",   MinGold = 0,   MaxGold = 10,   P1 = 2, P2 = 2, C1 = 5, C2 = 5, C3 = 5, M1 = 2, AM = 0,  WP = 5,  MI = 0, CL = 0, BK = 0, M2 = 1, RL = 2 }, //Giant
             new LootChanceMatrix() {key = "F",   MinGold = 2,   MaxGold = 15,   P1 = 2, P2 = 2, C1 = 5, C2 = 5, C3 = 5, M1 = 2, AM = 80, WP = 70, MI = 2, CL = 0, BK = 0, M2 = 3, RL = 10 },//Giant Loot
@@ -727,11 +759,11 @@ namespace LootRealism
             new LootChanceMatrix() {key = "Q",   MinGold = 10,  MaxGold = 40,   P1 = 2, P2 = 2, C1 = 4, C2 = 4, C3 = 4, M1 = 2, AM = 0,  WP = 0,  MI = 2, CL = 70,BK = 5, M2 = 3, RL = 5 }, //Vampires
             new LootChanceMatrix() {key = "R",   MinGold = 2,   MaxGold = 10,   P1 = 0, P2 = 0, C1 = 3, C2 = 3, C3 = 3, M1 = 5, AM = 0,  WP = 0,  MI = 1, CL = 0, BK = 0, M2 = 2, RL = 0 }, //Water monsters
             new LootChanceMatrix() {key = "S",   MinGold = 30,  MaxGold = 70,   P1 = 5, P2 = 5, C1 = 5, C2 = 5, C3 = 5, M1 = 15,AM = 0,  WP = 0,  MI = 8, CL = 5, BK = 5, M2 = 2, RL = 10 },//Dragon Loot, Daedras
-            new LootChanceMatrix() {key = "T",   MinGold = 10,  MaxGold = 50,   P1 = 0, P2 = 0, C1 = 0, C2 = 0, C3 = 0, M1 = 0, AM = 80, WP = 40, MI = 0, CL = 50,BK = 10,M2 = 0, RL = 10}, //Knight Orc Warlord
+            new LootChanceMatrix() {key = "T",   MinGold = 10,  MaxGold = 50,   P1 = 0, P2 = 0, C1 = 0, C2 = 0, C3 = 0, M1 = 0, AM = 60, WP = 40, MI = 0, CL = 50,BK = 10,M2 = 0, RL = 10}, //Knight Orc Warlord
             new LootChanceMatrix() {key = "U",   MinGold = 0,   MaxGold = 40,   P1 = 5, P2 = 5, C1 = 5, C2 = 5, C3 = 5, M1 = 10,AM = 20, WP = 20, MI = 4, CL = 20,BK = 90,M2 = 5, RL = 70 },//Laboratory Loot
-            new LootChanceMatrix() {key = "LR1", MinGold = 0,   MaxGold = 20,   P1 = 0, P2 = 0, C1 = 1, C2 = 1, C3 = 1, M1 = 0, AM = 60, WP = 50, MI = 1, CL = 50,BK = 0, M2 = 1, RL = 5 }, //Warrior, Barbarian
-            new LootChanceMatrix() {key = "LR2", MinGold = 0,   MaxGold = 5,    P1 = 3, P2 = 3, C1 = 1, C2 = 1, C3 = 1, M1 = 1, AM = 0,  WP = 20, MI = 1, CL = 60,BK = 10,M2 = 1, RL = 0 }, //Healer, Orc Shaman
-            new LootChanceMatrix() {key = "LR3", MinGold = 0,   MaxGold = 30,   P1 = 3, P2 = 3, C1 = 1, C2 = 1, C3 = 1, M1 = 1, AM = 0,  WP = 40, MI = 1, CL = 95,BK = 70,M2 = 2, RL = 10 },//Spellcasters
+            new LootChanceMatrix() {key = "LR1", MinGold = 0,   MaxGold = 20,   P1 = 0, P2 = 0, C1 = 0, C2 = 0, C3 = 0, M1 = 0, AM = 40, WP = 50, MI = 1, CL = 50,BK = 0, M2 = 0, RL = 5 }, //Warrior, Barbarian
+            new LootChanceMatrix() {key = "LR2", MinGold = 0,   MaxGold = 5,    P1 = 3, P2 = 3, C1 = 1, C2 = 1, C3 = 3, M1 = 3, AM = 0,  WP = 20, MI = 1, CL = 60,BK = 10,M2 = 3, RL = 0 }, //Healer, Orc Shaman
+            new LootChanceMatrix() {key = "LR3", MinGold = 0,   MaxGold = 30,   P1 = 3, P2 = 3, C1 = 1, C2 = 1, C3 = 1, M1 = 2, AM = 0,  WP = 40, MI = 1, CL = 95,BK = 70,M2 = 2, RL = 10 },//Spellcasters
         };
     }
 }
