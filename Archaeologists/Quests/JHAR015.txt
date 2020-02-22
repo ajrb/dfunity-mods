@@ -122,13 +122,14 @@ Message:  1030
  I have been entrusted with the Staff
  of Magnus, a powerful artifact.
  The Archaeologists need me to deliver
- it to _kni_ of ___dest_
+ it to _kni_ of ___dest_ at _dest_
  in =timer_ days' time.
 
 Message:  1031
 %qdt:
  The Staff of Magnus has been stolen
- from me by a mob.
+ from me by a mob. I need to try to
+ recover it, I should ask around.
 
 Message:  1032
 %qdt:
@@ -188,7 +189,10 @@ Foe _boss_ is Nightblade
     start timer _ambush_
 	log 1030 step 0 
 	get item _staff_
--    pc at _dest_ do _ambush_
+    place npc _kni_ at _dest_
+
+_arriveAmbush_ task:
+    pc at _dest_ do _ambush_
 
 _ambush_ task:
     say 1010
@@ -199,7 +203,6 @@ _ambush_ task:
     create foe _init2_ every 0 minutes 2 times with 100% success
     log 1031 step 1
     pc at _dummyplace_ do _houseattack_
-    place npc _kni_ at _dest_
 
 _qgclicked_ task:
 	clicked npc _qgiver_ 
@@ -258,6 +261,8 @@ _ft2_ task:
     have _staff_ set _recover_
     create foe _nme1_ every 0 minutes 1 times with 100% success
     create foe _nme2_ every 0 minutes 1 times with 100% success
+    cast Fortitude spell on _boss_
+    cast Orc_Strength spell on _boss_
     cast Shield spell on _boss_
     cast Spell_Reflection spell on _boss_
     cast Spell_Shield spell on _boss_
