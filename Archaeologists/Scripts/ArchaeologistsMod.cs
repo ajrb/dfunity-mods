@@ -220,7 +220,7 @@ namespace Archaeologists
                 languageSkill == DFCareer.Skills.Streetwise)
             {
                 chance += player.Skills.GetLiveSkillValue(languageSkill) / 2;
-                chance += (player.Stats.LivePersonality - 40) / 2;
+                chance += (player.Stats.LivePersonality - 50) / 2;
             }
             else
             {
@@ -235,15 +235,13 @@ namespace Archaeologists
             if (languagesEffect != null)
                 chance += languagesEffect.ChanceValue();
            
-            int roll = UnityEngine.Random.Range(0, 150);
+            int roll = UnityEngine.Random.Range(0, 130);
             bool success = (roll < chance);
 
             // Allow close calls with humans to train the skills.
-            if (!success && roll - chance < 30 &&
-                (languageSkill == DFCareer.Skills.Etiquette && languageSkill == DFCareer.Skills.Streetwise))
-            {
+            if (!success && roll - chance < 30 && languageSkill == DFCareer.Skills.Etiquette && languageSkill == DFCareer.Skills.Streetwise)
                 player.TallySkill(languageSkill, 1);
-            }
+
             Debug.LogFormat("Archaeologists Pacification {3} using {0} skill: chance= {1}  roll= {2}", languageSkill, chance, roll, success ? "success" : "failure");
             return success;
         }

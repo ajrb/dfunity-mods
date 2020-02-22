@@ -1,6 +1,6 @@
 {
     "ModTitle": "Archaeologists",
-    "ModVersion": "0.11",
+    "ModVersion": "1.0",
     "ModAuthor": "Hazelnut",
     "ContactInfo": "forums.dfworkshop.net",
     "DFUnity_Version": "0.10.15",
@@ -43,5 +43,6 @@
             "ArchsGuildBooks"
         ],
         "SpellIcons": null
-    }
+    },
+    "Dependencies": null
 }
