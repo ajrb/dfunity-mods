@@ -220,7 +220,7 @@ namespace Archaeologists
                 languageSkill == DFCareer.Skills.Streetwise)
             {
                 chance += player.Skills.GetLiveSkillValue(languageSkill) / 2;
-                chance += player.Stats.LivePersonality / 2;
+                chance += (player.Stats.LivePersonality - 40) / 2;
             }
             else
             {
@@ -234,15 +234,16 @@ namespace Archaeologists
             ComprehendLanguages languagesEffect = (ComprehendLanguages)GameManager.Instance.PlayerEffectManager.FindIncumbentEffect<ComprehendLanguages>();
             if (languagesEffect != null)
                 chance += languagesEffect.ChanceValue();
-
-            int roll = UnityEngine.Random.Range(0, 130);
+           
+            int roll = UnityEngine.Random.Range(0, 150);
             bool success = (roll < chance);
-/*
-            if (success)
-                player.TallySkill(languageSkill, 3);    // Increased skill uses from (assumed) 1 in classic on success to make raising language skills easier
-            else if (languageSkill != DFCareer.Skills.Etiquette && languageSkill != DFCareer.Skills.Streetwise)
+
+            // Allow close calls with humans to train the skills.
+            if (!success && roll - chance < 30 &&
+                (languageSkill == DFCareer.Skills.Etiquette && languageSkill == DFCareer.Skills.Streetwise))
+            {
                 player.TallySkill(languageSkill, 1);
-*/
+            }
             Debug.LogFormat("Archaeologists Pacification {3} using {0} skill: chance= {1}  roll= {2}", languageSkill, chance, roll, success ? "success" : "failure");
             return success;
         }
