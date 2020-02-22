@@ -246,7 +246,7 @@ namespace LootRealism
             }
 
             // Set item level, city watch never have items above iron or steel
-            int itemLevel = (enemyEntity.MobileEnemy.ID == (int)MobileTypes.Knight_CityWatch) ? 1 : playerEntity.Level;
+            int itemLevel = (enemyEntity.MobileEnemy.ID == (int)MobileTypes.Knight_CityWatch) ? 1 : enemyEntity.Level;
             Genders playerGender = playerEntity.Gender;
             Races playerRace = playerEntity.Race;
             int chance = 50;
@@ -290,7 +290,7 @@ namespace LootRealism
                         chance = 75;
                     }
                     if (enemyEntity.MobileEnemy.ID == (int)MobileTypes.Barbarian)
-                        chance -= 30;   // Barbies tend to forgo armor
+                        chance -= 45;   // Barbies tend to forgo armor
                     break;
 
                 // Mage classes:
@@ -315,18 +315,18 @@ namespace LootRealism
                     AddOrEquipWornItem(enemyEntity, ItemBuilder.CreateWeapon((enemyEntity.MobileEnemy.ID == (int)MobileTypes.Battlemage) ? RandomAxeOrBlade() : RandomShortblade(), ItemBuilder.RandomMaterial(itemLevel)), true);
                     if (Dice100.SuccessRoll(chance))
                         AddOrEquipWornItem(enemyEntity, ItemBuilder.CreateWeapon(SecondaryWeapon(), ItemBuilder.RandomMaterial(itemLevel/2)), true);
-                    chance = 50;
+                    chance = 45;
                     break;
             }
 
-            // cuirass (everyone gets at least a 50% chance)
-            if (Dice100.SuccessRoll(Mathf.Max(chance, 50)))
+            // cuirass (everyone gets at least a 50% chance, knights and warriors allways have them)
+            if (Dice100.SuccessRoll(Mathf.Max(chance, 50)) || enemyEntity.MobileEnemy.ID == (int)MobileTypes.Knight | enemyEntity.MobileEnemy.ID == (int)MobileTypes.Warrior)
                 AddOrEquipWornItem(enemyEntity, ItemBuilder.CreateArmor(playerGender, playerRace, Armor.Cuirass, ItemBuilder.RandomArmorMaterial(itemLevel)), true);
             // greaves (Barbarians always get them)
             if (Dice100.SuccessRoll(chance) || enemyEntity.MobileEnemy.ID == (int)MobileTypes.Barbarian)
                 AddOrEquipWornItem(enemyEntity, ItemBuilder.CreateArmor(playerGender, playerRace, Armor.Greaves, ItemBuilder.RandomArmorMaterial(itemLevel)), true);
-            // helm
-            if (Dice100.SuccessRoll(chance))
+            // helm (Barbarians always get them)
+            if (Dice100.SuccessRoll(chance) || enemyEntity.MobileEnemy.ID == (int)MobileTypes.Barbarian)
                 AddOrEquipWornItem(enemyEntity, ItemBuilder.CreateArmor(playerGender, playerRace, Armor.Helm, ItemBuilder.RandomArmorMaterial(itemLevel)), true);
             // boots
             if (Dice100.SuccessRoll(chance))
@@ -334,7 +334,7 @@ namespace LootRealism
 
             if (chance > 50)
             {
-                chance -= 10;
+                chance -= 15;
                 // right pauldron
                 if (Dice100.SuccessRoll(chance))
                     AddOrEquipWornItem(enemyEntity, ItemBuilder.CreateArmor(playerGender, playerRace, Armor.Right_Pauldron, ItemBuilder.RandomArmorMaterial(itemLevel)), true);
