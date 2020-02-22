@@ -45,21 +45,52 @@ namespace RoleplayRealism
         {
             // General texts:
 
-            { "NoneDesert0", "?" },
-            { "NoneDesert1", "?" },
-            { "NoneSwamp0", "?" },
-            { "NoneSwamp1", "?" },
-            { "NoneWoods0", "?" },
-            { "NoneMountains0", "?" },
-            { "NoneOcean0", "?" },
+            { "NoneDesert0", "The sand here grows shallow." },
+            { "NoneDesert1", "There are some dried bones under the sand here." },
+            { "NoneDesert2", "There's evidence of a recent camp here." },
+            { "NoneDesert3", "A tiny lizard scampers about." },
+            { "NoneDesert4", "A snake submerges in the sand." },
+            { "NoneSwamp0", "Someone recently burned oil here." },
+            { "NoneSwamp1", "A horse neighs in the distance." },
+            { "NoneSwamp2", "You see tattered clothing." },
+            { "NoneSwamp3", "Tracks here suggest a recent ambush." },
+            { "NoneSwamp4", "This ground emits gases." },
+            { "NoneWoods0", "You smell woodsmoke." },
+            { "NoneWoods1", "A horse neighs in the distance." },
+            { "NoneWoods2", "This arboreal smell is very relaxing." },
+            { "NoneWoods3", "Twigs snap underneath you." },
+            { "NoneWoods4", "You notice an ant trail beside you." },
+            { "NoneWoods5", "Broken bottles signal an old campsite." },
+            { "NoneMountains0", "You see old wagon trails." },
+            { "NoneMountains1", "A horse neighs in the distance." },
+            { "NoneMountains2", "You cross over some old bones." },
+            { "NoneMountains3", "There are some snake holes here." },
+            { "NoneOcean0", "Calm waves roll around you." },
+            { "Day0", "Small rodents scamper about nearby." },
+            { "Day1", "You swat an insect buzzing in your ear." },
+            { "Night0", "The darkness tries to lull you asleep." }, 
+            { "Night1", "The dark night fills you with unease." }, 
+            { "Night2", "Bats flutter about overhead." }, 
+            { "Snowy0", "You can see your breath." },
+            { "Snowy1", "The snow is starting to pile up around you." },
+            
 
-            { "TownCityDesert0", "?" },
-            { "TownCityDesert1", "?" },
-            { "TownCitySwamp0", "?" },
-            { "TownCitySwamp1", "?" },
-            { "TownCityWoods0", "?" },
-            { "TownCityMountains0", "?" },
-            { "TownCityOcean0", "?" },
+            { "TownCityDesert0", "You smell roasting scorpion." },
+            { "TownCityDesert1", "You hear someone fiddling with a lock." },
+            { "TownCitySwamp0", "Someone is cooking a vegetable stew." },
+            { "TownCitySwamp1", "Footprints weigh heavily in this damp soil." },
+            { "TownCityWoods0", "The smell of roast pig fills the air." },
+            { "TownCityMountains0", "This area smells heavily of roast chicken." },
+            { "TownCityOcean0", "The smell of the sea fills your lungs." },
+
+            { "TownCityNight0", "A black cat hisses and flees." },
+            { "TownCityNight1", "You hear someone fiddling with a lock." },
+
+            { "TownVillage0", "A suspicious child watches you from afar." },
+            { "TownVillage1", "A curious villager gawks at you." },
+
+            { "HomeFarms0", "The smell of livestock is penetrating." },
+            { "HomeFarms0", "The farm workers stare at you." },
 
             // Specific texts:
 
@@ -67,15 +98,15 @@ namespace RoleplayRealism
             { "NoneDesertClearDay0", "There are scorpion tracks here." },
             { "NoneDesertClearDay1", "Is that werewolf fur?" },
             { "NoneDesertClearDay2", "You see some footprints in the sand." },
-            { "NoneDesertClearNight0", "?" },
+            { "NoneDesertClearNight0", "A baby scorpion crosses your path." },
 
             // None-Desert-Cloudy
             { "NoneDesertCloudyDay0", "?" },
             { "NoneDesertCloudyNight0", "?" },
 
             // None-Desert-Rainy
-            { "NoneDesertRainyDay0", "?" },
-            { "NoneDesertRainyNight0", "?" },
+            { "NoneDesertRainyDay0", "The wet sand is getting uncomfortable." },
+            { "NoneDesertRainyNight0", "The wet sand grows deeper." },
 
             // None-Desert-Snowy
             { "NoneDesertSnowyDay0", "?" },
@@ -87,12 +118,22 @@ namespace RoleplayRealism
             { "TownCityDesertClearNight0", "The smell of burning fireplaces fills the air." },
 
             // City-Desert-Cloudy
-            { "TownCityDesertCloudyDay0", "?" },
+            { "TownCityDesertCloudyDay0", "You smell delicious food being cooked around here." },
             { "TownCityDesertCloudyNight0", "?" },
 
             // City-Desert-Rainy
-            { "TownCityDesertRainyDay0", "?" },
-            { "TownCityDesertRainyNight0", "?" },
+            { "TownCityDesertRainyDay0", "Puddles are starting to form nearby." },
+            { "TownCityDesertRainyDay1", "You overhear, “Please, just some gold to buy bread?”" },
+            { "TownCityDesertRainyDay2", "Someone shouts, “Give that back! Guards, help!”" },
+            { "TownCityDesertRainyDay3", "You hear, “I already paid you! Cease these lies!”" },
+            { "TownCityDesertRainyDay4", "A cry rings out, “Diseased! Keep away!”" },
+            { "TownCityDesertRainyDay5", "Someone calls out, “Fresh brewed ale!”" },
+            { "TownCityDesertRainyDay6", "Someone groans, “This shipment is all wrong! Why?”" },
+            { "TownCityDesertRainyDay7", "You overhear, “Wanna try? I can take you!”" },
+            { "TownCityDesertRainyDay8", "You hear, “That tavern's a mess!“" },
+            { "TownCityDesertRainyDay9", "Someone sighs, “More miserable rain.“" },
+            { "TownCityDesertRainyDay4", "A cry rings out, “Diseased! Keep away!”" },
+            { "TownCityDesertRainyNight0", "Someone mutters, “Our house must be haunted.”" },
 
             // City-Desert-Snowy
             { "TownCityDesertSnowyDay0", "?" },
@@ -114,7 +155,73 @@ namespace RoleplayRealism
             { "TownCitySwampSnowyDay0", "?" },
             { "TownCitySwampSnowyNight0", "?" },
 
+            // City-Woods-Clear
+            { "TownCityWoodsClearDay0", "?" },
+            { "TownCityWoodsClearNight0", "?" },
+
+            // City-Woods-Cloudy
+            { "TownCityWoodsCloudyDay0", "?" },
+            { "TownCityWoodsCloudyNight0", "?" },
+
+            // City-Woods-Rainy
+            { "TownCityWoodsRainyDay0", "?" },
+            { "TownCityWoodsRainyNight0", "?" },
+
+            // City-Woods-Snowy
+            { "TownCityWoodsSnowyDay0", "?" },
+            { "TownCityWoodsSnowyNight0", "?" },
+
+            // City-Mountain-Cloudy
+            { "TownCityMountainCloudyDay0", "?" },
+            { "TownCityMountainCloudyNight0", "?" },
+
+            // City-Mountain-Rainy
+            { "TownCityMountainRainyDay0", "?" },
+            { "TownCityMountainRainyNight0", "?" },
+
+            // City-Mountain-Snowy
+            { "TownCityMountainSnowyDay0", "The falling snow relaxes you." },
+            { "TownCityMountainSnowyDay1", "You breathe in some crisp, cold air." },
+            { "TownCityMountainSnowyDay2", "Someone says, “Get inside, before you catch cold!”" },
+            { "TownCityMountainSnowyDay3", "You overhear, “I can escort your caravan, for the right price.”" },
+            { "TownCityMountainSnowyDay4", "You hear, “Fresh baked bread, children! Come inside!”" },
+            { "TownCityMountainSnowyNight0", "?" },
+
             // Dungeon texts:
+
+            // Dungeon: Crypt
+
+            { "Crypt0", "You sense something creeping behind you."}   ,         
+            { "Crypt1", "A gust of cold air blows past you."},
+            { "Crypt2", "Was that a werewolf howl?"},
+            { "Crypt3", "A beetle crosses your path."},
+            { "Crypt4", "The air here is very stiff."},
+            { "Crypt5", "This place smells strongly of death."},
+            { "Crypt6", "You hear very faint whispers."},
+            { "Crypt7", "Someone made a very shallow grave here."},
+            { "Crypt8", "Tiny rodents scamper away from you."},
+            { "Crypt9", "A raven caws in the distance."},
+
+            // Dungeon: OrcStronghold
+            { "OrcStronghold0", "You notice broken fragments of a weapon."},
+            { "OrcStronghold1", "This place smells terribly of orc."},
+            { "OrcStronghold2", "The ground is smoothed here by dragged bodies."},
+            { "OrcStronghold3", "Orcs seem to have slept here often."},
+            { "OrcStronghold4", "You see writing in some primitive Orcish script."},
+            { "OrcStronghold5", "Someone cries for help, far away."},
+            { "OrcStronghold6", "Bits of fur and bone litter this area."},
+
+            // Dungeon: HumanStronghold
+            { "HumanStronghold0", "You hear the distant shot of an arrow."},
+            { "HumanStronghold1", "Something rustles about."},
+            { "HumanStronghold2", "You see unfamiliar markings scratched here."},
+            { "HumanStronghold3", "Something flees from you."},
+            { "HumanStronghold4", "The smell of death fills the air."},
+            { "HumanStronghold5", "You smell burnt wood."},
+            { "HumanStronghold6", "You vaguely smell ale."},
+            { "HumanStronghold7", "Things are deathly quiet here."},
+            { "HumanStronghold8", "A sigil is drawn here."},
+            { "HumanStronghold9", "You could swear you hear whispers."},
 
             // Dungeon: Prison
             { "Prison0", "Scrawlings nearby plead for release." },
@@ -127,6 +234,198 @@ namespace RoleplayRealism
             { "Prison7", "You could swear you just heard movement from afar." },
             { "Prison8", "Someone tried digging here." },
             { "Prison9", "Someone scratched an inaccurate map here." },
+
+            // Dungeon: Desecrated Temple
+
+            { "DesecratedTemple0", "You sense strong magic in the air." },
+            { "DesecratedTemple1", "You see a prayer to Kynareth scrawled here." },
+            { "DesecratedTemple2", "Someone scratched a prayer to Stendarr here." },
+            { "DesecratedTemple3", "The feeling of death is overwhelming here." },
+            { "DesecratedTemple4", "An upwelling of magic gathers near you." },
+            { "DesecratedTemple5", "A hateful presence is nearby." },
+            { "DesecratedTemple6", "Unholy energies permeate this area." },
+            { "DesecratedTemple7", "Your thoughts are filled with daedra." },
+
+            // Dungeon: Mine
+
+            { "Mine0", "This ground is well worn." },
+            { "Mine1", "Someone scratched several lines here." },
+            { "Mine2", "Many footsteps have worn this ground smooth." },
+            { "Mine3", "You notice writing in some kind of code." },
+            { "Mine4", "You hear footsteps move away." },
+            { "Mine5", "The ground is unusually warm here." },
+            { "Mine6", "Tiny rodents flee from you." },
+            { "Mine7", "A fly buzzes around your ear." },
+            { "Mine0", "Someone tried to dig here." },
+
+            // Dungeon: Natural Cave
+
+            { "NaturalCave0", "You hear a cloud of bats flutter away." },
+            { "NaturalCave1", "Old bear claws lie here." },
+            { "NaturalCave2", "A snake crosses your path." },
+            { "NaturalCave3", "Something tiny flees from you." },
+            { "NaturalCave4", "You hear something rustling about." },
+            { "NaturalCave5", "A moth flutters by." },
+            { "NaturalCave6", "You see some wolf fur here." },
+            { "NaturalCave7", "You encounter guano." },
+            { "NaturalCave8", "Some whiskers litter the ground." },
+            { "NaturalCave9", "You notice a snapped tree branch under foot." },
+
+            // Dungeon: Coven
+
+            { "Coven0", "Someone is watching you from afar." },
+            { "Coven1", "You hear whispering." },
+            { "Coven2", "Chanting echoes from far off." },
+            { "Coven3", "You feel very dark energies here." },
+            { "Coven4", "You wipe some oddly-colored dust from your face." },
+            { "Coven5", "A small spider skitters in front of you." },
+            { "Coven6", "You notice some gargoyle chips under your feet." },
+            { "Coven7", "This area smells of something burning." },
+            { "Coven8", "You feel the odd sensation of being laughed at." },
+            { "Coven9", "You can’t shake the feeling of being watched." },
+
+            // Dungeon: VampireHaunt
+
+            { "VampireHaunt0", "You hear faint rustling." },
+            { "VampireHaunt1", "Indistinct hissing comes from afar." },
+            { "VampireHaunt2", "You smell blood." },
+            { "VampireHaunt3", "A body was recently dragged through here." },
+            { "VampireHaunt4", "The air here is disturbed." },
+            { "VampireHaunt5", "Unintelligible markings cover the ground." },
+            { "VampireHaunt6", "You notice a plea for help written here." },
+            { "VampireHaunt7", "You see shards of a glass bottle mixed with blood." },
+            { "VampireHaunt8", "A cold gust of air catches you off guard." },
+            { "VampireHaunt9", "You smell death. Lots of it." },
+
+            // Dungeon: Laboratory
+
+            { "Laboratory0", "You see mineral deposits from a ruined atronach." },
+            { "Laboratory1", "You notice rudimentary notes." },
+            { "Laboratory2", "Unintelligible markings dot the ground." },
+            { "Laboratory3", "You see some notes, thoroughly scratched out." },
+            { "Laboratory4", "You feel concentrated magical forces." },
+            { "Laboratory5", "The air grows very warm here." },
+            { "Laboratory6", "The air here suddenly turns cold." },
+            { "Laboratory7", "You sense volatile magicks in this area." },
+            { "Laboratory8", "The ground shakes as something lumbers about." },
+            { "Laboratory9", "Something pounds a surface far away." },
+
+            // Dungeon: HarpyNest
+
+            { "HarpyNest0", "This place is entirely devoid of smaller rodents." },
+            { "HarpyNest1", "The stench of harpy is unbearable here." },
+            { "HarpyNest2", "You avoid stepping in harpy droppings." },
+            { "HarpyNest3", "Faint echoes of cawing fill the air." },
+            { "HarpyNest4", "Caustic magicks surround you momentarily." },
+            { "HarpyNest5", "A worm crawls across your foot." },
+            { "HarpyNest6", "The ground and walls bear faint scratch marks." },
+            { "HarpyNest7", "Is something watching you..?" },
+            { "HarpyNest8", "The stench here is truly awful." },
+
+            // Dungeon: RuinedCastle
+
+            { "RuinedCastle0", "You hear the distant shot of an arrow."},
+            { "RuinedCastle1", "Something rustles about."},
+            { "RuinedCastle2", "You see unfamiliar markings scratched here."},
+            { "RuinedCastle3", "Something flees from you."},
+            { "RuinedCastle4", "The smell of death fills the air."},
+            { "RuinedCastle5", "You smell burnt wood."},
+            { "RuinedCastle6", "You vaguely smell ale."},
+            { "RuinedCastle7", "Things are deathly quiet here."},
+            { "RuinedCastle8", "A sigil is drawn here."},
+            { "RuinedCastle9", "You could swear you hear whispers."},
+
+            // Dungeon: SpiderNest
+
+            { "SpiderNest0", "This area is devoid of insects."},
+            { "SpiderNest1", "A tiny spider skitters across the ground."},
+            { "SpiderNest2", "You feel as though something is crawling above you."},
+            { "SpiderNest3", "Something is scratching a surface nearby."},
+            { "SpiderNest4", "You clean some webs that have gathered on you."},
+            { "SpiderNest5", "A lone insect buzzes past you."},
+            { "SpiderNest6", "You brush off a small spider."},
+            { "SpiderNest7", "Eight tiny legs move across your feet."},
+            { "SpiderNest8", "Something hisses in the distance."},
+            { "SpiderNest9", "A small spider crawls out from among your possessions."},
+
+            // Dungeon: GiantStronghold
+
+            { "GiantStronghold0", "Many feet have smoothed the ground here."},
+            { "GiantStronghold1", "The stench of unbathed skin fills the air."},
+            { "GiantStronghold2", "Tiger whiskers litter this area."},
+            { "GiantStronghold3", "This area smells of fur."},
+            { "GiantStronghold4", "You think you hear lumbering steps."},
+            { "GiantStronghold5", "Some giant used this area as a latrine."},
+            { "GiantStronghold6", "Your movement has stirred up some fallen giant hair."},
+            { "GiantStronghold7", "The ground shakes momentarily."},
+            { "GiantStronghold8", "Thudding footsteps sound above you."},
+
+            // Dungeon: DragonsDen
+
+            { "DragonsDen0", "You see wilted dragon scales."},
+            { "DragonsDen1", "The floor here has been hardened by heat."},
+            { "DragonsDen2", "Human tracks. Someone else is hunting dragons."},
+            { "DragonsDen3", "You notice some lycanthrope tracks here."},
+            { "DragonsDen4", "Someone whispers afar off."},
+            { "DragonsDen5", "Someone scratched a message in phonetic Orcish here."},
+            { "DragonsDen6", "Some footprints here are fairly recent."},
+            { "DragonsDen7", "You smell burning wood here."},
+            { "DragonsDen8", "A beetle scampers over your foot."},
+            { "DragonsDen9", "You wipe some accumulating coal from your feet."},
+
+            // Dungeon: BarbarianStronghold
+
+            { "BarbarianStronghold0", "You hear the distant shot of an arrow."},
+            { "BarbarianStronghold1", "Something rustles about."},
+            { "BarbarianStronghold2", "You see unfamiliar markings scratched here."},
+            { "BarbarianStronghold3", "Something flees from you."},
+            { "BarbarianStronghold4", "The smell of death fills the air."},
+            { "BarbarianStronghold5", "You smell burnt wood."},
+            { "BarbarianStronghold6", "You vaguely smell ale."},
+            { "BarbarianStronghold7", "Things are deathly quiet here."},
+            { "BarbarianStronghold8", "A sigil is drawn here."},
+            { "BarbarianStronghold9", "You could swear you hear whispers."},
+
+            // Dungeon: VolcanicCaves
+
+            { "VolcanicCaves0", "You feel some vents of steam under the ground."},
+            { "VolcanicCaves1", "The air is moving quickly here."},
+            { "VolcanicCaves2", "A warm draft blows by."},
+            { "VolcanicCaves3", "The earth rumbles softly."},
+            { "VolcanicCaves4", "The air here is very comfortable."},
+            { "VolcanicCaves5", "You smell a whiff of sulfur."},
+            { "VolcanicCaves6", "This area smells of charcoal."},
+            { "VolcanicCaves7", "A summoning sigil was drawn and erased here."},
+            { "VolcanicCaves8", "The air suddenly grows still."},
+            { "VolcanicCaves9", "You smell something burning."},
+
+            // Dungeon: ScorpionNest
+
+            { "ScorpionNest0", "Tiny bits of animal corpses litter this area."},
+            { "ScorpionNest1", "You see the remains of molted skin."},
+            { "ScorpionNest2", "Flies buzz near you."},
+            { "ScorpionNest3", "Your familiarity with the smell of scorpion grows."},
+            { "ScorpionNest4", "You see some footprints nearby."},
+            { "ScorpionNest5", "A small rat scampers away."},
+            { "ScorpionNest6", "A tiny scorpion crawls out from your possessions."},
+            { "ScorpionNest7", "The air is still here."},
+            { "ScorpionNest8", "You feel like something is watching you."},
+            { "ScorpionNest9", "The insects near you dissipate."},
+
+            // Dungeon: Cemetery
+
+            { "Cemetery0", "A beetle creeps over your foot."},
+            { "Cemetery1", "Did the ground just move?"},
+            { "Cemetery2", "You smell decomposing bodies."},
+            { "Cemetery3", "The air is tense here."},
+            { "Cemetery4", "You sense something staring at you."},
+            { "Cemetery5", "Faint whispers fill the air."},
+            { "Cemetery6", "You feel unwelcome here."},
+            { "Cemetery7", "You feel the gaze of the dead upon you."},
+            { "Cemetery8", "Someone attempted to dig the ground here."},
+            { "Cemetery9", "Bones clatter about faintly."}
+
+
 
         };
 
