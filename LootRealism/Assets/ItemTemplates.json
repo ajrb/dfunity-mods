@@ -9,6 +9,22 @@
         "basePrice": 6000,
     },
     {
+        "index": 114,
+        "hitPoints": 35,
+    },
+    {
+        "index": 117,
+        "hitPoints": 100,
+    },
+    {
+        "index": 121,
+        "hitPoints": 300,
+    },
+    {
+        "index": 123,
+        "hitPoints": 400,
+    },
+    {
         "index": 131,
         "baseWeight": 0.1,
     },

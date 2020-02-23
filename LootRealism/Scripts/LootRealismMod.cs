@@ -161,11 +161,14 @@ namespace LootRealism
         }
         static Weapons RandomLongblade()
         {
-            return (Weapons)UnityEngine.Random.Range((int)Weapons.Broadsword, (int)Weapons.Katana + 1);
+            return (Weapons)UnityEngine.Random.Range((int)Weapons.Broadsword, (int)Weapons.Longsword + 1);
         }
         static Weapons RandomBigWeapon()
         {
-            return (Weapons)UnityEngine.Random.Range((int)Weapons.Claymore, (int)Weapons.War_Axe + 1);
+            Weapons weapon = (Weapons)UnityEngine.Random.Range((int)Weapons.Claymore, (int)Weapons.War_Axe + 1);
+            if (weapon == Weapons.Dai_Katana && Dice100.SuccessRoll(95))
+                weapon = Weapons.Claymore;  // Dai-katana's are really rare.
+            return weapon;
         }
         static Weapons RandomBlunt()
         {
@@ -186,26 +189,22 @@ namespace LootRealism
         }
         static Weapons RandomShortblade()
         {
-            switch (UnityEngine.Random.Range(0, 4))
+            if (Dice100.SuccessRoll(95))
+                return CoinFlip() ? Weapons.Dagger : Weapons.Shortsword;
+            else
+                return (Weapons)UnityEngine.Random.Range((int)Weapons.Dagger, (int)Weapons.Wakazashi + 1);
+        }
+        static Weapons SecondaryWeapon()
+        {
+            switch (UnityEngine.Random.Range(0, 3))
             {
                 case 0:
                     return Weapons.Dagger;
                 case 1:
-                    return Weapons.Tanto;
-                case 2:
                     return Weapons.Shortsword;
-                case 3:
-                    return Weapons.Wakazashi;
                 default:
-                    return Weapons.Dagger;
+                    return Weapons.Short_Bow;
             }
-        }
-        static Weapons SecondaryWeapon()
-        {
-            if (Dice100.SuccessRoll(50))
-                return Weapons.Short_Bow;
-            else
-                return RandomShortblade();
         }
         static Weapons GetCombatClassWeapon(MobileTypes enemyType)
         {
