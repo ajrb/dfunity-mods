@@ -25,6 +25,14 @@
         "hitPoints": 400,
     },
     {
+        "index": 129,
+        "hitPoints": 80,
+    },
+    {
+        "index": 130,
+        "hitPoints": 120,
+    },
+    {
         "index": 131,
         "baseWeight": 0.1,
     },
