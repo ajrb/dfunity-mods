@@ -382,7 +382,7 @@ namespace RoleplayRealism
                 !DaggerfallUI.Instance.FadeBehaviour.FadeInProgress)
             {
                 float encPc = playerEntity.CarriedWeight / playerEntity.MaxEncumbrance;
-                float encOver = Mathf.Max(encPc - 0.75f, 0f) * EncEffectScaleFactor;
+                float encOver = Mathf.Max(encPc - 0.75f, 0.1f) * EncEffectScaleFactor;
                 if (encOver > 0 && encOver < 0.8)
                 {
                     int speedEffect = (int)(playerEntity.Stats.PermanentSpeed * encOver);
