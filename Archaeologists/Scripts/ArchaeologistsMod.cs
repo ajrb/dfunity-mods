@@ -219,8 +219,9 @@ namespace Archaeologists
             if (languageSkill == DFCareer.Skills.Etiquette ||
                 languageSkill == DFCareer.Skills.Streetwise)
             {
-                chance += player.Skills.GetLiveSkillValue(languageSkill) / 2;
-                chance += (player.Stats.LivePersonality - 50) / 2;
+                chance += player.Skills.GetLiveSkillValue(languageSkill) - 20;
+                chance += (player.Stats.LivePersonality - 55) / 3;
+                chance += (player.Stats.LiveIntelligence - 55) / 3;
             }
             else
             {
