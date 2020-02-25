@@ -127,8 +127,8 @@ namespace LootRealism
                 DaggerfallUnityItem item = lootItems[i];
                 if ((item.ItemGroup == ItemGroups.Armor || item.ItemGroup == ItemGroups.Weapons || item.ItemGroup == ItemGroups.Books) && !item.IsArtifact)
                 {
-                    // Apply a random condition between 20% and 80%.
-                    float conditionMod = UnityEngine.Random.Range(0.2f, 0.8f);
+                    // Apply a random condition between 20% and 70%.
+                    float conditionMod = UnityEngine.Random.Range(0.2f, 0.7f);
                     item.currentCondition = (int)(item.maxCondition * conditionMod);
                     changes++;
                 }
