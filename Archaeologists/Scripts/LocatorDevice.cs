@@ -18,7 +18,7 @@ namespace Archaeologists
     public class LocatorDevice : MonoBehaviour
     {
         const string indicatorFilename = "SUN_00I0.IMG";
-        internal const string SMALLDUNGEON_MSG = "Actually that dungeon is really small, so you wont be needing a locator device.";
+        internal const string SMALLDUNGEON_MSG = "Actually that dungeon is really small, so you wont be needing a free locator device.";
 
         private Vector3 questTargetPos = Vector3.zero;
 
@@ -106,7 +106,7 @@ namespace Archaeologists
 
         private void QuestMachine_OnQuestStarted(Quest quest)
         {
-            // If quest is from archaeologists and involves a dungeon place, give player a locator charge
+            // If quest is from archaeologists and involves a dungeon place, give player a locator device
             if (quest.FactionId == ArchaeologistsGuild.FactionId)
             {
                 QuestResource[] foundResources = quest.GetAllResources(typeof(Place));

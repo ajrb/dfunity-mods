@@ -96,18 +96,19 @@ namespace DaggerfallWorkshop.Game.Guilds
             TextFile.CreateTextToken("Keep up the good work, and continue to study hard. "), newLine,
         };
 
-        protected static int[] intReqs = { 40, 45, 50, 55, 60, 60, 65, 65, 70, 70 };
+        protected static int[] intReqs = { 40, 55, 55, 60, 60, 65, 65, 70, 70, 75 };
 
         protected static string[] rankTitles = {
             "Field Assistant", "Field Agent", "Field Officer", "Field Director", "Apprentice", "Novice", "Journeyman", "Associate", "Professor", "Master"
         };
 
-        protected static int[] RankLocatorCosts = { 0, 0, 2000, 1600, 1200, 1000, 800, 600, 400, 200 };
+        protected static int[] RankLocatorCosts = { 2000, 1800, 1600, 1400, 1200, 1000, 800, 600, 400, 200 };
 
         protected static List<DFCareer.Skills> guildSkills = new List<DFCareer.Skills>() {
                 DFCareer.Skills.Centaurian,
                 DFCareer.Skills.Climbing,
                 DFCareer.Skills.Daedric,
+                DFCareer.Skills.Dodging,
                 DFCareer.Skills.Dragonish,
                 DFCareer.Skills.Giantish,
                 DFCareer.Skills.Harpy,
@@ -200,7 +201,7 @@ namespace DaggerfallWorkshop.Game.Guilds
 
         public override bool AvoidDeath()
         {
-            if (rank >= 7 && Random.Range(0, 50) < rank &&
+            if (rank >= 6 && Random.Range(0, 50) < rank &&
                 GameManager.Instance.PlayerEntity.FactionData.GetReputation((int) FactionFile.FactionIDs.Stendarr) >= 0 &&
                 !GameManager.Instance.PlayerEnterExit.IsPlayerSubmerged)
             {
@@ -237,7 +238,7 @@ namespace DaggerfallWorkshop.Game.Guilds
                     return (rank >= 7);
             }
             if ((int)service == LocatorServiceId)
-                return (rank >= 2);
+                return true;
             if ((int)service == RepairServiceId)
                 return (rank >= 2);
 
@@ -250,13 +251,12 @@ namespace DaggerfallWorkshop.Game.Guilds
 
         public static void LocatorService(IUserInterfaceWindow window)
         {
-            Debug.Log("Locator service.");
-
             // Get the guild instance.
             IGuild thisGuild = GameManager.Instance.GuildManager.GetGuild(FactionFile.GuildGroups.GGroup0);
-            // Check how many holy items the player has. Offer 16 if no limit.
+
+            // Check how many holy items the player has if rank 0. Offer 16 if no limit.
             int holyCount = 16;
-            if (thisGuild.Rank < 6)
+            if (thisGuild.Rank < 1)
             {
                 PlayerEntity playerEntity = GameManager.Instance.PlayerEntity;
                 List<DaggerfallUnityItem> tomes = playerEntity.Items.SearchItems(ItemGroups.ReligiousItems, (int)ReligiousItems.Holy_tome);
@@ -265,7 +265,7 @@ namespace DaggerfallWorkshop.Game.Guilds
                 daggers.AddRange(playerEntity.WagonItems.SearchItems(ItemGroups.ReligiousItems, (int)ReligiousItems.Holy_dagger));
                 holyCount = tomes.Count + daggers.Count;
             }
-            if (thisGuild.Rank >= 6 || holyCount > 0)
+            if (thisGuild.Rank >= 1 || holyCount > 0)
             {
                 // Show trade window and a popup message to inform player how many locators they can purchase.
                 DaggerfallTradeWindow tradeWindow = (DaggerfallTradeWindow)
@@ -273,14 +273,14 @@ namespace DaggerfallWorkshop.Game.Guilds
                 tradeWindow.MerchantItems = GetLocatorDevices(holyCount, RankLocatorCosts[thisGuild.Rank]);
                 DaggerfallUI.UIManager.PushWindow(tradeWindow);
 
-                if (thisGuild.Rank < 6)
+                if (thisGuild.Rank < 1)
                 {
                     tradeWindow.OnTrade += LocatorPurchase_OnTrade;
                     DaggerfallMessageBox messageBox = new DaggerfallMessageBox(DaggerfallUI.UIManager, window, true);
                     string[] message = {
                         "We require that you provide the guild with either a holy tome",
                         "   or holy dagger for each locator device we supply you.",
-                        " At least until you reach the more senior ranks of the guild.", "",
+                        " At least until you reach the first rank within the guild.", "",
                         "  You currently have " + holyCount + " holy items in your posession, so you",
                         "    can purchase up to that many locators at this time.",
                     };
