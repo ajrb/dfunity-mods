@@ -69,13 +69,14 @@ namespace RoleplayRealism
             bool weaponSpeed = settings.GetBool("Modules", "weaponSpeed");
             bool equipDamage = settings.GetBool("Modules", "equipDamage");
             bool enemyAppearance = settings.GetBool("Modules", "enemyAppearance");
+            bool purifyPot = settings.GetBool("Modules", "purificationPotion");
 
-            InitMod(bedSleeping, archery, riding, encumbrance, bandaging, shipPorts, expulsion, climbing, weaponSpeed, equipDamage, enemyAppearance);
+            InitMod(bedSleeping, archery, riding, encumbrance, bandaging, shipPorts, expulsion, climbing, weaponSpeed, equipDamage, enemyAppearance, purifyPot);
 
             mod.IsReady = true;
         }
 
-        public static void InitMod(bool bedSleeping, bool archery, bool riding, bool encumbrance, bool bandaging, bool shipPorts, bool expulsion, bool climbing, bool weaponSpeed, bool equipDamage, bool enemyAppearance)
+        public static void InitMod(bool bedSleeping, bool archery, bool riding, bool encumbrance, bool bandaging, bool shipPorts, bool expulsion, bool climbing, bool weaponSpeed, bool equipDamage, bool enemyAppearance, bool purifyPot)
         {
             Debug.Log("Begin mod init: RoleplayRealism");
 
@@ -152,6 +153,11 @@ namespace RoleplayRealism
             if (enemyAppearance)
             {
                 UpdateEnemyClassAppearances();
+            }
+
+            if (purifyPot)
+            {
+                GameManager.Instance.EntityEffectBroker.RegisterEffectTemplate(new CureDiseaseRR(), true);
             }
 
             // Initialise the FG master quest.

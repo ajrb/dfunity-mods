@@ -82,6 +82,13 @@
                     "Description": "Remixes human enemy appearance based on class",
                     "$version": "v1",
                     "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
+                },
+                {
+                    "Value": true,
+                    "Name": "purificationPotion",
+                    "Description": "Changes purification potion to cure poison rather than grant invisibility",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
                 }
             ],
             "$version": "v1"
