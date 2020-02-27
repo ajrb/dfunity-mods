@@ -1,12 +1,11 @@
 // Project:         RoleplayRealism mod for Daggerfall Unity (http://www.dfworkshop.net)
-// Copyright:       Copyright (C) 2019 Hazelnut
+// Copyright:       Copyright (C) 2020 Hazelnut
 // License:         MIT License (http://www.opensource.org/licenses/mit-license.php)
 // Author:          Hazelnut
 
 using DaggerfallConnect;
 using DaggerfallWorkshop.Game.Entity;
 using DaggerfallWorkshop.Game.Formulas;
-using DaggerfallWorkshop.Utility;
 using DaggerfallWorkshop.Utility.AssetInjection;
 using System;
 using UnityEngine;

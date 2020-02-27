@@ -1,5 +1,5 @@
-// Project:         Archaeologists Guild for Daggerfall Unity (http://www.dfworkshop.net)
-// Copyright:       Copyright (C) 2019 Hazelnut
+// Project:         RoleplayRealism mod for Daggerfall Unity (http://www.dfworkshop.net)
+// Copyright:       Copyright (C) 2020 Hazelnut
 // License:         MIT License (http://www.opensource.org/licenses/mit-license.php)
 // Author:          Hazelnut
 
