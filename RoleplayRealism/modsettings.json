@@ -71,6 +71,13 @@
                 },
                 {
                     "Value": true,
+                    "Name": "weaponMaterials",
+                    "Description": "Moderates the to-hit bonuses of weapon materials so skill remains key factor",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
+                },
+                {
+                    "Value": true,
                     "Name": "equipDamage",
                     "Description": "Increases equipment damage proportional to max condition.",
                     "$version": "v1",

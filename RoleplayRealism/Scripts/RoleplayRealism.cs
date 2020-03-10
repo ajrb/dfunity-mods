@@ -67,16 +67,17 @@ namespace RoleplayRealism
             bool expulsion = settings.GetBool("Modules", "underworldExpulsion");
             bool climbing = settings.GetBool("Modules", "climbingRestriction");
             bool weaponSpeed = settings.GetBool("Modules", "weaponSpeed");
+            bool weaponMaterials = settings.GetBool("Modules", "weaponMaterials");
             bool equipDamage = settings.GetBool("Modules", "equipDamage");
             bool enemyAppearance = settings.GetBool("Modules", "enemyAppearance");
             bool purifyPot = settings.GetBool("Modules", "purificationPotion");
 
-            InitMod(bedSleeping, archery, riding, encumbrance, bandaging, shipPorts, expulsion, climbing, weaponSpeed, equipDamage, enemyAppearance, purifyPot);
+            InitMod(bedSleeping, archery, riding, encumbrance, bandaging, shipPorts, expulsion, climbing, weaponSpeed, weaponMaterials, equipDamage, enemyAppearance, purifyPot);
 
             mod.IsReady = true;
         }
 
-        public static void InitMod(bool bedSleeping, bool archery, bool riding, bool encumbrance, bool bandaging, bool shipPorts, bool expulsion, bool climbing, bool weaponSpeed, bool equipDamage, bool enemyAppearance, bool purifyPot)
+        public static void InitMod(bool bedSleeping, bool archery, bool riding, bool encumbrance, bool bandaging, bool shipPorts, bool expulsion, bool climbing, bool weaponSpeed, bool weaponMaterials, bool equipDamage, bool enemyAppearance, bool purifyPot)
         {
             Debug.Log("Begin mod init: RoleplayRealism");
 
@@ -143,6 +144,11 @@ namespace RoleplayRealism
             if (weaponSpeed)
             {
                 FormulaHelper.RegisterOverride(mod, "GetMeleeWeaponAnimTime", (Func<PlayerEntity, WeaponTypes, ItemHands, float>)GetMeleeWeaponAnimTime);
+            }
+
+            if (weaponMaterials)
+            {
+                FormulaHelper.RegisterOverride(mod, "CalculateWeaponToHit", (Func<DaggerfallUnityItem, int>)CalculateWeaponToHit);
             }
 
             if (equipDamage)
@@ -241,6 +247,11 @@ namespace RoleplayRealism
             float frameSpeed = 3 * (115 - ((speed * spdRatio) + (strength * strRatio)));
             //Debug.LogFormat("anim= {0}ms/frame, speed={1} strength={2}", frameSpeed / FormulaHelper.classicFrameUpdate, speed * spdRatio, strength * strRatio);
             return frameSpeed / FormulaHelper.classicFrameUpdate;
+        }
+
+        private static int CalculateWeaponToHit(DaggerfallUnityItem weapon)
+        {
+            return weapon.GetWeaponMaterialModifier() * 5;
         }
 
         private static bool ApplyConditionDamageThroughPhysicalHit(DaggerfallUnityItem item, DaggerfallEntity owner, int damage)
