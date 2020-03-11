@@ -258,7 +258,7 @@ namespace RoleplayRealism
         {
             if (item.ItemGroup == ItemGroups.Armor)
             {
-                int amount = item.IsShield ? damage : damage * 4;
+                int amount = damage * 5;
                 item.LowerCondition(amount, owner);
                 if (owner == GameManager.Instance.PlayerEntity)
                     Debug.LogFormat("Damaged {0} by {1} from dmg {3}, cond={2}", item.ItemName, amount, item.currentCondition, damage);

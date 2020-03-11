@@ -45,13 +45,14 @@ namespace LootRealism
             bool enemyEquipment = settings.GetBool("Modules", "realisticEnemyEquipment");
             bool skillStartEquip = settings.GetBool("Modules", "skillBasedStartingEquipment");
             bool skillStartSpells = settings.GetBool("Modules", "skillBasedStartingSpells");
+            bool refinedWeaponDamage = settings.GetBool("Modules", "refinedWeaponDamage");
 
-            InitMod(lootRebalance, bandaging, conditionBasedPrices, enemyEquipment, skillStartEquip, skillStartSpells);
+            InitMod(lootRebalance, bandaging, conditionBasedPrices, enemyEquipment, skillStartEquip, skillStartSpells, refinedWeaponDamage);
 
             mod.IsReady = true;
         }
 
-        private static void InitMod(bool lootRebalance, bool bandaging, bool conditionBasedPrices, bool enemyEquipment, bool skillStartEquip, bool skillStartSpells)
+        private static void InitMod(bool lootRebalance, bool bandaging, bool conditionBasedPrices, bool enemyEquipment, bool skillStartEquip, bool skillStartSpells, bool refinedWeaponDamage)
         {
             Debug.Log("Begin mod init: LootRealism");
 
@@ -95,6 +96,12 @@ namespace LootRealism
             if (skillStartSpells)
             {
                 startGameBehaviour.AssignStartingSpells = AssignSkillSpellbook;
+            }
+
+            if (refinedWeaponDamage)
+            {
+                FormulaHelper.RegisterOverride(mod, "CalculateWeaponMinDamage", (Func<Weapons, int>)CalculateWeaponMinDamage);
+                FormulaHelper.RegisterOverride(mod, "CalculateWeaponMaxDamage", (Func<Weapons, int>)CalculateWeaponMaxDamage);
             }
 
             Debug.Log("Finished mod init: LootRealism");
@@ -149,6 +156,76 @@ namespace LootRealism
             cost = 2 * (cost * (shopQuality - 10) / 100 + cost);
 
             return cost;
+        }
+
+        public static int CalculateWeaponMinDamage(Weapons weapon)
+        {
+            switch (weapon)
+            {
+                case Weapons.Dagger:
+                case Weapons.Tanto:
+                case Weapons.Wakazashi:
+                case Weapons.Saber:
+                case Weapons.Katana:
+                case Weapons.Dai_Katana:
+                    return 1;
+                case Weapons.Shortsword:
+                case Weapons.Broadsword:
+                case Weapons.Longsword:
+                case Weapons.Claymore:
+                    return 2;
+                case Weapons.Battle_Axe:
+                case Weapons.War_Axe:
+                    return 3;
+                case Weapons.Staff:
+                case Weapons.Mace:
+                case Weapons.Flail:
+                case Weapons.Short_Bow:
+                case Weapons.Long_Bow:
+                    return 4;
+                case Weapons.Warhammer:
+                    return 5;
+                default:
+                    return 0;
+            }
+        }
+
+        public static int CalculateWeaponMaxDamage(Weapons weapon)
+        {
+            switch (weapon)
+            {
+                case Weapons.Dagger:
+                    return 6;
+                case Weapons.Tanto:
+                    return 7;
+                case Weapons.Shortsword:
+                case Weapons.Staff:
+                    return 8;
+                case Weapons.Wakazashi:
+                    return 10;
+                case Weapons.Mace:
+                    return 12;
+                case Weapons.Battle_Axe:
+                    return 13;
+                case Weapons.Broadsword:
+                    return 14;
+                case Weapons.Saber:
+                case Weapons.Longsword:
+                    return 15;
+                case Weapons.Katana:
+                case Weapons.Flail:
+                case Weapons.Warhammer:
+                case Weapons.Short_Bow:
+                    return 16;
+                case Weapons.War_Axe:
+                case Weapons.Long_Bow:
+                    return 18;
+                case Weapons.Claymore:
+                case Weapons.Dai_Katana:
+                    return 19;
+                default:
+                    return 0;
+            }
         }
 
         static bool CoinFlip()
