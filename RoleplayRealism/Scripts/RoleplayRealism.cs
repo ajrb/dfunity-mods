@@ -334,10 +334,10 @@ namespace RoleplayRealism
                             vf = 5;
                             break;
                         case Armor.Gauntlets:
-                        case Armor.Boots:
                             vs = 1;
                             vf = 1;
                             break;
+                        case Armor.Boots:
                         case Armor.Helm:
                             vs = 1;
                             vf = itemTemplate.variants-1;
