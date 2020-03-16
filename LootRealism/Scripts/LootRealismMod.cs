@@ -176,15 +176,14 @@ namespace LootRealism
                     return 2;
                 case Weapons.Battle_Axe:
                 case Weapons.War_Axe:
-                    return 3;
                 case Weapons.Staff:
+                    return 3;
                 case Weapons.Mace:
                 case Weapons.Flail:
+                case Weapons.Warhammer:
                 case Weapons.Short_Bow:
                 case Weapons.Long_Bow:
                     return 4;
-                case Weapons.Warhammer:
-                    return 5;
                 default:
                     return 0;
             }
@@ -214,10 +213,10 @@ namespace LootRealism
                     return 15;
                 case Weapons.Katana:
                 case Weapons.Flail:
-                case Weapons.Warhammer:
                 case Weapons.Short_Bow:
                     return 16;
                 case Weapons.War_Axe:
+                case Weapons.Warhammer:
                 case Weapons.Long_Bow:
                     return 18;
                 case Weapons.Claymore:
