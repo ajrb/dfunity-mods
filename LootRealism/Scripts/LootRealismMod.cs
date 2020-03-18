@@ -46,13 +46,14 @@ namespace LootRealism
             bool skillStartEquip = settings.GetBool("Modules", "skillBasedStartingEquipment");
             bool skillStartSpells = settings.GetBool("Modules", "skillBasedStartingSpells");
             bool refinedWeaponDamage = settings.GetBool("Modules", "refinedWeaponDamage");
+            bool newWeapons = settings.GetBool("Modules", "newWeapons");
 
-            InitMod(lootRebalance, bandaging, conditionBasedPrices, enemyEquipment, skillStartEquip, skillStartSpells, refinedWeaponDamage);
+            InitMod(lootRebalance, bandaging, conditionBasedPrices, enemyEquipment, skillStartEquip, skillStartSpells, refinedWeaponDamage, newWeapons);
 
             mod.IsReady = true;
         }
 
-        private static void InitMod(bool lootRebalance, bool bandaging, bool conditionBasedPrices, bool enemyEquipment, bool skillStartEquip, bool skillStartSpells, bool refinedWeaponDamage)
+        private static void InitMod(bool lootRebalance, bool bandaging, bool conditionBasedPrices, bool enemyEquipment, bool skillStartEquip, bool skillStartSpells, bool refinedWeaponDamage, bool newWeapons)
         {
             Debug.Log("Begin mod init: LootRealism");
 
@@ -102,9 +103,12 @@ namespace LootRealism
                 FormulaHelper.RegisterOverride(mod, "CalculateWeaponMaxDamage", (Func<Weapons, int>)CalculateWeaponMaxDamage);
             }
 
-            // Add Archers Axe and Light Flail as custom weapon items.
-            DaggerfallUnity.Instance.ItemHelper.RegisterCustomItem(513, ItemGroups.Weapons, typeof(ItemArchersAxe));
-            DaggerfallUnity.Instance.ItemHelper.RegisterCustomItem(514, ItemGroups.Weapons, typeof(ItemLightFlail));
+            if (newWeapons)
+            {
+                // Add Archers Axe and Light Flail as custom weapon items.
+                DaggerfallUnity.Instance.ItemHelper.RegisterCustomItem(513, ItemGroups.Weapons, typeof(ItemArchersAxe));
+                DaggerfallUnity.Instance.ItemHelper.RegisterCustomItem(514, ItemGroups.Weapons, typeof(ItemLightFlail));
+            }
 
             // Temp experiment for C&C camping item...
             DaggerfallUnity.Instance.ItemHelper.RegisterItemUseHander(530, UseCampingEquipment);
