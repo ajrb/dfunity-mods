@@ -39,9 +39,8 @@ namespace Archaeologists
         {
         }
 
-        public LocatorItem(int baseValue) : base(ItemGroups.Jewellery, 7)
+        public LocatorItem(int baseValue) : base(ItemGroups.MiscItems, 512)
         {
-            shortName = NAME;
             value = baseValue;
             nativeMaterialValue = INACTIVE;
         }

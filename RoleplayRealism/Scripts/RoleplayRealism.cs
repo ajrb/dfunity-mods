@@ -117,8 +117,7 @@ namespace RoleplayRealism
             Mod lootRealism = ModManager.Instance.GetMod("LootRealism");
             if (lootRealism == null && bandaging)
             {
-                if (!DaggerfallUnity.Instance.ItemHelper.RegisterItemUseHander((int)UselessItems2.Bandage, UseBandage))
-                    Debug.LogWarning("RoleplayRealism: Unable to register bandage use handler.");
+                DaggerfallUnity.Instance.ItemHelper.RegisterItemUseHander((int)UselessItems2.Bandage, UseBandage);
             }
 
             if (shipPorts)

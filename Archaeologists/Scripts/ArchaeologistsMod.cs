@@ -16,6 +16,7 @@ using DaggerfallWorkshop.Game.Items;
 using DaggerfallWorkshop.Game.MagicAndEffects.MagicEffects;
 using DaggerfallWorkshop.Game.Questing;
 using DaggerfallWorkshop.Game.Utility.ModSupport;
+using DaggerfallWorkshop;
 
 namespace Archaeologists
 {
@@ -57,7 +58,7 @@ namespace Archaeologists
                 // Register the custom locator service
                 Services.RegisterGuildService(1001, ArchaeologistsGuild.LocatorService, "Locator Devices");
                 // Register the custom locator item
-                ItemCollection.RegisterCustomItem(typeof(LocatorItem).ToString(), typeof(LocatorItem));
+                DaggerfallUnity.Instance.ItemHelper.RegisterCustomItem(512, ItemGroups.UselessItems2, typeof(LocatorItem));
                 // Register the daedra summoning service
                 Services.RegisterGuildService(1002, GuildServices.DaedraSummoning);
                 // Register the custom repair service for teleport mark

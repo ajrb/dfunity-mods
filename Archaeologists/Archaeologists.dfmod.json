@@ -36,7 +36,8 @@
         "Assets/Game/Mods/Archaeologists/WorldData/RESIAM10.RMB-543-building10.json",
         "Assets/Game/Mods/Archaeologists/WorldData/PAWNAL03.RMB-857-building3.json",
         "Assets/Game/Mods/Archaeologists/Books/Mapping/ArchsGuildBooks.json",
-        "Assets/Game/Mods/Archaeologists/Books/ArchGuildHalls.TXT"
+        "Assets/Game/Mods/Archaeologists/Books/ArchGuildHalls.TXT",
+        "Assets/Game/Mods/Archaeologists/ItemTemplates.json"
     ],
     "Contributes": {
         "BooksMapping": [

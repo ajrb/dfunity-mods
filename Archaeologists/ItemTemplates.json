@@ -1,0 +1,22 @@
+[
+    {
+        "index": 512,
+        "name": "Locator device",
+        "baseWeight": 0.3,
+        "hitPoints": 10,
+        "capacityOrTarget": 0,
+        "basePrice": 2000,
+        "enchantmentPoints": 0,
+        "rarity": 15,
+        "variants": 0,
+        "drawOrderOrEffect": 0,
+        "isBluntWeapon": false,
+        "isLiquid": false,
+        "isOneHanded": false,
+        "isIngredient": false,
+        "worldTextureArchive": 433,
+        "worldTextureRecord": 15,
+        "playerTextureArchive": 0,
+        "playerTextureRecord": 0
+    }
+]
