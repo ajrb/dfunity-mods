@@ -54,6 +54,13 @@
                     "Description": "Refined damage ranges to give more valid weapon choices",
                     "$version": "v1",
                     "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
+                },
+                {
+                    "Value": true,
+                    "Name": "newWeapons",
+                    "Description": "Adds two new weapons to the game, Archers Axe and Light Flail",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
                 }
             ],
             "$version": "v1"
