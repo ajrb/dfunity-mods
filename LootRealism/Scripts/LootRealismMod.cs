@@ -71,10 +71,8 @@ namespace LootRealism
 
             if (bandaging)
             {
-                if (DaggerfallUnity.Instance.ItemHelper.RegisterItemUseHander((int)UselessItems2.Bandage, UseBandage))
-                    FormulaHelper.RegisterOverride(mod, "IsItemStackable", (Func<DaggerfallUnityItem, bool>)IsItemStackable);
-                else
-                    Debug.LogWarning("LootRealism: Unable to register bandage use handler.");
+                DaggerfallUnity.Instance.ItemHelper.RegisterItemUseHander((int)UselessItems2.Bandage, UseBandage);
+                FormulaHelper.RegisterOverride(mod, "IsItemStackable", (Func<DaggerfallUnityItem, bool>)IsItemStackable);
             }
 
             if (conditionBasedPrices)
@@ -104,7 +102,22 @@ namespace LootRealism
                 FormulaHelper.RegisterOverride(mod, "CalculateWeaponMaxDamage", (Func<Weapons, int>)CalculateWeaponMaxDamage);
             }
 
+            // Add Archers Axe and Light Flail as custom weapon items.
+            DaggerfallUnity.Instance.ItemHelper.RegisterCustomItem(513, ItemGroups.Weapons, typeof(ItemArchersAxe));
+            DaggerfallUnity.Instance.ItemHelper.RegisterCustomItem(514, ItemGroups.Weapons, typeof(ItemLightFlail));
+
+            // Temp experiment for C&C camping item...
+            DaggerfallUnity.Instance.ItemHelper.RegisterItemUseHander(530, UseCampingEquipment);
+            DaggerfallUnity.Instance.ItemHelper.RegisterCustomItem(530, ItemGroups.UselessItems2);
+
             Debug.Log("Finished mod init: LootRealism");
+        }
+
+        static bool UseCampingEquipment(DaggerfallUnityItem item, ItemCollection collection)
+        {
+            item.LowerCondition(1, GameManager.Instance.PlayerEntity, collection);
+            DaggerfallUI.PostMessage(DaggerfallUIMessages.dfuiOpenRestWindow);
+            return true;
         }
 
         public static bool IsItemStackable(DaggerfallUnityItem item)
@@ -207,20 +220,20 @@ namespace LootRealism
                 case Weapons.Battle_Axe:
                     return 13;
                 case Weapons.Broadsword:
-                    return 14;
                 case Weapons.Saber:
+                    return 14;
                 case Weapons.Longsword:
                     return 15;
                 case Weapons.Katana:
                 case Weapons.Flail:
                 case Weapons.Short_Bow:
                     return 16;
+                case Weapons.Dai_Katana:
                 case Weapons.War_Axe:
                 case Weapons.Warhammer:
                 case Weapons.Long_Bow:
                     return 18;
                 case Weapons.Claymore:
-                case Weapons.Dai_Katana:
                     return 19;
                 default:
                     return 0;
