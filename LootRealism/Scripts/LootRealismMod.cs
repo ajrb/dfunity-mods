@@ -110,6 +110,12 @@ namespace LootRealism
                 DaggerfallUnity.Instance.ItemHelper.RegisterCustomItem(514, ItemGroups.Weapons, typeof(ItemLightFlail));
             }
 
+            DaggerfallUnity.Instance.ItemHelper.RegisterCustomItem(515, ItemGroups.Armor, typeof(ItemHauberk));
+            DaggerfallUnity.Instance.ItemHelper.RegisterCustomItem(516, ItemGroups.Armor, typeof(ItemChausses));
+            DaggerfallUnity.Instance.ItemHelper.RegisterCustomItem(517, ItemGroups.Armor, typeof(ItemLeftSpaulder));
+            DaggerfallUnity.Instance.ItemHelper.RegisterCustomItem(518, ItemGroups.Armor, typeof(ItemRightSpaulder));
+            DaggerfallUnity.Instance.ItemHelper.RegisterCustomItem(519, ItemGroups.Armor, typeof(ItemSollerets));
+
             // Temp experiment for C&C camping item...
             DaggerfallUnity.Instance.ItemHelper.RegisterItemUseHander(530, UseCampingEquipment);
             DaggerfallUnity.Instance.ItemHelper.RegisterCustomItem(530, ItemGroups.UselessItems2);
