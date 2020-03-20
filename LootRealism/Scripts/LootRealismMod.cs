@@ -47,13 +47,14 @@ namespace LootRealism
             bool skillStartSpells = settings.GetBool("Modules", "skillBasedStartingSpells");
             bool refinedWeaponDamage = settings.GetBool("Modules", "refinedWeaponDamage");
             bool newWeapons = settings.GetBool("Modules", "newWeapons");
+            bool newArmor = settings.GetBool("Modules", "newArmor");
 
-            InitMod(lootRebalance, bandaging, conditionBasedPrices, enemyEquipment, skillStartEquip, skillStartSpells, refinedWeaponDamage, newWeapons);
+            InitMod(lootRebalance, bandaging, conditionBasedPrices, enemyEquipment, skillStartEquip, skillStartSpells, refinedWeaponDamage, newWeapons, newArmor);
 
             mod.IsReady = true;
         }
 
-        private static void InitMod(bool lootRebalance, bool bandaging, bool conditionBasedPrices, bool enemyEquipment, bool skillStartEquip, bool skillStartSpells, bool refinedWeaponDamage, bool newWeapons)
+        private static void InitMod(bool lootRebalance, bool bandaging, bool conditionBasedPrices, bool enemyEquipment, bool skillStartEquip, bool skillStartSpells, bool refinedWeaponDamage, bool newWeapons, bool newArmor)
         {
             Debug.Log("Begin mod init: LootRealism");
 
@@ -110,11 +111,15 @@ namespace LootRealism
                 DaggerfallUnity.Instance.ItemHelper.RegisterCustomItem(514, ItemGroups.Weapons, typeof(ItemLightFlail));
             }
 
-            DaggerfallUnity.Instance.ItemHelper.RegisterCustomItem(515, ItemGroups.Armor, typeof(ItemHauberk));
-            DaggerfallUnity.Instance.ItemHelper.RegisterCustomItem(516, ItemGroups.Armor, typeof(ItemChausses));
-            DaggerfallUnity.Instance.ItemHelper.RegisterCustomItem(517, ItemGroups.Armor, typeof(ItemLeftSpaulder));
-            DaggerfallUnity.Instance.ItemHelper.RegisterCustomItem(518, ItemGroups.Armor, typeof(ItemRightSpaulder));
-            DaggerfallUnity.Instance.ItemHelper.RegisterCustomItem(519, ItemGroups.Armor, typeof(ItemSollerets));
+            if (newArmor)
+            {
+                // Add new medium armor set as custom armor pieces.
+                DaggerfallUnity.Instance.ItemHelper.RegisterCustomItem(515, ItemGroups.Armor, typeof(ItemHauberk));
+                DaggerfallUnity.Instance.ItemHelper.RegisterCustomItem(516, ItemGroups.Armor, typeof(ItemChausses));
+                DaggerfallUnity.Instance.ItemHelper.RegisterCustomItem(517, ItemGroups.Armor, typeof(ItemLeftSpaulder));
+                DaggerfallUnity.Instance.ItemHelper.RegisterCustomItem(518, ItemGroups.Armor, typeof(ItemRightSpaulder));
+                DaggerfallUnity.Instance.ItemHelper.RegisterCustomItem(519, ItemGroups.Armor, typeof(ItemSollerets));
+            }
 
             // Temp experiment for C&C camping item...
             DaggerfallUnity.Instance.ItemHelper.RegisterItemUseHander(530, UseCampingEquipment);

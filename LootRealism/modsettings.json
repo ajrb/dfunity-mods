@@ -61,6 +61,13 @@
                     "Description": "Adds two new weapons to the game, Archers Axe and Light Flail",
                     "$version": "v1",
                     "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
+                },
+                {
+                    "Value": true,
+                    "Name": "newArmor",
+                    "Description": "Adds new chest, arm, leg and foot armor pieces to the game",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
                 }
             ],
             "$version": "v1"

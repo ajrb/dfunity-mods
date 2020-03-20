@@ -23,7 +23,7 @@ namespace LootRealism
             get {
                 if (nativeMaterialValue == (int)ArmorMaterialTypes.Leather)
                     return 10;
-                else if (nativeMaterialValue >= (int)ArmorMaterialTypes.Chain && nativeMaterialValue < (int)ArmorMaterialTypes.Elven)
+                else if (nativeMaterialValue >= (int)ArmorMaterialTypes.Chain && nativeMaterialValue < (int)ArmorMaterialTypes.Silver)
                     return 11;
                 else
                     return 16;
