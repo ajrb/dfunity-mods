@@ -275,13 +275,14 @@ namespace RoleplayRealism
             Debug.Log("Custom Armor service.");
 
             PlayerEntity playerEntity = GameManager.Instance.PlayerEntity;
+            ItemHelper itemHelper = DaggerfallUnity.Instance.ItemHelper;
             if (playerEntity.Level < 9)
             {
                 DaggerfallUI.MessageBox("Sorry I have not yet sourced enough rare materials to make you armor.");
                 return;
             }
             ItemCollection armorItems = new ItemCollection();
-            Array armorTypes = DaggerfallUnity.Instance.ItemHelper.GetEnumArray(ItemGroups.Armor);
+            Array armorTypes = itemHelper.GetEnumArray(ItemGroups.Armor);
             foreach (ArmorMaterialTypes material in customArmorMaterials)
             {
                 if (playerEntity.Level < 9 ||
@@ -293,7 +294,7 @@ namespace RoleplayRealism
                 for (int i = 0; i < armorTypes.Length; i++)
                 {
                     Armor armorType = (Armor)armorTypes.GetValue(i);
-                    ItemTemplate itemTemplate = DaggerfallUnity.Instance.ItemHelper.GetItemTemplate(ItemGroups.Armor, i);
+                    ItemTemplate itemTemplate = itemHelper.GetItemTemplate(ItemGroups.Armor, i);
                     int vs = 0;
                     int vf = 0;
                     switch (armorType)
@@ -322,6 +323,13 @@ namespace RoleplayRealism
                     }
                     for (int v = vs; v <= vf; v++)
                         armorItems.AddItem(ItemBuilder.CreateArmor(playerEntity.Gender, playerEntity.Race, armorType, material, v));
+                }
+                int[] customItemTemplates = itemHelper.GetCustomItemsForGroup(ItemGroups.Armor);
+                for (int i = 0; i < customItemTemplates.Length; i++)
+                {
+                    DaggerfallUnityItem item = ItemBuilder.CreateItem(ItemGroups.Armor, customItemTemplates[i]);
+                    ItemBuilder.ApplyArmorSettings(item, playerEntity.Gender, playerEntity.Race, material);
+                    armorItems.AddItem(item);
                 }
             }
 

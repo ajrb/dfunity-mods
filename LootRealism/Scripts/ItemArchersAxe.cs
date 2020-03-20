@@ -12,7 +12,9 @@ namespace LootRealism
 {
     public class ItemArchersAxe : DaggerfallUnityItem
     {
-        public ItemArchersAxe() : base(ItemGroups.Weapons, 513)
+        public const int templateIndex = 513;
+
+        public ItemArchersAxe() : base(ItemGroups.Weapons, templateIndex)
         {
         }
 

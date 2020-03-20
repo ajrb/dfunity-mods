@@ -3,8 +3,6 @@
 // License:         MIT License (http://www.opensource.org/licenses/mit-license.php)
 // Author:          Hazelnut
 
-using DaggerfallWorkshop.Game;
-using DaggerfallWorkshop.Game.Entity;
 using DaggerfallWorkshop.Game.Items;
 using DaggerfallWorkshop.Game.Serialization;
 
@@ -12,9 +10,10 @@ namespace LootRealism
 {
     public class ItemRightSpaulder : DaggerfallUnityItem
     {
-        public ItemRightSpaulder() : base(ItemGroups.Armor, 518)
+        public const int templateIndex = 518;
+
+        public ItemRightSpaulder() : base(ItemGroups.Armor, templateIndex)
         {
-            PlayerTextureArchive = (GameManager.Instance.PlayerEntity.Gender == Genders.Female) ? ItemBuilder.firstFemaleArchive : ItemBuilder.firstMaleArchive;
         }
 
         // Always use chainmail record unless leather.

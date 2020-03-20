@@ -3,8 +3,6 @@
 // License:         MIT License (http://www.opensource.org/licenses/mit-license.php)
 // Author:          Hazelnut
 
-using DaggerfallWorkshop.Game;
-using DaggerfallWorkshop.Game.Entity;
 using DaggerfallWorkshop.Game.Items;
 using DaggerfallWorkshop.Game.Serialization;
 
@@ -12,9 +10,10 @@ namespace LootRealism
 {
     public class ItemSollerets : DaggerfallUnityItem
     {
-        public ItemSollerets() : base(ItemGroups.Armor, 519)
+        public const int templateIndex = 519;
+
+        public ItemSollerets() : base(ItemGroups.Armor, templateIndex)
         {
-            PlayerTextureArchive = (GameManager.Instance.PlayerEntity.Gender == Genders.Female) ? ItemBuilder.firstFemaleArchive : ItemBuilder.firstMaleArchive;
         }
 
         // Always use leather record for boots.

@@ -171,7 +171,7 @@
     {
         "index": 517,
         "name": "Left Spaulder",
-        "baseWeight": 1.6,
+        "baseWeight": 1.75,
         "hitPoints": 1024,
         "capacityOrTarget": 0,
         "basePrice": 50,
@@ -191,7 +191,7 @@
     {
         "index": 518,
         "name": "Right Spaulder",
-        "baseWeight": 1.6,
+        "baseWeight": 1.75,
         "hitPoints": 1024,
         "capacityOrTarget": 0,
         "basePrice": 50,
@@ -211,7 +211,7 @@
     {
         "index": 519,
         "name": "Sollerets",
-        "baseWeight": 1.8,
+        "baseWeight": 1.75,
         "hitPoints": 1536,
         "capacityOrTarget": 0,
         "basePrice": 42,

@@ -3,8 +3,6 @@
 // License:         MIT License (http://www.opensource.org/licenses/mit-license.php)
 // Author:          Hazelnut
 
-using DaggerfallWorkshop.Game;
-using DaggerfallWorkshop.Game.Entity;
 using DaggerfallWorkshop.Game.Items;
 using DaggerfallWorkshop.Game.Serialization;
 
@@ -12,9 +10,10 @@ namespace LootRealism
 {
     public class ItemHauberk : DaggerfallUnityItem
     {
-        public ItemHauberk() : base(ItemGroups.Armor, 515)
+        public const int templateIndex = 515;
+
+        public ItemHauberk() : base(ItemGroups.Armor, templateIndex)
         {
-            PlayerTextureArchive = (GameManager.Instance.PlayerEntity.Gender == Genders.Female) ? ItemBuilder.firstFemaleArchive : ItemBuilder.firstMaleArchive;
         }
 
         // Always use chainmail record unless leather.
@@ -58,22 +57,23 @@ namespace LootRealism
             {
                 case (int)ArmorMaterialTypes.Leather:
                     return 2;
-                case (int)ArmorMaterialTypes.Iron:
                 case (int)ArmorMaterialTypes.Chain:
                 case (int)ArmorMaterialTypes.Chain2:
                     return 4;
+                case (int)ArmorMaterialTypes.Iron:
+                    return 5;
                 case (int)ArmorMaterialTypes.Steel:
                     return 6;
                 case (int)ArmorMaterialTypes.Silver:
                     return 7;
                 case (int)ArmorMaterialTypes.Elven:
-                    return 9;
+                    return 8;
                 case (int)ArmorMaterialTypes.Dwarven:
-                    return 10;
+                    return 9;
                 case (int)ArmorMaterialTypes.Adamantium:
-                    return 12;
+                    return 11;
                 case (int)ArmorMaterialTypes.Mithril:
-                    return 13;
+                    return 12;
                 case (int)ArmorMaterialTypes.Ebony:
                     return 14;
                 case (int)ArmorMaterialTypes.Orcish:

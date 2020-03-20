@@ -12,7 +12,9 @@ namespace LootRealism
 {
     public class ItemLightFlail : DaggerfallUnityItem
     {
-        public ItemLightFlail() : base(ItemGroups.Weapons, 514)
+        public const int templateIndex = 514;
+
+        public ItemLightFlail() : base(ItemGroups.Weapons, templateIndex)
         {
         }
 
