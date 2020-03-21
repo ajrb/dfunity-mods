@@ -3,6 +3,8 @@
 // License:         MIT License (http://www.opensource.org/licenses/mit-license.php)
 // Author:          Hazelnut
 
+using UnityEngine;
+using DaggerfallWorkshop.Game.Formulas;
 using DaggerfallWorkshop.Game.Items;
 using DaggerfallWorkshop.Game.Serialization;
 
@@ -11,9 +13,20 @@ namespace LootRealism
     public class ItemHauberk : DaggerfallUnityItem
     {
         public const int templateIndex = 515;
+        public const string mail = "Mail ";
 
         public ItemHauberk() : base(ItemGroups.Armor, templateIndex)
         {
+        }
+
+        // Add mail prefix to name for Iron+ materials.
+        public override int CurrentVariant
+        {
+            set {
+                base.CurrentVariant = value;
+                if (nativeMaterialValue >= (int)ArmorMaterialTypes.Iron)
+                    shortName = ItemHauberk.mail + shortName;
+            }
         }
 
         // Always use chainmail record unless leather.
@@ -42,6 +55,12 @@ namespace LootRealism
         public override int GetMaterialArmorValue()
         {
             return GetChainmailMaterialArmorValue(nativeMaterialValue);
+        }
+
+        public override int GetEnchantmentPower()
+        {
+            float multiplier = FormulaHelper.GetArmorEnchantmentMultiplier((ArmorMaterialTypes)nativeMaterialValue);
+            return enchantmentPoints + Mathf.FloorToInt(enchantmentPoints * multiplier);
         }
 
         public override ItemData_v1 GetSaveData()
