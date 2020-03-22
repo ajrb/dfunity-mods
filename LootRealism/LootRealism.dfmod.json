@@ -1,9 +1,9 @@
 {
     "ModTitle": "LootRealism",
-    "ModVersion": "0.2",
+    "ModVersion": "0.3",
     "ModAuthor": "Hazelnut & Ralzar",
     "ContactInfo": null,
-    "DFUnity_Version": "0.10.20",
+    "DFUnity_Version": "0.10.22",
     "ModDescription": "Loot rebalance and item realism changes",
     "GUID": "b1b15c90-e2e1-46c6-96d8-000ecc282bbd",
     "Files": [
@@ -89,7 +89,14 @@
         "Assets/Game/Mods/LootRealism/Textures/514_0-0_Steel.png",
         "Assets/Game/Mods/LootRealism/Textures/514_1-0_Mithril.xml",
         "Assets/Game/Mods/LootRealism/Textures/514_1-0_Orcish.png",
-        "Assets/Game/Mods/LootRealism/Textures/513_1-0_Mithril.png"
+        "Assets/Game/Mods/LootRealism/Textures/513_1-0_Mithril.png",
+        "Assets/Game/Mods/LootRealism/Scripts/ItemRightSpaulder.cs",
+        "Assets/Game/Mods/LootRealism/Scripts/ItemArchersAxe.cs",
+        "Assets/Game/Mods/LootRealism/Scripts/ItemLeftSpaulder.cs",
+        "Assets/Game/Mods/LootRealism/Scripts/ItemChausses.cs",
+        "Assets/Game/Mods/LootRealism/Scripts/ItemLightFlail.cs",
+        "Assets/Game/Mods/LootRealism/Scripts/ItemHauberk.cs",
+        "Assets/Game/Mods/LootRealism/Scripts/ItemSollerets.cs"
     ],
     "Contributes": null,
     "Dependencies": null

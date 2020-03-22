@@ -18,6 +18,12 @@ namespace LootRealism
         {
         }
 
+        // Always use same archive for both genders as the same image set is used
+        public override int InventoryTextureArchive
+        {
+            get { return templateIndex; }
+        }
+
         // Act like an saber (number 6 of Weapons enum) for equip times etc.
         public override int GroupIndex
         {
