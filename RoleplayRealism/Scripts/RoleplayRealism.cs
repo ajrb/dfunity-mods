@@ -407,11 +407,12 @@ namespace RoleplayRealism
             {
                 float encPc = playerEntity.CarriedWeight / playerEntity.MaxEncumbrance;
                 float encOver = Mathf.Max(encPc - 0.75f, 0f) * EncEffectScaleFactor;
-                if (encOver > 0 && encOver < 0.8)
+                if (encOver > 0)
                 {
-                    int speedEffect = (int)(playerEntity.Stats.PermanentSpeed * encOver);
-                    int fatigueEffect = (int)(encOver * 100);
-                    //Debug.LogFormat("Encumbrance {0}, over {1} = effects: {2} speed, {3} fatigue", encPc, encOver, speedEffect, fatigueEffect);
+                    int speedEffect = Mathf.Min(playerEntity.Stats.PermanentSpeed - 2, (int)(playerEntity.Stats.PermanentSpeed * encOver));
+                    int fatigueEffect = Mathf.Min(playerEntity.CurrentFatigue - 100, (int)(encOver * 100));
+
+                    Debug.LogFormat("Encumbrance {0}, over {1} = effects: {2} speed, {3} fatigue", encPc, encOver, speedEffect, fatigueEffect);
 
                     playerEntity.DecreaseFatigue(fatigueEffect, false);
 
