@@ -2,91 +2,91 @@
     {
         "index": 93,
         "baseWeight": 600.0,
-        "basePrice": 1000,
+        "basePrice": 1000
     },
     {
         "index": 94,
-        "basePrice": 3000,
+        "basePrice": 3000
     },
     {
         "index": 114,
         "hitPoints": 40,
-        "rarity": 2,
+        "rarity": 2
     },
     {
         "index": 116,
         "baseWeight": 2,
-        "hitPoints": 400,
+        "hitPoints": 400
     },
     {
         "index": 117,
         "hitPoints": 150,
-        "rarity": 2,
+        "rarity": 2
     },
     {
         "index": 118,
         "hitPoints": 700,
-        "basePrice": 12,
+        "basePrice": 12
     },
     {
         "index": 121,
         "hitPoints": 350,
-        "rarity": 2,
+        "rarity": 2
     },
     {
         "index": 123,
         "name": "Odachi",
         "hitPoints": 450,
-        "rarity": 3,
+        "rarity": 3
     },
     {
         "index": 124,
         "baseWeight": 6.0,
-        "basePrice": 12,
+        "basePrice": 12
     },
     {
         "index": 125,
-        "baseWeight": 8.5,
+        "baseWeight": 8.5
     },
     {
         "index": 129,
-        "hitPoints": 80,
+        "hitPoints": 80
     },
     {
         "index": 130,
-        "hitPoints": 120,
+        "hitPoints": 120
     },
     {
         "index": 131,
-        "baseWeight": 0.1,
+        "baseWeight": 0.1
     },
     {
         "index": 140,
-        "baseWeight": 0.1,
+        "baseWeight": 0.1
     },
     {
         "index": 247,
-        "baseWeight": 0.35,
+        "baseWeight": 0.35
     },
     {
         "index": 249,
-        "baseWeight": 0.15,
+        "baseWeight": 0.15
     },
     {
         "index": 252,
-        "baseWeight": 0.15,
+        "baseWeight": 0.15
     },
     {
         "index": 275,
-        "baseWeight": 0.1,
+        "baseWeight": 0.1
     },
     {
         "index": 278,
-        "baseWeight": 0.1,
+        "baseWeight": 0.1
     },
     {
         "index": 279,
-        "baseWeight": 0.1,
+        "baseWeight": 0.1
     },
     {
         "index": 513,
@@ -227,25 +227,5 @@
         "worldTextureRecord": 1,
         "playerTextureArchive": 245,
         "playerTextureRecord": 0
-    },
-    {
-        "index": 530,
-        "name": "Camping Equipment",
-        "baseWeight": 5.0,
-        "hitPoints": 10,
-        "capacityOrTarget": 0,
-        "basePrice": 13,
-        "enchantmentPoints": 0,
-        "rarity": 1,
-        "variants": 0,
-        "drawOrderOrEffect": 0,
-        "isBluntWeapon": false,
-        "isLiquid": false,
-        "isOneHanded": false,
-        "isIngredient": false,
-        "worldTextureArchive": 204,
-        "worldTextureRecord": 8,
-        "playerTextureArchive": 0,
-        "playerTextureRecord": 0
-    },
+    }
 ]
