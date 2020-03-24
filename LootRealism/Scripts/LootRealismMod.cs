@@ -124,18 +124,7 @@ namespace LootRealism
                 DaggerfallUnity.Instance.ItemHelper.RegisterCustomItem(519, ItemGroups.Armor, typeof(ItemSollerets));
             }
 
-            // Temp experiment for C&C camping item...
-            DaggerfallUnity.Instance.ItemHelper.RegisterItemUseHander(530, UseCampingEquipment);
-            DaggerfallUnity.Instance.ItemHelper.RegisterCustomItem(530, ItemGroups.UselessItems2);
-
             Debug.Log("Finished mod init: LootRealism");
-        }
-
-        static bool UseCampingEquipment(DaggerfallUnityItem item, ItemCollection collection)
-        {
-            item.LowerCondition(1, GameManager.Instance.PlayerEntity, collection);
-            DaggerfallUI.PostMessage(DaggerfallUIMessages.dfuiOpenRestWindow);
-            return true;
         }
 
         public static bool IsItemStackable(DaggerfallUnityItem item)
@@ -152,7 +141,8 @@ namespace LootRealism
                 int heal = (int)Mathf.Min(medical / 3, playerEntity.MaxHealth * 0.4f);
                 collection.RemoveOne(item);
                 playerEntity.IncreaseHealth(heal);
-                Debug.LogFormat("Applied a Bandage and healed {0} health.", heal);
+                if (mod.IsVirtual)
+                    Debug.LogFormat("Applied a Bandage and healed {0} health.", heal);
             }
             return true;
         }

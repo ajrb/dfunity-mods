@@ -244,7 +244,9 @@ namespace RoleplayRealism
                 strRatio -= capRatio;
 
             float frameSpeed = 3 * (115 - ((speed * spdRatio) + (strength * strRatio)));
-            //Debug.LogFormat("anim= {0}ms/frame, speed={1} strength={2}", frameSpeed / FormulaHelper.classicFrameUpdate, speed * spdRatio, strength * strRatio);
+            if (mod.IsVirtual)
+                Debug.LogFormat("anim= {0}ms/frame, speed={1} strength={2}", frameSpeed / FormulaHelper.classicFrameUpdate, speed * spdRatio, strength * strRatio);
+
             return frameSpeed / FormulaHelper.classicFrameUpdate;
         }
 
@@ -259,7 +261,7 @@ namespace RoleplayRealism
             {
                 int amount = damage * 5;
                 item.LowerCondition(amount, owner);
-                if (owner == GameManager.Instance.PlayerEntity)
+                if (mod.IsVirtual && owner == GameManager.Instance.PlayerEntity)
                     Debug.LogFormat("Damaged {0} by {1} from dmg {3}, cond={2}", item.ItemName, amount, item.currentCondition, damage);
                 return true;
             }
@@ -341,7 +343,9 @@ namespace RoleplayRealism
 
         private static void BedActivation(Transform transform)
         {
-            //Debug.Log("zzzzzzzzzz!");
+            if (mod.IsVirtual)
+                Debug.Log("zzzzzzzzzz!");
+
             IUserInterfaceManager uiManager = DaggerfallUI.UIManager;
             uiManager.PushWindow(new DaggerfallRestWindow(uiManager, true));
         }
@@ -364,10 +368,11 @@ namespace RoleplayRealism
                 else if (weaponAnimTime > 8000)
                     adjustedHitChanceMod -= 20;
 
-                Debug.LogFormat("Adjusted Weapon HitChanceMod for bow drawing from {0} to {1} (t={2}ms)", hitChanceMod, adjustedHitChanceMod, weaponAnimTime);
+                if (mod.IsVirtual)
+                    Debug.LogFormat("Adjusted Weapon HitChanceMod for bow drawing from {0} to {1} (t={2}ms)", hitChanceMod, adjustedHitChanceMod, weaponAnimTime);
+
                 return adjustedHitChanceMod;
             }
-
             return hitChanceMod;
         }
 
@@ -389,10 +394,11 @@ namespace RoleplayRealism
                 else if (weaponAnimTime >= 9000)
                     adjustedDamage *= 0.25;
 
-                Debug.LogFormat("Adjusted Weapon Damage for bow drawing from {0} to {1} (t={2}ms)", damage, (int)adjustedDamage, weaponAnimTime);
+                if (mod.IsVirtual)
+                    Debug.LogFormat("Adjusted Weapon Damage for bow drawing from {0} to {1} (t={2}ms)", damage, (int)adjustedDamage, weaponAnimTime);
+
                 return (int)adjustedDamage;
             }
-
             return damage;
         }
 
@@ -412,7 +418,8 @@ namespace RoleplayRealism
                     int speedEffect = Mathf.Min(playerEntity.Stats.PermanentSpeed - 2, (int)(playerEntity.Stats.PermanentSpeed * encOver));
                     int fatigueEffect = Mathf.Min(playerEntity.CurrentFatigue - 100, (int)(encOver * 100));
 
-                    Debug.LogFormat("Encumbrance {0}, over {1} = effects: {2} speed, {3} fatigue", encPc, encOver, speedEffect, fatigueEffect);
+                    if (mod.IsVirtual)
+                        Debug.LogFormat("Encumbrance {0}, over {1} = effects: {2} speed, {3} fatigue", encPc, encOver, speedEffect, fatigueEffect);
 
                     playerEntity.DecreaseFatigue(fatigueEffect, false);
 
@@ -431,10 +438,11 @@ namespace RoleplayRealism
                 PlayerEntity playerEntity = GameManager.Instance.PlayerEntity;
                 int medical = playerEntity.Skills.GetLiveSkillValue(DFCareer.Skills.Medical);
                 int heal = (int) Mathf.Min(medical / 2, playerEntity.MaxHealth * 0.4f);
-                Debug.LogFormat("Applying a Bandage to heal {0} health.", heal);
                 collection.RemoveItem(item);
-
                 playerEntity.IncreaseHealth(heal);
+
+                if (mod.IsVirtual)
+                    Debug.LogFormat("Applied a Bandage to heal {0} health.", heal);
             }
             return true;
         }
