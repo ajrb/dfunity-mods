@@ -244,9 +244,9 @@ namespace Archaeologists
             if (!success && roll - chance < 30 && languageSkill == DFCareer.Skills.Etiquette && languageSkill == DFCareer.Skills.Streetwise)
                 player.TallySkill(languageSkill, 1);
 
-            if (mod.IsVirtual)
-                Debug.LogFormat("Archaeologists Pacification {3} using {0} skill: chance= {1}  roll= {2}", languageSkill, chance, roll, success ? "success" : "failure");
-
+#if UNITY_EDITOR
+            Debug.LogFormat("Archaeologists Pacification {3} using {0} skill: chance= {1}  roll= {2}", languageSkill, chance, roll, success ? "success" : "failure");
+#endif            
             return success;
         }
 

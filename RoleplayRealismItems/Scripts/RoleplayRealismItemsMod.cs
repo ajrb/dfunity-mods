@@ -1,4 +1,4 @@
-// Project:         LootRealism mod for Daggerfall Unity (http://www.dfworkshop.net)
+// Project:         RoleplayRealism:Items mod for Daggerfall Unity (http://www.dfworkshop.net)
 // Copyright:       Copyright (C) 2020
 // License:         MIT License (http://www.opensource.org/licenses/mit-license.php)
 // Authors:         Hazelnut & Ralzar
@@ -21,9 +21,9 @@ using DaggerfallWorkshop.Game.Utility;
 using DaggerfallWorkshop.Game.MagicAndEffects;
 using DaggerfallWorkshop.Game.MagicAndEffects.MagicEffects;
 
-namespace LootRealism
+namespace RoleplayRealism
 {
-    public class LootRealismMod : MonoBehaviour
+    public class RoleplayRealismItemsMod : MonoBehaviour
     {
         const int G = 85;   // Mob Array Gap from 42 .. 128 = 85
         static Mod mod;
@@ -36,7 +36,7 @@ namespace LootRealism
         {
             mod = initParams.Mod;
             var go = new GameObject(mod.Title);
-            go.AddComponent<LootRealismMod>();
+            go.AddComponent<RoleplayRealismItemsMod>();
         }
 
         void Awake()
@@ -59,7 +59,7 @@ namespace LootRealism
 
         private static void InitMod(bool lootRebalance, bool bandaging, bool conditionBasedPrices, bool enemyEquipment, bool skillStartEquip, bool skillStartSpells, bool refinedWeaponDamage, bool newWeapons, bool newArmor)
         {
-            Debug.Log("Begin mod init: LootRealism");
+            Debug.Log("Begin mod init: RoleplayRealismItems");
 
             if (lootRebalance)
             {
@@ -124,7 +124,7 @@ namespace LootRealism
                 DaggerfallUnity.Instance.ItemHelper.RegisterCustomItem(519, ItemGroups.Armor, typeof(ItemSollerets));
             }
 
-            Debug.Log("Finished mod init: LootRealism");
+            Debug.Log("Finished mod init: RoleplayRealismItems");
         }
 
         public static bool IsItemStackable(DaggerfallUnityItem item)
@@ -141,8 +141,9 @@ namespace LootRealism
                 int heal = (int)Mathf.Min(medical / 3, playerEntity.MaxHealth * 0.4f);
                 collection.RemoveOne(item);
                 playerEntity.IncreaseHealth(heal);
-                if (mod.IsVirtual)
-                    Debug.LogFormat("Applied a Bandage and healed {0} health.", heal);
+#if UNITY_EDITOR
+                Debug.LogFormat("Applied a Bandage and healed {0} health.", heal);
+#endif
             }
             return true;
         }

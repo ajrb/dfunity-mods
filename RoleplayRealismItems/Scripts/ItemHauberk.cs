@@ -1,4 +1,4 @@
-// Project:         Loot Realism for Daggerfall Unity (http://www.dfworkshop.net)
+// Project:         RoleplayRealism:Items mod for Daggerfall Unity (http://www.dfworkshop.net)
 // Copyright:       Copyright (C) 2020 Hazelnut
 // License:         MIT License (http://www.opensource.org/licenses/mit-license.php)
 // Author:          Hazelnut
@@ -8,13 +8,14 @@ using DaggerfallWorkshop.Game.Formulas;
 using DaggerfallWorkshop.Game.Items;
 using DaggerfallWorkshop.Game.Serialization;
 
-namespace LootRealism
+namespace RoleplayRealism
 {
-    public class ItemLeftSpaulder : DaggerfallUnityItem
+    public class ItemHauberk : DaggerfallUnityItem
     {
-        public const int templateIndex = 517;
+        public const int templateIndex = 515;
+        public const string mail = "Mail ";
 
-        public ItemLeftSpaulder() : base(ItemGroups.Armor, templateIndex)
+        public ItemHauberk() : base(ItemGroups.Armor, templateIndex)
         {
         }
 
@@ -33,9 +34,9 @@ namespace LootRealism
         {
             get {
                 if (nativeMaterialValue == (int)ArmorMaterialTypes.Leather)
-                    return 17;
+                    return 3;
                 else
-                    return 21;
+                    return 7;
             }
         }
 
@@ -48,12 +49,12 @@ namespace LootRealism
 
         public override EquipSlots GetEquipSlot()
         {
-            return EquipSlots.LeftArm;
+            return EquipSlots.ChestArmor;
         }
 
         public override int GetMaterialArmorValue()
         {
-            return ItemHauberk.GetChainmailMaterialArmorValue(nativeMaterialValue);
+            return GetChainmailMaterialArmorValue(nativeMaterialValue);
         }
 
         public override int GetEnchantmentPower()
@@ -65,8 +66,42 @@ namespace LootRealism
         public override ItemData_v1 GetSaveData()
         {
             ItemData_v1 data = base.GetSaveData();
-            data.className = typeof(ItemLeftSpaulder).ToString();
+            data.className = typeof(ItemHauberk).ToString();
             return data;
+        }
+
+        public static int GetChainmailMaterialArmorValue(int material)
+        {
+            switch (material)
+            {
+                case (int)ArmorMaterialTypes.Leather:
+                    return 2;
+                case (int)ArmorMaterialTypes.Chain:
+                case (int)ArmorMaterialTypes.Chain2:
+                    return 4;
+                case (int)ArmorMaterialTypes.Iron:
+                    return 5;
+                case (int)ArmorMaterialTypes.Steel:
+                    return 6;
+                case (int)ArmorMaterialTypes.Silver:
+                    return 7;
+                case (int)ArmorMaterialTypes.Elven:
+                    return 8;
+                case (int)ArmorMaterialTypes.Dwarven:
+                    return 9;
+                case (int)ArmorMaterialTypes.Adamantium:
+                    return 11;
+                case (int)ArmorMaterialTypes.Mithril:
+                    return 12;
+                case (int)ArmorMaterialTypes.Ebony:
+                    return 14;
+                case (int)ArmorMaterialTypes.Orcish:
+                    return 16;
+                case (int)ArmorMaterialTypes.Daedric:
+                    return 17;
+                default:
+                    return 0;
+            }
         }
 
     }

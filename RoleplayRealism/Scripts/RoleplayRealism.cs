@@ -114,7 +114,7 @@ namespace RoleplayRealism
                 EntityEffectBroker.OnNewMagicRound += EncumbranceEffects_OnNewMagicRound;
             }
 
-            Mod lootRealism = ModManager.Instance.GetMod("LootRealism");
+            Mod lootRealism = ModManager.Instance.GetMod("RoleplayRealismItems");
             if (lootRealism == null && bandaging)
             {
                 DaggerfallUnity.Instance.ItemHelper.RegisterItemUseHander((int)UselessItems2.Bandage, UseBandage);
@@ -244,9 +244,10 @@ namespace RoleplayRealism
                 strRatio -= capRatio;
 
             float frameSpeed = 3 * (115 - ((speed * spdRatio) + (strength * strRatio)));
-            if (mod.IsVirtual)
-                Debug.LogFormat("anim= {0}ms/frame, speed={1} strength={2}", frameSpeed / FormulaHelper.classicFrameUpdate, speed * spdRatio, strength * strRatio);
 
+#if UNITY_EDITOR
+            Debug.LogFormat("anim= {0}ms/frame, speed={1} strength={2}", frameSpeed / FormulaHelper.classicFrameUpdate, speed * spdRatio, strength * strRatio);
+#endif
             return frameSpeed / FormulaHelper.classicFrameUpdate;
         }
 
@@ -261,8 +262,10 @@ namespace RoleplayRealism
             {
                 int amount = damage * 5;
                 item.LowerCondition(amount, owner);
-                if (mod.IsVirtual && owner == GameManager.Instance.PlayerEntity)
+#if UNITY_EDITOR
+                if (owner == GameManager.Instance.PlayerEntity)
                     Debug.LogFormat("Damaged {0} by {1} from dmg {3}, cond={2}", item.ItemName, amount, item.currentCondition, damage);
+#endif
                 return true;
             }
             return false;
@@ -343,9 +346,6 @@ namespace RoleplayRealism
 
         private static void BedActivation(Transform transform)
         {
-            if (mod.IsVirtual)
-                Debug.Log("zzzzzzzzzz!");
-
             IUserInterfaceManager uiManager = DaggerfallUI.UIManager;
             uiManager.PushWindow(new DaggerfallRestWindow(uiManager, true));
         }
@@ -368,9 +368,9 @@ namespace RoleplayRealism
                 else if (weaponAnimTime > 8000)
                     adjustedHitChanceMod -= 20;
 
-                if (mod.IsVirtual)
-                    Debug.LogFormat("Adjusted Weapon HitChanceMod for bow drawing from {0} to {1} (t={2}ms)", hitChanceMod, adjustedHitChanceMod, weaponAnimTime);
-
+#if UNITY_EDITOR
+                Debug.LogFormat("Adjusted Weapon HitChanceMod for bow drawing from {0} to {1} (t={2}ms)", hitChanceMod, adjustedHitChanceMod, weaponAnimTime);
+#endif
                 return adjustedHitChanceMod;
             }
             return hitChanceMod;
@@ -394,9 +394,9 @@ namespace RoleplayRealism
                 else if (weaponAnimTime >= 9000)
                     adjustedDamage *= 0.25;
 
-                if (mod.IsVirtual)
-                    Debug.LogFormat("Adjusted Weapon Damage for bow drawing from {0} to {1} (t={2}ms)", damage, (int)adjustedDamage, weaponAnimTime);
-
+#if UNITY_EDITOR
+                Debug.LogFormat("Adjusted Weapon Damage for bow drawing from {0} to {1} (t={2}ms)", damage, (int)adjustedDamage, weaponAnimTime);
+#endif
                 return (int)adjustedDamage;
             }
             return damage;
@@ -418,9 +418,9 @@ namespace RoleplayRealism
                     int speedEffect = Mathf.Min(playerEntity.Stats.PermanentSpeed - 2, (int)(playerEntity.Stats.PermanentSpeed * encOver));
                     int fatigueEffect = Mathf.Min(playerEntity.CurrentFatigue - 100, (int)(encOver * 100));
 
-                    if (mod.IsVirtual)
-                        Debug.LogFormat("Encumbrance {0}, over {1} = effects: {2} speed, {3} fatigue", encPc, encOver, speedEffect, fatigueEffect);
-
+#if UNITY_EDITOR
+                    Debug.LogFormat("Encumbrance {0}, over {1} = effects: {2} speed, {3} fatigue", encPc, encOver, speedEffect, fatigueEffect);
+#endif
                     playerEntity.DecreaseFatigue(fatigueEffect, false);
 
                     EntityEffectManager playerEffectManager = playerEntity.EntityBehaviour.GetComponent<EntityEffectManager>();
@@ -441,8 +441,9 @@ namespace RoleplayRealism
                 collection.RemoveItem(item);
                 playerEntity.IncreaseHealth(heal);
 
-                if (mod.IsVirtual)
-                    Debug.LogFormat("Applied a Bandage to heal {0} health.", heal);
+#if UNITY_EDITOR
+                Debug.LogFormat("Applied a Bandage to heal {0} health.", heal);
+#endif
             }
             return true;
         }

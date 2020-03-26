@@ -1,4 +1,4 @@
-// Project:         Loot Realism for Daggerfall Unity (http://www.dfworkshop.net)
+// Project:         RoleplayRealism:Items mod for Daggerfall Unity (http://www.dfworkshop.net)
 // Copyright:       Copyright (C) 2020 Hazelnut
 // License:         MIT License (http://www.opensource.org/licenses/mit-license.php)
 // Author:          Hazelnut
@@ -8,13 +8,13 @@ using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game.Items;
 using DaggerfallWorkshop.Game.Serialization;
 
-namespace LootRealism
+namespace RoleplayRealism
 {
-    public class ItemArchersAxe : DaggerfallUnityItem
+    public class ItemLightFlail : DaggerfallUnityItem
     {
-        public const int templateIndex = 513;
+        public const int templateIndex = 514;
 
-        public ItemArchersAxe() : base(ItemGroups.Weapons, templateIndex)
+        public ItemLightFlail() : base(ItemGroups.Weapons, templateIndex)
         {
         }
 
@@ -24,16 +24,16 @@ namespace LootRealism
             get { return templateIndex; }
         }
 
-        // Act like an short sword (number 3 of Weapons enum) for equip times etc.
+        // Act like an saber (number 6 of Weapons enum) for equip times etc.
         public override int GroupIndex
         {
-            get { return 3; }
+            get { return 6; }
         }
 
-        // Set weapon damage to 2-10.
+        // Set weapon damage to 3-10.
         public override int GetBaseDamageMin()
         {
-            return 2;
+            return 3;
         }
         public override int GetBaseDamageMax()
         {
@@ -42,7 +42,7 @@ namespace LootRealism
 
         public override int GetWeaponSkillUsed()
         {
-            return (int)DFCareer.ProficiencyFlags.Axes;
+            return (int)DFCareer.ProficiencyFlags.BluntWeapons;
         }
 
         public override ItemHands GetItemHands()
@@ -52,13 +52,13 @@ namespace LootRealism
 
         public override WeaponTypes GetWeaponType()
         {
-            return IsEnchanted ? WeaponTypes.Battleaxe_Magic : WeaponTypes.Battleaxe;
+            return IsEnchanted ? WeaponTypes.Flail_Magic : WeaponTypes.Flail;
         }
 
         public override ItemData_v1 GetSaveData()
         {
             ItemData_v1 data = base.GetSaveData();
-            data.className = typeof(ItemArchersAxe).ToString();
+            data.className = typeof(ItemLightFlail).ToString();
             return data;
         }
     }
