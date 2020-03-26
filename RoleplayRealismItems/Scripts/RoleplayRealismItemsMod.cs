@@ -27,7 +27,7 @@ namespace RoleplayRealism
     {
         const int G = 85;   // Mob Array Gap from 42 .. 128 = 85
 
-        const float SpeedReductionFactor = 3.6f;
+        const float SpeedReductionFactor = 3.4f;
 
         static Mod mod;
 
@@ -267,8 +267,8 @@ namespace RoleplayRealism
             else
             {
                 weaponWeight = weapon.weightInKg;
-                int strWeightPerc = 100 - (player.Stats.LiveStrength / 2);
-                float adjustedWeight = (strWeightPerc * weaponWeight / 100) + 0.25f;
+                int strWeightPerc = 150 - player.Stats.LiveStrength;
+                float adjustedWeight = strWeightPerc * weaponWeight / 100;
                 float speedReductionPerc = adjustedWeight * SpeedReductionFactor;
                 int playerSpeed = Mathf.Min(player.Stats.LiveSpeed, 98);    // Cap speed at 98%
 

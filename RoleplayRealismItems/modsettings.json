@@ -51,7 +51,7 @@
                 {
                     "Value": true,
                     "Name": "weaponBalance",
-                    "Description": "Balances weapon attack speed and damage ranges vs. weight to give more valid choices",
+                    "Description": "Balances weapon attack speed and damage ranges against weight to give more valid choices",
                     "$version": "v1",
                     "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
                 },
