@@ -50,8 +50,8 @@
                 },
                 {
                     "Value": true,
-                    "Name": "refinedWeaponDamage",
-                    "Description": "Refined damage ranges to give more valid weapon choices",
+                    "Name": "weaponBalance",
+                    "Description": "Balances weapon attack speed and damage ranges vs. weight to give more valid choices",
                     "$version": "v1",
                     "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
                 },

@@ -26,6 +26,9 @@ namespace RoleplayRealism
     public class RoleplayRealismItemsMod : MonoBehaviour
     {
         const int G = 85;   // Mob Array Gap from 42 .. 128 = 85
+
+        const float SpeedReductionFactor = 3.6f;
+
         static Mod mod;
 
         static bool newWeapons = false;
@@ -48,16 +51,16 @@ namespace RoleplayRealism
             bool enemyEquipment = settings.GetBool("Modules", "realisticEnemyEquipment");
             bool skillStartEquip = settings.GetBool("Modules", "skillBasedStartingEquipment");
             bool skillStartSpells = settings.GetBool("Modules", "skillBasedStartingSpells");
-            bool refinedWeaponDamage = settings.GetBool("Modules", "refinedWeaponDamage");
+            bool weaponBalance = settings.GetBool("Modules", "weaponBalance");
             newWeapons = settings.GetBool("Modules", "newWeapons");
             newArmor = settings.GetBool("Modules", "newArmor");
 
-            InitMod(lootRebalance, bandaging, conditionBasedPrices, enemyEquipment, skillStartEquip, skillStartSpells, refinedWeaponDamage, newWeapons, newArmor);
+            InitMod(lootRebalance, bandaging, conditionBasedPrices, enemyEquipment, skillStartEquip, skillStartSpells, weaponBalance, newWeapons, newArmor);
 
             mod.IsReady = true;
         }
 
-        private static void InitMod(bool lootRebalance, bool bandaging, bool conditionBasedPrices, bool enemyEquipment, bool skillStartEquip, bool skillStartSpells, bool refinedWeaponDamage, bool newWeapons, bool newArmor)
+        private static void InitMod(bool lootRebalance, bool bandaging, bool conditionBasedPrices, bool enemyEquipment, bool skillStartEquip, bool skillStartSpells, bool weaponBalance, bool newWeapons, bool newArmor)
         {
             Debug.Log("Begin mod init: RoleplayRealismItems");
 
@@ -101,8 +104,9 @@ namespace RoleplayRealism
                 startGameBehaviour.AssignStartingSpells = AssignSkillSpellbook;
             }
 
-            if (refinedWeaponDamage)
+            if (weaponBalance)
             {
+                FormulaHelper.RegisterOverride(mod, "GetMeleeWeaponAnimTime", (Func<PlayerEntity, WeaponTypes, ItemHands, float>)GetMeleeWeaponAnimTime);
                 FormulaHelper.RegisterOverride(mod, "CalculateWeaponMinDamage", (Func<Weapons, int>)CalculateWeaponMinDamage);
                 FormulaHelper.RegisterOverride(mod, "CalculateWeaponMaxDamage", (Func<Weapons, int>)CalculateWeaponMaxDamage);
             }
@@ -248,6 +252,36 @@ namespace RoleplayRealism
                     return 0;
             }
         }
+
+        private static float GetMeleeWeaponAnimTime(PlayerEntity player, WeaponTypes weaponType, ItemHands weaponHands)
+        {
+            EquipSlots weaponSlot = GameManager.Instance.WeaponManager.UsingRightHand ? EquipSlots.RightHand : EquipSlots.LeftHand;
+            DaggerfallUnityItem weapon = player.ItemEquipTable.GetItem(weaponSlot);
+            int adjustedSpeed = 0;
+            float weaponWeight = 0f;
+
+            if (weaponType == WeaponTypes.Melee || weapon == null)
+            {
+                adjustedSpeed = player.Stats.LiveSpeed;
+            }
+            else
+            {
+                weaponWeight = weapon.weightInKg;
+                int strWeightPerc = 100 - (player.Stats.LiveStrength / 2);
+                float adjustedWeight = (strWeightPerc * weaponWeight / 100) + 0.25f;
+                float speedReductionPerc = adjustedWeight * SpeedReductionFactor;
+                int playerSpeed = Mathf.Min(player.Stats.LiveSpeed, 98);    // Cap speed at 98%
+
+                adjustedSpeed = (int)(playerSpeed - (playerSpeed * speedReductionPerc / 90));
+            }
+            float frameSpeed = 3 * (115 - adjustedSpeed);
+
+#if UNITY_EDITOR
+            Debug.LogFormat("anim= {0}ms/frame, speed={1} strength={2} weight={3} adjustedSpeed={4}", frameSpeed / FormulaHelper.classicFrameUpdate, player.Stats.LiveSpeed, player.Stats.LiveStrength, weaponWeight, adjustedSpeed);
+#endif
+            return frameSpeed / FormulaHelper.classicFrameUpdate;
+        }
+
 
         static int[] blunt = new int[] { (int)Weapons.Mace, (int)Weapons.Flail, (int)Weapons.Warhammer };
         static int[] bluntWnew = new int[] { (int)Weapons.Mace, (int)Weapons.Flail, (int)Weapons.Warhammer, ItemLightFlail.templateIndex };

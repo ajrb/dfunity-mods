@@ -81,6 +81,9 @@ namespace RoleplayRealism
         {
             Debug.Log("Begin mod init: RoleplayRealism");
 
+            Mod rrItemsMod = ModManager.Instance.GetMod("RoleplayRealismItems");
+            ModSettings rrItemsSettings = rrItemsMod != null ? rrItemsMod.GetSettings() : null;
+
             if (bedSleeping)
             {
                 PlayerActivate.RegisterModelActivation(41000, BedActivation);
@@ -114,8 +117,7 @@ namespace RoleplayRealism
                 EntityEffectBroker.OnNewMagicRound += EncumbranceEffects_OnNewMagicRound;
             }
 
-            Mod lootRealism = ModManager.Instance.GetMod("RoleplayRealismItems");
-            if (lootRealism == null && bandaging)
+            if (rrItemsMod == null && bandaging)
             {
                 DaggerfallUnity.Instance.ItemHelper.RegisterItemUseHander((int)UselessItems2.Bandage, UseBandage);
             }
@@ -140,7 +142,7 @@ namespace RoleplayRealism
                 FormulaHelper.RegisterOverride(mod, "CalculateClimbingChance", (Func<PlayerEntity, int, int>)CalculateClimbingChance);
             }
 
-            if (weaponSpeed)
+            if (weaponSpeed && (rrItemsSettings == null || !rrItemsSettings.GetBool("Modules", "weaponBalance")))
             {
                 FormulaHelper.RegisterOverride(mod, "GetMeleeWeaponAnimTime", (Func<PlayerEntity, WeaponTypes, ItemHands, float>)GetMeleeWeaponAnimTime);
             }
