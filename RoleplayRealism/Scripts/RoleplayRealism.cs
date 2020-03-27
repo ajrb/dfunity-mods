@@ -193,7 +193,7 @@ namespace RoleplayRealism
         private static int CalculateClimbingChance(PlayerEntity player, int basePercentSuccess)
         {
             // Fail to climb if weapon not sheathed.
-            if (!GameManager.Instance.WeaponManager.Sheathed)
+            if (!GameManager.Instance.WeaponManager.Sheathed && GameManager.Instance.WeaponManager.ScreenWeapon.WeaponType != WeaponTypes.Melee)
             {
                 DaggerfallUI.SetMidScreenText("You can't climb whilst holding your weapon.", 1f);
                 return 0;
