@@ -266,7 +266,7 @@ namespace RoleplayRealism
             }
             else
             {
-                weaponWeight = weapon.weightInKg;
+                weaponWeight = weapon.ItemTemplate.baseWeight;
                 int strWeightPerc = 150 - player.Stats.LiveStrength;
                 float adjustedWeight = strWeightPerc * weaponWeight / 100;
                 float speedReductionPerc = adjustedWeight * SpeedReductionFactor;
