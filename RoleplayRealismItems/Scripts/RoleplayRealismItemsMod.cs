@@ -20,6 +20,7 @@ using DaggerfallWorkshop.Game.Player;
 using DaggerfallWorkshop.Game.Utility;
 using DaggerfallWorkshop.Game.MagicAndEffects;
 using DaggerfallWorkshop.Game.MagicAndEffects.MagicEffects;
+using DaggerfallWorkshop.Game.Guilds;
 
 namespace RoleplayRealism
 {
@@ -28,6 +29,7 @@ namespace RoleplayRealism
         const int G = 85;   // Mob Array Gap from 42 .. 128 = 85
 
         const float SpeedReductionFactor = 3.4f;
+        const float RepairCostFactor = 0.6f;
 
         static Mod mod;
 
@@ -87,6 +89,7 @@ namespace RoleplayRealism
             {
                 FormulaHelper.RegisterOverride(mod, "ModifyFoundLootItems", (Func<DaggerfallUnityItem[], int>)RandomConditionFoundLootItems);
                 FormulaHelper.RegisterOverride(mod, "CalculateCost", (Func<int, int, int, int>)CalculateConditionCost);
+                FormulaHelper.RegisterOverride(mod, "CalculateItemRepairCost", (Func<int, int, int, int, IGuild, int>)CalculateItemRepairCost);
             }
 
             if (enemyEquipment)
@@ -180,6 +183,23 @@ namespace RoleplayRealism
 
             cost = FormulaHelper.ApplyRegionalPriceAdjustment(cost);
             cost = 2 * (cost * (shopQuality - 10) / 100 + cost);
+
+            return cost;
+        }
+
+        public static int CalculateItemRepairCost(int baseItemValue, int shopQuality, int condition, int max, IGuild guild)
+        {
+            // Don't cost already repaired item
+            if (condition == max)
+                return 0;
+
+            float conditionFactor = RepairCostFactor * condition / max;
+            int cost = Mathf.Max((int)(baseItemValue * conditionFactor), 1);
+
+            cost = FormulaHelper.CalculateCost(cost, shopQuality);
+
+            if (guild != null)
+                cost = guild.ReducedRepairCost(cost);
 
             return cost;
         }

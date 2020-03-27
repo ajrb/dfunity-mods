@@ -96,6 +96,13 @@
                     "Description": "Changes purification potion to cure poison rather than grant invisibility",
                     "$version": "v1",
                     "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
+                },
+                {
+                    "Value": true,
+                    "Name": "autoDouseLights",
+                    "Description": "Automatically douse any light sources when you exit a dungeon",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
                 }
             ],
             "$version": "v1"

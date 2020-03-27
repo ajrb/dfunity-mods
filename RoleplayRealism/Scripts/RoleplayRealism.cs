@@ -71,13 +71,14 @@ namespace RoleplayRealism
             bool equipDamage = settings.GetBool("Modules", "equipDamage");
             bool enemyAppearance = settings.GetBool("Modules", "enemyAppearance");
             bool purifyPot = settings.GetBool("Modules", "purificationPotion");
+            bool autoDouseLights = settings.GetBool("Modules", "autoDouseLights");
 
-            InitMod(bedSleeping, archery, riding, encumbrance, bandaging, shipPorts, expulsion, climbing, weaponSpeed, weaponMaterials, equipDamage, enemyAppearance, purifyPot);
+            InitMod(bedSleeping, archery, riding, encumbrance, bandaging, shipPorts, expulsion, climbing, weaponSpeed, weaponMaterials, equipDamage, enemyAppearance, purifyPot, autoDouseLights);
 
             mod.IsReady = true;
         }
 
-        public static void InitMod(bool bedSleeping, bool archery, bool riding, bool encumbrance, bool bandaging, bool shipPorts, bool expulsion, bool climbing, bool weaponSpeed, bool weaponMaterials, bool equipDamage, bool enemyAppearance, bool purifyPot)
+        public static void InitMod(bool bedSleeping, bool archery, bool riding, bool encumbrance, bool bandaging, bool shipPorts, bool expulsion, bool climbing, bool weaponSpeed, bool weaponMaterials, bool equipDamage, bool enemyAppearance, bool purifyPot, bool autoDouseLights)
         {
             Debug.Log("Begin mod init: RoleplayRealism");
 
@@ -165,6 +166,11 @@ namespace RoleplayRealism
             if (purifyPot)
             {
                 GameManager.Instance.EntityEffectBroker.RegisterEffectTemplate(new CureDiseaseRR(), true);
+            }
+
+            if (autoDouseLights)
+            {
+                PlayerEnterExit.OnTransitionDungeonExterior += OnTransitionToDungeonExterior_DouseLight;
             }
 
             // Initialise the FG master quest.
@@ -462,6 +468,15 @@ namespace RoleplayRealism
             }
 
             return false;
+        }
+
+        private static void OnTransitionToDungeonExterior_DouseLight(PlayerEnterExit.TransitionEventArgs args)
+        {
+            if (GameManager.Instance.PlayerEntity.LightSource != null && DaggerfallUnity.Instance.WorldTime.Now.IsDay)
+            {
+                DaggerfallUI.MessageBox(TextManager.Instance.GetText("DaggerfallUI", "lightDouse"), false, GameManager.Instance.PlayerEntity.LightSource);
+                GameManager.Instance.PlayerEntity.LightSource = null;
+            }
         }
 
         private static bool RegisterFactionIds()
