@@ -193,7 +193,7 @@ namespace RoleplayRealism
             if (condition == max)
                 return 0;
 
-            float conditionFactor = RepairCostFactor * condition / max;
+            float conditionFactor = RepairCostFactor * (max - condition) / max;
             int cost = Mathf.Max((int)(baseItemValue * conditionFactor), 1);
 
             cost = FormulaHelper.CalculateCost(cost, shopQuality);
