@@ -30,6 +30,7 @@ namespace RoleplayRealism
 
         const float SpeedReductionFactor = 3.4f;
         const float RepairCostFactor = 0.6f;
+        const float InstantRepairCostFactor = 0.9f;
 
         static Mod mod;
 
@@ -193,7 +194,8 @@ namespace RoleplayRealism
             if (condition == max)
                 return 0;
 
-            float conditionFactor = RepairCostFactor * (max - condition) / max;
+            float repairCostScaleFactor = DaggerfallUnity.Settings.InstantRepairs ? InstantRepairCostFactor : RepairCostFactor;
+            float conditionFactor = repairCostScaleFactor * (max - condition) / max;
             int cost = Mathf.Max((int)(baseItemValue * conditionFactor), 1);
 
             cost = FormulaHelper.CalculateCost(cost, shopQuality);
