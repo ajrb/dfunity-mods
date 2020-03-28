@@ -261,7 +261,7 @@ namespace RoleplayRealism
 
         private static int CalculateWeaponToHit(DaggerfallUnityItem weapon)
         {
-            return weapon.GetWeaponMaterialModifier() * 5;
+            return weapon.GetWeaponMaterialModifier() * 3;
         }
 
         private static bool ApplyConditionDamageThroughPhysicalHit(DaggerfallUnityItem item, DaggerfallEntity owner, int damage)
