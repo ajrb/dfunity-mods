@@ -99,8 +99,15 @@
                 },
                 {
                     "Value": true,
-                    "Name": "autoDouseLights",
-                    "Description": "Automatically douse any light sources when you exit a dungeon",
+                    "Name": "autoExtinguishLight",
+                    "Description": "Automatically extinguish any light sources when you exit a dungeon",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
+                },
+                {
+                    "Value": true,
+                    "Name": "classicStrengthDamageBonus",
+                    "Description": "Use classic displayed strength damage bonus (half) instead of classic internal value",
                     "$version": "v1",
                     "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
                 }

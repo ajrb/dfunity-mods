@@ -71,14 +71,15 @@ namespace RoleplayRealism
             bool equipDamage = settings.GetBool("Modules", "equipDamage");
             bool enemyAppearance = settings.GetBool("Modules", "enemyAppearance");
             bool purifyPot = settings.GetBool("Modules", "purificationPotion");
-            bool autoDouseLights = settings.GetBool("Modules", "autoDouseLights");
+            bool autoExtinguishLight = settings.GetBool("Modules", "autoExtinguishLight");
+            bool classicStrDmgBonus = settings.GetBool("Modules", "classicStrengthDamageBonus");
 
-            InitMod(bedSleeping, archery, riding, encumbrance, bandaging, shipPorts, expulsion, climbing, weaponSpeed, weaponMaterials, equipDamage, enemyAppearance, purifyPot, autoDouseLights);
+            InitMod(bedSleeping, archery, riding, encumbrance, bandaging, shipPorts, expulsion, climbing, weaponSpeed, weaponMaterials, equipDamage, enemyAppearance, purifyPot, autoExtinguishLight, classicStrDmgBonus);
 
             mod.IsReady = true;
         }
 
-        public static void InitMod(bool bedSleeping, bool archery, bool riding, bool encumbrance, bool bandaging, bool shipPorts, bool expulsion, bool climbing, bool weaponSpeed, bool weaponMaterials, bool equipDamage, bool enemyAppearance, bool purifyPot, bool autoDouseLights)
+        public static void InitMod(bool bedSleeping, bool archery, bool riding, bool encumbrance, bool bandaging, bool shipPorts, bool expulsion, bool climbing, bool weaponSpeed, bool weaponMaterials, bool equipDamage, bool enemyAppearance, bool purifyPot, bool autoExtinguishLight, bool classicStrDmgBonus)
         {
             Debug.Log("Begin mod init: RoleplayRealism");
 
@@ -168,9 +169,14 @@ namespace RoleplayRealism
                 GameManager.Instance.EntityEffectBroker.RegisterEffectTemplate(new CureDiseaseRR(), true);
             }
 
-            if (autoDouseLights)
+            if (autoExtinguishLight)
             {
-                PlayerEnterExit.OnTransitionDungeonExterior += OnTransitionToDungeonExterior_DouseLight;
+                PlayerEnterExit.OnTransitionDungeonExterior += OnTransitionToDungeonExterior_ExtinguishLight;
+            }
+
+            if (classicStrDmgBonus)
+            {
+                FormulaHelper.RegisterOverride(mod, "DamageModifier", (Func<int, int>)DamageModifier_classicDisplay);
             }
 
             // Initialise the FG master quest.
@@ -188,6 +194,11 @@ namespace RoleplayRealism
             Services.RegisterMerchantService(1022, CustomArmorService, "Custom Armor");
 
             Debug.Log("Finished mod init: RoleplayRealism");
+        }
+
+        public static int DamageModifier_classicDisplay(int strength)
+        {
+            return (int)Mathf.Floor((strength - 50) / 10f);
         }
 
         private static int CalculateClimbingChance(PlayerEntity player, int basePercentSuccess)
@@ -470,7 +481,7 @@ namespace RoleplayRealism
             return false;
         }
 
-        private static void OnTransitionToDungeonExterior_DouseLight(PlayerEnterExit.TransitionEventArgs args)
+        private static void OnTransitionToDungeonExterior_ExtinguishLight(PlayerEnterExit.TransitionEventArgs args)
         {
             if (GameManager.Instance.PlayerEntity.LightSource != null && DaggerfallUnity.Instance.WorldTime.Now.IsDay)
             {
