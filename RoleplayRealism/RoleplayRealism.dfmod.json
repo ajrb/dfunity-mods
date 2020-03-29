@@ -18,7 +18,8 @@
         "Assets/Game/Mods/RoleplayRealism/WorldData/RRFORT01.RMB.json",
         "Assets/Game/Mods/RoleplayRealism/WorldData/locationnew-RRfort01-16.json",
         "Assets/Game/Mods/RoleplayRealism/Quests/RRMSTARM0.txt",
-        "Assets/Game/Mods/RoleplayRealism/Quests/RRMSTARM2.txt"
+        "Assets/Game/Mods/RoleplayRealism/Quests/RRMSTARM2.txt",
+        "Assets/Game/Mods/RoleplayRealism/Scripts/CureDiseaseRR.cs"
     ],
     "Contributes": null,
     "Dependencies": null
