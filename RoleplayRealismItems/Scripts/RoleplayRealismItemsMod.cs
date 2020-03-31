@@ -125,11 +125,11 @@ namespace RoleplayRealism
             if (newArmor)
             {
                 // Add new medium armor set as custom armor pieces.
-                DaggerfallUnity.Instance.ItemHelper.RegisterCustomItem(515, ItemGroups.Armor, typeof(ItemHauberk));
-                DaggerfallUnity.Instance.ItemHelper.RegisterCustomItem(516, ItemGroups.Armor, typeof(ItemChausses));
-                DaggerfallUnity.Instance.ItemHelper.RegisterCustomItem(517, ItemGroups.Armor, typeof(ItemLeftSpaulder));
-                DaggerfallUnity.Instance.ItemHelper.RegisterCustomItem(518, ItemGroups.Armor, typeof(ItemRightSpaulder));
-                DaggerfallUnity.Instance.ItemHelper.RegisterCustomItem(519, ItemGroups.Armor, typeof(ItemSollerets));
+                DaggerfallUnity.Instance.ItemHelper.RegisterCustomItem(ItemHauberk.templateIndex, ItemGroups.Armor, typeof(ItemHauberk));
+                DaggerfallUnity.Instance.ItemHelper.RegisterCustomItem(ItemChausses.templateIndex, ItemGroups.Armor, typeof(ItemChausses));
+                DaggerfallUnity.Instance.ItemHelper.RegisterCustomItem(ItemLeftSpaulder.templateIndex, ItemGroups.Armor, typeof(ItemLeftSpaulder));
+                DaggerfallUnity.Instance.ItemHelper.RegisterCustomItem(ItemRightSpaulder.templateIndex, ItemGroups.Armor, typeof(ItemRightSpaulder));
+                DaggerfallUnity.Instance.ItemHelper.RegisterCustomItem(ItemSollerets.templateIndex, ItemGroups.Armor, typeof(ItemSollerets));
             }
 
             Debug.Log("Finished mod init: RoleplayRealismItems");

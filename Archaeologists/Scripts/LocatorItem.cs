@@ -13,6 +13,8 @@ namespace Archaeologists
 {
     public class LocatorItem : DaggerfallUnityItem
     {
+        public const int templateIndex = 512;
+
         internal const int INACTIVE = 1;
         internal const int ACTIVATED = 2;
 
@@ -39,7 +41,7 @@ namespace Archaeologists
         {
         }
 
-        public LocatorItem(int baseValue) : base(ItemGroups.MiscItems, 512)
+        public LocatorItem(int baseValue) : base(ItemGroups.MiscItems, templateIndex)
         {
             value = baseValue;
             nativeMaterialValue = INACTIVE;

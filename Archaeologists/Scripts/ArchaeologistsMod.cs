@@ -58,7 +58,7 @@ namespace Archaeologists
                 // Register the custom locator service
                 Services.RegisterGuildService(1001, ArchaeologistsGuild.LocatorService, "Locator Devices");
                 // Register the custom locator item
-                DaggerfallUnity.Instance.ItemHelper.RegisterCustomItem(512, ItemGroups.UselessItems2, typeof(LocatorItem));
+                DaggerfallUnity.Instance.ItemHelper.RegisterCustomItem(LocatorItem.templateIndex, ItemGroups.UselessItems1, typeof(LocatorItem));
                 // Register the daedra summoning service
                 Services.RegisterGuildService(1002, GuildServices.DaedraSummoning);
                 // Register the custom repair service for teleport mark
