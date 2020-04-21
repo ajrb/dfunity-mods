@@ -88,9 +88,9 @@ namespace RoleplayRealism
 
             if (bedSleeping)
             {
-                PlayerActivate.RegisterModelActivation(41000, BedActivation);
-                PlayerActivate.RegisterModelActivation(41001, BedActivation);
-                PlayerActivate.RegisterModelActivation(41002, BedActivation);
+                PlayerActivate.RegisterCustomActivation(mod, 41000, BedActivation);
+                PlayerActivate.RegisterCustomActivation(mod, 41001, BedActivation);
+                PlayerActivate.RegisterCustomActivation(mod, 41002, BedActivation);
             }
 
             if (archery)
@@ -363,7 +363,7 @@ namespace RoleplayRealism
             DaggerfallUI.UIManager.PushWindow(tradeWindow);
         }
 
-        private static void BedActivation(Transform transform)
+        private static void BedActivation(RaycastHit hit)
         {
             IUserInterfaceManager uiManager = DaggerfallUI.UIManager;
             uiManager.PushWindow(new DaggerfallRestWindow(uiManager, true));
