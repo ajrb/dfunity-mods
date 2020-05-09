@@ -121,7 +121,7 @@ namespace RoleplayRealism
 
             if (rrItemsMod == null && bandaging)
             {
-                DaggerfallUnity.Instance.ItemHelper.RegisterItemUseHander((int)UselessItems2.Bandage, UseBandage);
+                DaggerfallUnity.Instance.ItemHelper.RegisterItemUseHandler((int)UselessItems2.Bandage, UseBandage);
             }
 
             if (shipPorts)

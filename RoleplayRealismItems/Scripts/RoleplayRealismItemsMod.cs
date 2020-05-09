@@ -82,7 +82,7 @@ namespace RoleplayRealism
 
             if (bandaging)
             {
-                DaggerfallUnity.Instance.ItemHelper.RegisterItemUseHander((int)UselessItems2.Bandage, UseBandage);
+                DaggerfallUnity.Instance.ItemHelper.RegisterItemUseHandler((int)UselessItems2.Bandage, UseBandage);
                 FormulaHelper.RegisterOverride(mod, "IsItemStackable", (Func<DaggerfallUnityItem, bool>)IsItemStackable);
             }
 

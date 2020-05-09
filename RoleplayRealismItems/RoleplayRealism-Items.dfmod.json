@@ -3,8 +3,8 @@
     "ModVersion": "0.3",
     "ModAuthor": "Hazelnut & Ralzar",
     "ContactInfo": null,
-    "DFUnity_Version": "0.10.22",
-    "ModDescription": "Modular roleplay and realism item, loot and gameplay modifications",
+    "DFUnity_Version": "0.10.23",
+    "ModDescription": "Modular roleplay and realism: item, loot and gameplay modifications",
     "GUID": "68589945-3fbb-4d58-81a3-3066f3f08539",
     "Files": [
         "Assets/Game/Mods/RoleplayRealismItems/modsettings.json",
