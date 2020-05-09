@@ -55,6 +55,16 @@ namespace RoleplayRealism
             return IsEnchanted ? WeaponTypes.Flail_Magic : WeaponTypes.Flail;
         }
 
+        public override SoundClips GetEquipSound()
+        {
+            return SoundClips.EquipFlail;
+        }
+
+        public override SoundClips GetSwingSound()
+        {
+            return SoundClips.SwingMediumPitch;
+        }
+
         public override ItemData_v1 GetSaveData()
         {
             ItemData_v1 data = base.GetSaveData();

@@ -55,6 +55,16 @@ namespace RoleplayRealism
             return IsEnchanted ? WeaponTypes.Battleaxe_Magic : WeaponTypes.Battleaxe;
         }
 
+        public override SoundClips GetEquipSound()
+        {
+            return SoundClips.EquipAxe;
+        }
+
+        public override SoundClips GetSwingSound()
+        {
+            return SoundClips.SwingMediumPitch;
+        }
+
         public override ItemData_v1 GetSaveData()
         {
             ItemData_v1 data = base.GetSaveData();
