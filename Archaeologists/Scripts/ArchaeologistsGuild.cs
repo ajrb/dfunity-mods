@@ -206,6 +206,7 @@ namespace DaggerfallWorkshop.Game.Guilds
                 !GameManager.Instance.PlayerEnterExit.IsPlayerSubmerged)
             {
                 DaggerfallUI.AddHUDText(HardStrings.avoidDeath);
+                //DaggerfallUI.AddHUDText(TextManager.Instance.GetLocalizedText("avoidDeath"));
                 return true;
             }
             return false;
