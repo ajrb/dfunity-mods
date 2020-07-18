@@ -459,7 +459,7 @@ namespace RoleplayRealism
                 int heal = (int) Mathf.Min(medical / 2, playerEntity.MaxHealth * 0.4f);
                 collection.RemoveItem(item);
                 playerEntity.IncreaseHealth(heal);
-
+                playerEntity.TallySkill(DFCareer.Skills.Medical, 1);
 #if UNITY_EDITOR
                 Debug.LogFormat("Applied a Bandage to heal {0} health.", heal);
 #endif
