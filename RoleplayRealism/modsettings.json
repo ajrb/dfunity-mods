@@ -110,6 +110,13 @@
                     "Description": "Use classic displayed strength damage bonus (half) instead of classic internal value",
                     "$version": "v1",
                     "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
+                },
+                {
+                    "Value": true,
+                    "Name": "variantNpcs",
+                    "Description": "Enable variant NPC sprites in shops & taverns",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
                 }
             ],
             "$version": "v1"

@@ -73,13 +73,15 @@ namespace RoleplayRealism
             bool purifyPot = settings.GetBool("Modules", "purificationPotion");
             bool autoExtinguishLight = settings.GetBool("Modules", "autoExtinguishLight");
             bool classicStrDmgBonus = settings.GetBool("Modules", "classicStrengthDamageBonus");
+            bool variantNpcs = settings.GetBool("Modules", "variantNpcs");
 
-            InitMod(bedSleeping, archery, riding, encumbrance, bandaging, shipPorts, expulsion, climbing, weaponSpeed, weaponMaterials, equipDamage, enemyAppearance, purifyPot, autoExtinguishLight, classicStrDmgBonus);
+            InitMod(bedSleeping, archery, riding, encumbrance, bandaging, shipPorts, expulsion, climbing, weaponSpeed, weaponMaterials, equipDamage, enemyAppearance, purifyPot, autoExtinguishLight, classicStrDmgBonus, variantNpcs);
 
             mod.IsReady = true;
         }
 
-        public static void InitMod(bool bedSleeping, bool archery, bool riding, bool encumbrance, bool bandaging, bool shipPorts, bool expulsion, bool climbing, bool weaponSpeed, bool weaponMaterials, bool equipDamage, bool enemyAppearance, bool purifyPot, bool autoExtinguishLight, bool classicStrDmgBonus)
+        public static void InitMod(bool bedSleeping, bool archery, bool riding, bool encumbrance, bool bandaging, bool shipPorts, bool expulsion, bool climbing, bool weaponSpeed, bool weaponMaterials, bool equipDamage, bool enemyAppearance,
+            bool purifyPot, bool autoExtinguishLight, bool classicStrDmgBonus, bool variantNpcs)
         {
             Debug.Log("Begin mod init: RoleplayRealism");
 
@@ -177,6 +179,11 @@ namespace RoleplayRealism
             if (classicStrDmgBonus)
             {
                 FormulaHelper.RegisterOverride(mod, "DamageModifier", (Func<int, int>)DamageModifier_classicDisplay);
+            }
+
+            if (variantNpcs)
+            {
+                PlayerEnterExit.OnTransitionInterior += OnTransitionToInterior_VariantNPCsprites;
             }
 
             // Initialise the FG master quest.
@@ -606,6 +613,99 @@ namespace RoleplayRealism
             EnemyBasics.Enemies[(int)MobileTypes.Knight - G].ChanceForAttack2 = 50;
             EnemyBasics.Enemies[(int)MobileTypes.Knight - G].PrimaryAttackAnimFrames2 = new int[] { 4, 5, -1, 3, 2, 1, 0 };
             EnemyBasics.Enemies[(int)MobileTypes.Knight - G].ChanceForAttack3 = 0;
+        }
+
+        private static void OnTransitionToInterior_VariantNPCsprites(PlayerEnterExit.TransitionEventArgs args)
+        {
+            PlayerEnterExit playerEnterExit = GameManager.Instance.PlayerEnterExit;
+            DFLocation.BuildingData buildingData = playerEnterExit.Interior.BuildingData;
+            if (buildingData.BuildingType == DFLocation.BuildingTypes.Tavern || RMBLayout.IsShop(buildingData.BuildingType))
+            {
+                DaggerfallBillboard[] dfBillboards = playerEnterExit.Interior.GetComponentsInChildren<DaggerfallBillboard>();
+                foreach (DaggerfallBillboard billboard in dfBillboards)
+                {
+                    int record = -1;
+                    if (billboard.Summary.Archive == 182 && billboard.Summary.Record == 0)
+                    {
+                        record = GetRecord_182_0(buildingData.Quality);     // (buildingData.Quality - 1) / 4;
+                        Debug.LogFormat("Shop quality {0} using record {1} to replace 182_0", buildingData.Quality, record);
+                    }
+                    if (billboard.Summary.Archive == 182 && billboard.Summary.Record == 1)
+                    {
+                        if (buildingData.Quality < 12)
+                        {   // Using big test flats version
+                            record = 4;
+                        }
+                        else if (buildingData.Quality > 14)
+                        {
+                            record = 5;
+                        }
+                        Debug.LogFormat("Tavern quality {0} using record {1} to replace 182_1", buildingData.Quality, record);
+                    }
+
+                    if (record > -1)
+                    {
+                        billboard.SetMaterial(197, record);
+                        GameObjectHelper.AlignBillboardToGround(billboard.gameObject, billboard.Summary.Size);
+                    }
+                }
+            }
+        }
+
+        private static int GetRecord_182_0(byte quality)
+        {
+            switch (quality)
+            {
+                case 6:
+                case 7:
+                case 8:
+                case 9:
+                    return 0;
+                case 10:
+                case 11:
+                case 12:
+                case 13:
+                    return 1;
+                case 14:
+                case 15:
+                case 16:
+                case 17:
+                    return 2;
+                case 18:
+                case 19:
+                case 20:
+                    return 3;
+                default:
+                    return -1;
+            }
+        }
+
+        private static int GetRecord_182_1(byte quality)
+        {
+            switch (quality)
+            {
+                case 6:
+                case 7:
+                case 8:
+                case 9:
+                    return 0;
+                case 10:
+                case 11:
+                case 12:
+                case 13:
+                    return 1;
+                case 14:
+                case 15:
+                case 16:
+                case 17:
+                    return 2;
+                case 18:
+                case 19:
+                case 20:
+                    return 3;
+                default:
+                    return -1;
+            }
         }
 
     }

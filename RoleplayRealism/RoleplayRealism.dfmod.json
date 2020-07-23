@@ -3,7 +3,7 @@
     "ModVersion": "0.11",
     "ModAuthor": "Hazelnut",
     "ContactInfo": "forums.dfworkshop.net",
-    "DFUnity_Version": "0.10.25a",
+    "DFUnity_Version": "0.10.26",
     "ModDescription": "Modular roleplay and realism gameplay modifications",
     "GUID": "d828b782-46e9-40e7-8ae6-19cde308032e",
     "Files": [
@@ -19,6 +19,18 @@
         "Assets/Game/Mods/RoleplayRealism/WorldData/locationnew-RRfort01-16.json",
         "Assets/Game/Mods/RoleplayRealism/Quests/RRMSTARM0.txt",
         "Assets/Game/Mods/RoleplayRealism/Quests/RRMSTARM2.txt",
-        "Assets/Game/Mods/RoleplayRealism/Scripts/CureDiseaseRR.cs"
+        "Assets/Game/Mods/RoleplayRealism/Scripts/CureDiseaseRR.cs",
+        "Assets/Game/Mods/RoleplayRealism/Textures/197_0-0.xml",
+        "Assets/Game/Mods/RoleplayRealism/Textures/197_0-0.png",
+        "Assets/Game/Mods/RoleplayRealism/Textures/197_2-0.png",
+        "Assets/Game/Mods/RoleplayRealism/Textures/197_1-0.png",
+        "Assets/Game/Mods/RoleplayRealism/Textures/197_1-0.xml",
+        "Assets/Game/Mods/RoleplayRealism/Textures/197_3-0.png",
+        "Assets/Game/Mods/RoleplayRealism/Textures/197_3-0.xml",
+        "Assets/Game/Mods/RoleplayRealism/Textures/197_2-0.xml",
+        "Assets/Game/Mods/RoleplayRealism/Textures/197_4-0.xml",
+        "Assets/Game/Mods/RoleplayRealism/Textures/197_4-0.png",
+        "Assets/Game/Mods/RoleplayRealism/Textures/197_5-0.xml",
+        "Assets/Game/Mods/RoleplayRealism/Textures/197_5-0.png"
     ]
 }
