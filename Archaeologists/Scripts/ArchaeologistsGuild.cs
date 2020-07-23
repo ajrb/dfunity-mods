@@ -205,8 +205,8 @@ namespace DaggerfallWorkshop.Game.Guilds
                 GameManager.Instance.PlayerEntity.FactionData.GetReputation((int) FactionFile.FactionIDs.Stendarr) >= 0 &&
                 !GameManager.Instance.PlayerEnterExit.IsPlayerSubmerged)
             {
-                DaggerfallUI.AddHUDText(HardStrings.avoidDeath);
-                //DaggerfallUI.AddHUDText(TextManager.Instance.GetLocalizedText("avoidDeath"));
+                //DaggerfallUI.AddHUDText(HardStrings.avoidDeath);
+                DaggerfallUI.AddHUDText(TextManager.Instance.GetLocalizedText("avoidDeath"));
                 return true;
             }
             return false;

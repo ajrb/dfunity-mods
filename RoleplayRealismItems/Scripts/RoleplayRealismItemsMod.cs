@@ -73,8 +73,8 @@ namespace RoleplayRealism
                 foreach (int mobDataId in MobLootKeys.Keys)
                 {
                     // Log a message indicating the enemy mob being updated and update the loot key.
-                    Debug.LogFormat("Updating enemy loot key for {0} to {1}.", EnemyBasics.Enemies[mobDataId].Name, MobLootKeys[mobDataId]);
-                    //Debug.LogFormat("Updating enemy loot key for {0} to {1}.", TextManager.Instance.GetLocalizedEnemyName(mobDataId), MobLootKeys[mobDataId]);
+                    //Debug.LogFormat("Updating enemy loot key for {0} to {1}.", EnemyBasics.Enemies[mobDataId].Name, MobLootKeys[mobDataId]);
+                    Debug.LogFormat("Updating enemy loot key for {0} to {1}.", TextManager.Instance.GetLocalizedEnemyName(mobDataId), MobLootKeys[mobDataId]);
                     EnemyBasics.Enemies[mobDataId].LootTableKey = (string) MobLootKeys[mobDataId];
                 }
                 // Replace the default loot matrix table with custom data.
