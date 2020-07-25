@@ -1,0 +1,15 @@
+{
+    "ModTitle": "TravelOptions",
+    "ModVersion": "0.1",
+    "ModAuthor": "Hazelnut & Jedidia",
+    "DFUnity_Version": "0.10.25",
+    "GUID": "93f3ad1c-83cc-40ac-b762-96d2f47f2e05",
+    "Files": [
+        "Assets/Game/Mods/TravelOptions/modsettings.json",
+        "Assets/Game/Mods/TravelOptions/Scripts/TravelOptionsPopUp.cs",
+        "Assets/Game/Mods/TravelOptions/Scripts/PlayerAutoPilot.cs",
+        "Assets/Game/Mods/TravelOptions/Scripts/TravelOptionsMod.cs",
+        "Assets/Game/Mods/TravelOptions/Scripts/TravelControlUI.cs",
+        "Assets/Game/Mods/TravelOptions/Scripts/TravelOptionsMapWindow.cs"
+    ]
+}
