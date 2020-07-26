@@ -45,6 +45,7 @@ namespace TravelOptions
         public bool DestinationCautious { get; private set; }
 
         public bool CautiousTravel { get; private set; }
+        public bool ShipTravelPortsOnly { get; private set; }
 
         private PlayerAutoPilot playerAutopilot;
         private TravelControlUI travelControlUI;
@@ -77,6 +78,7 @@ namespace TravelOptions
 
             ModSettings settings = mod.GetSettings();
             CautiousTravel = settings.GetValue<bool>("Options", "CautiousTravel");
+            ShipTravelPortsOnly = settings.GetValue<bool>("Options", "ShipTravelPortsOnly");
             disableRealGrass = settings.GetValue<bool>("Options", "DisableRealGrass");
             locationPause = settings.GetValue<int>("Options", "LocationPause");
             defaultStartingAccel = startAccelVals[settings.GetValue<int>("TimeAcceleration", "DefaultStartingAcceleration")];

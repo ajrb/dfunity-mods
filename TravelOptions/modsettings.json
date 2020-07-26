@@ -3,13 +3,20 @@
     "Sections": [
         {
             "Name": "Options",
-            "Description": null,
+            "Description": "Configuration for Travel Options to suit each player.",
             "IsAdvanced": false,
             "Keys": [
                 {
                     "Value": true,
                     "Name": "CautiousTravel",
-                    "Description": "Enable the speed option \"Cautiously\" to initiate real time accelerated travel instead of fast travel",
+                    "Description": "Enables the speed option \"Cautiously\" to initiate real time accelerated travel instead of fast travel",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
+                },
+                {
+                    "Value": true,
+                    "Name": "ShipTravelPortsOnly",
+                    "Description": "Restricts ship travel to be possible only from places with ports",
                     "$version": "v1",
                     "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
                 },
@@ -37,7 +44,7 @@
         },
         {
             "Name": "TimeAcceleration",
-            "Description": "Time acceleration configuration",
+            "Description": "Time acceleration configuration.",
             "IsAdvanced": false,
             "Keys": [
                 {
