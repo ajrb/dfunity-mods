@@ -27,6 +27,7 @@ namespace TravelOptions
         private const string MsgAvoidFail = "You failed to avoid the encounter!";
 
         static Mod mod;
+        static readonly int[] startAccelVals = { 1, 5, 10, 20, 30, 40, 50 };
 
         public static TravelOptionsMod Instance { get; private set; }
 
@@ -37,14 +38,15 @@ namespace TravelOptions
         private TravelControlUI travelControlUI;
         internal TravelControlUI GetTravelControlUI() { return travelControlUI; }
 
+        private int defaultStartingAccel;
+        private int accelerationLimit;
         private float baseFixedDeltaTime;
         private bool encounterAvoidanceSystem;
         private int maxSuccessChance;
         private bool ignoreEncounters;
         private uint ignoreEncountersTime;
         private int diseaseCount = 0;
-
-        uint beginTime=0;
+        private uint beginTime = 0;
 
         [Invoke(StateManager.StateTypes.Start, 0)]
         public static void Init(InitParams initParams)
@@ -59,6 +61,8 @@ namespace TravelOptions
             Debug.Log("Begin mod init: TravelOptions");
 
             ModSettings settings = mod.GetSettings();
+            defaultStartingAccel = startAccelVals[settings.GetValue<int>("TimeAcceleration", "DefaultStartingAcceleration")];
+            accelerationLimit = settings.GetValue<int>("TimeAcceleration", "AccelerationLimiter");
             encounterAvoidanceSystem = settings.GetValue<bool>("RandomEncounterAvoidance", "AvoidRandomEncounters");
             maxSuccessChance = settings.GetValue<int>("RandomEncounterAvoidance", "MaxChanceToAvoidEncounter");
 
@@ -67,7 +71,7 @@ namespace TravelOptions
 
             baseFixedDeltaTime = Time.fixedDeltaTime;
 
-            travelControlUI = new TravelControlUI(DaggerfallUI.UIManager);
+            travelControlUI = new TravelControlUI(DaggerfallUI.UIManager, defaultStartingAccel, accelerationLimit);
             travelControlUI.OnCancel += (sender) => { ClearTravelDestination(); };
             travelControlUI.OnClose += () => { InterruptTravel(); };
             travelControlUI.OnTimeAccelerationChanged += (timeAcceleration) => { SetTimeScale(timeAcceleration); };
@@ -129,7 +133,7 @@ namespace TravelOptions
                     {
                         travelControlUI.CancelWindow();
                         DaggerfallUI.Instance.DaggerfallHUD.SetMidScreenText(MsgArrived, 5f);
-                        Debug.Log("Elapsed time: " + (DaggerfallUnity.Instance.WorldTime.Now.ToClassicDaggerfallTime() - beginTime) );
+                        Debug.Log("Elapsed time for trip: " + (DaggerfallUnity.Instance.WorldTime.Now.ToClassicDaggerfallTime() - beginTime) );
                     };
 
                 SetTimeScale(travelControlUI.TimeAcceleration);
@@ -173,7 +177,6 @@ namespace TravelOptions
                 {
                     ignoreEncounters = false;
                 }
-                // TESTING ignoreEncounters = true;
 
                 if (!ignoreEncounters && GameManager.Instance.AreEnemiesNearby())
                 {

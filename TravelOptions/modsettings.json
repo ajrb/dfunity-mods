@@ -2,6 +2,39 @@
     "Version": "1.0",
     "Sections": [
         {
+            "Name": "TimeAcceleration",
+            "Description": "Time acceleration configuration",
+            "IsAdvanced": false,
+            "Keys": [
+                {
+                    "Options": [
+                        "1",
+                        "5",
+                        "10",
+                        "20",
+                        "30",
+                        "40",
+                        "50"
+                    ],
+                    "Value": 2,
+                    "Name": "DefaultStartingAcceleration",
+                    "Description": "The initial time acceleration used after starting the game",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.MultipleChoiceKey"
+                },
+                {
+                    "Min": 10,
+                    "Max": 100,
+                    "Value": 40,
+                    "Name": "AccelerationLimiter",
+                    "Description": "The maximum limit allowed for time acceleration",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.SliderIntKey"
+                }
+            ],
+            "$version": "v1"
+        },
+        {
             "Name": "RandomEncounterAvoidance",
             "Description": "Enable ability to avoid a random encounter based either Running or Stealth skill, whichever is higher.",
             "IsAdvanced": false,

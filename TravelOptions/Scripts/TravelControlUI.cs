@@ -46,10 +46,11 @@ namespace TravelOptions
 
         Texture2D baseTexture;
         Vector2 baseSize;
+        int accelerationLimit;
 
         public bool isShowing = false;
 
-        public int TimeAcceleration { get; private set; } = 10;
+        public int TimeAcceleration { get; private set; }
 
         public void SetDestination(string destinationName)
         {
@@ -60,9 +61,12 @@ namespace TravelOptions
 
         #region Constructors
 
-        public TravelControlUI(IUserInterfaceManager uiManager)
+        public TravelControlUI(IUserInterfaceManager uiManager, int defaultStartingAccel = 10, int accelerationLimit = 100)
             : base(uiManager)
         {
+            TimeAcceleration = defaultStartingAccel;
+            this.accelerationLimit = (accelerationLimit / 5) * 5;
+
             // Clear background
             ParentPanel.BackgroundColor = Color.clear;
             pauseWhileOpened = false;
@@ -182,7 +186,7 @@ namespace TravelOptions
             if (TimeAcceleration < 5)
                 TimeAcceleration += 1;
             else
-                TimeAcceleration = Math.Min(100, TimeAcceleration + 5);
+                TimeAcceleration = Math.Min(accelerationLimit, TimeAcceleration + 5);
 
             timeAccelSpinner.Value = TimeAcceleration;
 
