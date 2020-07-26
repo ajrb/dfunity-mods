@@ -205,14 +205,6 @@ namespace TravelOptions
             RaiseOnTimeAccelerationChangeEvent(TimeAcceleration);
         }
 
-        private void CampButton_OnMouseClick(BaseScreenComponent sender, Vector2 position)
-        {
-        }
-
-        private void CancelButton_OnMouseClick(BaseScreenComponent sender, Vector2 position)
-        {
-        }
-
         // events
         public delegate void OnTimeAccelerationChangeHandler(int newTimeAcceleration);
         public event OnTimeAccelerationChangeHandler OnTimeAccelerationChanged;

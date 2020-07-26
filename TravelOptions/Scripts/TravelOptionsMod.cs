@@ -21,23 +21,38 @@ namespace TravelOptions
 {
     public class TravelOptionsMod : MonoBehaviour
     {
-        private const string MsgArrived = "You have arrived at your destination";
+        private const string MsgArrived = "You have arrived at your destination.";
         private const string MsgEnemies = "Enemies are seeking to prevent your travel...";
         private const string MsgAvoidAttempt = "You suspect enemies are close, attempt to avoid them?";
         private const string MsgAvoidFail = "You failed to avoid the encounter!";
+        private const string MsgLowHealth = "You are close to the point of death!";
+        private const string MsgLowFatigue = "You are exhausted and should rest.";
+        private const string MsgNearLocation = "Paused the journey since a {0} called {1} is nearby.";
+        private const string MsgEnterLocation = "Paused the journey as you've entered a {0} called {1}.";
+
+        private const int LocPauseOff = 0;
+        private const int LocPauseNear = 1;
+        private const int LocPauseEnter = 2;
+
+        static readonly int[] startAccelVals = { 1, 5, 10, 20, 30, 40, 50 };
 
         static Mod mod;
-        static readonly int[] startAccelVals = { 1, 5, 10, 20, 30, 40, 50 };
 
         public static TravelOptionsMod Instance { get; private set; }
 
-        public ContentReader.MapSummary DestinationSummary { get; private set; }
         public string DestinationName { get; private set; }
+        public ContentReader.MapSummary DestinationSummary { get; private set; }
+        public bool DestinationCautious { get; private set; }
+
+        public bool CautiousTravel { get; private set; }
 
         private PlayerAutoPilot playerAutopilot;
         private TravelControlUI travelControlUI;
         internal TravelControlUI GetTravelControlUI() { return travelControlUI; }
+        private DFLocation lastLocation;
 
+        private bool disableRealGrass;
+        private int locationPause;
         private int defaultStartingAccel;
         private int accelerationLimit;
         private float baseFixedDeltaTime;
@@ -61,6 +76,9 @@ namespace TravelOptions
             Debug.Log("Begin mod init: TravelOptions");
 
             ModSettings settings = mod.GetSettings();
+            CautiousTravel = settings.GetValue<bool>("Options", "CautiousTravel");
+            disableRealGrass = settings.GetValue<bool>("Options", "DisableRealGrass");
+            locationPause = settings.GetValue<int>("Options", "LocationPause");
             defaultStartingAccel = startAccelVals[settings.GetValue<int>("TimeAcceleration", "DefaultStartingAcceleration")];
             accelerationLimit = settings.GetValue<int>("TimeAcceleration", "AccelerationLimiter");
             encounterAvoidanceSystem = settings.GetValue<bool>("RandomEncounterAvoidance", "AvoidRandomEncounters");
@@ -106,17 +124,26 @@ namespace TravelOptions
             {
                 SetTimeScale(1);        // Essentially redundant, but still helpful, since the close window event takes longer to trigger the time downscale.
                 travelControlUI.CloseWindow();
-                DaggerfallUI.MessageBox(MsgEnemies);
             }
+            DaggerfallUI.MessageBox(MsgEnemies);
         }
 
-        public void BeginTravel(ContentReader.MapSummary destinationSummary)
+        private void PlayerGPS_OnEnterLocationRect(DFLocation dfLocation)
+        {
+            if (travelControlUI.isShowing)
+                travelControlUI.CloseWindow();
+            DaggerfallUI.MessageBox(string.Format(MsgEnterLocation, MacroHelper.LocationTypeName(), dfLocation.Name));
+        }
+
+
+        public void BeginTravel(ContentReader.MapSummary destinationSummary, bool speedCautious = false)
         {
             if (DaggerfallUnity.Instance.ContentReader.GetLocation(destinationSummary.RegionIndex, destinationSummary.MapIndex, out DFLocation targetLocation))
             {
                 DestinationName = targetLocation.Name;
                 travelControlUI.SetDestination(targetLocation.Name);
                 DestinationSummary = destinationSummary;
+                DestinationCautious = speedCautious;
                 BeginTravel();
                 beginTime = DaggerfallUnity.Instance.WorldTime.Now.ToClassicDaggerfallTime();
             }
@@ -129,16 +156,20 @@ namespace TravelOptions
             if (!string.IsNullOrEmpty(DestinationName))
             {
                 playerAutopilot = new PlayerAutoPilot(DestinationSummary);
-                playerAutopilot.OnArrival += () =>
-                    {
-                        travelControlUI.CancelWindow();
-                        DaggerfallUI.Instance.DaggerfallHUD.SetMidScreenText(MsgArrived, 5f);
-                        Debug.Log("Elapsed time for trip: " + (DaggerfallUnity.Instance.WorldTime.Now.ToClassicDaggerfallTime() - beginTime) );
-                    };
+                playerAutopilot.OnArrival += () => {
+                    travelControlUI.CancelWindow();
+                    DaggerfallUI.Instance.DaggerfallHUD.SetMidScreenText(MsgArrived, 5f);
+                    Debug.Log("Elapsed time for trip: " + (DaggerfallUnity.Instance.WorldTime.Now.ToClassicDaggerfallTime() - beginTime) );
+                };
 
+                lastLocation = GameManager.Instance.PlayerGPS.CurrentLocation;
                 SetTimeScale(travelControlUI.TimeAcceleration);
                 DisableWeatherAndSound();
                 diseaseCount = GameManager.Instance.PlayerEffectManager.DiseaseCount;
+
+                // Register event for entering location rects
+                if (locationPause == LocPauseEnter)
+                    PlayerGPS.OnEnterLocationRect += PlayerGPS_OnEnterLocationRect;
 
                 Debug.Log("Begun travel to " + DestinationName);
             }
@@ -154,9 +185,14 @@ namespace TravelOptions
             GameManager.Instance.PlayerMouseLook.enableMouseLook = true;
             GameManager.Instance.PlayerMouseLook.lockCursor = true;
             GameManager.Instance.PlayerMouseLook.simpleCursorLock = false;
-            playerAutopilot.MouseLookAtDestination();
+            if (playerAutopilot != null)
+                playerAutopilot.MouseLookAtDestination();
             playerAutopilot = null;
             EnableWeatherAndSound();
+
+            // Remove event for entering location rects
+            if (locationPause == LocPauseEnter)
+                PlayerGPS.OnEnterLocationRect -= PlayerGPS_OnEnterLocationRect;
         }
 
 
@@ -172,12 +208,41 @@ namespace TravelOptions
                 playerAutopilot.Update();
                 DaggerfallUI.Instance.DaggerfallHUD.HUDVitals.Update();
 
+                // If travelling cautiously, check health and fatigue levels
+                if (DestinationCautious)
+                {
+                    if (GameManager.Instance.PlayerEntity.CurrentHealthPercent < 0.05f)
+                    {
+                        if (travelControlUI.isShowing)
+                            travelControlUI.CloseWindow();
+                        DaggerfallUI.MessageBox(MsgLowHealth);
+                        return;
+                    }
+                    if (GameManager.Instance.PlayerEntity.CurrentFatigue < DaggerfallEntity.FatigueMultiplier * 6)
+                    {
+                        if (travelControlUI.isShowing)
+                            travelControlUI.CloseWindow();
+                        DaggerfallUI.MessageBox(MsgLowFatigue);
+                        return;
+                    }
+                }
+
+                // If location pause set to nearby, check for a near location
+                PlayerGPS playerGPS = GameManager.Instance.PlayerGPS;
+                if (locationPause == LocPauseNear && playerGPS.HasCurrentLocation && !playerGPS.CurrentLocation.Equals(lastLocation))
+                {
+                    lastLocation = playerGPS.CurrentLocation;
+                    if (travelControlUI.isShowing)
+                        travelControlUI.CloseWindow();
+                    DaggerfallUI.MessageBox(string.Format(MsgNearLocation, MacroHelper.LocationTypeName(), playerGPS.CurrentLocation.Name));
+                    return;
+                }
+
                 // Handle encounters.
                 if (ignoreEncounters && DaggerfallUnity.Instance.WorldTime.Now.ToClassicDaggerfallTime() >= ignoreEncountersTime)
                 {
                     ignoreEncounters = false;
                 }
-
                 if (!ignoreEncounters && GameManager.Instance.AreEnemiesNearby())
                 {
                     // This happens when DFU spawns enemies nearby, however quest trigger encounters fire the OnEncounter event first so this code is never reached.
@@ -251,6 +316,9 @@ namespace TravelOptions
 
             GameManager.Instance.PlayerActivate.GetComponentInParent<PlayerFootsteps>().enabled = false;
             GameManager.Instance.TransportManager.GetComponent<AudioSource>().enabled = false;
+
+            if (disableRealGrass)
+                ModManager.Instance.SendModMessage("Real Grass", "toggle", false);
         }
 
         private void EnableWeatherAndSound()
@@ -259,6 +327,9 @@ namespace TravelOptions
 
             GameManager.Instance.PlayerActivate.GetComponentInParent<PlayerFootsteps>().enabled = true;
             GameManager.Instance.TransportManager.GetComponent<AudioSource>().enabled = true;
+
+            if (disableRealGrass)
+                ModManager.Instance.SendModMessage("Real Grass", "toggle", true);
         }
 
     }

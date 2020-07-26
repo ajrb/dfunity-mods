@@ -2,6 +2,40 @@
     "Version": "1.0",
     "Sections": [
         {
+            "Name": "Options",
+            "Description": null,
+            "IsAdvanced": false,
+            "Keys": [
+                {
+                    "Value": true,
+                    "Name": "CautiousTravel",
+                    "Description": "Enable the speed option \"Cautiously\" to initiate real time accelerated travel instead of fast travel",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
+                },
+                {
+                    "Value": true,
+                    "Name": "DisableRealGrass",
+                    "Description": "Switches off the Real Grass mod during time accelerated travel",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
+                },
+                {
+                    "Options": [
+                        "off",
+                        "nearby",
+                        "entered"
+                    ],
+                    "Value": 0,
+                    "Name": "LocationPause",
+                    "Description": "Auto pause when encountering a game location during real time accelerated travel",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.MultipleChoiceKey"
+                }
+            ],
+            "$version": "v1"
+        },
+        {
             "Name": "TimeAcceleration",
             "Description": "Time acceleration configuration",
             "IsAdvanced": false,

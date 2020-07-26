@@ -37,7 +37,7 @@ namespace TravelOptions
 
         public bool PlayerControlledTravel()
         {
-            return !SpeedCautious && !SleepModeInn && !TravelShip;
+            return (TravelOptionsMod.Instance.CautiousTravel || !SpeedCautious) && !SleepModeInn && !TravelShip;
         }
 
         protected override void UpdateLabels()
@@ -47,7 +47,7 @@ namespace TravelOptions
                 TransportManager transportManager = GameManager.Instance.TransportManager;
                 bool horse = transportManager.TransportMode == TransportModes.Horse;
                 bool cart = transportManager.TransportMode == TransportModes.Cart;
-                travelTimeTotalMins = travelTimeCalculator.CalculateTravelTime(EndPos, SpeedCautious, SleepModeInn, TravelShip, horse, cart);
+                travelTimeTotalMins = travelTimeCalculator.CalculateTravelTime(EndPos, SpeedCautious && !TravelOptionsMod.Instance.CautiousTravel, SleepModeInn, TravelShip, horse, cart);
                 travelTimeTotalMins = GameManager.Instance.GuildManager.FastTravel(travelTimeTotalMins);    // Players can have fast travel benefit from guild memberships
                 travelTimeTotalMins /= 2;   // Manually controlled is roughly twice as fast, depending on player speed
                 Debug.Log("Travel time: " + travelTimeTotalMins);
@@ -71,7 +71,7 @@ namespace TravelOptions
                 CloseWindow();
                 TravelWindow.CloseTravelWindows(true);
 
-                TravelOptionsMod.Instance.BeginTravel(TravelWindow.LocationSummary);
+                TravelOptionsMod.Instance.BeginTravel(TravelWindow.LocationSummary, SpeedCautious);
             }
             else
             {
