@@ -10,6 +10,7 @@
         "Assets/Game/Mods/TravelOptions/Scripts/PlayerAutoPilot.cs",
         "Assets/Game/Mods/TravelOptions/Scripts/TravelOptionsMod.cs",
         "Assets/Game/Mods/TravelOptions/Scripts/TravelControlUI.cs",
-        "Assets/Game/Mods/TravelOptions/Scripts/TravelOptionsMapWindow.cs"
+        "Assets/Game/Mods/TravelOptions/Scripts/TravelOptionsMapWindow.cs",
+        "Assets/Game/Mods/TravelOptions/Textures/TOcontrolUI.png"
     ]
 }

@@ -1,66 +1,59 @@
 // Project:         TravelOptions mod for Daggerfall Unity (http://www.dfworkshop.net)
-// Copyright:       Copyright (C) 2019 Jedidia
+// Copyright:       Copyright (C) 2020 Hazelnut
 // License:         MIT License (http://www.opensource.org/licenses/mit-license.php)
-// Author:          Jedidia
-// Contributors:    Hazelnut
+// Author:          Hazelnut
+// Contributors:    Jedidia
 
 using System;
 using UnityEngine;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.UserInterface;
 using DaggerfallWorkshop.Game.UserInterfaceWindows;
+using DaggerfallWorkshop.Utility.AssetInjection;
 
 namespace TravelOptions
 {
     public class TravelControlUI : DaggerfallPopupWindow
     {
-
         #region UI Rects
-        Rect mainPanelRect = new Rect(0, 0, 215, 24);
-        Rect destinationRect = new Rect(5, 2, 210, 10);
-        Rect fasterButtonRect = new Rect(5, 12, 20, 10);
-        Rect timeCompressionRect = new Rect(30, 12, 20, 10);
-        Rect slowerButtonRect = new Rect(55, 12, 20, 10);
-        Rect mapButtonRect = new Rect(80, 12, 40, 10);
-        Rect interruptButtonRect = new Rect(125, 12, 40, 10);
-        Rect cancelButtonRect = new Rect(170, 12, 40, 10);
+
+        Rect destPanelRect = new Rect(5, 14, 152, 7);
+        Rect mapButtonRect = new Rect(183, 3, 45, 21);
+        Rect campButtonRect = new Rect(230, 3, 45, 21);
+        Rect exitButtonRect = new Rect(279, 3, 38, 21);
+        Vector2 timeAccelPos = new Vector2(163, 4);
+
         #endregion
 
         #region UI Controls
 
-        Panel mainPanel = null;
-        Button fasterButton;
-        Button slowerButton;
-        Button interruptButton;
-        Button cancelButton;
+        Panel mainPanel = new Panel();
+        Panel destPanel;
+        TextLabel destinationLabel = new TextLabel();
+        UpDownSpinner timeAccelSpinner = new UpDownSpinner();
         Button mapButton;
-        TextBox destinationTextbox;
-        TextBox timeCompressionTextbox;
-        #endregion
-
-        #region UI Textures
-
-        Texture2D baseTexture;
-        Texture2D disabledTexture;
+        Button campButton;
+        Button exitButton;
 
         #endregion
 
         #region Fields
 
-        public bool isShowing = false;
+        public const string TipMap = "Consult Map";
+        public const string TipCamp = "Stop to Camp";
 
-        Color mainPanelBackgroundColor = new Color(0.0f, 0f, 0.0f, 1.0f);
-        Color buttonBackgroundColor = new Color(0.0f, 0.5f, 0.0f, 0.4f);
-        Color cancelButtonBackgroundColor = new Color(0.7f, 0.0f, 0.0f, 0.4f);
+        const string baseTextureName = "TOcontrolUI.png";
+
+        Texture2D baseTexture;
+        Vector2 baseSize;
+
+        public bool isShowing = false;
 
         public int TimeAcceleration { get; private set; } = 10;
 
-        string destinationStr = "";
         public void SetDestination(string destinationName)
         {
-            destinationStr = "Travelling to " + destinationName;
-            if (destinationTextbox != null)
-                destinationTextbox.Text = destinationStr;
+            destinationLabel.Text = destinationName;
         }
 
         #endregion
@@ -84,53 +77,47 @@ namespace TravelOptions
 
         protected override void Setup()
         {
+            // Load all textures
+            LoadTextures();
 
             // Create interface panel
-            mainPanel = DaggerfallUI.AddPanel(mainPanelRect);
             mainPanel.HorizontalAlignment = HorizontalAlignment.Center;
             mainPanel.VerticalAlignment = VerticalAlignment.Top;
-            mainPanel.BackgroundColor = mainPanelBackgroundColor;
+            mainPanel.Position = new Vector2(0, 0);
+            mainPanel.BackgroundTexture = baseTexture;
+            mainPanel.Size = baseSize;
 
-            // destination description
-            destinationTextbox = DaggerfallUI.AddTextBox(destinationRect, destinationStr, mainPanel);
-            destinationTextbox.ReadOnly = true;
-            // increase time compression button
-            fasterButton = DaggerfallUI.AddButton(fasterButtonRect, mainPanel);
-            fasterButton.OnMouseClick += FasterButton_OnMouseClick;
-            fasterButton.BackgroundColor = buttonBackgroundColor;
-            fasterButton.Label.Text = "+";
-            //display time compression
-            timeCompressionTextbox = DaggerfallUI.AddTextBox(timeCompressionRect, TimeAcceleration + "x", mainPanel);
-            timeCompressionTextbox.ReadOnly = true;
+            // Add primary skill spinner
+            mainPanel.Components.Add(timeAccelSpinner);
+            timeAccelSpinner.Position = timeAccelPos;
+            timeAccelSpinner.OnDownButtonClicked += SlowerButton_OnMouseClick;
+            timeAccelSpinner.OnUpButtonClicked += FasterButton_OnMouseClick;
+            timeAccelSpinner.Value = TimeAcceleration;
 
-            // decrease time compression button
-            slowerButton = DaggerfallUI.AddButton(slowerButtonRect, mainPanel);
-            slowerButton.OnMouseClick += SlowerButton_OnMouseClick;
-            slowerButton.BackgroundColor = buttonBackgroundColor;
-            slowerButton.Label.Text = "-";
+            // Destination label
+            destPanel = DaggerfallUI.AddPanel(destPanelRect, mainPanel);
+            destPanel.Components.Add(destinationLabel);
+            destinationLabel.HorizontalAlignment = HorizontalAlignment.Center;
 
-            // map button
+            // Map button
             mapButton = DaggerfallUI.AddButton(mapButtonRect, mainPanel);
             mapButton.OnMouseClick += (_, __) => {
                 DaggerfallUI.PostMessage(DaggerfallUIMessages.dfuiOpenTravelMapWindow);
             };
-            mapButton.BackgroundColor = buttonBackgroundColor;
-            mapButton.Label.Text = "Map";
+            mapButton.ToolTip = defaultToolTip;
+            mapButton.ToolTipText = TipMap;
 
-            // interrupt travel button
-            interruptButton = DaggerfallUI.AddButton(interruptButtonRect, mainPanel);
-            interruptButton.OnMouseClick += (_, __) => { CloseWindow(); };
-            interruptButton.BackgroundColor = buttonBackgroundColor;
-            interruptButton.Label.Text = "Interrupt";
+            // Camp (pause travel) button
+            campButton = DaggerfallUI.AddButton(campButtonRect, mainPanel);
+            campButton.OnMouseClick += (_, __) => { CloseWindow(); };
+            campButton.ToolTip = defaultToolTip;
+            campButton.ToolTipText = TipCamp;
 
-            // cancel travel button
-            cancelButton = DaggerfallUI.AddButton(cancelButtonRect, mainPanel);
-            cancelButton.OnMouseClick += (_, __) => { CancelWindow(); };
-            cancelButton.BackgroundColor = cancelButtonBackgroundColor;
-            cancelButton.Label.Text = "Cancel";
+            // Exit travel button
+            exitButton = DaggerfallUI.AddButton(exitButtonRect, mainPanel);
+            exitButton.OnMouseClick += (_, __) => { CancelWindow(); };
 
             NativePanel.Components.Add(mainPanel);
-
         }
 
         #endregion
@@ -156,7 +143,6 @@ namespace TravelOptions
         public override void OnPush()
         {
             base.OnPush();
-
             isShowing = true;
         }
 
@@ -179,29 +165,39 @@ namespace TravelOptions
 
         #region Private Methods
 
+        void LoadTextures()
+        {
+            if (TextureReplacement.TryImportImage(baseTextureName, true, out baseTexture))
+            {
+                baseSize = new Vector2(baseTexture.width, baseTexture.height);
+            }
+        }
+
         #endregion
 
         #region Event Handlers
 
-        private void FasterButton_OnMouseClick(BaseScreenComponent sender, Vector2 position)
+        private void FasterButton_OnMouseClick()
         {
             if (TimeAcceleration < 5)
                 TimeAcceleration += 1;
             else
                 TimeAcceleration = Math.Min(100, TimeAcceleration + 5);
 
-            timeCompressionTextbox.Text = TimeAcceleration.ToString() + "x";
+            timeAccelSpinner.Value = TimeAcceleration;
+
             RaiseOnTimeAccelerationChangeEvent(TimeAcceleration);
         }
 
-        private void SlowerButton_OnMouseClick(BaseScreenComponent sender, Vector2 position)
+        private void SlowerButton_OnMouseClick()
         {
             if (TimeAcceleration <= 5)
                 TimeAcceleration = Math.Max(1, TimeAcceleration - 1);
             else
                 TimeAcceleration = Mathf.Max(1, TimeAcceleration - 5);
 
-            timeCompressionTextbox.Text = TimeAcceleration.ToString() + "x";
+            timeAccelSpinner.Value = TimeAcceleration;
+
             RaiseOnTimeAccelerationChangeEvent(TimeAcceleration);
         }
 
@@ -216,12 +212,11 @@ namespace TravelOptions
         // events
         public delegate void OnTimeAccelerationChangeHandler(int newTimeAcceleration);
         public event OnTimeAccelerationChangeHandler OnTimeAccelerationChanged;
-        void RaiseOnTimeAccelerationChangeEvent(int newTimeCompression)
+        void RaiseOnTimeAccelerationChangeEvent(int newTimeAcceleration)
         {
             if (OnTimeAccelerationChanged != null)
-                OnTimeAccelerationChanged(newTimeCompression);
+                OnTimeAccelerationChanged(newTimeAcceleration);
         }
-
 
         #endregion
     }
