@@ -15,6 +15,8 @@ namespace TravelOptions
 {
     public class TravelOptionsMapWindow : DaggerfallTravelMapWindow
     {
+        private const string MsgResume = "Resume travel to {0}?";
+
         const string portsOffName = "TOportsOff.png";
         const string portsOnName = "TOportsOn.png";
 
@@ -98,7 +100,7 @@ namespace TravelOptions
             {
                 Debug.Log("Active destination: " + travelModInstance.DestinationName);
 
-                string resume = string.Format("Resume travel to {0}?", travelModInstance.DestinationName);
+                string resume = string.Format(MsgResume, travelModInstance.DestinationName);
                 DaggerfallMessageBox resumeMsgBox = new DaggerfallMessageBox(uiManager, DaggerfallMessageBox.CommonMessageBoxButtons.YesNo, resume, uiManager.TopWindow);
                 resumeMsgBox.OnButtonClick += (_sender, button) =>
                 {

@@ -93,7 +93,7 @@ namespace TravelOptions
             ShipTravelDestinationPortsOnly = settings.GetValue<bool>("ShipTravel", "OnlyToPorts");
             defaultStartingAccel = startAccelVals[settings.GetValue<int>("TimeAcceleration", "DefaultStartingAcceleration")];
             alwaysUseStartingAccel = settings.GetValue<bool>("TimeAcceleration", "AlwaysUseStartingAcceleration");
-            accelerationLimit = settings.GetValue<int>("TimeAcceleration", "AccelerationLimiter");
+            accelerationLimit = settings.GetValue<int>("TimeAcceleration", "AccelerationLimit");
             encounterAvoidanceSystem = settings.GetValue<bool>("RandomEncounterAvoidance", "AvoidRandomEncounters");
             maxSuccessChance = settings.GetValue<int>("RandomEncounterAvoidance", "MaxChanceToAvoidEncounter");
 
@@ -123,8 +123,9 @@ namespace TravelOptions
             // Must set fixed delta time to scale the fixed (physics) updates as well.
             Time.timeScale = timeScale;
             Time.fixedDeltaTime = timeScale * baseFixedDeltaTime; // Default is 0.02 or 50/s
-
+#if UNITY_EDITOR
             Debug.LogFormat("Set timescale= {0}, fixedDelta= {1}", timeScale, timeScale * baseFixedDeltaTime);
+#endif
         }
 
         public void ClearTravelDestination()
@@ -152,7 +153,8 @@ namespace TravelOptions
 
         public void BeginTravel(ContentReader.MapSummary destinationSummary, bool speedCautious = false)
         {
-            if (DaggerfallUnity.Instance.ContentReader.GetLocation(destinationSummary.RegionIndex, destinationSummary.MapIndex, out DFLocation targetLocation))
+            DFLocation targetLocation;
+            if (DaggerfallUnity.Instance.ContentReader.GetLocation(destinationSummary.RegionIndex, destinationSummary.MapIndex, out targetLocation))
             {
                 DestinationName = targetLocation.Name;
                 travelControlUI.SetDestination(targetLocation.Name);

@@ -117,14 +117,17 @@ namespace TravelOptions
         {
             double angleRad = Math.Atan2(fromWorldPos.X - toWorldPos.X, fromWorldPos.Y - toWorldPos.Y);
             double angleDeg = angleRad * 180.0 / Math.PI + 180;
+#if UNITY_EDITOR
             Debug.Log((float)angleDeg);
+#endif
             return (float)angleDeg;
         }
 
 
         public static Rect GetLocationRect(ContentReader.MapSummary mapSummary)
         {
-            if (DaggerfallUnity.Instance.ContentReader.GetLocation(mapSummary.RegionIndex, mapSummary.MapIndex, out DFLocation targetLocation))
+            DFLocation targetLocation;
+            if (DaggerfallUnity.Instance.ContentReader.GetLocation(mapSummary.RegionIndex, mapSummary.MapIndex, out targetLocation))
                 return DaggerfallLocation.GetLocationRect(targetLocation);
 
             throw new ArgumentException("Travel destination not found!");

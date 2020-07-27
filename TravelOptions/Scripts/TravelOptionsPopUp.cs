@@ -15,7 +15,7 @@ namespace TravelOptions
     {
         private const string PlayerControlled = "Player Controlled Travel";
         private string TimeFormat = " {0} hours {1} mins (approx)";
-        private const string MsgNoPort = "You cannot travel by ship from here, as there's no port.";
+        private const string MsgNoPort = "You cannot travel by ship from here, since there's no port.";
         private const string MsgNoDestPort = "You cannot travel by ship to their, as that location has no port.";
         private const string MsgNoSailing = "Your journey doesn't cross any ocean, so a ship is not needed.";
 
@@ -37,6 +37,8 @@ namespace TravelOptions
             {
                 TimeFormat = '~' + TimeFormat;
             }
+
+            Refresh();
         }
 
         public override void OnPush()
@@ -89,8 +91,9 @@ namespace TravelOptions
                     TravelShip, horse, cart);
                 travelTimeTotalMins = GameManager.Instance.GuildManager.FastTravel(travelTimeTotalMins);    // Players can have fast travel benefit from guild memberships
                 travelTimeTotalMins /= 2;   // Manually controlled is roughly twice as fast, depending on player speed
+#if UNITY_EDITOR
                 Debug.Log("Travel time: " + travelTimeTotalMins);
-
+#endif
                 availableGoldLabel.Text = GameManager.Instance.PlayerEntity.GoldPieces.ToString();
                 tripCostLabel.Text = PlayerControlled;
                 int travelTimeHours = travelTimeTotalMins / 60;

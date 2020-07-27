@@ -112,7 +112,7 @@
                     "Min": 10,
                     "Max": 100,
                     "Value": 40,
-                    "Name": "AccelerationLimiter",
+                    "Name": "AccelerationLimit",
                     "Description": "The maximum limit allowed for time acceleration",
                     "$version": "v1",
                     "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.SliderIntKey"
