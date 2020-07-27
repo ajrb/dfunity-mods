@@ -21,6 +21,8 @@ namespace TravelOptions
 {
     public class TravelOptionsMod : MonoBehaviour
     {
+        public const string PAUSE_TRAVEL = "pauseTravel";
+
         private const string MsgArrived = "You have arrived at your destination.";
         private const string MsgEnemies = "Enemies are seeking to prevent your travel...";
         private const string MsgAvoidAttempt = "You suspect enemies are close, attempt to avoid them?";
@@ -33,7 +35,6 @@ namespace TravelOptions
         private const int LocPauseOff = 0;
         private const int LocPauseNear = 1;
         private const int LocPauseEnter = 2;
-
         static readonly int[] startAccelVals = { 1, 2, 3, 5, 10, 20, 30, 40, 50 };
 
         static Mod mod;
@@ -111,9 +112,10 @@ namespace TravelOptions
             StartGameBehaviour.OnNewGame += () => { ClearTravelDestination(); };
             GameManager.OnEncounter += GameManager_OnEncounter;
 
-            Debug.Log("Finished mod init: TravelOptions");
-
+            mod.MessageReceiver = MessageReceiver;
             mod.IsReady = true;
+
+            Debug.Log("Finished mod init: TravelOptions");
         }
 
         private void SetTimeScale(int timeScale)
@@ -136,8 +138,8 @@ namespace TravelOptions
             {
                 SetTimeScale(1);        // Essentially redundant, but still helpful, since the close window event takes longer to trigger the time downscale.
                 travelControlUI.CloseWindow();
+                DaggerfallUI.MessageBox(MsgEnemies);
             }
-            DaggerfallUI.MessageBox(MsgEnemies);
         }
 
         private void PlayerGPS_OnEnterLocationRect(DFLocation dfLocation)
@@ -356,5 +358,19 @@ namespace TravelOptions
                 ModManager.Instance.SendModMessage("Real Grass", "toggle", true);
         }
 
+        private void MessageReceiver(string message, object data, DFModMessageCallback callBack)
+        {
+            switch (message)
+            {
+                case PAUSE_TRAVEL:
+                    if (travelControlUI.isShowing)
+                        travelControlUI.CloseWindow();
+                    break;
+
+                default:
+                    Debug.LogErrorFormat("{0}: unknown message received ({1}).", this, message);
+                    break;
+            }
+        }
     }
 }
