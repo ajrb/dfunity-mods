@@ -34,7 +34,7 @@ namespace TravelOptions
         private const int LocPauseNear = 1;
         private const int LocPauseEnter = 2;
 
-        static readonly int[] startAccelVals = { 1, 5, 10, 20, 30, 40, 50 };
+        static readonly int[] startAccelVals = { 1, 2, 3, 5, 10, 20, 30, 40, 50 };
 
         static Mod mod;
 
@@ -45,16 +45,21 @@ namespace TravelOptions
         public bool DestinationCautious { get; private set; }
 
         public bool CautiousTravel { get; private set; }
+        public bool StopAtInnsTravel { get; private set; }
         public bool ShipTravelPortsOnly { get; private set; }
+        public bool ShipTravelDestinationPortsOnly { get; private set; }
 
         private PlayerAutoPilot playerAutopilot;
         private TravelControlUI travelControlUI;
         internal TravelControlUI GetTravelControlUI() { return travelControlUI; }
         private DFLocation lastLocation;
 
+        private bool disableWeather;
+        private bool disableSounds;
         private bool disableRealGrass;
         private int locationPause;
         private int defaultStartingAccel;
+        private bool alwaysUseStartingAccel;
         private int accelerationLimit;
         private float baseFixedDeltaTime;
         private bool encounterAvoidanceSystem;
@@ -78,10 +83,15 @@ namespace TravelOptions
 
             ModSettings settings = mod.GetSettings();
             CautiousTravel = settings.GetValue<bool>("Options", "CautiousTravel");
-            ShipTravelPortsOnly = settings.GetValue<bool>("Options", "ShipTravelPortsOnly");
+            StopAtInnsTravel = settings.GetValue<bool>("Options", "StopAtInnsTravel");
+            disableWeather = settings.GetValue<bool>("Options", "DisableWeather");
+            disableSounds = settings.GetValue<bool>("Options", "DisableSounds");
             disableRealGrass = settings.GetValue<bool>("Options", "DisableRealGrass");
             locationPause = settings.GetValue<int>("Options", "LocationPause");
+            ShipTravelPortsOnly = settings.GetValue<bool>("ShipTravel", "OnlyFromPorts");
+            ShipTravelDestinationPortsOnly = settings.GetValue<bool>("ShipTravel", "OnlyToPorts");
             defaultStartingAccel = startAccelVals[settings.GetValue<int>("TimeAcceleration", "DefaultStartingAcceleration")];
+            alwaysUseStartingAccel = settings.GetValue<bool>("TimeAcceleration", "AlwaysUseStartingAcceleration");
             accelerationLimit = settings.GetValue<int>("TimeAcceleration", "AccelerationLimiter");
             encounterAvoidanceSystem = settings.GetValue<bool>("RandomEncounterAvoidance", "AvoidRandomEncounters");
             maxSuccessChance = settings.GetValue<int>("RandomEncounterAvoidance", "MaxChanceToAvoidEncounter");
@@ -146,6 +156,8 @@ namespace TravelOptions
                 travelControlUI.SetDestination(targetLocation.Name);
                 DestinationSummary = destinationSummary;
                 DestinationCautious = speedCautious;
+                if (alwaysUseStartingAccel)
+                    travelControlUI.TimeAcceleration = defaultStartingAccel;
                 BeginTravel();
                 beginTime = DaggerfallUnity.Instance.WorldTime.Now.ToClassicDaggerfallTime();
             }
@@ -311,13 +323,19 @@ namespace TravelOptions
 
         private void DisableWeatherAndSound()
         {
-            var playerWeather = GameManager.Instance.WeatherManager.PlayerWeather;
-            playerWeather.RainParticles.SetActive(false);
-            playerWeather.SnowParticles.SetActive(false);
-            playerWeather.enabled = false;
+            if (disableWeather)
+            {
+                var playerWeather = GameManager.Instance.WeatherManager.PlayerWeather;
+                playerWeather.RainParticles.SetActive(false);
+                playerWeather.SnowParticles.SetActive(false);
+                playerWeather.enabled = false;
+            }
 
-            GameManager.Instance.PlayerActivate.GetComponentInParent<PlayerFootsteps>().enabled = false;
-            GameManager.Instance.TransportManager.GetComponent<AudioSource>().enabled = false;
+            if (disableSounds)
+            {
+                GameManager.Instance.PlayerActivate.GetComponentInParent<PlayerFootsteps>().enabled = false;
+                GameManager.Instance.TransportManager.GetComponent<AudioSource>().enabled = false;
+            }
 
             if (disableRealGrass)
                 ModManager.Instance.SendModMessage("Real Grass", "toggle", false);
@@ -325,10 +343,14 @@ namespace TravelOptions
 
         private void EnableWeatherAndSound()
         {
-            GameManager.Instance.WeatherManager.PlayerWeather.enabled = true;
+            if (disableWeather)
+                GameManager.Instance.WeatherManager.PlayerWeather.enabled = true;
 
-            GameManager.Instance.PlayerActivate.GetComponentInParent<PlayerFootsteps>().enabled = true;
-            GameManager.Instance.TransportManager.GetComponent<AudioSource>().enabled = true;
+            if (disableSounds)
+            {
+                GameManager.Instance.PlayerActivate.GetComponentInParent<PlayerFootsteps>().enabled = true;
+                GameManager.Instance.TransportManager.GetComponent<AudioSource>().enabled = true;
+            }
 
             if (disableRealGrass)
                 ModManager.Instance.SendModMessage("Real Grass", "toggle", true);

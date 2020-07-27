@@ -117,10 +117,15 @@ namespace TravelOptions
         protected override bool checkLocationDiscovered(ContentReader.MapSummary summary)
         {
             // If ports filter is on, only return true if it's a port
-            if (portsFilter && !Array.Exists(portLocationIds, n => n == summary.ID))
+            if (portsFilter && !HasPort(summary))
                 return false;
 
             return base.checkLocationDiscovered(summary);
+        }
+
+        public static bool HasPort(ContentReader.MapSummary mapSummary)
+        {
+            return Array.Exists(portLocationIds, n => n == mapSummary.ID);
         }
 
         public static readonly int[] portLocationIds = {

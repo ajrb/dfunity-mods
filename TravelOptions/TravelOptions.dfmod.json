@@ -13,6 +13,7 @@
         "Assets/Game/Mods/TravelOptions/Scripts/TravelOptionsMapWindow.cs",
         "Assets/Game/Mods/TravelOptions/Textures/TOcontrolUI.png",
         "Assets/Game/Mods/TravelOptions/Textures/TOportsOff.png",
-        "Assets/Game/Mods/TravelOptions/Textures/TOportsOn.png"
+        "Assets/Game/Mods/TravelOptions/Textures/TOportsOn.png",
+        "Assets/Game/Mods/TravelOptions/modpresets.json"
     ]
 }

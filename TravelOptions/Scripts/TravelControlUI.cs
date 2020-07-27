@@ -50,7 +50,7 @@ namespace TravelOptions
 
         public bool isShowing = false;
 
-        public int TimeAcceleration { get; private set; }
+        public int TimeAcceleration { get; internal set; }
 
         public void SetDestination(string destinationName)
         {
@@ -131,6 +131,7 @@ namespace TravelOptions
         public override void Update()
         {
             base.Update();
+            timeAccelSpinner.Value = TimeAcceleration;
 
             if (Input.GetKeyUp(exitKey))
                 CloseWindow();
@@ -188,8 +189,6 @@ namespace TravelOptions
             else
                 TimeAcceleration = Math.Min(accelerationLimit, TimeAcceleration + 5);
 
-            timeAccelSpinner.Value = TimeAcceleration;
-
             RaiseOnTimeAccelerationChangeEvent(TimeAcceleration);
         }
 
@@ -199,8 +198,6 @@ namespace TravelOptions
                 TimeAcceleration = Math.Max(1, TimeAcceleration - 1);
             else
                 TimeAcceleration = Mathf.Max(1, TimeAcceleration - 5);
-
-            timeAccelSpinner.Value = TimeAcceleration;
 
             RaiseOnTimeAccelerationChangeEvent(TimeAcceleration);
         }

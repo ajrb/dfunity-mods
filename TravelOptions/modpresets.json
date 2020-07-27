@@ -1,0 +1,53 @@
+[
+    {
+        "Title": "Default",
+        "Author": "Hazelnut",
+        "Description": "Default",
+        "SettingsVersion": "1.0",
+        "Values": {
+            "Options": {
+                "CautiousTravel": "True",
+                "StopAtInnsTravel": "False"
+            },
+            "ShipTravel": {
+                "OnlyFromPorts": "True",
+                "OnlyToPorts": "False"
+            }
+        },
+        "$version": "v1"
+    },
+    {
+        "Title": "Freedom",
+        "Author": "Hazelnut",
+        "Description": "Freely choose whether you use normal fast travel or time accelerated travel when selecting reckless, foot/horse, and camp out options.",
+        "SettingsVersion": "1.0",
+        "Values": {
+            "Options": {
+                "CautiousTravel": "False",
+                "StopAtInnsTravel": "False"
+            },
+            "ShipTravel": {
+                "OnlyFromPorts": "False",
+                "OnlyToPorts": "False"
+            }
+        },
+        "$version": "v1"
+    },
+    {
+        "Title": "Tedious",
+        "Author": "Hazelnut",
+        "Description": "Travel is more tedious, and close to the Tedious Travel mod but without the shipping logic from that mod.",
+        "SettingsVersion": "1.0",
+        "Values": {
+            "Options": {
+                "CautiousTravel": "True",
+                "StopAtInnsTravel": "True"
+            },
+            "ShipTravel": {
+                "OnlyFromPorts": "True",
+                "OnlyToPorts": "True"
+            }
+        },
+        "$version": "v1"
+    }
+]

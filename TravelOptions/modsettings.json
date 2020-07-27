@@ -9,14 +9,28 @@
                 {
                     "Value": true,
                     "Name": "CautiousTravel",
-                    "Description": "Enables the speed option \"Cautiously\" to initiate real time accelerated travel instead of fast travel",
+                    "Description": "Makes the speed option \"Cautiously\" initiate real time accelerated travel instead of fast travel",
                     "$version": "v1",
                     "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
                 },
                 {
                     "Value": true,
-                    "Name": "ShipTravelPortsOnly",
-                    "Description": "Restricts ship travel to be possible only from places with ports",
+                    "Name": "StopAtInnsTravel",
+                    "Description": "Makes the stop for night option \"Inns\" initiate real time accelerated travel instead of fast travel",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
+                },
+                {
+                    "Value": true,
+                    "Name": "DisableWeather",
+                    "Description": "Switches off weather changes during time accelerated travel",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
+                },
+                {
+                    "Value": true,
+                    "Name": "DisableSounds",
+                    "Description": "Switches off annoying sounds during time accelerated travel",
                     "$version": "v1",
                     "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
                 },
@@ -43,6 +57,28 @@
             "$version": "v1"
         },
         {
+            "Name": "ShipTravel",
+            "Description": "Configuration for Ship Travel restrictions to suit each player.",
+            "IsAdvanced": false,
+            "Keys": [
+                {
+                    "Value": true,
+                    "Name": "OnlyFromPorts",
+                    "Description": "Restricts ship travel to be possible only from places with ports",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
+                },
+                {
+                    "Value": true,
+                    "Name": "OnlyToPorts",
+                    "Description": "Restricts ship travel to be possible only if destination has a port, if from ports setting is enabled",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
+                }
+            ],
+            "$version": "v1"
+        },
+        {
             "Name": "TimeAcceleration",
             "Description": "Time acceleration configuration.",
             "IsAdvanced": false,
@@ -50,6 +86,8 @@
                 {
                     "Options": [
                         "1",
+                        "2",
+                        "3",
                         "5",
                         "10",
                         "20",
@@ -57,11 +95,18 @@
                         "40",
                         "50"
                     ],
-                    "Value": 2,
+                    "Value": 4,
                     "Name": "DefaultStartingAcceleration",
                     "Description": "The initial time acceleration used after starting the game",
                     "$version": "v1",
                     "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.MultipleChoiceKey"
+                },
+                {
+                    "Value": false,
+                    "Name": "AlwaysUseStartingAcceleration",
+                    "Description": "Always uses the default starting acceleration when initiating a journey, rather than value from the previous journey",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
                 },
                 {
                     "Min": 10,
