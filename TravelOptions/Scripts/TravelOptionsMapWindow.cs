@@ -9,6 +9,7 @@ using DaggerfallWorkshop.Game.UserInterfaceWindows;
 using DaggerfallWorkshop.Utility;
 using System;
 using DaggerfallWorkshop.Utility.AssetInjection;
+using DaggerfallConnect;
 
 namespace TravelOptions
 {
@@ -128,6 +129,20 @@ namespace TravelOptions
             return Array.Exists(portLocationIds, n => n == mapSummary.ID);
         }
 
+        public static bool HasPortExtra(DFRegion.RegionMapTable mapTable)
+        {
+            return Array.Exists(portLocationExtraIds, n => n == (mapTable.MapId & 0xFFFFF));
+        }
+
+        public static readonly int[] portLocationExtraIds = {
+            // Extras from TT allowing travel to :
+            205676,     // "Isle of Balfiera", "Blackhead"
+            278901,     // "Mournoth", "Zagoparia"
+            263119,     // "Betony", "Whitefort"
+            148062,     // "Tulune", "The Citadel of Hearthham"
+            144059,     // "Tulune", "The Elyzanna Assembly"
+        };
+
         public static readonly int[] portLocationIds = {
             443401, 280614, 285597, 485856, 86496, 137544, 139547, 143535, 143542, 149513,
             150625, 158629, 162631, 162646, 164648, 166644, 168652, 169640, 170654, 178663,
@@ -164,14 +179,12 @@ namespace TravelOptions
             381881, 382879, 278962, 281872, 281969, 324981, 469891, 437653, 446471, 472431,
             480415, 217966, 100086, 121067, 123073, 144059, 75104, 77077, 83137, 86218,
             86334, 89333, 343439,
-/*
-            // Extras from TT:
+            // Extras from TT allowing travel to :
             205676,     // "Isle of Balfiera", "Blackhead"
             278901,     // "Mournoth", "Zagoparia"
             263119,     // "Betony", "Whitefort"
             148062,     // "Tulune", "The Citadel of Hearthham"
             144059,     // "Tulune", "The Elyzanna Assembly"
-*/
         };
     }
 }

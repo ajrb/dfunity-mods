@@ -63,7 +63,7 @@ namespace TravelOptions
         public bool IsNotAtPort()
         {
             DFLocation location = GameManager.Instance.PlayerGPS.CurrentLocation;
-            return location.Loaded == false || location.Exterior.ExteriorData.PortTownAndUnknown == 0;
+            return location.Loaded == false || location.Exterior.ExteriorData.PortTownAndUnknown == 0 || TravelOptionsMapWindow.HasPortExtra(location.MapTableData);
         }
 
         public bool HasNoOceanTravel()
