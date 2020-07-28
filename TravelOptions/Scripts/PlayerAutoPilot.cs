@@ -2,6 +2,7 @@
 // Copyright:       Copyright (C) 2019 Jedidia
 // License:         MIT License (http://www.opensource.org/licenses/mit-license.php)
 // Author:          Jedidia
+// Contributors:    Hazelnut
 
 using System;
 using System.Reflection;
@@ -17,7 +18,10 @@ namespace TravelOptions
 {
     public class PlayerAutoPilot
     {
+        private const int ArrivalBuffer = 800;
+
         private ContentReader.MapSummary destinationSummary;
+        private float travelSpeedMultiplier;
         private DFPosition destinationMapPixel = null;
         private Rect destinationWorldRect;
         private PlayerGPS playerGPS = GameManager.Instance.PlayerGPS;
@@ -33,9 +37,10 @@ namespace TravelOptions
         // some reflection-fu to get access to a private function. Don't judge me, if there was another way I'd use it.
         private MethodInfo applyHorizontalForce = InputManager.Instance.GetType().GetMethod("ApplyVerticalForce", BindingFlags.NonPublic | BindingFlags.Instance);
 
-        public PlayerAutoPilot(ContentReader.MapSummary destinationSummary)
+        public PlayerAutoPilot(ContentReader.MapSummary destinationSummary, float travelSpeedMultiplier = 1f)
         {
             this.destinationSummary = destinationSummary;
+            this.travelSpeedMultiplier = travelSpeedMultiplier;
             Init();
         }
 
@@ -46,10 +51,10 @@ namespace TravelOptions
             // get exact coordinates of destination
             destinationWorldRect = GetLocationRect(destinationSummary);
             //grow the rect a bit so fast travel cancels shortly before entering the location
-            destinationWorldRect.xMin -= 1000;
-            destinationWorldRect.xMax += 1000;
-            destinationWorldRect.yMin -= 1000;
-            destinationWorldRect.yMax += 1000;
+            destinationWorldRect.xMin -= ArrivalBuffer;
+            destinationWorldRect.xMax += ArrivalBuffer;
+            destinationWorldRect.yMin -= ArrivalBuffer;
+            destinationWorldRect.yMax += ArrivalBuffer;
         }
 
         public void Update()
@@ -80,7 +85,7 @@ namespace TravelOptions
             mouseLook.simpleCursorLock = true;
             mouseLook.enableMouseLook = false;
             // make the player move forward
-            applyHorizontalForce.Invoke(inputManager, new object[] { 1 });
+            applyHorizontalForce.Invoke(inputManager, new object[] { travelSpeedMultiplier });
 
         }
 

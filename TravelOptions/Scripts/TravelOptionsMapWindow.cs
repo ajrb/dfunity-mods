@@ -137,12 +137,13 @@ namespace TravelOptions
         }
 
         public static readonly int[] portLocationExtraIds = {
-            // Extras from TT allowing travel to :
+            // Extras allowing travel to :
             205676,     // "Isle of Balfiera", "Blackhead"
             278901,     // "Mournoth", "Zagoparia"
             263119,     // "Betony", "Whitefort"
             148062,     // "Tulune", "The Citadel of Hearthham"
             144059,     // "Tulune", "The Elyzanna Assembly"
+            343439,     // "Cybiades", "Ruins of Cosh Hall"
         };
 
         public static readonly int[] portLocationIds = {
@@ -181,12 +182,13 @@ namespace TravelOptions
             381881, 382879, 278962, 281872, 281969, 324981, 469891, 437653, 446471, 472431,
             480415, 217966, 100086, 121067, 123073, 144059, 75104, 77077, 83137, 86218,
             86334, 89333, 343439,
-            // Extras from TT allowing travel to :
+            // Extras allowing travel to:
             205676,     // "Isle of Balfiera", "Blackhead"
             278901,     // "Mournoth", "Zagoparia"
             263119,     // "Betony", "Whitefort"
             148062,     // "Tulune", "The Citadel of Hearthham"
             144059,     // "Tulune", "The Elyzanna Assembly"
+            343439,     // "Cybiades", "Ruins of Cosh Hall"
         };
     }
 }

@@ -30,6 +30,7 @@ namespace TravelOptions
         Panel mainPanel = new Panel();
         Panel destPanel;
         TextLabel destinationLabel = new TextLabel();
+        TextLabel messageLabel;
         UpDownSpinner timeAccelSpinner = new UpDownSpinner();
         Button mapButton;
         Button campButton;
@@ -47,6 +48,7 @@ namespace TravelOptions
         Texture2D baseTexture;
         Vector2 baseSize;
         int accelerationLimit;
+        uint messageTimer = 0;
 
         public bool isShowing = false;
 
@@ -103,6 +105,10 @@ namespace TravelOptions
             destPanel.Components.Add(destinationLabel);
             destinationLabel.HorizontalAlignment = HorizontalAlignment.Center;
 
+            // Message label
+            messageLabel = DaggerfallUI.AddTextLabel(null, new Vector2(0, 32), "", NativePanel);
+            messageLabel.HorizontalAlignment = HorizontalAlignment.Center;
+
             // Map button
             mapButton = DaggerfallUI.AddButton(mapButtonRect, mainPanel);
             mapButton.OnMouseClick += (_, __) => {
@@ -126,12 +132,27 @@ namespace TravelOptions
 
         #endregion
 
-        #region Overrides
+        #region Public Methods
+
+        public void ShowMessage(string message)
+        {
+            if (IsSetup)
+            {
+                messageLabel.Text = message;
+                messageTimer = (uint)Time.unscaledTime + 3;
+            }
+        }
 
         public override void Update()
         {
             base.Update();
+
             timeAccelSpinner.Value = TimeAcceleration;
+            if (messageTimer > 0 && Time.unscaledTime > messageTimer)
+            {
+                messageLabel.Text = "";
+                messageTimer = 0;
+            }
 
             if (Input.GetKeyUp(exitKey))
                 CloseWindow();
@@ -142,7 +163,7 @@ namespace TravelOptions
             base.Draw();
             DaggerfallUI.Instance.DaggerfallHUD.HUDVitals.Draw();
             DaggerfallUI.Instance.DaggerfallHUD.HUDCompass.Draw();
-            DaggerfallUI.Instance.DaggerfallHUD.ShowMidScreenText = true;
+            //DaggerfallUI.Instance.DaggerfallHUD.ShowMidScreenText = true;
         }
 
         public override void OnPush()

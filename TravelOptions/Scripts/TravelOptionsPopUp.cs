@@ -13,8 +13,8 @@ namespace TravelOptions
 {
     public class TravelOptionsPopUp : DaggerfallTravelPopUp
     {
-        private const string PlayerControlled = "Player Controlled Travel";
-        private string TimeFormat = " {0} hours {1} mins (approx)";
+        private const string MsgPlayerControlled = "Player Controlled Journey";
+        private string MsgTimeFormat = " {0} hours {1} mins (approx)";
         private const string MsgNoPort = "You cannot travel by ship from here, since there's no port.";
         private const string MsgNoDestPort = "You cannot travel by ship to their, as that location has no port.";
         private const string MsgNoSailing = "Your journey doesn't cross any ocean, so a ship is not needed.";
@@ -31,11 +31,11 @@ namespace TravelOptions
             if (DaggerfallWorkshop.DaggerfallUnity.Settings.SDFFontRendering)
             {
                 travelTimeLabel.MaxCharacters = 28;
-                tripCostLabel.MaxCharacters = 24;
+                tripCostLabel.MaxCharacters = 25;
             }
             else
             {
-                TimeFormat = '~' + TimeFormat;
+                MsgTimeFormat = '~' + MsgTimeFormat;
             }
 
             Refresh();
@@ -90,15 +90,18 @@ namespace TravelOptions
                     SleepModeInn && !TravelOptionsMod.Instance.StopAtInnsTravel,
                     TravelShip, horse, cart);
                 travelTimeTotalMins = GameManager.Instance.GuildManager.FastTravel(travelTimeTotalMins);    // Players can have fast travel benefit from guild memberships
-                travelTimeTotalMins /= 2;   // Manually controlled is roughly twice as fast, depending on player speed
+
+                // Manually controlled is roughly twice as fast, depending on player speed. So divide by 2 times the relevant speed multiplier
+                float travelTimeMinsMult = ((SpeedCautious && TravelOptionsMod.Instance.CautiousTravel) ? TravelOptionsMod.Instance.CautiousTravelMultiplier : TravelOptionsMod.Instance.RecklessTravelMultiplier) * 2;
+                travelTimeTotalMins = (int)(travelTimeTotalMins / travelTimeMinsMult);
 #if UNITY_EDITOR
                 Debug.Log("Travel time: " + travelTimeTotalMins);
 #endif
                 availableGoldLabel.Text = GameManager.Instance.PlayerEntity.GoldPieces.ToString();
-                tripCostLabel.Text = PlayerControlled;
+                tripCostLabel.Text = MsgPlayerControlled;
                 int travelTimeHours = travelTimeTotalMins / 60;
                 int travelTimeMinutes = travelTimeTotalMins % 60;
-                travelTimeLabel.Text = string.Format(TimeFormat, travelTimeHours, travelTimeMinutes);
+                travelTimeLabel.Text = string.Format(MsgTimeFormat, travelTimeHours, travelTimeMinutes);
             }
             else
             {

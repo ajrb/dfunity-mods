@@ -2,28 +2,28 @@
     "Version": "1.0",
     "Sections": [
         {
-            "Name": "Options",
+            "Name": "GeneralOptions",
             "Description": "Configuration for Travel Options to suit each player.",
             "IsAdvanced": false,
             "Keys": [
                 {
                     "Value": true,
                     "Name": "CautiousTravel",
-                    "Description": "Makes the speed option \"Cautiously\" initiate real time accelerated travel instead of fast travel",
+                    "Description": "Makes the speed option \"Cautiously\" initiate time accelerated travel, instead of fast travel",
                     "$version": "v1",
                     "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
                 },
                 {
-                    "Value": true,
+                    "Value": false,
                     "Name": "StopAtInnsTravel",
-                    "Description": "Makes the stop for night option \"Inns\" initiate real time accelerated travel instead of fast travel",
+                    "Description": "Makes the stop for night option \"Inns\" initiate time accelerated travel, instead of fast travel",
                     "$version": "v1",
                     "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
                 },
                 {
                     "Value": true,
                     "Name": "DisableWeather",
-                    "Description": "Switches off weather changes during time accelerated travel",
+                    "Description": "Switches off weather during time accelerated travel",
                     "$version": "v1",
                     "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
                 },
@@ -69,7 +69,7 @@
                     "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
                 },
                 {
-                    "Value": true,
+                    "Value": false,
                     "Name": "OnlyToPorts",
                     "Description": "Restricts ship travel to be possible only if destination has a port, if from ports setting is enabled",
                     "$version": "v1",
@@ -121,23 +121,43 @@
             "$version": "v1"
         },
         {
-            "Name": "RandomEncounterAvoidance",
-            "Description": "Enable ability to avoid a random encounter based either Running or Stealth skill, whichever is higher.",
+            "Name": "CautiousTravel",
+            "Description": "Configuration for Cautious Travel speed penatly and benefits, including possibility to avoid random encounters based on luck and Stealth.",
             "IsAdvanced": false,
             "Keys": [
                 {
-                    "Value": true,
-                    "Name": "AvoidRandomEncounters",
-                    "Description": "Enable or disable random encounter avoidance.",
+                    "Min": 5,
+                    "Max": 40,
+                    "Value": 20,
+                    "Name": "SpeedPenalty",
+                    "Description": "Speed penalty for travelling cautiously, as a percentage",
                     "$version": "v1",
-                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.SliderIntKey"
                 },
                 {
-                    "Min": 1,
+                    "Min": 60,
                     "Max": 100,
-                    "Value": 80,
+                    "Value": 95,
                     "Name": "MaxChanceToAvoidEncounter",
-                    "Description": "Maximum percent chance to avoid an encounter with 100 stealth or running, scales with skill.",
+                    "Description": "Maximum chance to avoid an encounter when travelling cautiously, as a percentage",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.SliderIntKey"
+                },
+                {
+                    "Min": 0,
+                    "Max": 25,
+                    "Value": 5,
+                    "Name": "HealthMinimumPercentage",
+                    "Description": "Level of health that will automatically pause the journey when travelling cautiously, as a percentage",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.SliderIntKey"
+                },
+                {
+                    "Min": 0,
+                    "Max": 50,
+                    "Value": 5,
+                    "Name": "FatigueMinimumValue",
+                    "Description": "Level of fatigue that will automatically pause the journey when travelling cautiously, absolute value",
                     "$version": "v1",
                     "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.SliderIntKey"
                 }

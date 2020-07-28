@@ -25,8 +25,8 @@ namespace TravelOptions
 
         private const string MsgArrived = "You have arrived at your destination.";
         private const string MsgEnemies = "Enemies are seeking to prevent your travel...";
-        private const string MsgAvoidAttempt = "You suspect enemies are close, attempt to avoid them?";
-        private const string MsgAvoidFail = "You failed to avoid the encounter!";
+        private const string MsgAvoidFail = "You failed to avoid an encounter!";
+        private const string MsgAvoidSuccess = "You successfully avoided an encounter.";
         private const string MsgLowHealth = "You are close to the point of death!";
         private const string MsgLowFatigue = "You are exhausted and should rest.";
         private const string MsgNearLocation = "Paused the journey since a {0} called {1} is nearby.";
@@ -35,9 +35,6 @@ namespace TravelOptions
         private const int LocPauseOff = 0;
         private const int LocPauseNear = 1;
         private const int LocPauseEnter = 2;
-        static readonly int[] startAccelVals = { 1, 2, 3, 5, 10, 20, 30, 40, 50 };
-
-        static Mod mod;
 
         public static TravelOptionsMod Instance { get; private set; }
 
@@ -49,6 +46,16 @@ namespace TravelOptions
         public bool StopAtInnsTravel { get; private set; }
         public bool ShipTravelPortsOnly { get; private set; }
         public bool ShipTravelDestinationPortsOnly { get; private set; }
+
+        public float RecklessTravelMultiplier { get; private set; } = 1f;
+        public float CautiousTravelMultiplier { get; private set; } = 0.8f;
+        private float GetTravelSpeedMultiplier() { return DestinationCautious ? CautiousTravelMultiplier : RecklessTravelMultiplier; }
+        public int CautiousHealthMinPc { get; private set; } = 5;
+        public int CautiousFatigueMin { get; private set; } = 6;
+
+        static readonly int[] startAccelVals = { 1, 2, 3, 5, 10, 20, 30, 40, 50 };
+
+        static Mod mod;
 
         private PlayerAutoPilot playerAutopilot;
         private TravelControlUI travelControlUI;
@@ -63,8 +70,7 @@ namespace TravelOptions
         private bool alwaysUseStartingAccel;
         private int accelerationLimit;
         private float baseFixedDeltaTime;
-        private bool encounterAvoidanceSystem;
-        private int maxSuccessChance;
+        private int maxAvoidChance;
         private bool ignoreEncounters;
         private uint ignoreEncountersTime;
         private int diseaseCount = 0;
@@ -83,19 +89,26 @@ namespace TravelOptions
             Debug.Log("Begin mod init: TravelOptions");
 
             ModSettings settings = mod.GetSettings();
-            CautiousTravel = settings.GetValue<bool>("Options", "CautiousTravel");
-            StopAtInnsTravel = settings.GetValue<bool>("Options", "StopAtInnsTravel");
-            disableWeather = settings.GetValue<bool>("Options", "DisableWeather");
-            disableSounds = settings.GetValue<bool>("Options", "DisableSounds");
-            disableRealGrass = settings.GetValue<bool>("Options", "DisableRealGrass");
-            locationPause = settings.GetValue<int>("Options", "LocationPause");
+
+            CautiousTravel = settings.GetValue<bool>("GeneralOptions", "CautiousTravel");
+            StopAtInnsTravel = settings.GetValue<bool>("GeneralOptions", "StopAtInnsTravel");
+            disableWeather = settings.GetValue<bool>("GeneralOptions", "DisableWeather");
+            disableSounds = settings.GetValue<bool>("GeneralOptions", "DisableSounds");
+            disableRealGrass = settings.GetValue<bool>("GeneralOptions", "DisableRealGrass");
+            locationPause = settings.GetValue<int>("GeneralOptions", "LocationPause");
+
+            int speedPenalty = settings.GetValue<int>("CautiousTravel", "SpeedPenalty");
+            CautiousTravelMultiplier = 1 - ((float)speedPenalty / 100);
+            maxAvoidChance = settings.GetValue<int>("CautiousTravel", "MaxChanceToAvoidEncounter");
+            CautiousHealthMinPc = settings.GetValue<int>("CautiousTravel", "HealthMinimumPercentage");
+            CautiousFatigueMin = settings.GetValue<int>("CautiousTravel", "FatigueMinimumValue") + 1;
+
             ShipTravelPortsOnly = settings.GetValue<bool>("ShipTravel", "OnlyFromPorts");
             ShipTravelDestinationPortsOnly = settings.GetValue<bool>("ShipTravel", "OnlyToPorts");
+
             defaultStartingAccel = startAccelVals[settings.GetValue<int>("TimeAcceleration", "DefaultStartingAcceleration")];
             alwaysUseStartingAccel = settings.GetValue<bool>("TimeAcceleration", "AlwaysUseStartingAcceleration");
             accelerationLimit = settings.GetValue<int>("TimeAcceleration", "AccelerationLimit");
-            encounterAvoidanceSystem = settings.GetValue<bool>("RandomEncounterAvoidance", "AvoidRandomEncounters");
-            maxSuccessChance = settings.GetValue<int>("RandomEncounterAvoidance", "MaxChanceToAvoidEncounter");
 
             UIWindowFactory.RegisterCustomUIWindow(UIWindowType.TravelMap, typeof(TravelOptionsMapWindow));
             UIWindowFactory.RegisterCustomUIWindow(UIWindowType.TravelPopUp, typeof(TravelOptionsPopUp));
@@ -135,7 +148,7 @@ namespace TravelOptions
 
         private void GameManager_OnEncounter()
         {
-            if (travelControlUI.isShowing)
+            if (travelControlUI.isShowing && !ignoreEncounters)
             {
                 SetTimeScale(1);        // Essentially redundant, but still helpful, since the close window event takes longer to trigger the time downscale.
                 travelControlUI.CloseWindow();
@@ -173,11 +186,13 @@ namespace TravelOptions
         {
             if (!string.IsNullOrEmpty(DestinationName))
             {
-                playerAutopilot = new PlayerAutoPilot(DestinationSummary);
-                playerAutopilot.OnArrival += () => {
-                    travelControlUI.CancelWindow();
-                    DaggerfallUI.Instance.DaggerfallHUD.SetMidScreenText(MsgArrived, 5f);
-                    Debug.Log("Elapsed time for trip: " + (DaggerfallUnity.Instance.WorldTime.Now.ToClassicDaggerfallTime() - beginTime) );
+                playerAutopilot = new PlayerAutoPilot(DestinationSummary, GetTravelSpeedMultiplier());
+                playerAutopilot.OnArrival += () =>
+                {
+                    travelControlUI.CloseWindow();
+                    ClearTravelDestination();
+                    DaggerfallUI.MessageBox(MsgArrived);
+                    Debug.Log("Elapsed time for trip: " + (DaggerfallUnity.Instance.WorldTime.Now.ToClassicDaggerfallTime() - beginTime));
                 };
 
                 lastLocation = GameManager.Instance.PlayerGPS.CurrentLocation;
@@ -229,14 +244,14 @@ namespace TravelOptions
                 // If travelling cautiously, check health and fatigue levels
                 if (DestinationCautious)
                 {
-                    if (GameManager.Instance.PlayerEntity.CurrentHealthPercent < 0.05f)
+                    if (GameManager.Instance.PlayerEntity.CurrentHealthPercent * 100 < CautiousHealthMinPc)
                     {
                         if (travelControlUI.isShowing)
                             travelControlUI.CloseWindow();
                         DaggerfallUI.MessageBox(MsgLowHealth);
                         return;
                     }
-                    if (GameManager.Instance.PlayerEntity.CurrentFatigue < DaggerfallEntity.FatigueMultiplier * 6)
+                    if (GameManager.Instance.PlayerEntity.CurrentFatigue < DaggerfallEntity.FatigueMultiplier * CautiousFatigueMin)
                     {
                         if (travelControlUI.isShowing)
                             travelControlUI.CloseWindow();
@@ -257,24 +272,20 @@ namespace TravelOptions
                 }
 
                 // Handle encounters.
-                if (ignoreEncounters && DaggerfallUnity.Instance.WorldTime.Now.ToClassicDaggerfallTime() >= ignoreEncountersTime)
+                if (ignoreEncounters && Time.unscaledTime >= ignoreEncountersTime)
                 {
                     ignoreEncounters = false;
                 }
                 if (!ignoreEncounters && GameManager.Instance.AreEnemiesNearby())
                 {
                     // This happens when DFU spawns enemies nearby, however quest trigger encounters fire the OnEncounter event first so this code is never reached.
-                    Debug.Log("Enemies enountered during travel");
+                    Debug.Log("Enountered enemies during travel.");
                     travelControlUI.CloseWindow();
-                    if (encounterAvoidanceSystem)
-                    {
+                    if (DestinationCautious)
                         AttemptAvoidEncounter();
-                    }
                     else
-                    {
                         DaggerfallUI.MessageBox(MsgEnemies);
-                        return;
-                    }
+                    return;
                 }
 
                 // Check for diseases.
@@ -294,35 +305,21 @@ namespace TravelOptions
 
         private void AttemptAvoidEncounter()
         {
-            DaggerfallSkills skills = GameManager.Instance.PlayerEntity.Skills;
-            int successChance = Mathf.Max(skills.GetLiveSkillValue(DFCareer.Skills.Running), skills.GetLiveSkillValue(DFCareer.Skills.Stealth));
+            int successChance = Mathf.Min((GameManager.Instance.PlayerEntity.Stats.LiveLuck + GameManager.Instance.PlayerEntity.Skills.GetLiveSkillValue(DFCareer.Skills.Stealth) - 20), maxAvoidChance);
 
-            successChance = successChance * maxSuccessChance / 100;
-
-            DaggerfallMessageBox mb = new DaggerfallMessageBox(DaggerfallUI.Instance.UserInterfaceManager);
-            mb.SetText(MsgAvoidAttempt);
-            mb.AddButton(DaggerfallMessageBox.MessageBoxButtons.Yes, true);
-            mb.AddButton(DaggerfallMessageBox.MessageBoxButtons.No);
-            mb.ParentPanel.BackgroundColor = Color.clear;
-
-            mb.OnButtonClick += (_sender, button) =>
+            if (Dice100.SuccessRoll(successChance))
             {
-                _sender.CloseWindow();
-                if (button == DaggerfallMessageBox.MessageBoxButtons.Yes)
-                {
-                    if (Dice100.SuccessRoll(successChance))
-                    {
-                        ignoreEncounters = true;
-                        ignoreEncountersTime = DaggerfallUnity.Instance.WorldTime.Now.ToClassicDaggerfallTime() + 10;
-                        BeginTravel();
-                    }
-                    else
-                    {
-                        DaggerfallUI.MessageBox(MsgAvoidFail);
-                    }
-                }
-            };
-            mb.Show();
+                Debug.LogWarning("Avoided enemies enountered during travel, chance: " + successChance);
+                ignoreEncounters = true;
+                ignoreEncountersTime = (uint)Time.unscaledTime + 15;
+                BeginTravel();
+                travelControlUI.ShowMessage(MsgAvoidSuccess);
+            }
+            else
+            {
+                Debug.Log("Failed to avoid enemies enountered during travel, chance: " + successChance);
+                DaggerfallUI.MessageBox(MsgAvoidFail);
+            }
         }
 
         private void DisableWeatherAndSound()

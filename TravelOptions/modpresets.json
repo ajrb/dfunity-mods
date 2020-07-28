@@ -1,11 +1,43 @@
 [
     {
-        "Title": "Default",
+        "Title": "DefaultSettings",
         "Author": "Hazelnut",
-        "Description": "Default",
+        "Description": "Default settings the mod ships with",
         "SettingsVersion": "1.0",
         "Values": {
-            "Options": {
+            "GeneralOptions": {
+                "CautiousTravel": "True",
+                "StopAtInnsTravel": "False",
+                "DisableWeather": "True",
+                "DisableSounds": "True",
+                "DisableRealGrass": "True",
+                "LocationPause": "0"
+            },
+            "ShipTravel": {
+                "OnlyFromPorts": "True",
+                "OnlyToPorts": "False"
+            },
+            "TimeAcceleration": {
+                "DefaultStartingAcceleration": "4",
+                "AlwaysUseStartingAcceleration": "False",
+                "AccelerationLimit": "40"
+            },
+            "CautiousTravel": {
+                "SpeedPenalty": "20",
+                "MaxChanceToAvoidEncounter": "95",
+                "HealthMinimumPercentage": "5",
+                "FatigueMinimumValue": "5"
+            }
+        },
+        "$version": "v1"
+    },
+    {
+        "Title": "BalancedTravel",
+        "Author": "Hazelnut",
+        "Description": "Balanced integration of time acceleration into the base game of Daggerfall.",
+        "SettingsVersion": "1.0",
+        "Values": {
+            "GeneralOptions": {
                 "CautiousTravel": "True",
                 "StopAtInnsTravel": "False"
             },
@@ -17,12 +49,12 @@
         "$version": "v1"
     },
     {
-        "Title": "Freedom",
+        "Title": "FreedomTravel",
         "Author": "Hazelnut",
         "Description": "Freely choose whether you use normal fast travel or time accelerated travel when selecting reckless, foot/horse, and camp out options.",
         "SettingsVersion": "1.0",
         "Values": {
-            "Options": {
+            "GeneralOptions": {
                 "CautiousTravel": "False",
                 "StopAtInnsTravel": "False"
             },
@@ -34,12 +66,12 @@
         "$version": "v1"
     },
     {
-        "Title": "Tedious",
+        "Title": "TediousTravel",
         "Author": "Hazelnut",
         "Description": "Travel is more tedious, and close to the Tedious Travel mod but without the shipping logic from that mod.",
         "SettingsVersion": "1.0",
         "Values": {
-            "Options": {
+            "GeneralOptions": {
                 "CautiousTravel": "True",
                 "StopAtInnsTravel": "True"
             },
