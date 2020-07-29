@@ -191,13 +191,19 @@ namespace DaggerfallWorkshop.Game
                     enemyMotor.KnockbackSpeed = 100;
                     enemyMotor.KnockbackDirection = direction;
 
-                    // Handle charge hit damage.
+                    // Handle charge hit damage and fatigue loss.
+                    PlayerEntity playerEntity = GameManager.Instance.PlayerEntity;
                     hitEnemyEntity.PickpocketByPlayerAttempted = true;
-                    DaggerfallEntityBehaviour playerEntityBehaviour = GameManager.Instance.PlayerEntity.EntityBehaviour;
-                    int damage = FormulaHelper.CalculateHandToHandMaxDamage(GameManager.Instance.PlayerEntity.Skills.GetLiveSkillValue(DFCareer.Skills.HandToHand));
-                    damage = playerMotor.IsRunning ? damage * 2 : damage;
+                    playerEntity.DecreaseFatigue(PlayerEntity.DefaultFatigueLoss * 15);
+
+                    int minBaseDamage = FormulaHelper.CalculateHandToHandMinDamage(playerEntity.Skills.GetLiveSkillValue(DFCareer.Skills.HandToHand));
+                    int maxBaseDamage = FormulaHelper.CalculateHandToHandMaxDamage(playerEntity.Skills.GetLiveSkillValue(DFCareer.Skills.HandToHand));
+                    int damage = UnityEngine.Random.Range(minBaseDamage, maxBaseDamage + 1);
+                    damage += playerEntity.Stats.GetLiveStatValue(DFCareer.Stats.Agility) / 10;
+                    damage += playerEntity.Stats.GetLiveStatValue(DFCareer.Stats.Willpower) / 10;
+                    DaggerfallEntityBehaviour playerEntityBehaviour = playerEntity.EntityBehaviour;
                     hitEntityBehaviour.DamageHealthFromSource(playerEntityBehaviour, damage, true, BloodPos());
-                    GameManager.Instance.PlayerEntity.DecreaseFatigue(PlayerEntity.DefaultFatigueLoss * 15);
+
                     Debug.LogFormat("Charged down a {0} for {1} damage!", hitEntityBehaviour.name, damage);
                 }
             }
