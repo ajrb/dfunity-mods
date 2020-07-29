@@ -6,27 +6,30 @@
         "SettingsVersion": "1.0",
         "Values": {
             "GeneralOptions": {
-                "CautiousTravel": "True",
-                "StopAtInnsTravel": "False",
-                "DisableWeather": "True",
-                "DisableSounds": "True",
-                "DisableRealGrass": "True",
+                "AllowWeather": "False",
+                "AllowAnnoyingSounds": "False",
+                "AllowRealGrass": "False",
                 "LocationPause": "0"
+            },
+            "CautiousTravel": {
+                "PlayerControlledCautiousTravel": "True",
+                "StopAtInnsTravel": "False",
+                "SpeedPenalty": "20",
+                "MaxChanceToAvoidEncounter": "95",
+                "HealthMinimumPercentage": "5",
+                "FatigueMinimumValue": "5"
             },
             "ShipTravel": {
                 "OnlyFromPorts": "True",
                 "OnlyToPorts": "False"
             },
+            "StopAtInnsTravel": {
+                "PlayerControlledInnsTravel": "False"
+            },
             "TimeAcceleration": {
                 "DefaultStartingAcceleration": "4",
                 "AlwaysUseStartingAcceleration": "False",
                 "AccelerationLimit": "40"
-            },
-            "CautiousTravel": {
-                "SpeedPenalty": "20",
-                "MaxChanceToAvoidEncounter": "95",
-                "HealthMinimumPercentage": "5",
-                "FatigueMinimumValue": "5"
             }
         },
         "$version": "v1"
@@ -37,13 +40,15 @@
         "Description": "Balanced integration of time acceleration into the base game of Daggerfall.",
         "SettingsVersion": "1.0",
         "Values": {
-            "GeneralOptions": {
-                "CautiousTravel": "True",
-                "StopAtInnsTravel": "False"
+            "CautiousTravel": {
+                "PlayerControlledCautiousTravel": "True"
             },
             "ShipTravel": {
                 "OnlyFromPorts": "True",
                 "OnlyToPorts": "False"
+            },
+            "StopAtInnsTravel": {
+                "PlayerControlledInnsTravel": "False"
             }
         },
         "$version": "v1"
@@ -54,13 +59,15 @@
         "Description": "Freely choose whether you use normal fast travel or time accelerated travel when selecting reckless, foot/horse, and camp out options.",
         "SettingsVersion": "1.0",
         "Values": {
-            "GeneralOptions": {
-                "CautiousTravel": "False",
-                "StopAtInnsTravel": "False"
+            "CautiousTravel": {
+                "PlayerControlledCautiousTravel": "False"
             },
             "ShipTravel": {
                 "OnlyFromPorts": "False",
                 "OnlyToPorts": "False"
+            },
+            "StopAtInnsTravel": {
+                "PlayerControlledInnsTravel": "False"
             }
         },
         "$version": "v1"
@@ -71,13 +78,15 @@
         "Description": "Travel is more tedious, and close to the Tedious Travel mod but without the shipping logic from that mod.",
         "SettingsVersion": "1.0",
         "Values": {
-            "GeneralOptions": {
-                "CautiousTravel": "True",
-                "StopAtInnsTravel": "True"
+            "CautiousTravel": {
+                "PlayerControlledCautiousTravel": "True"
             },
             "ShipTravel": {
                 "OnlyFromPorts": "True",
                 "OnlyToPorts": "True"
+            },
+            "StopAtInnsTravel": {
+                "PlayerControlledInnsTravel": "True"
             }
         },
         "$version": "v1"
