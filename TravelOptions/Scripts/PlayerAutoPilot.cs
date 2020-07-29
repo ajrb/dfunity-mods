@@ -33,10 +33,6 @@ namespace TravelOptions
         private Vector3 pitchVector = new Vector3(0, 0, 0);
         private Vector3 yawVector = new Vector3(0, 0, 0);
 
-
-        // some reflection-fu to get access to a private function. Don't judge me, if there was another way I'd use it.
-        private MethodInfo applyHorizontalForce = InputManager.Instance.GetType().GetMethod("ApplyVerticalForce", BindingFlags.NonPublic | BindingFlags.Instance);
-
         public PlayerAutoPilot(ContentReader.MapSummary destinationSummary, float travelSpeedMultiplier = 1f)
         {
             this.destinationSummary = destinationSummary;
@@ -85,7 +81,7 @@ namespace TravelOptions
             mouseLook.simpleCursorLock = true;
             mouseLook.enableMouseLook = false;
             // make the player move forward
-            applyHorizontalForce.Invoke(inputManager, new object[] { travelSpeedMultiplier });
+            InputManager.Instance.ApplyVerticalForce(travelSpeedMultiplier);
 
         }
 
