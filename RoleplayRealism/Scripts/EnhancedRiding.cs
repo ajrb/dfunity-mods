@@ -40,6 +40,7 @@ namespace DaggerfallWorkshop.Game
         AudioClip trampleMaleClip;
         AudioClip trampleFemaleClip;
 
+        public bool RealisticMovement { get; set; }
         public bool TerrainFollowing { get; set; }
 
         public void SetFollowTerrainSoftenFactor(int softenFollow)
@@ -91,6 +92,14 @@ namespace DaggerfallWorkshop.Game
         {
             if (!GameManager.IsGamePaused && playerMotor.IsRiding)
             {
+                if (RealisticMovement)
+                {
+                    float horseStrafeLimit = (transportManager.TransportMode == TransportModes.Cart) ? 0.1f : 0.4f;
+                    InputManager.Instance.NegHorizontalLimit = horseStrafeLimit;
+                    InputManager.Instance.PosHorizontalLimit = horseStrafeLimit;
+                    InputManager.Instance.NegVerticalLimit = (transportManager.TransportMode == TransportModes.Cart) ? 0.2f : 0.5f;
+                }
+
                 // Sample angle of terrain
                 RaycastHit hit1, hit2;
                 Physics.Raycast(transform.position, Vector3.down, out hit1);
@@ -104,6 +113,12 @@ namespace DaggerfallWorkshop.Game
             }
             else
             {
+                if (RealisticMovement)
+                {
+                    InputManager.Instance.NegVerticalLimit = 1f;
+                    InputManager.Instance.NegHorizontalLimit = 1f;
+                    InputManager.Instance.PosHorizontalLimit = 1f;
+                }
                 playerMouseLook.PitchMaxLimit = PlayerMouseLook.PitchMax;
             }
         }

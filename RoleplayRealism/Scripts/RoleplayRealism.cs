@@ -110,6 +110,7 @@ namespace RoleplayRealism
                     EnhancedRiding enhancedRiding = playerAdvGO.AddComponent<EnhancedRiding>();
                     if (enhancedRiding != null)
                     {
+                        enhancedRiding.RealisticMovement = mod.GetSettings().GetBool("EnhancedRiding", "RealisticMovement");
                         enhancedRiding.TerrainFollowing = mod.GetSettings().GetBool("EnhancedRiding", "followTerrainEnabled");
                         enhancedRiding.SetFollowTerrainSoftenFactor(mod.GetSettings().GetInt("EnhancedRiding", "followTerrainSoftenFactor"));
                     }
