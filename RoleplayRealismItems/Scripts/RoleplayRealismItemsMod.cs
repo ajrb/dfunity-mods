@@ -342,7 +342,7 @@ namespace RoleplayRealism
         {
             return CoinFlip() ? RandomAxe() : RandomLongblade();
         }
-        private static int RandomAxeOrBlunt()
+        private static int RandomBluntOrBlade()
         {
             return CoinFlip() ? RandomBlunt() : RandomLongblade();
         }
@@ -479,13 +479,13 @@ namespace RoleplayRealism
 
                 // Stealthy stabby classes:
                 case MobileTypes.Assassin:
-                    AddOrEquipWornItem(enemyEntity, CreateWeapon(RandomAxeOrBlunt(), ItemBuilder.RandomMaterial(itemLevel)), true);
-                    AddOrEquipWornItem(enemyEntity, CreateWeapon(RandomAxeOrBlunt(), ItemBuilder.RandomMaterial(itemLevel)));
+                    AddOrEquipWornItem(enemyEntity, CreateWeapon(RandomAxeOrBlade(), ItemBuilder.RandomMaterial(itemLevel)), true);
+                    AddOrEquipWornItem(enemyEntity, CreateWeapon(RandomAxeOrBlade(), ItemBuilder.RandomMaterial(itemLevel)));
                     chance = 45;
                     break;
                 case MobileTypes.Battlemage:
-                    AddOrEquipWornItem(enemyEntity, CreateWeapon(RandomAxeOrBlade(), ItemBuilder.RandomMaterial(itemLevel)), true);
-                    AddOrEquipWornItem(enemyEntity, CreateWeapon(RandomAxeOrBlade(), ItemBuilder.RandomMaterial(itemLevel)));
+                    AddOrEquipWornItem(enemyEntity, CreateWeapon(RandomBluntOrBlade(), ItemBuilder.RandomMaterial(itemLevel)), true);
+                    AddOrEquipWornItem(enemyEntity, CreateWeapon(RandomBluntOrBlade(), ItemBuilder.RandomMaterial(itemLevel)));
                     chance = 50;
                     break;
 
