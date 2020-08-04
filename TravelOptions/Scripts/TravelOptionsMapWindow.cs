@@ -15,7 +15,7 @@ namespace TravelOptions
 {
     public class TravelOptionsMapWindow : DaggerfallTravelMapWindow
     {
-        private const string MsgResume = "Resume travel to {0}?";
+        private const string MsgResume = "Resume your journey to {0}?";
 
         const string portsOffName = "TOportsOff.png";
         const string portsOnName = "TOportsOn.png";
