@@ -3,7 +3,7 @@
     "ModVersion": "0.11",
     "ModAuthor": "Hazelnut",
     "ContactInfo": "forums.dfworkshop.net",
-    "DFUnity_Version": "0.10.26",
+    "DFUnity_Version": "0.10.25",
     "ModDescription": "Modular roleplay and realism gameplay modifications",
     "GUID": "d828b782-46e9-40e7-8ae6-19cde308032e",
     "Files": [
@@ -31,6 +31,8 @@
         "Assets/Game/Mods/RoleplayRealism/Textures/197_4-0.xml",
         "Assets/Game/Mods/RoleplayRealism/Textures/197_4-0.png",
         "Assets/Game/Mods/RoleplayRealism/Textures/197_5-0.xml",
-        "Assets/Game/Mods/RoleplayRealism/Textures/197_5-0.png"
+        "Assets/Game/Mods/RoleplayRealism/Textures/197_5-0.png",
+        "Assets/Game/Mods/RoleplayRealism/Textures/197_6-0.png",
+        "Assets/Game/Mods/RoleplayRealism/Textures/197_6-0.xml"
     ]
 }

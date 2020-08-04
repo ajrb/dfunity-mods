@@ -631,7 +631,7 @@ namespace RoleplayRealism
                         record = GetRecord_182_0(buildingData.Quality);     // (buildingData.Quality - 1) / 4;
                         Debug.LogFormat("Shop quality {0} using record {1} to replace 182_0", buildingData.Quality, record);
                     }
-                    if (billboard.Summary.Archive == 182 && billboard.Summary.Record == 1)
+                    else if (billboard.Summary.Archive == 182 && billboard.Summary.Record == 1)
                     {
                         if (buildingData.Quality < 12)
                         {   // Using big test flats version
@@ -642,6 +642,14 @@ namespace RoleplayRealism
                             record = 5;
                         }
                         Debug.LogFormat("Tavern quality {0} using record {1} to replace 182_1", buildingData.Quality, record);
+                    }
+                    else if (billboard.Summary.Archive == 182 && billboard.Summary.Record == 2)
+                    {
+                        if (buildingData.Quality > 12)
+                        {
+                            record = 6;
+                        }
+                        Debug.LogFormat("Tavern quality {0} using record {1} to replace 182_2", buildingData.Quality, record);
                     }
 
                     if (record > -1)
