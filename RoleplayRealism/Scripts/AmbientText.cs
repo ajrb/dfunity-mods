@@ -28,7 +28,7 @@ namespace RoleplayRealism
          */
         static IDictionary AmbientTexts = new Hashtable()
         {
-            // Climate texts:
+            #region Climate texts:
 
             { "NoneDesert0", "The sand here grows shallow." },
             { "NoneDesert1", "There are some dried bones under the sand here." },
@@ -36,7 +36,7 @@ namespace RoleplayRealism
             { "NoneDesert3", "A tiny lizard scampers about." },
             { "NoneDesert4", "A snake submerges in the sand." },
             { "NoneDesert5", "There are scorpion tracks here." },
-            { "NoneDesert6", "Is that werewolf fur?" }, // ?
+            { "NoneDesert6", "Is that werewolf fur?" },
             { "NoneDesert7", "You see some footprints in the sand." },
             { "NoneDesert8", "A baby scorpion crosses your path." },
 
@@ -66,7 +66,6 @@ namespace RoleplayRealism
             { "TownCityDesert2", "The heat of the day bears down on you." },
             { "TownCityDesert3", "The smell of burning fireplaces fills the air." },
             { "TownCityDesert4", "You smell delicious food being cooked." },
-            { "TownCityDesert5", "You hear a child crying somewhere." }, // ?
 
             { "TownCitySwamp0", "Someone is cooking a vegetable stew." },
             { "TownCitySwamp1", "Footprints weigh heavily in this damp soil." },
@@ -75,16 +74,19 @@ namespace RoleplayRealism
 
             { "TownCityMountains0", "This area smells heavily of roast chicken." },
 
+            #endregion
 
-            // Weather texts:
+            #region Weather texts:
 
             { "NoneDayClear0", "The day is so clear, you can see for miles." },
             { "NoneDayClear1", "The sky is so clear and blue." },
 
-            { "NoneDayClear0", "Tonight it's so clear that you stop for a moment to marvel at the sheer number of stars overhead." },
+            { "NoneNightClear0", "Tonight it's so clear that you stop for a moment to marvel at the sheer number of stars overhead." },
 
             { "NoneDayRainy0", "Your clothes are becoming soaked through." },
             { "NoneDayRainy1", "The rain is making the ground muddy." },
+
+            { "NoneNightRainy0", "The rain is making the night even more inpenetrable." },
 
             { "NoneDaySnowy0", "You can see your breath." },
             { "NoneDaySnowy1", "The snow is starting to pile up around you." },
@@ -103,8 +105,9 @@ namespace RoleplayRealism
 
             { "TownCityNightCloudy0", "The streets are quiet and gloomy, giving the night an eery feeling." },
 
+            #endregion
 
-            // Day / Night texts:
+            #region Day / Night texts:
 
             { "NoneDay0", "Small rodents scamper about nearby." },
             { "NoneDay1", "You swat an insect buzzing in your ear." },
@@ -124,6 +127,7 @@ namespace RoleplayRealism
 
             { "TownCityNight0", "A black cat hisses and flees." },
             { "TownCityNight1", "You hear someone fiddling with a lock." },
+            { "TownCityNight2", "You hear a child crying somewhere in the distance." },
 
             { "TownVillageDay0", "A suspicious child watches you from afar." },
             { "TownVillageDay1", "A curious villager gawks at you." },
@@ -131,7 +135,9 @@ namespace RoleplayRealism
             { "HomeFarmsDay0", "The smell of livestock is penetrating." },
             { "HomeFarmsDay1", "The farm workers stare at you." },
 
-            // Dungeon texts:
+            #endregion
+
+            #region Dungeon texts:
 
             // Dungeon: Crypt
             { "Crypt0", "You sense something creeping behind you."}   ,         
@@ -352,6 +358,8 @@ namespace RoleplayRealism
             { "Cemetery7", "You feel the gaze of the dead upon you."},
             { "Cemetery8", "Someone attempted to dig the ground here."},
             { "Cemetery9", "Bones clatter about faintly."}
+
+            #endregion
         };
 
         public static string SelectAmbientText()
