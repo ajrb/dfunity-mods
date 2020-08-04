@@ -113,6 +113,13 @@
                 },
                 {
                     "Value": true,
+                    "Name": "ambientText",
+                    "Description": "Adds context sensitive ambient text messages to the world",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
+                },
+                {
+                    "Value": true,
                     "Name": "variantNpcs",
                     "Description": "Enable variant NPC sprites in shops & taverns",
                     "$version": "v1",
@@ -146,6 +153,50 @@
                     "Value": 8,
                     "Name": "followTerrainSoftenFactor",
                     "Description": "Scale factor to soften terrain gradient following. (0=none, 32=max soften)",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.SliderIntKey"
+                }
+            ],
+            "$version": "v1"
+        },
+        {
+            "Name": "AmbientText",
+            "Description": "Ambient text message settings",
+            "IsAdvanced": false,
+            "Keys": [
+                {
+                    "Min": 0,
+                    "Max": 100,
+                    "Value": 20,
+                    "Name": "textChance",
+                    "Description": "Chance % of selecting any ambient text each interval",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.SliderIntKey"
+                },
+                {
+                    "Min": 60,
+                    "Max": 600,
+                    "Value": 60,
+                    "Name": "interval",
+                    "Description": "Interval length between checking ambient text in real time seconds",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.SliderIntKey"
+                },
+                {
+                    "Min": 60,
+                    "Max": 600,
+                    "Value": 180,
+                    "Name": "postTextInterval",
+                    "Description": "Interval length after displaying a message in real time seconds",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.SliderIntKey"
+                },
+                {
+                    "Min": 1,
+                    "Max": 10,
+                    "Value": 3,
+                    "Name": "textDisplayTime",
+                    "Description": "Length of time text messages are displayed in seconds",
                     "$version": "v1",
                     "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.SliderIntKey"
                 }

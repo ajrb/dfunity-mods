@@ -23,6 +23,7 @@ using DaggerfallWorkshop.Game.UserInterfaceWindows;
 using DaggerfallWorkshop.Game.Utility.ModSupport;
 using DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings;
 using DaggerfallWorkshop.Utility;
+using DaggerfallWorkshop.Game.Utility;
 
 namespace RoleplayRealism
 {
@@ -44,8 +45,15 @@ namespace RoleplayRealism
             "Orthus_Dharjen,        0, -1, 1022"
         };
 
+        public bool AmbientTextEnabled { get; private set; }
 
         static Mod mod;
+        float lastTickTime;
+        float tickTimeInterval;
+        int textChance = 95;
+        float stdInterval = 2f;
+        float postTextInterval = 4f;
+        int textDisplayTime = 3;
 
         [Invoke(StateManager.StateTypes.Start, 0)]
         public static void Init(InitParams initParams)
@@ -77,7 +85,51 @@ namespace RoleplayRealism
 
             InitMod(bedSleeping, archery, riding, encumbrance, bandaging, shipPorts, expulsion, climbing, weaponSpeed, weaponMaterials, equipDamage, enemyAppearance, purifyPot, autoExtinguishLight, classicStrDmgBonus, variantNpcs);
 
+            AmbientTextEnabled = settings.GetBool("Modules", "ambientText");
+            if (AmbientTextEnabled && false)
+            {
+                textChance          = mod.GetSettings().GetInt("AmbientText", "textChance");
+                stdInterval         = mod.GetSettings().GetInt("AmbientText", "interval");
+                postTextInterval    = mod.GetSettings().GetInt("AmbientText", "postTextInterval");
+                textDisplayTime     = mod.GetSettings().GetInt("AmbientText", "textDisplayTime");
+            }
+
             mod.IsReady = true;
+        }
+
+        void Start()
+        {
+            lastTickTime = Time.unscaledTime;
+            tickTimeInterval = stdInterval;
+        }
+
+        void Update()
+        {
+            if (AmbientTextEnabled)
+            {
+                PlayerEnterExit playerEnterExit = GameManager.Instance.PlayerEnterExit;
+                if (!DaggerfallUnity.Instance.IsReady || !playerEnterExit || GameManager.IsGamePaused)
+                    return;
+
+                // Ambient text module.
+                if (!playerEnterExit.IsPlayerInsideBuilding && Time.unscaledTime > lastTickTime + tickTimeInterval)
+                {
+                    lastTickTime = Time.unscaledTime;
+                    tickTimeInterval = stdInterval;
+                    Debug.Log("tick");
+
+                    if (Dice100.SuccessRoll(textChance))
+                    {
+                        string textMsg = AmbientText.SelectAmbientText();
+                        if (textMsg != null)
+                        {
+                            Debug.Log(textMsg);
+                            DaggerfallUI.AddHUDText(textMsg, textDisplayTime);
+                            tickTimeInterval = postTextInterval;
+                        }
+                    }
+                }
+            }
         }
 
         public static void InitMod(bool bedSleeping, bool archery, bool riding, bool encumbrance, bool bandaging, bool shipPorts, bool expulsion, bool climbing, bool weaponSpeed, bool weaponMaterials, bool equipDamage, bool enemyAppearance,
