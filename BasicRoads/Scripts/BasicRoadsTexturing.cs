@@ -22,7 +22,7 @@ namespace BasicRoads
     /// Generates texture tiles for terrains and uses marching squares for tile transitions.
     /// These features are very much in early stages of development.
     /// </summary>
-    public class BasicRoadsTerrainTexturing : DefaultTerrainTexturing
+    public class BasicRoadsTexturing : DefaultTerrainTexturing
     {
         // Use same seed to ensure continuous tiles
         const int seed = 417028;
@@ -36,14 +36,14 @@ namespace BasicRoads
         public const byte road_grass = 55;
         public const byte road_dirt = 47;
 
-        public const byte N  = 0b1000_0000;
-        public const byte NE = 0b0100_0000;
-        public const byte E  = 0b0010_0000;
-        public const byte SE = 0b0001_0000;
-        public const byte S  = 0b0000_1000;
-        public const byte SW = 0b0000_0100;
-        public const byte W  = 0b0000_0010;
-        public const byte NW = 0b0000_0001;
+        public const byte N  = 0b_1000_0000;
+        public const byte NE = 0b_0100_0000;
+        public const byte E  = 0b_0010_0000;
+        public const byte SE = 0b_0001_0000;
+        public const byte S  = 0b_0000_1000;
+        public const byte SW = 0b_0000_0100;
+        public const byte W  = 0b_0000_0010;
+        public const byte NW = 0b_0000_0001;
 
 
         public override JobHandle ScheduleAssignTilesJob(ITerrainSampler terrainSampler, ref MapPixelData mapData, JobHandle dependencies, bool march = true)
@@ -73,19 +73,28 @@ namespace BasicRoads
                 tilemapData = mapData.tilemapData,
                 tdDim = tileDataDim,
                 tDim = assignTilesDim,
+                hDim = terrainSampler.HeightmapDimension,
                 march = march,
-                //mapPixelX = mapData.mapPixelX,
-                //mapPixelY = mapData.mapPixelY,
                 locationRect = mapData.locationRect,
                 roadData = BasicRoadsPathEditor.roadData[mapData.mapPixelX + (mapData.mapPixelY * MapsFile.MaxMapPixelX)],
             };
             JobHandle assignTilesHandle = assignTilesJob.Schedule(assignTilesDim * assignTilesDim, 64, tileDataHandle);
 
+            SmoothRoadTerrainJob smoothRoadTerrainJob = new SmoothRoadTerrainJob()
+            {
+                heightmapData = mapData.heightmapData,
+                tilemapData = mapData.tilemapData,
+                hDim = DaggerfallUnity.Instance.TerrainSampler.HeightmapDimension,
+                tDim = assignTilesDim,
+                locationRect = mapData.locationRect,
+            };
+            JobHandle smoothRoadHandle = smoothRoadTerrainJob.Schedule(assignTilesHandle);
+
             // Add both working native arrays to disposal list.
             mapData.nativeArrayList.Add(tileData);
             mapData.nativeArrayList.Add(lookupData);
 
-            return assignTilesHandle;
+            return smoothRoadHandle;
         }
 
         // Very basic marching squares from default texturer, with road painting added.
@@ -100,6 +109,7 @@ namespace BasicRoads
 
             public int tdDim;
             public int tDim;
+            public int hDim;
             public bool march;
             public Rect locationRect;
             public byte roadData;
@@ -151,7 +161,6 @@ namespace BasicRoads
                 if (roadData != 0)
                 {
                     // Paint road around locations
-                    //if (locationRect.Contains(new Vector2(x, y)))
                     if (x > locationRect.xMin && x < locationRect.xMax && y > locationRect.yMin && y < locationRect.yMax)
                     {
                         tilemapData[index] = road;
@@ -242,6 +251,52 @@ namespace BasicRoads
             {
                 int record = tile & 0x4F;
                 return tile == 0 || record == road || record == road_grass || record == road_dirt;
+            }
+        }
+
+        // Smooths road terrain a bit
+        struct SmoothRoadTerrainJob : IJob
+        {
+            [ReadOnly]
+            public NativeArray<byte> tilemapData;
+
+            public NativeArray<float> heightmapData;
+
+            public int hDim;
+            public int tDim;
+            public Rect locationRect;
+
+            public void Execute()
+            {
+                for (int y = 1; y < hDim-2; y++)
+                {
+                    for (int x = 1; x < hDim-2; x++)
+                    {
+                        if (!locationRect.Contains(new Vector2(x, y)) && true)
+                        {
+                            int idx = JobA.Idx(y, x, hDim);
+                            int tIdx = JobA.Idx(x, y, tDim);
+
+                            if (tIdx < tilemapData.Length && tilemapData[tIdx] == road)
+                            {
+                                SmoothRoad(idx);
+                                SmoothRoad(idx + 1);
+                                SmoothRoad(idx + hDim);
+                                SmoothRoad(idx + hDim + 1);
+                            }
+                        }
+                    }
+                }
+            }
+
+            void SmoothRoad(int idx)
+            {
+                float height = heightmapData[idx];
+                float h1 = heightmapData[idx + hDim];
+                float h2 = heightmapData[idx + 1];
+                float h3 = heightmapData[idx - hDim];
+                float h4 = heightmapData[idx - 1];
+                heightmapData[idx] = (height + h1 + h2 + h3 + h4) / 5;
             }
         }
     }

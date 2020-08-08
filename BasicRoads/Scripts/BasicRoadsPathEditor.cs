@@ -109,7 +109,13 @@ namespace BasicRoads
         protected override void UpdateRegionLabel()
         {
             if (RegionSelected && !MouseOverOtherRegion)
-                regionLabel.Text = string.Format("X: {0}   Y: {1}", mouseX, mouseY);
+            {
+                ContentReader.MapSummary loc;
+                if (DaggerfallUnity.ContentReader.HasLocation(mouseX, mouseY, out loc))
+                    regionLabel.Text = string.Format("X: {0}   Y: {1}  - {2} : {3}", mouseX, mouseY, DaggerfallUnity.ContentReader.MapFileReader.GetRegionName(mouseOverRegion), currentDFRegion.MapNames[loc.MapIndex]);
+                else
+                    regionLabel.Text = string.Format("X: {0}   Y: {1}", mouseX, mouseY);
+            }
             else
                 base.UpdateRegionLabel();
         }
@@ -139,15 +145,15 @@ namespace BasicRoads
 
                 if (roadData[rIdx] == 0)
                 {
-                    bool rn = ConnectRoad(rIdx, n, BasicRoadsTerrainTexturing.N, BasicRoadsTerrainTexturing.S);
-                    bool re = ConnectRoad(rIdx, e, BasicRoadsTerrainTexturing.E, BasicRoadsTerrainTexturing.W);
-                    bool rs = ConnectRoad(rIdx, s, BasicRoadsTerrainTexturing.S, BasicRoadsTerrainTexturing.N);
-                    bool rw = ConnectRoad(rIdx, w, BasicRoadsTerrainTexturing.W, BasicRoadsTerrainTexturing.E);
+                    bool rn = ConnectRoad(rIdx, n, BasicRoadsTexturing.N, BasicRoadsTexturing.S);
+                    bool re = ConnectRoad(rIdx, e, BasicRoadsTexturing.E, BasicRoadsTexturing.W);
+                    bool rs = ConnectRoad(rIdx, s, BasicRoadsTexturing.S, BasicRoadsTexturing.N);
+                    bool rw = ConnectRoad(rIdx, w, BasicRoadsTexturing.W, BasicRoadsTexturing.E);
 
-                    if (!rn && !re) ConnectRoad(rIdx, ne, BasicRoadsTerrainTexturing.NE, BasicRoadsTerrainTexturing.SW);
-                    if (!rs && !re) ConnectRoad(rIdx, se, BasicRoadsTerrainTexturing.SE, BasicRoadsTerrainTexturing.NW);
-                    if (!rs && !rw) ConnectRoad(rIdx, sw, BasicRoadsTerrainTexturing.SW, BasicRoadsTerrainTexturing.NE);
-                    if (!rn && !rw) ConnectRoad(rIdx, nw, BasicRoadsTerrainTexturing.NW, BasicRoadsTerrainTexturing.SE);
+                    if (!rn && !re) ConnectRoad(rIdx, ne, BasicRoadsTexturing.NE, BasicRoadsTexturing.SW);
+                    if (!rs && !re) ConnectRoad(rIdx, se, BasicRoadsTexturing.SE, BasicRoadsTexturing.NW);
+                    if (!rs && !rw) ConnectRoad(rIdx, sw, BasicRoadsTexturing.SW, BasicRoadsTexturing.NE);
+                    if (!rn && !rw) ConnectRoad(rIdx, nw, BasicRoadsTexturing.NW, BasicRoadsTexturing.SE);
 
                     if (roadData[rIdx] == 0)
                         roadData[rIdx] = 0xFF;
@@ -157,14 +163,14 @@ namespace BasicRoads
                 else
                 {
                     roadData[rIdx] = 0;
-                    DisconnectRoad(n, BasicRoadsTerrainTexturing.S);
-                    DisconnectRoad(e, BasicRoadsTerrainTexturing.W);
-                    DisconnectRoad(s, BasicRoadsTerrainTexturing.N);
-                    DisconnectRoad(w, BasicRoadsTerrainTexturing.E);
-                    DisconnectRoad(ne, BasicRoadsTerrainTexturing.SW);
-                    DisconnectRoad(se, BasicRoadsTerrainTexturing.NW);
-                    DisconnectRoad(sw, BasicRoadsTerrainTexturing.NE);
-                    DisconnectRoad(nw, BasicRoadsTerrainTexturing.SE);
+                    DisconnectRoad(n, BasicRoadsTexturing.S);
+                    DisconnectRoad(e, BasicRoadsTexturing.W);
+                    DisconnectRoad(s, BasicRoadsTexturing.N);
+                    DisconnectRoad(w, BasicRoadsTexturing.E);
+                    DisconnectRoad(ne, BasicRoadsTexturing.SW);
+                    DisconnectRoad(se, BasicRoadsTexturing.NW);
+                    DisconnectRoad(sw, BasicRoadsTexturing.NE);
+                    DisconnectRoad(nw, BasicRoadsTexturing.SE);
                     Debug.LogFormat("Unmarked road at x:{0} y:{1}  index:{2}", mouseX, mouseY, rIdx);
                 }
 
@@ -316,10 +322,6 @@ namespace BasicRoads
 
             mouseX = x;
             mouseY = y;
-
-            if (DaggerfallUnity.ContentReader.HasLocation(x, y) && !FindingLocation)
-            {
-            }
         }
 
 

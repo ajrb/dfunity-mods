@@ -28,7 +28,7 @@ namespace BasicRoads
 
             BasicRoadsPathEditor editor = BasicRoadsPathEditor.Instance;
 
-            DaggerfallUnity.Instance.TerrainTexturing = new BasicRoadsTerrainTexturing();
+            DaggerfallUnity.Instance.TerrainTexturing = new BasicRoadsTexturing();
 
             mod.IsReady = true;
             Debug.Log("Finished mod init: BasicRoads");
