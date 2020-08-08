@@ -18,6 +18,7 @@ using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.UserInterface;
 using DaggerfallWorkshop.Game.UserInterfaceWindows;
 using DaggerfallWorkshop.Utility;
+using DaggerfallConnect;
 
 namespace BasicRoads
 {
@@ -27,6 +28,9 @@ namespace BasicRoads
     public class BasicRoadsPathEditor : DaggerfallTravelMapWindow
     {
         Color32 roadColor = new Color32(60, 60, 60, 255);
+
+        protected Rect roadOverlayPanelRect = new Rect(0, regionPanelOffset, 320 * 5, 160 * 5);
+        protected Panel roadOverlayPanel;
 
         static BasicRoadsPathEditor instance;
         public static BasicRoadsPathEditor Instance {
@@ -41,6 +45,7 @@ namespace BasicRoads
 
         int mouseX = 0;
         int mouseY = 0;
+        bool outlineBackup;
 
         public BasicRoadsPathEditor(IUserInterfaceManager uiManager) : base(uiManager)
         {
@@ -54,56 +59,33 @@ namespace BasicRoads
                 Debug.LogError(string.Format("Error Registering Travelmap Console commands: {0}", ex.Message));
             }
         }
+
         
+        protected override void Setup()
+        {
+            base.Setup();
+
+            locationDotsPixelBuffer = new Color32[(int)regionTextureOverlayPanelRect.width * (int)regionTextureOverlayPanelRect.height * 25];
+            locationDotsTexture = new Texture2D((int)regionTextureOverlayPanelRect.width * 5, (int)regionTextureOverlayPanelRect.height * 5, TextureFormat.ARGB32, false);
+        }
+
         public override void OnPush()
         {
             base.OnPush();
 
-            ReadRoadData();
-        }
+            outlineBackup = DaggerfallUnity.Settings.TravelMapLocationsOutline;
+            DaggerfallUnity.Settings.TravelMapLocationsOutline = false;
 
-        private static void ReadRoadData()
-        {
-            using (System.IO.StreamReader file = new System.IO.StreamReader(@"roadData.txt"))
-            {
-                for (int l = 0; l < MapsFile.MaxMapPixelY; l++)
-                {
-                    string line = file.ReadLine();
-                    try
-                    {
-                        for (int i = 0; i < MapsFile.MaxMapPixelX; i++)
-                        {
-                            int index = (l * MapsFile.MaxMapPixelX) + i;
-                            roadData[index] = Convert.ToByte(line.Substring(i * 2, 2), 16);
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        Debug.LogWarning(line);
-                        Debug.LogWarning(e.Message);
-                    }
-                }
-            }
+            ReadRoadData();
         }
 
         public override void OnPop()
         {
             base.OnPop();
 
-            WriteRoadData();
-        }
+            DaggerfallUnity.Settings.TravelMapLocationsOutline = outlineBackup;
 
-        private static void WriteRoadData()
-        {
-            using (System.IO.StreamWriter file = new System.IO.StreamWriter(@"roadData.txt"))
-            {
-                for (int i = 0; i < roadData.Length; i++)
-                {
-                    if (i != 0 && i % MapsFile.MaxMapPixelX == 0)
-                        file.WriteLine();
-                    file.Write(roadData[i].ToString("x2"));
-                }
-            }
+            WriteRoadData();
         }
 
         protected override void UpdateRegionLabel()
@@ -234,30 +216,33 @@ namespace BasicRoads
                         continue;
                     int sampleRegion = DaggerfallUnity.Instance.ContentReader.MapFileReader.GetPoliticIndex(originX + x, originY + y) - 128;
 
+                    int width5 = width * 5;
+                    int offset5 = (int)((((height - y - 1) * 5 * width5) + (x * 5)) * scale);
+
+                    int rIdx = originX + x + ((originY + y) * MapsFile.MaxMapPixelX);
+                    byte roads = roadData[rIdx];
+
                     // Set location pixel if inside region area
                     if (sampleRegion == selectedRegion)
                     {
-                        int rIdx = originX + x + ((originY + y) * MapsFile.MaxMapPixelX);
-                        byte roads = roadData[rIdx];
-                        if (roads != 0)
-                        {
-                            locationDotsPixelBuffer[offset] = roadColor;
-                            //Debug.LogFormat("Found road at x:{0} y:{1}  index:{2}", originX + x, originY + y, rIdx);
-                        }
-
                         ContentReader.MapSummary summary;
                         if (DaggerfallUnity.Instance.ContentReader.HasLocation(originX + x, originY + y, out summary))
                         {
                             int index = GetPixelColorIndex(summary.LocationType);
-                            if (index == -1)
-                                continue;
-                            else
+                            if (index != -1)
                             {
-                                if (DaggerfallUnity.Settings.TravelMapLocationsOutline && roads != 0)
+                                if (DaggerfallUnity.Settings.TravelMapLocationsOutline && roads != 0 && IsLocationLarge(summary.LocationType))
                                     locationDotsOutlinePixelBuffer[offset] = dotOutlineColor;
-                                locationDotsPixelBuffer[offset] = locationPixelColors[index];
+
+                                DrawLocation(offset5, width5, locationPixelColors[index], IsLocationLarge(summary.LocationType));
                             }
                         }
+                    }
+
+                    if (roads != 0)
+                    {
+                        DrawRoad(offset5, width5, roads);
+                        //Debug.LogFormat("Found road at x:{0} y:{1}  index:{2}", originX + x, originY + y, rIdx);
                     }
                 }
             }
@@ -276,6 +261,87 @@ namespace BasicRoads
                 for (int i = 0; i < outlineDisplacements.Length; i++)
                     regionLocationDotsOutlinesOverlayPanel[i].BackgroundTexture = locationDotsOutlineTexture;
             regionLocationDotsOverlayPanel.BackgroundTexture = locationDotsTexture;
+        }
+
+        void DrawLocation(int offset, int width, Color32 color, bool large)
+        {
+            int st = large ? 0 : 1;
+            int en = large ? 5 : 4;
+            for (int y = st; y < en; y++)
+            {
+                for (int x = st; x < en; x++)
+                {
+                    locationDotsPixelBuffer[offset + (y * width) + x] = color;
+                }
+            }
+        }
+
+        bool IsLocationLarge(DFRegion.LocationTypes locationType)
+        {
+            return locationType == DFRegion.LocationTypes.TownCity || locationType == DFRegion.LocationTypes.TownHamlet;
+        }
+
+        private void DrawRoad(int offset, int width, byte roads)
+        {
+            locationDotsPixelBuffer[offset + (width * 2) + 2] = roadColor;
+            if ((roads & BasicRoadsTexturing.S) != 0)
+            {
+                locationDotsPixelBuffer[offset + 2] = roadColor;
+                locationDotsPixelBuffer[offset + width + 2] = roadColor;
+            }
+            if ((roads & BasicRoadsTexturing.SE) != 0)
+            {
+                locationDotsPixelBuffer[offset + 4] = roadColor;
+                locationDotsPixelBuffer[offset + width + 3] = roadColor;
+            }
+            if ((roads & BasicRoadsTexturing.E) != 0)
+            {
+                locationDotsPixelBuffer[offset + (width * 2) + 3] = roadColor;
+                locationDotsPixelBuffer[offset + (width * 2) + 4] = roadColor;
+            }
+            if ((roads & BasicRoadsTexturing.NE) != 0)
+            {
+                locationDotsPixelBuffer[offset + (width * 3) + 3] = roadColor;
+                locationDotsPixelBuffer[offset + (width * 4) + 4] = roadColor;
+            }
+            if ((roads & BasicRoadsTexturing.N) != 0)
+            {
+                locationDotsPixelBuffer[offset + (width * 3) + 2] = roadColor;
+                locationDotsPixelBuffer[offset + (width * 4) + 2] = roadColor;
+            }
+            if ((roads & BasicRoadsTexturing.NW) != 0)
+            {
+                locationDotsPixelBuffer[offset + (width * 3) + 1] = roadColor;
+                locationDotsPixelBuffer[offset + (width * 4)] = roadColor;
+            }
+            if ((roads & BasicRoadsTexturing.W) != 0)
+            {
+                locationDotsPixelBuffer[offset + (width * 2)] = roadColor;
+                locationDotsPixelBuffer[offset + (width * 2) + 1] = roadColor;
+            }
+            if ((roads & BasicRoadsTexturing.SW) != 0)
+            {
+                locationDotsPixelBuffer[offset] = roadColor;
+                locationDotsPixelBuffer[offset + width + 1] = roadColor;
+            }
+        }
+
+        // Zoom and pan region texture
+        protected override void ZoomMapTextures()
+        {
+            base.ZoomMapTextures();
+
+            // Adjust cropped location dots overlay to x5 version
+            int width = (int)regionTextureOverlayPanelRect.width;
+            int height = (int)regionTextureOverlayPanelRect.height;
+            int zoomWidth = width / (zoomfactor * 2);
+            int zoomHeight = height / (zoomfactor * 2);
+            int startX = (int)zoomPosition.x - zoomWidth;
+            int startY = (int)(height + (-zoomPosition.y - zoomHeight)) + regionPanelOffset;
+            Rect locationDotsNewRect = new Rect(startX * 5, startY * 5, width * 5 / zoomfactor, height * 5 / zoomfactor);
+            regionLocationDotsOverlayPanel.BackgroundCroppedRect = locationDotsNewRect;
+
+            UpdateBorder();
         }
 
         protected override void UpdateMouseOverLocation()
@@ -322,6 +388,43 @@ namespace BasicRoads
 
             mouseX = x;
             mouseY = y;
+        }
+
+        private static void ReadRoadData()
+        {
+            using (System.IO.StreamReader file = new System.IO.StreamReader(@"roadData.txt"))
+            {
+                for (int l = 0; l < MapsFile.MaxMapPixelY; l++)
+                {
+                    string line = file.ReadLine();
+                    try
+                    {
+                        for (int i = 0; i < MapsFile.MaxMapPixelX; i++)
+                        {
+                            int index = (l * MapsFile.MaxMapPixelX) + i;
+                            roadData[index] = Convert.ToByte(line.Substring(i * 2, 2), 16);
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Debug.LogWarning(line);
+                        Debug.LogWarning(e.Message);
+                    }
+                }
+            }
+        }
+
+        private static void WriteRoadData()
+        {
+            using (System.IO.StreamWriter file = new System.IO.StreamWriter(@"roadData.txt"))
+            {
+                for (int i = 0; i < roadData.Length; i++)
+                {
+                    if (i != 0 && i % MapsFile.MaxMapPixelX == 0)
+                        file.WriteLine();
+                    file.Write(roadData[i].ToString("x2"));
+                }
+            }
         }
 
 

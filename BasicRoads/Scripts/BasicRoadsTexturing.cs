@@ -1,15 +1,9 @@
-// Project:         Daggerfall Tools For Unity
-// Copyright:       Copyright (C) 2009-2020 Daggerfall Workshop
-// Web Site:        http://www.dfworkshop.net
+// Project:         BasicRoads mod for Daggerfall Unity (http://www.dfworkshop.net)
+// Copyright:       Copyright (C) 2020 Hazelnut
 // License:         MIT License (http://www.opensource.org/licenses/mit-license.php)
-// Source Code:     https://github.com/Interkarma/daggerfall-unity
-// Original Author: Gavin Clayton (interkarma@dfworkshop.net)
-// Contributors:    Hazelnut
-// 
-// Notes:
-//
+// Author:          Hazelnut
+// Contributors:    Interkarma
 
-using System;
 using UnityEngine;
 using Unity.Jobs;
 using Unity.Collections;
@@ -20,13 +14,10 @@ namespace BasicRoads
 {
     /// <summary>
     /// Generates texture tiles for terrains and uses marching squares for tile transitions.
-    /// These features are very much in early stages of development.
+    /// Paints roads onto terrain.
     /// </summary>
     public class BasicRoadsTexturing : DefaultTerrainTexturing
     {
-        // Use same seed to ensure continuous tiles
-        const int seed = 417028;
-
         public const byte water = 0;
         public const byte dirt = 1;
         public const byte grass = 2;
@@ -151,12 +142,6 @@ namespace BasicRoads
             private bool PaintRoad(int x, int y, int index, byte roadData)
             {
                 bool hasRoad = false;
-                /* Test locator tiles:
-                if ((x == 65 && y == 65) || (x == 62 && y == 65) || (x == 65 && y == 62) || (x == 62 && y == 62))
-                {
-                    tilemapData[index] = water;
-                    hasRoad = true;
-                }*/
 
                 if (roadData != 0)
                 {
@@ -254,7 +239,7 @@ namespace BasicRoads
             }
         }
 
-        // Smooths road terrain a bit
+        // Smoothes road terrain by averaging corner heights of road tiles
         struct SmoothRoadTerrainJob : IJob
         {
             [ReadOnly]
