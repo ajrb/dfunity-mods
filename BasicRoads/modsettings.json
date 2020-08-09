@@ -1,0 +1,35 @@
+{
+    "Version": null,
+    "Sections": [
+        {
+            "Name": "Settings",
+            "Description": "Settings for basic roads in game",
+            "IsAdvanced": false,
+            "Keys": [
+                {
+                    "Value": true,
+                    "Name": "SmoothRoads",
+                    "Description": "Enables light smoothing of road surfaces, disable for minor extra performance.",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
+                }
+            ],
+            "$version": "v1"
+        },
+        {
+            "Name": "Editing",
+            "Description": "Road path editing",
+            "IsAdvanced": true,
+            "Keys": [
+                {
+                    "Value": false,
+                    "Name": "EditingEnabled",
+                    "Description": "Enables road path editing commands",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
+                }
+            ],
+            "$version": "v1"
+        }
+    ]
+}

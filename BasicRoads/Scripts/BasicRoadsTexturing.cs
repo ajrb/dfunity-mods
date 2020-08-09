@@ -44,12 +44,12 @@ namespace BasicRoads
 
         static byte[] roadData;
 
-        public BasicRoadsTexturing()
+        bool smoothRoads;
+
+        public BasicRoadsTexturing(bool smooth)
         {
             // Read in road data.
             TextAsset dataAsset;
-            string fileName = Path.Combine(WorldDataReplacement.WorldDataPath, RoadDataFilename);
-
             if (ModManager.Instance.TryGetAsset(RoadDataFilename, false, out dataAsset))
             {
                 roadData = dataAsset.bytes;
@@ -59,6 +59,7 @@ namespace BasicRoads
                 Debug.LogWarning("BasicRoads: Unable to load road data, starting with blank path data.");
                 roadData = new byte[MapsFile.MaxMapPixelX * MapsFile.MaxMapPixelY];
             }
+            smoothRoads = smooth;
         }
 
         internal byte[] GetRoadData()
@@ -108,21 +109,26 @@ namespace BasicRoads
             };
             JobHandle assignTilesHandle = assignTilesJob.Schedule(assignTilesDim * assignTilesDim, 64, tileDataHandle);
 
-            SmoothRoadTerrainJob smoothRoadTerrainJob = new SmoothRoadTerrainJob()
+            JobHandle returnHandle = assignTilesHandle;
+            if (smoothRoads)
             {
-                heightmapData = mapData.heightmapData,
-                tilemapData = mapData.tilemapData,
-                hDim = DaggerfallUnity.Instance.TerrainSampler.HeightmapDimension,
-                tDim = assignTilesDim,
-                locationRect = mapData.locationRect,
-            };
-            JobHandle smoothRoadHandle = smoothRoadTerrainJob.Schedule(assignTilesHandle);
+                SmoothRoadTerrainJob smoothRoadTerrainJob = new SmoothRoadTerrainJob()
+                {
+                    heightmapData = mapData.heightmapData,
+                    tilemapData = mapData.tilemapData,
+                    hDim = DaggerfallUnity.Instance.TerrainSampler.HeightmapDimension,
+                    tDim = assignTilesDim,
+                    locationRect = mapData.locationRect,
+                };
+                JobHandle smoothRoadHandle = smoothRoadTerrainJob.Schedule(assignTilesHandle);
+                returnHandle = smoothRoadHandle;
+            }
 
             // Add both working native arrays to disposal list.
             mapData.nativeArrayList.Add(tileData);
             mapData.nativeArrayList.Add(lookupData);
 
-            return smoothRoadHandle;
+            return returnHandle;
         }
 
         // Very basic marching squares from default texturer, with road painting added.

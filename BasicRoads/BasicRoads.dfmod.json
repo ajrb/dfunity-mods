@@ -8,6 +8,7 @@
         "Assets/Game/Mods/BasicRoads/Scripts/BasicRoadsTerrainTexturing.cs",
         "Assets/Game/Mods/BasicRoads/Scripts/BasicRoadsPathEditor.cs",
         "Assets/Game/Mods/BasicRoads/Scripts/BasicRoadsMod.cs",
-        "Assets/Game/Mods/BasicRoads/roadData.bytes"
+        "Assets/Game/Mods/BasicRoads/roadData.bytes",
+        "Assets/Game/Mods/BasicRoads/modsettings.json"
     ]
 }

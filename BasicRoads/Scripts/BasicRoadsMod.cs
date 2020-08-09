@@ -7,6 +7,7 @@ using UnityEngine;
 using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Utility.ModSupport;
+using DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings;
 
 namespace BasicRoads
 {
@@ -26,9 +27,16 @@ namespace BasicRoads
         {
             Debug.Log("Begin mod init: BasicRoads");
 
-            DaggerfallUnity.Instance.TerrainTexturing = new BasicRoadsTexturing();
+            ModSettings settings = mod.GetSettings();
+            bool smoothRoads = settings.GetBool("Settings", "SmoothRoads");
+            bool editingEnabled = settings.GetBool("Editing", "EditingEnabled");
 
-            BasicRoadsPathEditor editor = BasicRoadsPathEditor.Instance;
+            DaggerfallUnity.Instance.TerrainTexturing = new BasicRoadsTexturing(smoothRoads);
+
+            if (editingEnabled)
+            {
+                BasicRoadsPathEditor editor = BasicRoadsPathEditor.Instance;
+            }
 
             mod.IsReady = true;
             Debug.Log("Finished mod init: BasicRoads");
