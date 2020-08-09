@@ -19,6 +19,8 @@ using DaggerfallWorkshop.Game.UserInterface;
 using DaggerfallWorkshop.Game.UserInterfaceWindows;
 using DaggerfallWorkshop.Utility;
 using DaggerfallConnect;
+using System.IO;
+using DaggerfallWorkshop.Utility.AssetInjection;
 
 namespace BasicRoads
 {
@@ -27,6 +29,8 @@ namespace BasicRoads
     /// </summary>
     public class BasicRoadsPathEditor : DaggerfallTravelMapWindow
     {
+        public const string RoadDataFilename = "roadData.txt";
+
         Color32 roadColor = new Color32(60, 60, 60, 255);
 
         protected Rect roadOverlayPanelRect = new Rect(0, regionPanelOffset, 320 * 5, 160 * 5);
@@ -41,11 +45,14 @@ namespace BasicRoads
             }
         }
 
-        public static byte[] roadData = new byte[MapsFile.MaxMapPixelX * MapsFile.MaxMapPixelY];
+        public static byte[] roadData;
+
+        static BasicRoadsTexturing roadTexturing;
 
         int mouseX = 0;
         int mouseY = 0;
         bool outlineBackup;
+        bool changed;
 
         public BasicRoadsPathEditor(IUserInterfaceManager uiManager) : base(uiManager)
         {
@@ -58,15 +65,8 @@ namespace BasicRoads
             {
                 Debug.LogError(string.Format("Error Registering Travelmap Console commands: {0}", ex.Message));
             }
-        }
 
-        
-        protected override void Setup()
-        {
-            base.Setup();
-
-            locationDotsPixelBuffer = new Color32[(int)regionTextureOverlayPanelRect.width * (int)regionTextureOverlayPanelRect.height * 25];
-            locationDotsTexture = new Texture2D((int)regionTextureOverlayPanelRect.width * 5, (int)regionTextureOverlayPanelRect.height * 5, TextureFormat.ARGB32, false);
+            roadTexturing = (BasicRoadsTexturing)DaggerfallUnity.Instance.TerrainTexturing;
         }
 
         public override void OnPush()
@@ -77,6 +77,8 @@ namespace BasicRoads
             DaggerfallUnity.Settings.TravelMapLocationsOutline = false;
 
             ReadRoadData();
+
+            changed = false;
         }
 
         public override void OnPop()
@@ -84,8 +86,51 @@ namespace BasicRoads
             base.OnPop();
 
             DaggerfallUnity.Settings.TravelMapLocationsOutline = outlineBackup;
+        }
 
-            WriteRoadData();
+        protected override void Setup()
+        {
+            base.Setup();
+
+            locationDotsPixelBuffer = new Color32[(int)regionTextureOverlayPanelRect.width * (int)regionTextureOverlayPanelRect.height * 25];
+            locationDotsTexture = new Texture2D((int)regionTextureOverlayPanelRect.width * 5, (int)regionTextureOverlayPanelRect.height * 5, TextureFormat.ARGB32, false);
+
+            filterDungeons = false;
+            filterTemples = false;
+            filterHomes = false;
+            filterTowns = false;
+            UpdateSearchButtons();
+        }
+
+        protected override void ExitButtonClickHandler(BaseScreenComponent sender, Vector2 position)
+        {
+            DaggerfallUI.Instance.PlayOneShot(SoundClips.ButtonClick);
+
+            if (RegionSelected)
+                CloseRegionPanel();
+            else if (changed)
+            {
+                DaggerfallMessageBox messageBox = new DaggerfallMessageBox(uiManager, this);
+                messageBox.SetText("Do you want to save changes?");
+                messageBox.AddButton(DaggerfallMessageBox.MessageBoxButtons.Yes);
+                messageBox.AddButton(DaggerfallMessageBox.MessageBoxButtons.No);
+                messageBox.OnButtonClick += SaveBoxClick;
+                uiManager.PushWindow(messageBox);
+            }
+            else
+                CloseTravelWindows();
+        }
+
+        protected virtual void SaveBoxClick(DaggerfallMessageBox sender, DaggerfallMessageBox.MessageBoxButtons messageBoxButton)
+        {
+            DaggerfallUI.Instance.PlayOneShot(SoundClips.ButtonClick);
+            sender.CloseWindow();
+            if (messageBoxButton == DaggerfallMessageBox.MessageBoxButtons.Yes)
+            {
+                WriteRoadData();
+                roadTexturing.UpdateRoadData(roadData);
+            }
+            CloseTravelWindows();
         }
 
         protected override void UpdateRegionLabel()
@@ -157,9 +202,17 @@ namespace BasicRoads
                 }
 
                 UpdateMapLocationDotsTexture();
+                changed = true;
             }
             else
+            {
+                if (zoom)
+                {
+                    zoom = false;
+                    ZoomMapTextures();
+                }
                 base.ClickHandler(sender, position);
+            }
         }
 
         private static bool ConnectRoad(int rIdx, int dIdx, byte rDir, byte dDir)
@@ -222,20 +275,16 @@ namespace BasicRoads
                     int rIdx = originX + x + ((originY + y) * MapsFile.MaxMapPixelX);
                     byte roads = roadData[rIdx];
 
-                    // Set location pixel if inside region area
-                    if (sampleRegion == selectedRegion)
+                    ContentReader.MapSummary summary;
+                    if (DaggerfallUnity.Instance.ContentReader.HasLocation(originX + x, originY + y, out summary))
                     {
-                        ContentReader.MapSummary summary;
-                        if (DaggerfallUnity.Instance.ContentReader.HasLocation(originX + x, originY + y, out summary))
+                        int index = GetPixelColorIndex(summary.LocationType);
+                        if (index != -1)
                         {
-                            int index = GetPixelColorIndex(summary.LocationType);
-                            if (index != -1)
-                            {
-                                if (DaggerfallUnity.Settings.TravelMapLocationsOutline && roads != 0 && IsLocationLarge(summary.LocationType))
-                                    locationDotsOutlinePixelBuffer[offset] = dotOutlineColor;
+                            if (DaggerfallUnity.Settings.TravelMapLocationsOutline && roads != 0 && IsLocationLarge(summary.LocationType))
+                                locationDotsOutlinePixelBuffer[offset] = dotOutlineColor;
 
-                                DrawLocation(offset5, width5, locationPixelColors[index], IsLocationLarge(summary.LocationType));
-                            }
+                            DrawLocation(offset5, width5, locationPixelColors[index], IsLocationLarge(summary.LocationType));
                         }
                     }
 
@@ -331,17 +380,31 @@ namespace BasicRoads
         {
             base.ZoomMapTextures();
 
-            // Adjust cropped location dots overlay to x5 version
-            int width = (int)regionTextureOverlayPanelRect.width;
-            int height = (int)regionTextureOverlayPanelRect.height;
-            int zoomWidth = width / (zoomfactor * 2);
-            int zoomHeight = height / (zoomfactor * 2);
-            int startX = (int)zoomPosition.x - zoomWidth;
-            int startY = (int)(height + (-zoomPosition.y - zoomHeight)) + regionPanelOffset;
-            Rect locationDotsNewRect = new Rect(startX * 5, startY * 5, width * 5 / zoomfactor, height * 5 / zoomfactor);
-            regionLocationDotsOverlayPanel.BackgroundCroppedRect = locationDotsNewRect;
+            if (RegionSelected && zoom)
+            {
+                // Adjust cropped location dots overlay to x5 version
+                int width = (int)regionTextureOverlayPanelRect.width;
+                int height = (int)regionTextureOverlayPanelRect.height;
+                int zoomWidth = width / (zoomfactor * 2);
+                int zoomHeight = height / (zoomfactor * 2);
+                int startX = (int)zoomPosition.x - zoomWidth;
+                int startY = (int)(height + (-zoomPosition.y - zoomHeight)) + regionPanelOffset;
+                // Clamp to edges
+                if (startX < 0)
+                    startX = 0;
+                else if (startX + width / zoomfactor >= width)
+                    startX = width - width / zoomfactor;
+                if (startY < 0)
+                    startY = 0;
+                else if (startY + height / zoomfactor >= height)
+                    startY = height - height / zoomfactor;
 
-            UpdateBorder();
+                Rect locationDotsNewRect = new Rect(startX * 5, startY * 5, width * 5 / zoomfactor, height * 5 / zoomfactor);
+                regionLocationDotsOverlayPanel.BackgroundCroppedRect = locationDotsNewRect;
+
+                UpdateBorder();
+            }
+                
         }
 
         protected override void UpdateMouseOverLocation()
@@ -392,31 +455,42 @@ namespace BasicRoads
 
         private static void ReadRoadData()
         {
-            using (System.IO.StreamReader file = new System.IO.StreamReader(@"roadData.txt"))
+
+            string filePath = Path.Combine(WorldDataReplacement.WorldDataPath, RoadDataFilename);
+            if (File.Exists(filePath))
             {
-                for (int l = 0; l < MapsFile.MaxMapPixelY; l++)
+                roadData = new byte[MapsFile.MaxMapPixelX * MapsFile.MaxMapPixelY];
+                using (StreamReader file = new StreamReader(filePath))
                 {
-                    string line = file.ReadLine();
-                    try
+                    for (int l = 0; l < MapsFile.MaxMapPixelY; l++)
                     {
-                        for (int i = 0; i < MapsFile.MaxMapPixelX; i++)
+                        string line = file.ReadLine();
+                        try
                         {
-                            int index = (l * MapsFile.MaxMapPixelX) + i;
-                            roadData[index] = Convert.ToByte(line.Substring(i * 2, 2), 16);
+                            for (int i = 0; i < MapsFile.MaxMapPixelX; i++)
+                            {
+                                int index = (l * MapsFile.MaxMapPixelX) + i;
+                                roadData[index] = Convert.ToByte(line.Substring(i * 2, 2), 16);
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            Debug.LogWarning(line);
+                            Debug.LogWarning(e.Message);
                         }
                     }
-                    catch (Exception e)
-                    {
-                        Debug.LogWarning(line);
-                        Debug.LogWarning(e.Message);
-                    }
                 }
+            }
+            else
+            {
+                Debug.LogWarning("Edited road data not found, initialising from existing data.");
+                roadData = roadTexturing.GetRoadData();
             }
         }
 
         private static void WriteRoadData()
         {
-            using (System.IO.StreamWriter file = new System.IO.StreamWriter(@"roadData.txt"))
+            using (StreamWriter file = new StreamWriter(Path.Combine(WorldDataReplacement.WorldDataPath, RoadDataFilename)))
             {
                 for (int i = 0; i < roadData.Length; i++)
                 {
@@ -437,8 +511,9 @@ namespace BasicRoads
                 try
                 {
                     ConsoleCommandsDatabase.RegisterCommand(RoadPathEditorCmd.name, RoadPathEditorCmd.description, RoadPathEditorCmd.usage, RoadPathEditorCmd.Execute);
+                    ConsoleCommandsDatabase.RegisterCommand(ExportRoadPathsCmd.name, ExportRoadPathsCmd.description, ExportRoadPathsCmd.usage, ExportRoadPathsCmd.Execute);
                 }
-                catch (System.Exception ex)
+                catch (Exception ex)
                 {
                     DaggerfallUnity.LogMessage(ex.Message, true);
                 }
@@ -450,11 +525,44 @@ namespace BasicRoads
                 public static readonly string description = "Opens a map window for editing road paths";
                 public static readonly string usage = "roadeditor";
 
+                static ConsoleController controller;
+
                 public static string Execute(params string[] args)
                 {
+                    if (FindController())
+                        controller.ui.CloseConsole();
+
                     DaggerfallUI.UIManager.PushWindow(Instance);
+
                     return "Finished";
                 }
+
+                private static bool FindController()
+                {
+                    if (controller)
+                        return true;
+
+                    GameObject console = GameObject.Find("Console");
+                    if (console && (controller = console.GetComponent<ConsoleController>()))
+                        return true;
+
+                    Debug.LogError("Failed to find console controller.");
+                    return false;
+                }
+            }
+
+            private static class ExportRoadPathsCmd
+            {
+                public static readonly string name = "ExportRoadData";
+                public static readonly string description = "Exports edited road paths as a binary file";
+                public static readonly string usage = "exportroaddata";
+
+                public static string Execute(params string[] args)
+                {
+                    File.WriteAllBytes(Path.Combine(WorldDataReplacement.WorldDataPath, BasicRoadsTexturing.RoadDataFilename), roadData);
+                    return "Exported edited road path data to: " + Path.Combine(WorldDataReplacement.WorldDataPath, BasicRoadsTexturing.RoadDataFilename);
+                }
+
             }
         }
 
