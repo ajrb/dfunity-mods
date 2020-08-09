@@ -31,14 +31,14 @@ namespace BasicRoads
         public const byte road_grass = 55;
         public const byte road_dirt = 47;
 
-        public const byte N  = 0b_1000_0000;
-        public const byte NE = 0b_0100_0000;
-        public const byte E  = 0b_0010_0000;
-        public const byte SE = 0b_0001_0000;
-        public const byte S  = 0b_0000_1000;
-        public const byte SW = 0b_0000_0100;
-        public const byte W  = 0b_0000_0010;
-        public const byte NW = 0b_0000_0001;
+        public const byte N  = 128;//0b_1000_0000;
+        public const byte NE = 64; //0b_0100_0000;
+        public const byte E  = 32; //0b_0010_0000;
+        public const byte SE = 16; //0b_0001_0000;
+        public const byte S  = 8;  //0b_0000_1000;
+        public const byte SW = 4;  //0b_0000_0100;
+        public const byte W  = 2;  //0b_0000_0010;
+        public const byte NW = 1;  //0b_0000_0001;
 
         public const string RoadDataFilename = "roadData.bytes";
 
