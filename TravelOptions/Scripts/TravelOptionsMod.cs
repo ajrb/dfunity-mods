@@ -16,6 +16,7 @@ using DaggerfallWorkshop.Game.Serialization;
 using DaggerfallWorkshop.Game.Utility;
 using DaggerfallWorkshop.Game.Entity;
 using DaggerfallWorkshop.Utility;
+using DaggerfallConnect.Arena2;
 
 namespace TravelOptions
 {
@@ -29,6 +30,7 @@ namespace TravelOptions
         private const string MsgAvoidSuccess = "You successfully avoided an encounter.";
         private const string MsgLowHealth = "You are close to the point of death!";
         private const string MsgLowFatigue = "You are exhausted and should rest.";
+        private const string MsgOcean = "You've found yourself in the sea, maybe you should travel on a ship.";
         private const string MsgNearLocation = "Paused the journey since a {0} called {1} is nearby.";
         private const string MsgEnterLocation = "Paused the journey as you've entered a {0} called {1}.";
 
@@ -246,16 +248,12 @@ namespace TravelOptions
                 {
                     if (GameManager.Instance.PlayerEntity.CurrentHealthPercent * 100 < CautiousHealthMinPc)
                     {
-                        if (travelControlUI.isShowing)
-                            travelControlUI.CloseWindow();
-                        DaggerfallUI.MessageBox(MsgLowHealth);
+                        StopTravelWithMessage(MsgLowHealth);
                         return;
                     }
                     if (GameManager.Instance.PlayerEntity.CurrentFatigue < DaggerfallEntity.FatigueMultiplier * CautiousFatigueMin)
                     {
-                        if (travelControlUI.isShowing)
-                            travelControlUI.CloseWindow();
-                        DaggerfallUI.MessageBox(MsgLowFatigue);
+                        StopTravelWithMessage(MsgLowFatigue);
                         return;
                     }
                 }
@@ -265,9 +263,14 @@ namespace TravelOptions
                 if (locationPause == LocPauseNear && playerGPS.HasCurrentLocation && !playerGPS.CurrentLocation.Equals(lastLocation))
                 {
                     lastLocation = playerGPS.CurrentLocation;
-                    if (travelControlUI.isShowing)
-                        travelControlUI.CloseWindow();
-                    DaggerfallUI.MessageBox(string.Format(MsgNearLocation, MacroHelper.LocationTypeName(), playerGPS.CurrentLocation.Name));
+                    StopTravelWithMessage(string.Format(MsgNearLocation, MacroHelper.LocationTypeName(), playerGPS.CurrentLocation.Name));
+                    return;
+                }
+
+                // Check for ocean climate.
+                if (playerGPS.CurrentClimateIndex == (int)MapsFile.Climates.Ocean)
+                {
+                    StopTravelWithMessage(MsgOcean);
                     return;
                 }
 
@@ -300,7 +303,15 @@ namespace TravelOptions
                     }
                     diseaseCount = currentDiseaseCount;
                 }
+
             }
+        }
+
+        private void StopTravelWithMessage(string message)
+        {
+            if (travelControlUI.isShowing)
+                travelControlUI.CloseWindow();
+            DaggerfallUI.MessageBox(message);
         }
 
         private void AttemptAvoidEncounter()
