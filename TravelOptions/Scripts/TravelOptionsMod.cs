@@ -23,6 +23,7 @@ namespace TravelOptions
     public class TravelOptionsMod : MonoBehaviour
     {
         public const string PAUSE_TRAVEL = "pauseTravel";
+        public const string IS_TRAVEL_ACTIVE = "isTravelActive";
 
         private const string MsgArrived = "You have arrived at your destination.";
         private const string MsgEnemies = "Enemies are seeking to prevent your travel...";
@@ -375,6 +376,10 @@ namespace TravelOptions
                 case PAUSE_TRAVEL:
                     if (travelControlUI.isShowing)
                         travelControlUI.CloseWindow();
+                    break;
+
+                case IS_TRAVEL_ACTIVE:
+                    callBack?.Invoke(IS_TRAVEL_ACTIVE, travelControlUI.isShowing);
                     break;
 
                 default:
