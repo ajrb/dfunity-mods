@@ -31,7 +31,7 @@ namespace BasicRoads
             bool smoothRoads = settings.GetBool("Settings", "SmoothRoads");
             bool editingEnabled = settings.GetBool("Editing", "EditingEnabled");
 
-            DaggerfallUnity.Instance.TerrainTexturing = new BasicRoadsTexturing(smoothRoads);
+            DaggerfallUnity.Instance.TerrainTexturing = new BasicRoadsTexturing(smoothRoads, editingEnabled);
 
             if (editingEnabled)
             {

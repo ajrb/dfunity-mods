@@ -67,6 +67,8 @@ namespace BasicRoads
             }
 
             roadTexturing = (BasicRoadsTexturing)DaggerfallUnity.Instance.TerrainTexturing;
+            roadData = roadTexturing.GetRoadData();
+            ReadEditedRoadData();
         }
 
         public override void OnPush()
@@ -76,7 +78,7 @@ namespace BasicRoads
             outlineBackup = DaggerfallUnity.Settings.TravelMapLocationsOutline;
             DaggerfallUnity.Settings.TravelMapLocationsOutline = false;
 
-            ReadRoadData();
+            ReadEditedRoadData();
 
             changed = false;
         }
@@ -94,12 +96,6 @@ namespace BasicRoads
 
             locationDotsPixelBuffer = new Color32[(int)regionTextureOverlayPanelRect.width * (int)regionTextureOverlayPanelRect.height * 25];
             locationDotsTexture = new Texture2D((int)regionTextureOverlayPanelRect.width * 5, (int)regionTextureOverlayPanelRect.height * 5, TextureFormat.ARGB32, false);
-
-            filterDungeons = false;
-            filterTemples = false;
-            filterHomes = false;
-            filterTowns = false;
-            UpdateSearchButtons();
         }
 
         protected override void ExitButtonClickHandler(BaseScreenComponent sender, Vector2 position)
@@ -127,8 +123,7 @@ namespace BasicRoads
             sender.CloseWindow();
             if (messageBoxButton == DaggerfallMessageBox.MessageBoxButtons.Yes)
             {
-                WriteRoadData();
-                roadTexturing.UpdateRoadData(roadData);
+                WriteEditedRoadData();
             }
             CloseTravelWindows();
         }
@@ -453,13 +448,11 @@ namespace BasicRoads
             mouseY = y;
         }
 
-        private static void ReadRoadData()
+        private static void ReadEditedRoadData()
         {
-
             string filePath = Path.Combine(WorldDataReplacement.WorldDataPath, RoadDataFilename);
             if (File.Exists(filePath))
             {
-                roadData = new byte[MapsFile.MaxMapPixelX * MapsFile.MaxMapPixelY];
                 using (StreamReader file = new StreamReader(filePath))
                 {
                     for (int l = 0; l < MapsFile.MaxMapPixelY; l++)
@@ -470,7 +463,9 @@ namespace BasicRoads
                             for (int i = 0; i < MapsFile.MaxMapPixelX; i++)
                             {
                                 int index = (l * MapsFile.MaxMapPixelX) + i;
-                                roadData[index] = Convert.ToByte(line.Substring(i * 2, 2), 16);
+                                byte b = Convert.ToByte(line.Substring(i * 2, 2), 16);
+                                if (b != 0)
+                                    roadData[index] = b;
                             }
                         }
                         catch (Exception e)
@@ -483,20 +478,20 @@ namespace BasicRoads
             }
             else
             {
-                Debug.LogWarning("Edited road data not found, initialising from existing data.");
-                roadData = roadTexturing.GetRoadData();
+                Debug.LogWarning("Edited road data not found, initialising editing using existing data.");
             }
         }
 
-        private static void WriteRoadData()
+        private static void WriteEditedRoadData()
         {
             using (StreamWriter file = new StreamWriter(Path.Combine(WorldDataReplacement.WorldDataPath, RoadDataFilename)))
             {
+                byte[] existingData = roadTexturing.GetRoadData();
                 for (int i = 0; i < roadData.Length; i++)
                 {
                     if (i != 0 && i % MapsFile.MaxMapPixelX == 0)
                         file.WriteLine();
-                    file.Write(roadData[i].ToString("x2"));
+                    file.Write((existingData[i] == roadData[i]) ? "00" : roadData[i].ToString("x2"));
                 }
             }
         }

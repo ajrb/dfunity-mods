@@ -45,8 +45,9 @@ namespace BasicRoads
         static byte[] roadData;
 
         bool smoothRoads;
+        bool editorEnabled;
 
-        public BasicRoadsTexturing(bool smooth)
+        public BasicRoadsTexturing(bool smooth, bool editor)
         {
             // Read in road data.
             TextAsset dataAsset;
@@ -60,6 +61,7 @@ namespace BasicRoads
                 roadData = new byte[MapsFile.MaxMapPixelX * MapsFile.MaxMapPixelY];
             }
             smoothRoads = smooth;
+            editorEnabled = editor;
         }
 
         internal byte[] GetRoadData()
@@ -97,6 +99,11 @@ namespace BasicRoads
             int roadIndex = mapData.mapPixelX + (mapData.mapPixelY * MapsFile.MaxMapPixelX);
             byte roadDataPt = roadData[roadIndex];
             byte roadCorners = (byte)((roadData[roadIndex + 1] & 0x5) | (roadData[roadIndex - 1] & 0x50));
+            if (editorEnabled)
+            {
+                roadDataPt = BasicRoadsPathEditor.roadData[roadIndex];
+                roadCorners = (byte)((BasicRoadsPathEditor.roadData[roadIndex + 1] & 0x5) | (BasicRoadsPathEditor.roadData[roadIndex - 1] & 0x50));
+            }
 
             NativeArray<byte> lookupData = new NativeArray<byte>(lookupTable, Allocator.TempJob);
             AssignTilesWithRoadsJob assignTilesJob = new AssignTilesWithRoadsJob
