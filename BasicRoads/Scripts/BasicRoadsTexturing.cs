@@ -27,9 +27,55 @@ namespace BasicRoads
         public const byte grass = 2;
         public const byte stone = 3;
 
+        public const byte grass_dirt = 12;
+
+        public const byte dirt_path = 11;
+
+        public const byte dirt_grass = 10;
+        public const byte dirt_stone = 25;
+
         public const byte road = 46;
         public const byte road_grass = 55;
         public const byte road_dirt = 47;
+
+        public const byte temp_water = byte.MaxValue;
+
+        const int CardInn = 0;
+        const int CardOut = 1;
+        const int DiagInn = 2;
+        const int DiagOut = 3;
+        const int DiagGap = 4;
+
+        // Tile replacement arrays:
+        //          water, dirt, grass, stone
+        static readonly byte[][] roadTiles = {
+            new byte[] { 46, 46, 46, 46 },  // Cardinal - Inner
+            null,                           // Cardinal - Outer 
+            new byte[] { 46, 46, 46, 46 },  // Diagonal - Inner
+            new byte[] { 47, 47, 55, 55 },  // Diagonal - Outer 
+            null,                           // Diagonal - Gaps (Outer)
+        };
+        static readonly byte[] trackTiles = {
+            01, 11, 26,  // Cardinal - Inner
+            99, 99, 99,  // Cardinal - Outer 
+            01, 51, 52,  // Diagonal - Inner
+            01, 12, 27,  // Diagonal - Outer1 
+            99, 99, 99,  // Diagonal - Outer2
+        };
+        static readonly byte[] streamTiles = {
+            01, 11, 26,  // Cardinal - Inner
+            99, 99, 99,  // Cardinal - Outer 
+            01, 51, 52,  // Diagonal - Inner
+            01, 12, 27,  // Diagonal - Outer1 
+            99, 99, 99,  // Diagonal - Outer2
+        };
+        static readonly byte[][] riverTiles = {
+            new byte[] { 00, 00, 00, 00 },  // Cardinal - Inner
+            new byte[] { 00, 06, 21, 31 },  // Cardinal - Outer 
+            new byte[] { 00, 01, 51, 52 },  // Diagonal - Inner
+            new byte[] { 00, 05, 20, 30 },  // Diagonal - Outer1 
+            new byte[] { 00, 07, 22, 32 },  // Diagonal - Outer2
+        };
 
         public const byte N  = 128;//0b_1000_0000;
         public const byte NE = 64; //0b_0100_0000;
@@ -170,11 +216,15 @@ namespace BasicRoads
                 int x = JobA.Row(index, tDim);
                 int y = JobA.Col(index, tDim);
 
+                // Paint tracks
+//                if (ValidTrackLocationTile(tilemapData[index]) && PaintPath(x, y, index, trackTiles, roadDataPt, roadCorners))
+//                    return;
+
                 // Do nothing if in location rect as texture already set, to 0xFF if zero
                 if (tilemapData[index] != 0)
                     return;
 
-                if (PaintRoad(x, y, index, roadDataPt))
+                if (PaintPath(x, y, index, riverTiles, roadDataPt, roadCorners))
                     return;
 
                 // Assign tile texture
@@ -199,128 +249,180 @@ namespace BasicRoads
                 }
             }
 
-            private bool PaintRoad(int x, int y, int index, byte roadDataPt)
+            private bool ValidTrackLocationTile(byte tileData)
             {
-                bool hasRoad = false;
+                int tile = tileData & 0x3F;
+                return tile == 0 || tile == grass || (tile >= 9 && tile <= 13);
+            }
 
-                if (roadDataPt != 0)
+            private void PaintPathTile(int x, int y, int index, byte[] pathTile, bool rotate, bool flip, bool overwrite = true)
+            {
+                if (overwrite || tilemapData[index] == 0)
                 {
-                    // Paint road around locations
-                    if (x > locationRect.xMin && x < locationRect.xMax && y > locationRect.yMin && y < locationRect.yMax)
+                    byte tile = tileData[JobA.Idx(x, y, tdDim)];
+                    tilemapData[index] = pathTile[tile];
+                    RotateFlipTile(index, rotate, flip);
+                    if (tilemapData[index] == 0)
+                        tilemapData[index] = temp_water;
+                }
+            }
+
+            private bool PaintPath(int x, int y, int index, byte[][] pathTiles, byte pathDataPt, byte pathCorners)
+            {
+                bool hasPath = false;
+
+                pathDataPt = E|N|S;
+
+                // Paint path sections if path data is present:
+                if (pathDataPt != 0)
+                {
+                    // N-S
+                    if ((((pathDataPt & N) != 0 && (x == midLo || x == midHi) && y > midLo) || ((pathDataPt & S) != 0 && (x == midLo || x == midHi) && y < midHi)) && pathTiles[CardInn] != null)
+                    {   // Cardinal - Inner
+                        PaintPathTile(x, y, index, pathTiles[CardInn], false, x == midHi);
+                        hasPath = true;
+                    }
+                    if ((((pathDataPt & N) != 0 && (x == midLo || x == midHi) && y == midLo) || ((pathDataPt & S) != 0 && (x == midLo || x == midHi) && y == midHi)) && pathTiles[DiagOut] != null)
+                    {   // Cardinal end /\
+                        PaintPathTile(x, y, index, pathTiles[DiagOut], x == y, x == midHi, false);
+                        hasPath = true;
+                    }
+                    if ((((pathDataPt & N) != 0 && (x == midLo-1 || x == midHi+1) && y > midLo) || ((pathDataPt & S) != 0 && (x == midLo-1 || x == midHi+1) && y < midHi)) && pathTiles[CardOut] != null && !hasPath)
+                    {   // Cardinal - Outer
+                        PaintPathTile(x, y, index, pathTiles[CardOut], false, x == midHi+1);
+                        hasPath = true;
+                    }
+
+                    // E-W
+                    if ((((pathDataPt & E) != 0 && (y == midLo || y == midHi) && x > midLo) || ((pathDataPt & W) != 0 && (y == midLo || y == midHi) && x < midHi)) && pathTiles[CardInn] != null)
+                    {   // Cardinal - Inner
+                        PaintPathTile(x, y, index, pathTiles[CardInn], true, x == midHi);
+                        hasPath = true;
+                    }
+                    if ((((pathDataPt & E) != 0 && (y == midLo || y == midHi) && x == midLo) || ((pathDataPt & W) != 0 && (y == midLo || y == midHi) && x == midHi)) && pathTiles[DiagOut] != null)
+                    {   // Cardinal end /\
+                        PaintPathTile(x, y, index, pathTiles[DiagOut], x == y, x == midHi, false);
+                        hasPath = true;
+                    }
+                    if ((((pathDataPt & E) != 0 && (y == midLo-1 || y == midHi+1) && x > midLo) || ((pathDataPt & W) != 0 && (y == midLo-1 || y == midHi+1) && x < midHi)) && pathTiles[CardOut] != null && !hasPath)
+                    {   // Cardinal - Outer
+                        PaintPathTile(x, y, index, pathTiles[CardOut], true, y == midHi+1);
+                        hasPath = true;
+                    }
+
+/*
+                    // NE-SW
+                    if (((pathDataPt & NE) != 0 && x == y && x > midLo) || ((pathDataPt & SW) != 0 && x == y && x < midHi))
+                    {
+                        tilemapData[index] = pathTile;
+                        hasPath = true;
+                    }
+                    if (((pathDataPt & NE) != 0 && x == y && x == midLo) || ((pathDataPt & SW) != 0 && x == y && x == midHi))
+                    {
+                        PaintHalfPath(x, y, index, pathTile, true, x == midHi);
+                        hasPath = true;
+                    }
+                    if (((pathDataPt & NE) != 0 && ((x == y + 1 && x > midLo) || (x + 1 == y && y > midLo))) || ((pathDataPt & SW) != 0 && ((x == y + 1 && x <= midHi) || (x + 1 == y && y <= midHi))))
+                    {
+                        PaintHalfPath(x, y, index, pathTile, false, (x == y + 1));
+                        hasPath = true;
+                    }
+                    // NW-SE
+                    int _x = 127 - x;
+                    if (((pathDataPt & NW) != 0 && _x == y && x < midHi) || ((pathDataPt & SE) != 0 && _x == y && x > midLo))
+                    {
+                        tilemapData[index] = pathTile;
+                        hasPath = true;
+                    }
+                    if (((pathDataPt & NW) != 0 && _x == y && x == midHi) || ((pathDataPt & SE) != 0 && _x == y && x == midLo))
+                    {
+                        PaintHalfPath(x, y, index, pathTile, false, x == midHi);
+                        hasPath = true;
+                    }
+                    if (((pathDataPt & NW) != 0 && ((_x == y + 1 && x < midHi) || (_x + 1 == y && y > midLo))) || ((pathDataPt & SE) != 0 && ((_x == y + 1 && x >= midLo) || (_x + 1 == y && y <= midHi))))
+                    {
+                        PaintHalfPath(x, y, index, pathTile, true, (_x != y + 1));
+                        hasPath = true;
+                    }
+*/
+                    // Paint roads around locations
+                    if (x > locationRect.xMin && x < locationRect.xMax && y > locationRect.yMin && y < locationRect.yMax && pathTiles == roadTiles)
                     {
                         tilemapData[index] = road;
                         return true;
                     }
-                    // Paint road sections
-                    // N-S
-                    if (((roadDataPt & N) != 0 && (x == midLo || x == midHi) && y > midLo) || ((roadDataPt & S) != 0 && (x == midLo || x == midHi) && y < midHi))
-                    {
-                        tilemapData[index] = road;
-                        hasRoad = true;
-                    }
-                    if (((roadDataPt & N) != 0 && (x == midLo || x == midHi) && y == midLo) || ((roadDataPt & S) != 0 && (x == midLo || x == midHi) && y == midHi))
-                    {
-                        PaintHalfRoad(x, y, index, x == y, x == midHi);
-                        hasRoad = true;
-                    }
-                    // E-W
-                    if (((roadDataPt & E) != 0 && (y == midLo || y == midHi) && x > midLo) || ((roadDataPt & W) != 0 && (y == midLo || y == midHi) && x < midHi))
-                    {
-                        tilemapData[index] = road;
-                        hasRoad = true;
-                    }
-                    if (((roadDataPt & E) != 0 && (y == midLo || y == midHi) && x == midLo) || ((roadDataPt & W) != 0 && (y == midLo || y == midHi) && x == midHi))
-                    {
-                        PaintHalfRoad(x, y, index, x == y, x == midHi);
-                        hasRoad = true;
-                    }
-                    // NE-SW
-                    if (((roadDataPt & NE) != 0 && x == y && x > midLo) || ((roadDataPt & SW) != 0 && x == y && x < midHi))
-                    {
-                        tilemapData[index] = road;
-                        hasRoad = true;
-                    }
-                    if (((roadDataPt & NE) != 0 && x == y && x == midLo) || ((roadDataPt & SW) != 0 && x == y && x == midHi))
-                    {
-                        PaintHalfRoad(x, y, index, true, x == midHi);
-                        hasRoad = true;
-                    }
-                    if (((roadDataPt & NE) != 0 && ((x == y + 1 && x > midLo) || (x + 1 == y && y > midLo))) || ((roadDataPt & SW) != 0 && ((x == y + 1 && x <= midHi) || (x + 1 == y && y <= midHi))))
-                    {
-                        PaintHalfRoad(x, y, index, false, (x == y + 1));
-                        hasRoad = true;
-                    }
-                    // NW-SE
-                    int _x = 127 - x;
-                    if (((roadDataPt & NW) != 0 && _x == y && x < midHi) || ((roadDataPt & SE) != 0 && _x == y && x > midLo))
-                    {
-                        tilemapData[index] = road;
-                        hasRoad = true;
-                    }
-                    if (((roadDataPt & NW) != 0 && _x == y && x == midHi) || ((roadDataPt & SE) != 0 && _x == y && x == midLo))
-                    {
-                        PaintHalfRoad(x, y, index, false, x == midHi);
-                        hasRoad = true;
-                    }
-                    if (((roadDataPt & NW) != 0 && ((_x == y + 1 && x < midHi) || (_x + 1 == y && y > midLo))) || ((roadDataPt & SE) != 0 && ((_x == y + 1 && x >= midLo) || (_x + 1 == y && y <= midHi))))
-                    {
-                        PaintHalfRoad(x, y, index, true, (_x != y + 1));
-                        hasRoad = true;
-                    }
                 }
+/*
                 // Paint corners
-                if (roadCorners != 0)
+                if (pathCorners != 0)
                 {
-                    if ((roadCorners & NW) != 0 && x == tDim-1 && y == tDim-1)
+                    if ((pathCorners & NW) != 0 && x == tDim-1 && y == tDim-1)
                     {   // NE
-                        PaintHalfRoad(x, y, index, true, false);
-                        hasRoad = true;
+                        PaintHalfPath(x, y, index, pathTile, true, false);
+                        hasPath = true;
                     }
-                    if ((roadCorners & SW) != 0 && x == tDim-1 && y == 0)
+                    if ((pathCorners & SW) != 0 && x == tDim-1 && y == 0)
                     {   // SE
-                        PaintHalfRoad(x, y, index, false, false);
-                        hasRoad = true;
+                        PaintHalfPath(x, y, index, pathTile, false, false);
+                        hasPath = true;
                     }
-                    if ((roadCorners & SE) != 0 && x == 0 && y == 0)
+                    if ((pathCorners & SE) != 0 && x == 0 && y == 0)
                     {   // SW
-                        PaintHalfRoad(x, y, index, true, true);
-                        hasRoad = true;
+                        PaintHalfPath(x, y, index, pathTile, true, true);
+                        hasPath = true;
                     }
-                    if ((roadCorners & NE) != 0 && x == 0 && y == tDim-1)
+                    if ((pathCorners & NE) != 0 && x == 0 && y == tDim-1)
                     {   // NW
-                        PaintHalfRoad(x, y, index, false, true);
-                        hasRoad = true;
+                        PaintHalfPath(x, y, index, pathTile, false, true);
+                        hasPath = true;
                     }
                 }
-                return hasRoad;
+*/
+                return hasPath;
             }
 
-            private void PaintHalfRoad(int x, int y, int index, bool rotate, bool flip)
+
+
+            private void PaintHalfPath(int x, int y, int index, byte pathType, bool rotate, bool flip)
             {
                 int tileMap = tilemapData[index] & 0x3F;
                 if (tileMap == road || tileMap == road_grass || tileMap == road_dirt)
                     return;
+                if (pathType == dirt && (tileMap == dirt || tileMap == dirt_grass || tileMap == dirt_stone))
+                    return;
 
                 byte tile = tileData[JobA.Idx(x, y, tdDim)];
-                if (tile == grass)
-                    tilemapData[index] = road_grass;
-                else if (tile == dirt)
-                    tilemapData[index] = road_dirt;
-                else if (tile == stone)
-                    tilemapData[index] = road_grass;
+                if (pathType == road)
+                {
+                    if (tile == grass)
+                        tilemapData[index] = road_grass;
+                    else if (tile == dirt)
+                        tilemapData[index] = road_dirt;
+                    else if (tile == stone)
+                        tilemapData[index] = road_grass;
+                }
+                else if (pathType == dirt)
+                {
+                    if (tile == grass)
+                        tilemapData[index] = dirt_grass;
+                    else if (tile == dirt)
+                        tilemapData[index] = dirt;
+                    else if (tile == stone)
+                        tilemapData[index] = dirt_stone;
+                }
+                RotateFlipTile(index, rotate, flip);
+            }
 
+            private void RotateFlipTile(int index, bool rotate, bool flip)
+            {
                 if (rotate)
                     tilemapData[index] += 64;
                 if (flip)
                     tilemapData[index] += 128;
             }
-
-            private bool IsTileNotSetOrValid(byte tile)
-            {
-                int record = tile & 0x4F;
-                return tile == 0 || record == road || record == road_grass || record == road_dirt;
-            }
         }
+
+        static readonly byte[] smoothTiles = { road, temp_water }; // Use a list for check below to expand smoothing?
 
         // Smoothes road terrain by averaging corner heights of road tiles
         struct SmoothRoadTerrainJob : IJob
@@ -340,12 +442,12 @@ namespace BasicRoads
                 {
                     for (int x = 1; x < hDim-2; x++)
                     {
-                        if (!locationRect.Contains(new Vector2(x, y)) && true)
+                        if (!locationRect.Contains(new Vector2(x, y)) && true)  // TODO fix this conditional!!
                         {
                             int idx = JobA.Idx(y, x, hDim);
                             int tIdx = JobA.Idx(x, y, tDim);
 
-                            if (tIdx < tilemapData.Length && tilemapData[tIdx] == road)
+                            if (tIdx < tilemapData.Length && tilemapData[tIdx] == road && tilemapData[tIdx] == temp_water)
                             {
                                 SmoothRoad(idx);
                                 SmoothRoad(idx + 1);
