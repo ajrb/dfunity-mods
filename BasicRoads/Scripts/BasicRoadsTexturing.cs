@@ -9,8 +9,6 @@ using Unity.Jobs;
 using Unity.Collections;
 using DaggerfallConnect.Arena2;
 using DaggerfallWorkshop;
-using System.IO;
-using DaggerfallWorkshop.Utility.AssetInjection;
 using DaggerfallWorkshop.Game.Utility.ModSupport;
 using System;
 
@@ -27,27 +25,27 @@ namespace BasicRoads
         public const byte grass = 2;
         public const byte stone = 3;
 
-        public const byte grass_dirt = 12;
-
-        public const byte dirt_path = 11;
-
-        public const byte dirt_grass = 10;
-        public const byte dirt_stone = 25;
-
         public const byte road = 46;
         public const byte road_grass = 55;
         public const byte road_dirt = 47;
+        public const byte water_temp = byte.MaxValue;
 
-        public const byte temp_water = byte.MaxValue;
+        public const byte N  = 128;//0b_1000_0000;
+        public const byte NE = 64; //0b_0100_0000;
+        public const byte E  = 32; //0b_0010_0000;
+        public const byte SE = 16; //0b_0001_0000;
+        public const byte S  = 8;  //0b_0000_1000;
+        public const byte SW = 4;  //0b_0000_0100;
+        public const byte W  = 2;  //0b_0000_0010;
+        public const byte NW = 1;  //0b_0000_0001;
 
+        // Tile replacement arrays:
         const int CardInn = 0;
         const int CardOut = 1;
         const int DiagInn = 2;
         const int DiagOut = 3;
         const int DiagGap = 4;
         const int ICorner = 5;
-
-        // Tile replacement arrays:
         //          water, dirt, grass, stone
         static readonly byte[][] roadTiles = {
             new byte[] { 46, 46, 46, 46 },  // Cardinal - Inner
@@ -82,37 +80,42 @@ namespace BasicRoads
             new byte[] { 00, 05, 20, 30 },  // Cardinal - Inside 90o Corners
         };
 
-        public const byte N  = 128;//0b_1000_0000;
-        public const byte NE = 64; //0b_0100_0000;
-        public const byte E  = 32; //0b_0010_0000;
-        public const byte SE = 16; //0b_0001_0000;
-        public const byte S  = 8;  //0b_0000_1000;
-        public const byte SW = 4;  //0b_0000_0100;
-        public const byte W  = 2;  //0b_0000_0010;
-        public const byte NW = 1;  //0b_0000_0001;
-
         public const string RoadDataFilename = "roadData.bytes";
+        public const string TrackDataFilename = "trackData.bytes";
+        public const string RiverDataFilename = "riverData.bytes";
+        public const string StreamDataFilename = "streamData.bytes";
 
         static byte[] roadData;
+        static byte[] trackData;
+        static byte[] riverData;
+        static byte[] streamData;
 
-        bool smoothRoads;
+        bool smoothPaths;
         bool editorEnabled;
 
         public BasicRoadsTexturing(bool smooth, bool editor)
         {
             // Read in road data.
-            TextAsset dataAsset;
-            if (ModManager.Instance.TryGetAsset(RoadDataFilename, false, out dataAsset))
-            {
-                roadData = dataAsset.bytes;
-            }
-            if (roadData == null || roadData.Length != MapsFile.MaxMapPixelX * MapsFile.MaxMapPixelY)
-            {
-                Debug.LogWarning("BasicRoads: Unable to load road data, starting with blank path data.");
-                roadData = new byte[MapsFile.MaxMapPixelX * MapsFile.MaxMapPixelY];
-            }
-            smoothRoads = smooth;
+            roadData = ReadPathData(RoadDataFilename);
+
+            smoothPaths = smooth;
             editorEnabled = editor;
+        }
+
+        private static byte[] ReadPathData(string filename)
+        {
+            byte[] pathData = null;
+            TextAsset dataAsset;
+            if (ModManager.Instance.TryGetAsset(filename, false, out dataAsset))
+            {
+                pathData = dataAsset.bytes;
+            }
+            if (pathData == null || pathData.Length != MapsFile.MaxMapPixelX * MapsFile.MaxMapPixelY)
+            {
+                Debug.LogWarningFormat("BasicRoads: Unable to load path data from {0}, starting with blank path data.", filename);
+                pathData = new byte[MapsFile.MaxMapPixelX * MapsFile.MaxMapPixelY];
+            }
+            return pathData;
         }
 
         internal byte[] GetRoadData()
@@ -182,9 +185,9 @@ namespace BasicRoads
             JobHandle assignTilesHandle = assignTilesJob.Schedule(assignTilesDim * assignTilesDim, 64, tileDataHandle);
 
             JobHandle returnHandle = assignTilesHandle;
-            if (smoothRoads)
+            if (smoothPaths)
             {
-                SmoothRoadTerrainJob smoothRoadTerrainJob = new SmoothRoadTerrainJob()
+                SmoothRoadsTerrainJob smoothRoadTerrainJob = new SmoothRoadsTerrainJob()
                 {
                     heightmapData = mapData.heightmapData,
                     tilemapData = mapData.tilemapData,
@@ -228,15 +231,12 @@ namespace BasicRoads
                 int x = JobA.Row(index, tDim);
                 int y = JobA.Col(index, tDim);
 
-                // Paint dirt tracks
-                //if (ValidTrackLocationTile(tilemapData[index]) && PaintPath(x, y, index, trackTiles, roadDataPt, roadCorners))
-                //    return;
-
                 // Do nothing if in location rect as texture already set, to 0xFF if zero
                 if (tilemapData[index] != 0)
                     return;
 
-                if (PaintPath(x, y, index, trackTiles, roadDataPt, roadCorners))
+                // Paint roads, rivers, dirt tracks, then streams
+                if (PaintPath(x, y, index, riverTiles, roadDataPt, roadCorners))
                     return;
 
                 // Assign tile texture
@@ -261,12 +261,6 @@ namespace BasicRoads
                 }
             }
 
-            private bool ValidTrackLocationTile(byte tileData)
-            {
-                int tile = tileData & 0x3F;
-                return tile == 0 || tile == grass || (tile >= 11 && tile <= 15);
-            }
-
             private void PaintPathTile(int x, int y, int index, byte[] pathTile, bool rotate, bool flip, bool overwrite = true)
             {
                 if (overwrite || tilemapData[index] == 0)
@@ -277,15 +271,22 @@ namespace BasicRoads
                     tilemapData[index] = pathTile[tile];
                     RotateFlipTile(index, rotate, flip);
                     if (tilemapData[index] == 0)
-                        tilemapData[index] = temp_water;
+                        tilemapData[index] = water_temp;
                 }
+            }
+
+            private void RotateFlipTile(int index, bool rotate, bool flip)
+            {
+                if (rotate)
+                    tilemapData[index] += 64;
+                if (flip)
+                    tilemapData[index] += 128;
             }
 
             private bool PaintPath(int x, int y, int index, byte[][] pathTiles, byte pathDataPt, byte pathCorners)
             {
-                bool hasPath = false;
-
                 // Paint path sections if path data is present:
+                bool hasPath = false;
                 if (pathDataPt != 0)
                 {
                     // N-S
@@ -417,52 +418,10 @@ namespace BasicRoads
 
                 return hasPath;
             }
-
-
-
-            private void PaintHalfPath(int x, int y, int index, byte pathType, bool rotate, bool flip)
-            {
-                int tileMap = tilemapData[index] & 0x3F;
-                if (tileMap == road || tileMap == road_grass || tileMap == road_dirt)
-                    return;
-                if (pathType == dirt && (tileMap == dirt || tileMap == dirt_grass || tileMap == dirt_stone))
-                    return;
-
-                byte tile = tileData[JobA.Idx(x, y, tdDim)];
-                if (pathType == road)
-                {
-                    if (tile == grass)
-                        tilemapData[index] = road_grass;
-                    else if (tile == dirt)
-                        tilemapData[index] = road_dirt;
-                    else if (tile == stone)
-                        tilemapData[index] = road_grass;
-                }
-                else if (pathType == dirt)
-                {
-                    if (tile == grass)
-                        tilemapData[index] = dirt_grass;
-                    else if (tile == dirt)
-                        tilemapData[index] = dirt;
-                    else if (tile == stone)
-                        tilemapData[index] = dirt_stone;
-                }
-                RotateFlipTile(index, rotate, flip);
-            }
-
-            private void RotateFlipTile(int index, bool rotate, bool flip)
-            {
-                if (rotate)
-                    tilemapData[index] += 64;
-                if (flip)
-                    tilemapData[index] += 128;
-            }
         }
 
-        static readonly byte[] smoothTiles = { road, temp_water }; // Use a list for check below to expand smoothing?
-
-        // Smoothes road terrain by averaging corner heights of road tiles
-        struct SmoothRoadTerrainJob : IJob
+        // Smoothes terrain for roads and rivers by averaging corner heights of matching tiles
+        struct SmoothRoadsTerrainJob : IJob
         {
             [ReadOnly]
             public NativeArray<byte> tilemapData;
@@ -479,12 +438,13 @@ namespace BasicRoads
                 {
                     for (int x = 1; x < hDim-2; x++)
                     {
-                        if (!locationRect.Contains(new Vector2(x, y)) && true)  // TODO fix this conditional!!
+                        if (!locationRect.Contains(new Vector2(x, y)))
                         {
                             int idx = JobA.Idx(y, x, hDim);
                             int tIdx = JobA.Idx(x, y, tDim);
 
-                            if (tIdx < tilemapData.Length && tilemapData[tIdx] == road && tilemapData[tIdx] == temp_water)
+                            byte tile = tilemapData[tIdx];
+                            if (tIdx < tilemapData.Length && (tile == road || tile == water_temp)) // || (tile >= 5 && tile <= 7) || (tile >= 20 && tile <= 22) || (tile >= 30 && tile <= 32)))
                             {
                                 SmoothRoad(idx);
                                 SmoothRoad(idx + 1);
