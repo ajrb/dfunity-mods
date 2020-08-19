@@ -5,12 +5,11 @@
 // Contributors:    Interkarma
 
 using UnityEngine;
-using Unity.Jobs;
 using Unity.Collections;
+using Unity.Jobs;
 using DaggerfallConnect.Arena2;
 using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game.Utility.ModSupport;
-using System;
 
 namespace BasicRoads
 {
@@ -26,8 +25,8 @@ namespace BasicRoads
         public const byte stone = 3;
 
         public const byte road = 46;
-        public const byte road_grass = 55;
         public const byte road_dirt = 47;
+        public const byte road_grass = 55;
         public const byte water_temp = byte.MaxValue;
 
         public const byte N  = 128;//0b_1000_0000;
@@ -85,18 +84,22 @@ namespace BasicRoads
         public const string RiverDataFilename = "riverData.bytes";
         public const string StreamDataFilename = "streamData.bytes";
 
-        static byte[] roadData;
-        static byte[] trackData;
-        static byte[] riverData;
-        static byte[] streamData;
+        // Path data array and path type access constants
+        public const int roads = 0;
+        public const int tracks = 1;
+        public const int rivers = 2;
+        public const int streams = 3;
 
-        bool smoothPaths;
-        bool editorEnabled;
+        static byte[][] pathsData = new byte[4][];
+
+        readonly bool smoothPaths;
+        readonly bool editorEnabled;
 
         public BasicRoadsTexturing(bool smooth, bool editor)
         {
-            // Read in road data.
-            roadData = ReadPathData(RoadDataFilename);
+            // Read in path data.
+            pathsData[roads] = ReadPathData(RoadDataFilename);
+            pathsData[tracks] = ReadPathData(TrackDataFilename);
 
             smoothPaths = smooth;
             editorEnabled = editor;
@@ -118,17 +121,14 @@ namespace BasicRoads
             return pathData;
         }
 
-        internal byte[] GetRoadData()
+        internal byte[] GetPathData(int pathType)
         {
             byte[] data = new byte[MapsFile.MaxMapPixelX * MapsFile.MaxMapPixelY];
-            roadData.CopyTo(data, 0);
-            return data;
-        }
 
-        internal void UpdateRoadData(byte[] data)
-        {
-            if (data != null && data.Length == roadData.Length)
-                Array.Copy(data, roadData, data.Length);
+            if (pathType >= roads && pathType <= streams)
+                pathsData[pathType].CopyTo(data, 0);
+
+            return data;
         }
 
         public override JobHandle ScheduleAssignTilesJob(ITerrainSampler terrainSampler, ref MapPixelData mapData, JobHandle dependencies, bool march = true)
@@ -149,23 +149,27 @@ namespace BasicRoads
             };
             JobHandle tileDataHandle = tileDataJob.Schedule(tileDataDim * tileDataDim, 64, dependencies);
 
-            // Assign tile data to terrain, painting roads in the process
-            int roadIndex = mapData.mapPixelX + (mapData.mapPixelY * MapsFile.MaxMapPixelX);
-            byte roadDataPt = roadData[roadIndex];
-            byte roadCorners = (byte)((roadData[roadIndex + 1] & 0x5) | (roadData[roadIndex - 1] & 0x50));
+            // Assign tile data to terrain, painting paths in the process
+            int pathsIndex = mapData.mapPixelX + (mapData.mapPixelY * MapsFile.MaxMapPixelX);
+            byte roadDataPt = pathsData[roads][pathsIndex];
+            byte roadCorners = (byte)((pathsData[roads][pathsIndex + 1] & 0x5) | (pathsData[roads][pathsIndex - 1] & 0x50));
+            byte trackDataPt = pathsData[tracks][pathsIndex];
+            byte trackCorners = (byte)((pathsData[tracks][pathsIndex + 1] & 0x5) | (pathsData[tracks][pathsIndex - 1] & 0x50));
             if (editorEnabled)
             {
-                roadDataPt = BasicRoadsPathEditor.roadData[roadIndex];
-                roadCorners = (byte)((BasicRoadsPathEditor.roadData[roadIndex + 1] & 0x5) | (BasicRoadsPathEditor.roadData[roadIndex - 1] & 0x50));
+                roadDataPt = BasicRoadsPathEditor.pathsData[roads][pathsIndex];
+                roadCorners = (byte)((BasicRoadsPathEditor.pathsData[roads][pathsIndex + 1] & 0x5) | (BasicRoadsPathEditor.pathsData[roads][pathsIndex - 1] & 0x50));
+                trackDataPt = BasicRoadsPathEditor.pathsData[tracks][pathsIndex];
+                trackCorners = (byte)((BasicRoadsPathEditor.pathsData[tracks][pathsIndex + 1] & 0x5) | (BasicRoadsPathEditor.pathsData[tracks][pathsIndex - 1] & 0x50));
             }
-/*
-            roadDataPt = N;//|E|S|W;
-            if (mapData.mapPixelX > 207)
-            {
-                int i = mapData.mapPixelX - 208;
-                roadDataPt = (byte)(roadDataPt | (1 << i));
-            }
-*/
+            /*
+                        roadDataPt = N;//|E|S|W;
+                        if (mapData.mapPixelX > 207)
+                        {
+                            int i = mapData.mapPixelX - 208;
+                            roadDataPt = (byte)(roadDataPt | (1 << i));
+                        }
+            */
             NativeArray<byte> lookupData = new NativeArray<byte>(lookupTable, Allocator.TempJob);
             AssignTilesWithRoadsJob assignTilesJob = new AssignTilesWithRoadsJob
             {
@@ -181,6 +185,8 @@ namespace BasicRoads
                 midHi = assignTilesDim / 2,
                 roadDataPt = roadDataPt,
                 roadCorners = roadCorners,
+                trackDataPt = trackDataPt,
+                trackCorners = trackCorners,
             };
             JobHandle assignTilesHandle = assignTilesJob.Schedule(assignTilesDim * assignTilesDim, 64, tileDataHandle);
 
@@ -225,6 +231,8 @@ namespace BasicRoads
             public int midHi;   // 64
             public byte roadDataPt;
             public byte roadCorners;
+            public byte trackDataPt;
+            public byte trackCorners;
 
             public void Execute(int index)
             {
@@ -236,7 +244,8 @@ namespace BasicRoads
                     return;
 
                 // Paint roads, rivers, dirt tracks, then streams
-                if (PaintPath(x, y, index, riverTiles, roadDataPt, roadCorners))
+                if (PaintPath(x, y, index, roadTiles, roadDataPt, roadCorners) ||
+                    PaintPath(x, y, index, trackTiles, trackDataPt, trackCorners))
                     return;
 
                 // Assign tile texture
