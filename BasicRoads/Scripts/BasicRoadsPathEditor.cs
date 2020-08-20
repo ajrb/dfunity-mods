@@ -70,7 +70,7 @@ namespace BasicRoads
         int currPathType = -1;
         bool outlineBackup;
         bool changed;
-        bool[] showPaths = { true, false, false, false };
+        bool[] showPaths = { true, true, false, false };
 
         public BasicRoadsPathEditor(IUserInterfaceManager uiManager) : base(uiManager)
         {
