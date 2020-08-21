@@ -58,7 +58,7 @@
             "IsAdvanced": false,
             "Keys": [
                 {
-                    "Value": false,
+                    "Value": true,
                     "Name": "PlayerControlledInnsTravel",
                     "Description": "Enables the stop for night travel option \"Inns\" to initiate time accelerated travel, instead of fast travel",
                     "$version": "v1",
@@ -80,7 +80,7 @@
                     "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
                 },
                 {
-                    "Value": false,
+                    "Value": true,
                     "Name": "OnlyToPorts",
                     "Description": "Restricts ship travel to be possible only if destination has a port, if from ports setting is enabled",
                     "$version": "v1",
@@ -94,6 +94,13 @@
             "Description": "Configuration for  general travel options to suit each player and system setup.",
             "IsAdvanced": false,
             "Keys": [
+                {
+                    "Value": true,
+                    "Name": "PathsTravel",
+                    "Description": "Enables time accelerated travelling following paths if BasicRoads mod is installed",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
+                },
                 {
                     "Value": false,
                     "Name": "AllowWeather",
@@ -119,7 +126,8 @@
                     "Options": [
                         "off",
                         "nearby",
-                        "entered"
+                        "entered",
+                        ""
                     ],
                     "Value": 0,
                     "Name": "LocationPause",

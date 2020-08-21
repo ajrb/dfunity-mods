@@ -3,13 +3,16 @@
 // License:         MIT License (http://www.opensource.org/licenses/mit-license.php)
 // Author:          Hazelnut
 
+using System;
 using UnityEngine;
+using DaggerfallConnect;
+using DaggerfallConnect.Arena2;
+using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game.UserInterface;
 using DaggerfallWorkshop.Game.UserInterfaceWindows;
 using DaggerfallWorkshop.Utility;
-using System;
 using DaggerfallWorkshop.Utility.AssetInjection;
-using DaggerfallConnect;
+using DaggerfallWorkshop.Game.Utility.ModSupport;
 
 namespace TravelOptions
 {
@@ -17,9 +20,43 @@ namespace TravelOptions
     {
         private const string MsgResume = "Resume your journey to {0}?";
 
+        // Path type and direction constants from BasicRoadsTexturing.
+        public const int path_roads = 0;
+        public const int path_tracks = 1;
+        public const int path_rivers = 2;
+        public const int path_streams = 3;
+        public const byte N = 128; //0b_1000_0000;
+        public const byte NE = 64; //0b_0100_0000;
+        public const byte E = 32;  //0b_0010_0000;
+        public const byte SE = 16; //0b_0001_0000;
+        public const byte S = 8;   //0b_0000_1000;
+        public const byte SW = 4;  //0b_0000_0100;
+        public const byte W = 2;   //0b_0000_0010;
+        public const byte NW = 1;  //0b_0000_0001;
+
+        Color32 roadColor = new Color32(60, 60, 60, 255);
+        Color32 trackColor = new Color32(160, 118, 74, 255);
+
+        const string roadsOffName = "roadsOff.png";
+        const string roadsOnName = "roadsOn.png";
+        const string tracksOffName = "tracksOff.png";
+        const string tracksOnName = "tracksOn.png";
+        Texture2D roadsOffTexture;
+        Texture2D roadsOnTexture;
+        Texture2D tracksOffTexture;
+        Texture2D tracksOnTexture;
+
+        protected Vector2 roadsButtonPos = new Vector2(1, 0);
+        protected Vector2 tracksButtonPos = new Vector2(48, 0);
+
+        protected Rect pathsOverlayPanelRect = new Rect(0, regionPanelOffset, 320 * 5, 160 * 5);
+        protected Panel pathsOverlayPanel;
+
+        protected Button roadsButton;
+        protected Button tracksButton;
+
         const string portsOffName = "TOportsOff.png";
         const string portsOnName = "TOportsOn.png";
-
         Texture2D portsOffTexture;
         Texture2D portsOnTexture;
 
@@ -36,9 +73,15 @@ namespace TravelOptions
 
         protected bool portsFilter = false;
 
+        public static byte[][] pathsData = new byte[4][];
+        protected bool[] showPaths = { true, true, false, false };
+
+
         public TravelOptionsMapWindow(IUserInterfaceManager uiManager)
             : base(uiManager)
         {
+            pathsData[path_roads] = new byte[MapsFile.MaxMapPixelX * MapsFile.MaxMapPixelY];
+            pathsData[path_tracks] = new byte[MapsFile.MaxMapPixelX * MapsFile.MaxMapPixelY];
         }
 
         protected override void Setup()
@@ -59,6 +102,21 @@ namespace TravelOptions
                 portsFilterButton.BackgroundTexture = portsOffTexture;
                 portsFilterButton.OnMouseClick += PortsFilterButton_OnMouseClick;
                 NativePanel.Components.Add(portsFilterButton);
+            }
+
+            if (TravelOptionsMod.Instance.PathsTravel)
+            {
+                // Try to get path data from BasicRoads mod
+                ModManager.Instance.SendModMessage(TravelOptionsMod.ROADS_MODNAME, "getPathData", path_roads,
+                    (string message, object data) => { pathsData[path_roads] = (byte[])data; });
+                ModManager.Instance.SendModMessage(TravelOptionsMod.ROADS_MODNAME, "getPathData", path_tracks,
+                    (string message, object data) => { pathsData[path_tracks] = (byte[])data; });
+
+                SetupPathButtons();
+                UpdatePathButtons();
+
+                locationDotsPixelBuffer = new Color32[(int)regionTextureOverlayPanelRect.width * (int)regionTextureOverlayPanelRect.height * 25];
+                locationDotsTexture = new Texture2D((int)regionTextureOverlayPanelRect.width * 5, (int)regionTextureOverlayPanelRect.height * 5, TextureFormat.ARGB32, false);
             }
         }
 
@@ -92,11 +150,55 @@ namespace TravelOptions
             }
         }
 
+        protected void SetupPathButtons()
+        {
+            // Paths buttons
+            if (!TextureReplacement.TryImportImage(roadsOffName, true, out roadsOffTexture))
+                return;
+            if (!TextureReplacement.TryImportImage(roadsOnName, true, out roadsOnTexture))
+                return;
+            if (!TextureReplacement.TryImportImage(tracksOffName, true, out tracksOffTexture))
+                return;
+            if (!TextureReplacement.TryImportImage(tracksOnName, true, out tracksOnTexture))
+                return;
+
+            roadsButton = new Button();
+            roadsButton.Tag = path_roads;
+            roadsButton.Position = roadsButtonPos;
+            roadsButton.Size = new Vector2(roadsOnTexture.width, roadsOnTexture.height);
+            roadsButton.OnMouseClick += PathTypeButton_OnMouseClick;
+            NativePanel.Components.Add(roadsButton);
+
+            tracksButton = new Button();
+            tracksButton.Tag = path_tracks;
+            tracksButton.Position = tracksButtonPos;
+            tracksButton.Size = new Vector2(tracksOnTexture.width, tracksOnTexture.height);
+            tracksButton.OnMouseClick += PathTypeButton_OnMouseClick;
+            NativePanel.Components.Add(tracksButton);
+        }
+
+        protected virtual void PathTypeButton_OnMouseClick(BaseScreenComponent sender, Vector2 position)
+        {
+            int pathType = (int)sender.Tag;
+            if (pathType >= path_roads && pathType <= path_streams)
+            {
+                showPaths[pathType] = !showPaths[pathType];
+            }
+            UpdatePathButtons();
+            UpdateMapLocationDotsTexture();
+        }
+
+        private void UpdatePathButtons()
+        {
+            roadsButton.BackgroundTexture = showPaths[path_roads] ? roadsOnTexture : roadsOffTexture;
+            tracksButton.BackgroundTexture = showPaths[path_tracks] ? tracksOnTexture : tracksOffTexture;
+        }
+
         public override void OnPush()
         {
             // Check if there's an active destination
             TravelOptionsMod travelModInstance = TravelOptionsMod.Instance;
-            if (!string.IsNullOrEmpty(travelModInstance.DestinationName) && !travelModInstance.GetTravelControlUI().isShowing) //&& travelMod.TravelUi != null 
+            if (!string.IsNullOrEmpty(travelModInstance.DestinationName) && !travelModInstance.GetTravelControlUI().isShowing)
             {
                 Debug.Log("Active destination: " + travelModInstance.DestinationName);
 
@@ -115,6 +217,183 @@ namespace TravelOptions
             }
 
             base.OnPush();
+        }
+
+        // Updates location dots
+        protected override void UpdateMapLocationDotsTexture()
+        {
+            if (TravelOptionsMod.Instance.PathsTravel)
+            {
+                UpdateMapLocationDotsTextureWithPaths();
+            }
+            else
+            {
+                base.UpdateMapLocationDotsTexture();
+            }
+        }
+
+        protected virtual void UpdateMapLocationDotsTextureWithPaths()
+        {
+            // Get map and dimensions
+            string mapName = selectedRegionMapNames[mapIndex];
+            Vector2 origin = offsetLookup[mapName];
+            int originX = (int)origin.x;
+            int originY = (int)origin.y;
+            int width = (int)regionTextureOverlayPanelRect.width;
+            int height = (int)regionTextureOverlayPanelRect.height;
+
+            // Plot locations to color array
+            scale = GetRegionMapScale(selectedRegion);
+            Array.Clear(locationDotsPixelBuffer, 0, locationDotsPixelBuffer.Length);
+            Array.Clear(locationDotsOutlinePixelBuffer, 0, locationDotsOutlinePixelBuffer.Length);
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    int offset = (int)((((height - y - 1) * width) + x) * scale);
+                    if (offset >= (width * height))
+                        continue;
+                    int sampleRegion = DaggerfallUnity.ContentReader.MapFileReader.GetPoliticIndex(originX + x, originY + y) - 128;
+
+                    int width5 = width * 5;
+                    int offset5 = (int)((((height - y - 1) * 5 * width5) + (x * 5)) * scale);
+
+                    ContentReader.MapSummary summary;
+                    if (DaggerfallUnity.ContentReader.HasLocation(originX + x, originY + y, out summary))
+                    {
+                        if (checkLocationDiscovered(summary))
+                        {
+                            int index = GetPixelColorIndex(summary.LocationType);
+                            if (index != -1)
+                            {
+                                if (DaggerfallUnity.Settings.TravelMapLocationsOutline)
+                                    locationDotsOutlinePixelBuffer[offset] = dotOutlineColor;
+                                DrawLocation(offset5, width5, locationPixelColors[index], IsLocationLarge(summary.LocationType));
+                            }
+                        }
+                    }
+
+                    int pIdx = originX + x + ((originY + y) * MapsFile.MaxMapPixelX);
+                    if (showPaths[path_tracks])
+                        DrawPath(offset5, width5, pathsData[path_tracks][pIdx], trackColor);
+                    if (showPaths[path_roads])
+                        DrawPath(offset5, width5, pathsData[path_roads][pIdx], roadColor);
+                    //Debug.LogFormat("Found road at x:{0} y:{1}  index:{2}", originX + x, originY + y, rIdx);
+                }
+            }
+
+            // Apply updated color array to texture
+            if (DaggerfallUnity.Settings.TravelMapLocationsOutline)
+            {
+                locationDotsOutlineTexture.SetPixels32(locationDotsOutlinePixelBuffer);
+                locationDotsOutlineTexture.Apply();
+            }
+            locationDotsTexture.SetPixels32(locationDotsPixelBuffer);
+            locationDotsTexture.Apply();
+
+            // Present texture
+            if (DaggerfallUnity.Settings.TravelMapLocationsOutline)
+                for (int i = 0; i < outlineDisplacements.Length; i++)
+                    regionLocationDotsOutlinesOverlayPanel[i].BackgroundTexture = locationDotsOutlineTexture;
+            regionLocationDotsOverlayPanel.BackgroundTexture = locationDotsTexture;
+        }
+
+        void DrawLocation(int offset, int width, Color32 color, bool large)
+        {
+            int st = large ? 0 : 1;
+            int en = large ? 5 : 4;
+            for (int y = st; y < en; y++)
+            {
+                for (int x = st; x < en; x++)
+                {
+                    locationDotsPixelBuffer[offset + (y * width) + x] = color;
+                }
+            }
+        }
+
+        bool IsLocationLarge(DFRegion.LocationTypes locationType)
+        {
+            return locationType == DFRegion.LocationTypes.TownCity || locationType == DFRegion.LocationTypes.TownHamlet;
+        }
+
+        private void DrawPath(int offset, int width, byte pathDataPt, Color32 pathColor)
+        {
+            if (pathDataPt == 0)
+                return;
+
+            locationDotsPixelBuffer[offset + (width * 2) + 2] = pathColor;
+            if ((pathDataPt & S) != 0)
+            {
+                locationDotsPixelBuffer[offset + 2] = pathColor;
+                locationDotsPixelBuffer[offset + width + 2] = pathColor;
+            }
+            if ((pathDataPt & SE) != 0)
+            {
+                locationDotsPixelBuffer[offset + 4] = pathColor;
+                locationDotsPixelBuffer[offset + width + 3] = pathColor;
+            }
+            if ((pathDataPt & E) != 0)
+            {
+                locationDotsPixelBuffer[offset + (width * 2) + 3] = pathColor;
+                locationDotsPixelBuffer[offset + (width * 2) + 4] = pathColor;
+            }
+            if ((pathDataPt & NE) != 0)
+            {
+                locationDotsPixelBuffer[offset + (width * 3) + 3] = pathColor;
+                locationDotsPixelBuffer[offset + (width * 4) + 4] = pathColor;
+            }
+            if ((pathDataPt & N) != 0)
+            {
+                locationDotsPixelBuffer[offset + (width * 3) + 2] = pathColor;
+                locationDotsPixelBuffer[offset + (width * 4) + 2] = pathColor;
+            }
+            if ((pathDataPt & NW) != 0)
+            {
+                locationDotsPixelBuffer[offset + (width * 3) + 1] = pathColor;
+                locationDotsPixelBuffer[offset + (width * 4)] = pathColor;
+            }
+            if ((pathDataPt & W) != 0)
+            {
+                locationDotsPixelBuffer[offset + (width * 2)] = pathColor;
+                locationDotsPixelBuffer[offset + (width * 2) + 1] = pathColor;
+            }
+            if ((pathDataPt & SW) != 0)
+            {
+                locationDotsPixelBuffer[offset] = pathColor;
+                locationDotsPixelBuffer[offset + width + 1] = pathColor;
+            }
+        }
+
+        // Zoom and pan region texture
+        protected override void ZoomMapTextures()
+        {
+            base.ZoomMapTextures();
+
+            if (TravelOptionsMod.Instance.PathsTravel && RegionSelected && zoom)
+            {
+                // Adjust cropped location dots overlay to x5 version
+                int width = (int)regionTextureOverlayPanelRect.width;
+                int height = (int)regionTextureOverlayPanelRect.height;
+                int zoomWidth = width / (zoomfactor * 2);
+                int zoomHeight = height / (zoomfactor * 2);
+                int startX = (int)zoomPosition.x - zoomWidth;
+                int startY = (int)(height + (-zoomPosition.y - zoomHeight)) + regionPanelOffset;
+                // Clamp to edges
+                if (startX < 0)
+                    startX = 0;
+                else if (startX + width / zoomfactor >= width)
+                    startX = width - width / zoomfactor;
+                if (startY < 0)
+                    startY = 0;
+                else if (startY + height / zoomfactor >= height)
+                    startY = height - height / zoomfactor;
+
+                Rect locationDotsNewRect = new Rect(startX * 5, startY * 5, width * 5 / zoomfactor, height * 5 / zoomfactor);
+                regionLocationDotsOverlayPanel.BackgroundCroppedRect = locationDotsNewRect;
+
+                UpdateBorder();
+            }
+
         }
 
         protected override bool checkLocationDiscovered(ContentReader.MapSummary summary)

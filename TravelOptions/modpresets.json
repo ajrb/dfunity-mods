@@ -9,7 +9,8 @@
                 "AllowWeather": "False",
                 "AllowAnnoyingSounds": "False",
                 "AllowRealGrass": "False",
-                "LocationPause": "0"
+                "LocationPause": "0",
+                "PathsTravel": "True"
             },
             "CautiousTravel": {
                 "PlayerControlledCautiousTravel": "True",

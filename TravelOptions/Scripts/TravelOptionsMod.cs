@@ -25,6 +25,8 @@ namespace TravelOptions
         public const string PAUSE_TRAVEL = "pauseTravel";
         public const string IS_TRAVEL_ACTIVE = "isTravelActive";
 
+        public const string ROADS_MODNAME = "BasicRoads";
+
         private const string MsgArrived = "You have arrived at your destination.";
         private const string MsgEnemies = "Enemies are seeking to prevent your travel...";
         private const string MsgAvoidFail = "You failed to avoid an encounter!";
@@ -45,6 +47,7 @@ namespace TravelOptions
         public ContentReader.MapSummary DestinationSummary { get; private set; }
         public bool DestinationCautious { get; private set; }
 
+        public bool PathsTravel { get; private set; }
         public bool CautiousTravel { get; private set; }
         public bool StopAtInnsTravel { get; private set; }
         public bool ShipTravelPortsOnly { get; private set; }
@@ -91,8 +94,12 @@ namespace TravelOptions
         {
             Debug.Log("Begin mod init: TravelOptions");
 
+            Mod roadsMod = ModManager.Instance.GetMod(ROADS_MODNAME);
+            bool roadsModEnabled = roadsMod != null && roadsMod.Enabled;
+
             ModSettings settings = mod.GetSettings();
 
+            PathsTravel = settings.GetValue<bool>("GeneralOptions", "PathsTravel") && roadsModEnabled;
             enableWeather = settings.GetValue<bool>("GeneralOptions", "AllowWeather");
             enableSounds = settings.GetValue<bool>("GeneralOptions", "AllowAnnoyingSounds");
             enableRealGrass = settings.GetValue<bool>("GeneralOptions", "AllowRealGrass");

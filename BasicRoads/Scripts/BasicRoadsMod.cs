@@ -13,7 +13,10 @@ namespace BasicRoads
 {
     public class BasicRoadsMod : MonoBehaviour
     {
+        public const string GET_PATH_DATA = "getPathData";
+
         static Mod mod;
+        static BasicRoadsTexturing roadTexturing;
 
         [Invoke(StateManager.StateTypes.Start, 0)]
         public static void Init(InitParams initParams)
@@ -31,16 +34,31 @@ namespace BasicRoads
             bool smoothRoads = settings.GetBool("Settings", "SmoothRoads");
             bool editingEnabled = settings.GetBool("Editing", "EditingEnabled");
 
-            DaggerfallUnity.Instance.TerrainTexturing = new BasicRoadsTexturing(smoothRoads, editingEnabled);
+            roadTexturing = new BasicRoadsTexturing(smoothRoads, editingEnabled);
+            DaggerfallUnity.Instance.TerrainTexturing = roadTexturing;
 
             if (editingEnabled)
             {
                 BasicRoadsPathEditor editor = BasicRoadsPathEditor.Instance;
             }
 
+            mod.MessageReceiver = MessageReceiver;
             mod.IsReady = true;
             Debug.Log("Finished mod init: BasicRoads");
         }
 
+        private void MessageReceiver(string message, object data, DFModMessageCallback callBack)
+        {
+            switch (message)
+            {
+                case GET_PATH_DATA:
+                    callBack?.Invoke(GET_PATH_DATA, roadTexturing.GetPathData((int)data));
+                    break;
+
+                default:
+                    Debug.LogErrorFormat("{0}: unknown message received ({1}).", this, message);
+                    break;
+            }
+        }
     }
 }

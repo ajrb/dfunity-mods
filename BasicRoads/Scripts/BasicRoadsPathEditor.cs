@@ -47,8 +47,9 @@ namespace BasicRoads
         protected Vector2 roadsButtonPos = new Vector2(1, 0);
         protected Vector2 tracksButtonPos = new Vector2(48, 0);
 
-        protected Rect roadOverlayPanelRect = new Rect(0, regionPanelOffset, 320 * 5, 160 * 5);
-        protected Panel roadOverlayPanel;
+        protected Rect pathsOverlayPanelRect = new Rect(0, regionPanelOffset, 320 * 5, 160 * 5);
+        protected Panel pathsOverlayPanel;
+
         protected Button roadsButton;
         protected Button tracksButton;
 
@@ -116,6 +117,15 @@ namespace BasicRoads
         {
             base.Setup();
 
+            SetupPathButtons();
+            UpdatePathButtons();
+
+            locationDotsPixelBuffer = new Color32[(int)regionTextureOverlayPanelRect.width * (int)regionTextureOverlayPanelRect.height * 25];
+            locationDotsTexture = new Texture2D((int)regionTextureOverlayPanelRect.width * 5, (int)regionTextureOverlayPanelRect.height * 5, TextureFormat.ARGB32, false);
+        }
+
+        protected void SetupPathButtons()
+        {
             // Paths buttons
             if (!TextureReplacement.TryImportImage(roadsOffName, true, out roadsOffTexture))
                 return;
@@ -141,12 +151,6 @@ namespace BasicRoads
             tracksButton.BackgroundColor = Color.white;
             tracksButton.OnMouseClick += PathTypeButton_OnMouseClick;
             NativePanel.Components.Add(tracksButton);
-
-
-            UpdatePathButtons();
-
-            locationDotsPixelBuffer = new Color32[(int)regionTextureOverlayPanelRect.width * (int)regionTextureOverlayPanelRect.height * 25];
-            locationDotsTexture = new Texture2D((int)regionTextureOverlayPanelRect.width * 5, (int)regionTextureOverlayPanelRect.height * 5, TextureFormat.ARGB32, false);
         }
 
         protected virtual void PathTypeButton_OnMouseClick(BaseScreenComponent sender, Vector2 position)
@@ -352,13 +356,13 @@ namespace BasicRoads
                     int offset = (int)((((height - y - 1) * width) + x) * scale);
                     if (offset >= (width * height))
                         continue;
-                    int sampleRegion = DaggerfallUnity.Instance.ContentReader.MapFileReader.GetPoliticIndex(originX + x, originY + y) - 128;
+                    int sampleRegion = DaggerfallUnity.ContentReader.MapFileReader.GetPoliticIndex(originX + x, originY + y) - 128;
 
                     int width5 = width * 5;
                     int offset5 = (int)((((height - y - 1) * 5 * width5) + (x * 5)) * scale);
 
                     ContentReader.MapSummary summary;
-                    if (DaggerfallUnity.Instance.ContentReader.HasLocation(originX + x, originY + y, out summary))
+                    if (DaggerfallUnity.ContentReader.HasLocation(originX + x, originY + y, out summary))
                     {
                         int index = GetPixelColorIndex(summary.LocationType);
                         if (index != -1)
