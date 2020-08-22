@@ -13,12 +13,15 @@ using DaggerfallWorkshop.Game.UserInterfaceWindows;
 using DaggerfallWorkshop.Utility;
 using DaggerfallWorkshop.Utility.AssetInjection;
 using DaggerfallWorkshop.Game.Utility.ModSupport;
+using DaggerfallWorkshop.Game;
+using DaggerfallConnect.Utility;
 
 namespace TravelOptions
 {
     public class TravelOptionsMapWindow : DaggerfallTravelMapWindow
     {
         private const string MsgResume = "Resume your journey to {0}?";
+        private const string MsgFollow = "Do you want to follow this road?";
 
         // Path type and direction constants from BasicRoadsTexturing.
         public const int path_roads = 0;
@@ -73,15 +76,21 @@ namespace TravelOptions
 
         protected bool portsFilter = false;
 
-        public static byte[][] pathsData = new byte[4][];
+        internal static byte[][] pathsData = new byte[4][];
         protected bool[] showPaths = { true, true, false, false };
 
 
         public TravelOptionsMapWindow(IUserInterfaceManager uiManager)
             : base(uiManager)
         {
-            pathsData[path_roads] = new byte[MapsFile.MaxMapPixelX * MapsFile.MaxMapPixelY];
-            pathsData[path_tracks] = new byte[MapsFile.MaxMapPixelX * MapsFile.MaxMapPixelY];
+            if (TravelOptionsMod.Instance.PathsTravel)
+            {
+                // Try to get path data from BasicRoads mod
+                ModManager.Instance.SendModMessage(TravelOptionsMod.ROADS_MODNAME, "getPathData", path_roads,
+                    (string message, object data) => { pathsData[path_roads] = (byte[])data; });
+                ModManager.Instance.SendModMessage(TravelOptionsMod.ROADS_MODNAME, "getPathData", path_tracks,
+                    (string message, object data) => { pathsData[path_tracks] = (byte[])data; });
+            }
         }
 
         protected override void Setup()
@@ -106,12 +115,6 @@ namespace TravelOptions
 
             if (TravelOptionsMod.Instance.PathsTravel)
             {
-                // Try to get path data from BasicRoads mod
-                ModManager.Instance.SendModMessage(TravelOptionsMod.ROADS_MODNAME, "getPathData", path_roads,
-                    (string message, object data) => { pathsData[path_roads] = (byte[])data; });
-                ModManager.Instance.SendModMessage(TravelOptionsMod.ROADS_MODNAME, "getPathData", path_tracks,
-                    (string message, object data) => { pathsData[path_tracks] = (byte[])data; });
-
                 SetupPathButtons();
                 UpdatePathButtons();
 
@@ -215,6 +218,42 @@ namespace TravelOptions
                 };
                 resumeMsgBox.Show();
             }
+            // Check whether player is on a path to follow
+/*            else if (TravelOptionsMod.Instance.PathsTravel && IsSetup)
+            {
+                PlayerGPS playerGPS = GameManager.Instance.PlayerGPS;
+                DFPosition currMapPixel = playerGPS.CurrentMapPixel;
+                int pathsIndex = currMapPixel.X + (currMapPixel.Y * MapsFile.MaxMapPixelX);
+                byte roadDataPt = pathsData[path_roads][pathsIndex];
+                if (roadDataPt != 0)
+                {
+                    int midLo = 16384 - 256;
+                    int midHi = 16384 + 256;
+                    DFPosition worldOrigin = MapsFile.MapPixelToWorldCoord(currMapPixel.X, currMapPixel.Y);
+                    DFPosition posInMp = new DFPosition(playerGPS.WorldX - worldOrigin.X, playerGPS.WorldZ - worldOrigin.Y);
+                    if ((roadDataPt & N) != 0 && posInMp.X > midLo && posInMp.X < midHi && posInMp.Y > midHi)
+                    {
+                        DFPosition targetPos = MapsFile.MapPixelToWorldCoord(currMapPixel.X, currMapPixel.Y - 1);
+                        Rect targetRect = new Rect(targetPos.X + midLo + 128, targetPos.Y + midLo + 128, 256, 256);
+                        //string resume = string.Format(MsgResume, travelModInstance.DestinationName);
+                        DaggerfallMessageBox followMsgBox = new DaggerfallMessageBox(uiManager, DaggerfallMessageBox.CommonMessageBoxButtons.YesNo, MsgFollow, uiManager.TopWindow);
+                        followMsgBox.OnButtonClick += (_sender, button) =>
+                        {
+                            CloseWindow();
+                            if (button == DaggerfallMessageBox.MessageBoxButtons.Yes)
+                            {
+                                CloseWindow();
+                                travelModInstance.BeginTravel(targetRect);
+                            }
+                        };
+                        followMsgBox.Show();
+                    }
+
+                    float yaw = GameManager.Instance.PlayerMouseLook.Yaw;
+                    Debug.Log("yaw: " + yaw);
+                    // What next?
+                }
+            }*/
 
             base.OnPush();
         }

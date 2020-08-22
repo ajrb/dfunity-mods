@@ -17,6 +17,7 @@ using DaggerfallWorkshop.Game.Utility;
 using DaggerfallWorkshop.Game.Entity;
 using DaggerfallWorkshop.Utility;
 using DaggerfallConnect.Arena2;
+using DaggerfallConnect.Utility;
 
 namespace TravelOptions
 {
@@ -26,6 +27,32 @@ namespace TravelOptions
         public const string IS_TRAVEL_ACTIVE = "isTravelActive";
 
         public const string ROADS_MODNAME = "BasicRoads";
+
+        // Path type and direction constants from BasicRoadsTexturing.
+        public const int path_roads = 0;
+        public const int path_tracks = 1;
+        public const int path_rivers = 2;
+        public const int path_streams = 3;
+        public const byte N = 128; //0b_1000_0000;
+        public const byte NE = 64; //0b_0100_0000;
+        public const byte E = 32;  //0b_0010_0000;
+        public const byte SE = 16; //0b_0001_0000;
+        public const byte S = 8;   //0b_0000_1000;
+        public const byte SW = 4;  //0b_0000_0100;
+        public const byte W = 2;   //0b_0000_0010;
+        public const byte NW = 1;  //0b_0000_0001;
+
+        private const int MPhalfWunits = 16384;
+        const int TSize = 256;
+        const int PSize = TSize * 2;
+        const int MidLo = MPhalfWunits - TSize;
+        const int MidHi = MPhalfWunits + TSize;
+        const int SSize = 1024;
+        const int SDSize = SSize * 2;
+        const int SloDo = MPhalfWunits - SDSize;
+        const float AngUnit = 22.5f; // 45/2
+        const int SlowdownSpeed = 20;
+
 
         private const string MsgArrived = "You have arrived at your destination.";
         private const string MsgEnemies = "Enemies are seeking to prevent your travel...";
@@ -67,6 +94,7 @@ namespace TravelOptions
         private TravelControlUI travelControlUI;
         internal TravelControlUI GetTravelControlUI() { return travelControlUI; }
         private DFLocation lastLocation;
+        //private Rect slowdownRect = Rect.zero;
 
         private bool enableWeather;
         private bool enableSounds;
@@ -218,6 +246,186 @@ namespace TravelOptions
             }
         }
 
+        #region Path following
+
+        void FollowPath(bool onPath = false)
+        {
+            PlayerGPS playerGPS = GameManager.Instance.PlayerGPS;
+            DFPosition currMapPixel = playerGPS.CurrentMapPixel;
+            int pathsIndex = currMapPixel.X + (currMapPixel.Y * MapsFile.MaxMapPixelX);
+            byte roadDataPt = TravelOptionsMapWindow.pathsData[path_roads][pathsIndex];
+
+            if (roadDataPt != 0)
+            {
+                if (!onPath)
+                {
+                    DFPosition worldOrigin = MapsFile.MapPixelToWorldCoord(currMapPixel.X, currMapPixel.Y);
+                    DFPosition posInMp = new DFPosition(playerGPS.WorldX - worldOrigin.X, playerGPS.WorldZ - worldOrigin.Y);
+                    if ((roadDataPt & N) != 0 && posInMp.X > MidLo && posInMp.X < MidHi && posInMp.Y > MidLo)
+                        onPath = true;
+                    if ((roadDataPt & E) != 0 && posInMp.Y > MidLo && posInMp.Y < MidHi && posInMp.X > MidLo)
+                        onPath = true;
+                    if ((roadDataPt & S) != 0 && posInMp.X > MidLo && posInMp.X < MidHi && posInMp.Y < MidHi)
+                        onPath = true;
+                    if ((roadDataPt & W) != 0 && posInMp.Y > MidLo && posInMp.Y < MidHi && posInMp.X < MidHi)
+                        onPath = true;
+                    if ((roadDataPt & NE) != 0 && (Mathf.Abs(posInMp.X - posInMp.Y) < PSize) && posInMp.X > MidLo)
+                        onPath = true;
+                    if ((roadDataPt & SW) != 0 && (Mathf.Abs(posInMp.X - posInMp.Y) < PSize) && posInMp.X < MidHi)
+                        onPath = true;
+                    if ((roadDataPt & NW) != 0 && (Mathf.Abs(posInMp.X - (32768-posInMp.Y)) < PSize) && posInMp.X > MidLo)
+                        onPath = true;
+                    if ((roadDataPt & SE) != 0 && (Mathf.Abs(posInMp.X - (32768 - posInMp.Y)) < PSize) && posInMp.X < MidHi)
+                        onPath = true;
+                }
+            }
+            if (onPath)
+            {
+                byte playerDirection = GetDirection(GetNormalisedPlayerYaw());
+                Debug.Log("Following path in dir: " + playerDirection);
+                if ((roadDataPt & playerDirection) != 0)
+                {
+                    BeginTravel(GetTargetPixel(playerDirection, currMapPixel));
+                }
+                else
+                {
+                    byte fromDirection = GetDirection(GetNormalisedPlayerYaw(true));
+                    if ((roadDataPt & fromDirection) != 0)
+                    {
+                        BeginTravel(GetTargetPixel(0, currMapPixel));
+                    }
+                }
+            }
+        }
+
+        public void BeginTravel(DFPosition targetPixel, bool speedCautious = false)
+        {
+            if (targetPixel != null)
+            {
+                travelControlUI.SetDestination("Following a path.");
+                Rect targetRect = new Rect(targetPixel.X + MidLo, targetPixel.Y + MidLo, PSize, PSize);
+                //slowdownRect = new Rect(targetPixel.X + SloDo, targetPixel.Y + SloDo, SDSize, SDSize);
+                DestinationCautious = speedCautious;
+                if (alwaysUseStartingAccel)
+                    travelControlUI.TimeAcceleration = defaultStartingAccel;
+
+                playerAutopilot = new PlayerAutoPilot(targetRect, GetTravelSpeedMultiplier());
+                playerAutopilot.OnArrival += SelectNextPath;
+                SetTimeScale(travelControlUI.TimeAcceleration);
+                DisableWeatherAndSound();
+                diseaseCount = GameManager.Instance.PlayerEffectManager.DiseaseCount;
+            }
+        }
+
+        DFPosition GetTargetPixel(byte direction, DFPosition currMapPixel)
+        {
+            switch (direction)
+            {
+                case N:
+                    return MapsFile.MapPixelToWorldCoord(currMapPixel.X, currMapPixel.Y - 1);
+                case NE:
+                    return MapsFile.MapPixelToWorldCoord(currMapPixel.X + 1, currMapPixel.Y - 1);
+                case E:
+                    return MapsFile.MapPixelToWorldCoord(currMapPixel.X + 1, currMapPixel.Y);
+                case SE:
+                    return MapsFile.MapPixelToWorldCoord(currMapPixel.X + 1, currMapPixel.Y + 1);
+                case S:
+                    return MapsFile.MapPixelToWorldCoord(currMapPixel.X, currMapPixel.Y + 1);
+                case SW:
+                    return MapsFile.MapPixelToWorldCoord(currMapPixel.X - 1, currMapPixel.Y + 1);
+                case W:
+                    return MapsFile.MapPixelToWorldCoord(currMapPixel.X - 1, currMapPixel.Y);
+                case NW:
+                    return MapsFile.MapPixelToWorldCoord(currMapPixel.X - 1, currMapPixel.Y - 1);
+                default:
+                    return MapsFile.MapPixelToWorldCoord(currMapPixel.X, currMapPixel.Y);
+            }
+        }
+
+        void SelectNextPath()
+        {
+            PlayerGPS playerGPS = GameManager.Instance.PlayerGPS;
+            DFPosition currMapPixel = playerGPS.CurrentMapPixel;
+            int pathsIndex = currMapPixel.X + (currMapPixel.Y * MapsFile.MaxMapPixelX);
+
+            byte roadDataPt = TravelOptionsMapWindow.pathsData[path_roads][pathsIndex];
+            byte playerDirection = GetDirection(GetNormalisedPlayerYaw());
+            if (CountSetBits(roadDataPt) == 2)
+            {
+                playerDirection = (byte)(roadDataPt & playerDirection);
+                if (playerDirection == 0)
+                {
+                    byte fromDirection = GetDirection(GetNormalisedPlayerYaw(true));
+                    playerDirection = (byte)(roadDataPt ^ fromDirection);
+                    Debug.Log("Changing to dir: " + playerDirection);
+                }
+                Debug.Log("Heading in dir: " + playerDirection);
+                BeginTravel(GetTargetPixel(playerDirection, currMapPixel));
+                return;
+            }
+            // An intersection or path end, close travel
+            //slowdownRect = Rect.zero;
+            travelControlUI.CloseWindow();
+        }
+
+        float GetNormalisedPlayerYaw(bool invert = false)
+        {
+            int inv = invert ? 180 : 0;
+            float yaw = (GameManager.Instance.PlayerMouseLook.Yaw + inv) % 360;
+            if (yaw < 0)
+                yaw += 360;
+            return yaw;
+        }
+
+        /*
+        byte GetNewDirection(byte direction, byte pathDataPt)
+        {
+            byte left = direction;
+            byte right = direction;
+            byte left = (byte)(direction << 1);
+            if (left == 0) left = NW;
+            if ((left & pathDataPt) != 0) return left;
+
+            byte right = (byte)(direction >> 1);
+            if (right == 0) right = N;
+            if ((right & pathDataPt) != 0)
+                return right;
+        }
+*/
+        byte GetDirection(float yaw)
+        {
+            if ((yaw >= 360 - AngUnit && yaw <= 360) || (yaw >= 0 && yaw <= AngUnit))
+                return N;
+            if (yaw >= 90 - AngUnit && yaw <= 90 + AngUnit)
+                return E;
+            if (yaw >= 180 - AngUnit && yaw <= 180 + AngUnit)
+                return S;
+            if (yaw >= 270 - AngUnit && yaw <= 270 + AngUnit)
+                return W;
+            if (yaw > 45 - AngUnit && yaw < 45 + AngUnit)
+                return NE;
+            if (yaw > 135 - AngUnit && yaw < 135 + AngUnit)
+                return SE;
+            if (yaw > 225 - AngUnit && yaw < 225 + AngUnit)
+                return SW;
+            if (yaw > 295 - AngUnit && yaw < 295 + AngUnit)
+                return NW;
+            return 0;
+        }
+
+        static int CountSetBits(byte n)
+        {
+            int count = 0;
+            while (n > 0)
+            {
+                count += n & 1;
+                n >>= 1;
+            }
+            return count;
+        }
+
+        #endregion
+
         /// <summary>
         /// Stops travel, but leaves current destination active
         /// </summary>
@@ -241,6 +449,10 @@ namespace TravelOptions
 
         void Update()
         {
+            PlayerGPS playerGPS = GameManager.Instance.PlayerGPS;
+            //if (slowdownRect != Rect.zero && Time.timeScale > SlowdownSpeed && slowdownRect.Contains(new Vector2(playerGPS.WorldX, playerGPS.WorldZ)))
+            //    SetTimeScale(SlowdownSpeed);
+
             if (playerAutopilot != null)
             {
                 // Ensure UI is showing
@@ -267,7 +479,6 @@ namespace TravelOptions
                 }
 
                 // If location pause set to nearby, check for a near location
-                PlayerGPS playerGPS = GameManager.Instance.PlayerGPS;
                 if (locationPause == LocPauseNear && playerGPS.HasCurrentLocation && !playerGPS.CurrentLocation.Equals(lastLocation))
                 {
                     lastLocation = playerGPS.CurrentLocation;
@@ -311,7 +522,10 @@ namespace TravelOptions
                     }
                     diseaseCount = currentDiseaseCount;
                 }
-
+            }
+            else if (PathsTravel && InputManager.Instance.GetKey(KeyCode.F))
+            {
+                FollowPath();
             }
         }
 

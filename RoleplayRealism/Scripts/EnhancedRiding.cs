@@ -94,10 +94,10 @@ namespace DaggerfallWorkshop.Game
             {
                 if (RealisticMovement)
                 {
+                    InputManager.Instance.NegVerticalLimit = (transportManager.TransportMode == TransportModes.Cart) ? 0.2f : 0.5f;
                     float horseStrafeLimit = (transportManager.TransportMode == TransportModes.Cart) ? 0.1f : 0.4f;
                     InputManager.Instance.NegHorizontalLimit = horseStrafeLimit;
                     InputManager.Instance.PosHorizontalLimit = horseStrafeLimit;
-                    InputManager.Instance.NegVerticalLimit = (transportManager.TransportMode == TransportModes.Cart) ? 0.2f : 0.5f;
                 }
 
                 // Sample angle of terrain

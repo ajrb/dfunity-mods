@@ -4,8 +4,6 @@
 // Author:          Jedidia
 // Contributors:    Hazelnut
 
-using System;
-using System.Reflection;
 using UnityEngine;
 using DaggerfallConnect;
 using DaggerfallConnect.Arena2;
@@ -13,6 +11,7 @@ using DaggerfallConnect.Utility;
 using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Utility;
+using System;
 
 namespace TravelOptions
 {
@@ -24,29 +23,41 @@ namespace TravelOptions
         private float travelSpeedMultiplier;
         private DFPosition destinationMapPixel = null;
         private Rect destinationWorldRect;
+        private DFPosition destinationCentre;
         private PlayerGPS playerGPS = GameManager.Instance.PlayerGPS;
         private DFPosition lastPlayerMapPixel = new DFPosition(int.MaxValue, int.MaxValue);
         private bool inDestinationMapPixel = false;
-        private InputManager inputManager = InputManager.Instance;
         private Transform cameraTransform = GameManager.Instance.PlayerMouseLook.GetComponent<Transform>();
         private PlayerMouseLook mouseLook = GameManager.Instance.PlayerMouseLook;
         private Vector3 pitchVector = new Vector3(0, 0, 0);
         private Vector3 yawVector = new Vector3(0, 0, 0);
 
+        public PlayerAutoPilot(Rect targetRect, float travelSpeedMultiplier = 1f)
+        {
+            destinationWorldRect = targetRect;
+            destinationCentre = new DFPosition((int)targetRect.center.x, (int)targetRect.center.y);
+            destinationMapPixel = MapsFile.WorldCoordToMapPixel((int)targetRect.x, (int)targetRect.y);
+
+            this.travelSpeedMultiplier = travelSpeedMultiplier;
+            mouseLook.Pitch = 0;
+        }
+
         public PlayerAutoPilot(ContentReader.MapSummary destinationSummary, float travelSpeedMultiplier = 1f)
         {
             this.destinationSummary = destinationSummary;
             this.travelSpeedMultiplier = travelSpeedMultiplier;
-            Init();
+            InitDestination();
         }
 
-        private void Init()
+        private void InitDestination()
         {
             destinationMapPixel = MapsFile.GetPixelFromPixelID(destinationSummary.ID);
 
-            // get exact coordinates of destination
+            // Set rect coordinates of destination
             destinationWorldRect = GetLocationRect(destinationSummary);
-            //grow the rect a bit so fast travel cancels shortly before entering the location
+            destinationCentre = new DFPosition((int)destinationWorldRect.center.x, (int)destinationWorldRect.center.y);
+
+            // Grow the rect a bit so fast travel cancels shortly before entering the location
             destinationWorldRect.xMin -= ArrivalBuffer;
             destinationWorldRect.xMax += ArrivalBuffer;
             destinationWorldRect.yMin -= ArrivalBuffer;
@@ -57,7 +68,7 @@ namespace TravelOptions
         {
             if (inDestinationMapPixel)
             {
-                if (isPlayerInArrivalRect())
+                if (IsPlayerInArrivalRect())
                 {
                     // note that event will be raised whenever player is inside destination rect when update is called.
                     RaiseOnArrivalEvent();
@@ -91,39 +102,40 @@ namespace TravelOptions
         /// so the player stops a bit outside it.
         /// </summary>
         /// <returns></returns>
-        private bool isPlayerInArrivalRect()
+        private bool IsPlayerInArrivalRect()
         {
-            return (destinationWorldRect.Contains(new Vector2(playerGPS.WorldX, playerGPS.WorldZ)));
+            var playerPos = new DFPosition(playerGPS.WorldX, playerGPS.WorldZ);
+            float yaw = CalculateYaw(playerPos, destinationCentre);
+            float dy = Mathf.Abs(yaw - yawVector.y);
+            if (dy > 5)
+                return true;    // If yaw changes more than 5 degrees in one update, must have overshot target
+            else
+                yawVector.y = yaw;
+
+            return destinationWorldRect.Contains(new Vector2(playerGPS.WorldX, playerGPS.WorldZ));
         }
 
- 
+        private float CalculateYaw(DFPosition fromWorldPos, DFPosition toWorldPos)
+        {
+            float angleRad = Mathf.Atan2(fromWorldPos.X - toWorldPos.X, fromWorldPos.Y - toWorldPos.Y);
+            return angleRad * 180 / Mathf.PI + 180;
+        }
 
         private void SetNewYaw()
         {
             var playerPos = new DFPosition(playerGPS.WorldX, playerGPS.WorldZ);
-            yawVector.y = CalculateYaw(playerPos,
-                new DFPosition(
-                    (int)destinationWorldRect.center.x,
-                    (int)destinationWorldRect.center.y));
+            yawVector.y = CalculateYaw(playerPos, destinationCentre);
+#if UNITY_EDITOR
+            Debug.Log("Set yaw = " + yawVector.y);
+#endif
         }
 
         private void SetPlayerOrientation()
         {
+            mouseLook.Yaw = yawVector.y;
             cameraTransform.localEulerAngles = pitchVector;
             mouseLook.characterBody.transform.localEulerAngles = yawVector;
         }
-
-
-        private float CalculateYaw(DFPosition fromWorldPos, DFPosition toWorldPos)
-        {
-            double angleRad = Math.Atan2(fromWorldPos.X - toWorldPos.X, fromWorldPos.Y - toWorldPos.Y);
-            double angleDeg = angleRad * 180.0 / Math.PI + 180;
-#if UNITY_EDITOR
-            Debug.Log((float)angleDeg);
-#endif
-            return (float)angleDeg;
-        }
-
 
         public static Rect GetLocationRect(ContentReader.MapSummary mapSummary)
         {
@@ -146,9 +158,12 @@ namespace TravelOptions
 
         public void MouseLookAtDestination()
         {
-            // set the player up so he's facing the destination.
-            mouseLook.Pitch = 0f;
-            mouseLook.Yaw = yawVector.y;
+            if (destinationSummary.ID != 0)
+            {
+                // set the player up so he's facing the destination.
+                mouseLook.Pitch = 0f;
+                mouseLook.Yaw = yawVector.y;
+            }
         }
     }
 
