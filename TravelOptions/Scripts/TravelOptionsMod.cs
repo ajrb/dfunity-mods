@@ -93,6 +93,10 @@ namespace TravelOptions
         private DFLocation lastLocation;
         Rect locationRect = Rect.zero;
         Rect locationBorderRect = Rect.zero;
+        Rect locBorderNERect = Rect.zero;
+        Rect locBorderSERect = Rect.zero;
+        Rect locBorderSWRect = Rect.zero;
+        Rect locBorderNWRect = Rect.zero;
 
         private bool enableWeather;
         private bool enableSounds;
@@ -332,7 +336,6 @@ namespace TravelOptions
                 else
                 {
                     byte fromDirection = GetDirection(GetNormalisedPlayerYaw(true));
-                    //if ((pathsDataPt & fromDirection) != 0)
                     if ((inLoc && (pathsDataPt & fromDirection) != 0) || (pathsDataPt & fromDirection & onPath) != 0)
                     {
                         BeginTravel(GetTargetPixel(0, currMapPixel));
@@ -344,18 +347,65 @@ namespace TravelOptions
             {
                 // Player in location border, initiate location skirting
                 Debug.Log("Location skirting...");
+                SetupLocBorderCornerRects();
+                SkirtLocation();
                 return;
             }
 
             DaggerfallUI.AddHUDText("Found no path to follow in that direction.");
         }
 
-        private static byte GetPathsDataPoint(DFPosition currMapPixel)
+        void SetupLocBorderCornerRects()
         {
-            int pathsIndex = currMapPixel.X + (currMapPixel.Y * MapsFile.MaxMapPixelX);
-            byte pathsDataPt = TravelOptionsMapWindow.pathsData[path_roads][pathsIndex];
-            pathsDataPt = (byte)(pathsDataPt | TravelOptionsMapWindow.pathsData[path_tracks][pathsIndex]);
-            return pathsDataPt;
+            locBorderNERect = Rect.MinMaxRect(locationRect.xMax, locationRect.yMax, locationBorderRect.xMax, locationBorderRect.yMax);
+            locBorderSERect = Rect.MinMaxRect(locationRect.xMax, locationBorderRect.yMin, locationBorderRect.xMax, locationRect.yMin);
+            locBorderSWRect = Rect.MinMaxRect(locationBorderRect.xMin, locationBorderRect.yMin, locationRect.xMin, locationRect.yMin);
+            locBorderNWRect = Rect.MinMaxRect(locationBorderRect.xMin, locationRect.yMax, locationRect.xMin, locationBorderRect.yMax);
+        }
+
+        public void SkirtLocation()
+        {
+            PlayerGPS playerGPS = GameManager.Instance.PlayerGPS;
+            DFPosition currMapPixel = playerGPS.CurrentMapPixel;
+            int yaw = (int)GetNormalisedPlayerYaw();
+            byte playerDir = GetDirection(GetNormalisedPlayerYaw());
+
+            Rect targetRect;
+            Vector2 worldPos = new Vector2(playerGPS.WorldX, playerGPS.WorldZ);
+            if (locBorderNERect.Contains(worldPos))                                                         // NE Corner
+                targetRect = (yaw > 45 && yaw < 225) ? locBorderSERect : locBorderNWRect;
+            else if (locBorderSERect.Contains(worldPos))                                                    // SE Corner
+                targetRect = (yaw > 135 && yaw < 315) ? locBorderSWRect : locBorderNERect;
+            else if (locBorderSWRect.Contains(worldPos))                                                    // SW Corner
+                targetRect = (yaw > 45 && yaw < 225) ? locBorderSERect : locBorderNWRect;
+            else if (locBorderNWRect.Contains(worldPos))                                                    // NW Corner
+                targetRect = (yaw > 135 && yaw < 315) ? locBorderSWRect : locBorderNERect;
+
+            else if (playerGPS.WorldZ > locationRect.yMax && playerGPS.WorldZ < locationBorderRect.yMax)    // North edge
+                targetRect = (yaw > 180 && yaw < 360) ? locBorderNWRect : locBorderNERect;
+            else if (playerGPS.WorldZ > locationBorderRect.yMin && playerGPS.WorldZ < locationRect.yMin)    // South edge
+                targetRect = (yaw > 180 && yaw < 360) ? locBorderSWRect : locBorderSERect;
+            else if (playerGPS.WorldX > locationRect.xMax && playerGPS.WorldX < locationBorderRect.xMax)    // East edge
+                targetRect = (yaw > 90 && yaw < 270) ? locBorderSERect : locBorderNERect;
+            else if (playerGPS.WorldX > locationBorderRect.xMin && playerGPS.WorldX < locationRect.xMin)    // West edge
+                targetRect = (yaw > 90 && yaw < 270) ? locBorderSWRect : locBorderNWRect;
+            else
+                return;
+
+            travelControlUI.SetDestination("Circumnavigating " + GameManager.Instance.PlayerGPS.CurrentLocation.Name);
+
+            //DestinationCautious = speedCautious;
+            if (alwaysUseStartingAccel)
+                travelControlUI.TimeAcceleration = defaultStartingAccel;
+
+            playerAutopilot = new PlayerAutoPilot(currMapPixel, targetRect, GetTravelSpeedMultiplier());
+            playerAutopilot.OnArrival += () =>
+            {
+                SkirtLocation();
+            };
+            SetTimeScale(5);
+            //DisableWeatherAndSound();
+            //diseaseCount = GameManager.Instance.PlayerEffectManager.DiseaseCount;
         }
 
         public void BeginTravel(DFPosition targetPixel, bool speedCautious = false)
@@ -363,7 +413,6 @@ namespace TravelOptions
             if (targetPixel != null)
             {
                 travelControlUI.SetDestination("Following a path.");
-                DestinationSummary = new ContentReader.MapSummary();
                 DFPosition targetMPworld = MapsFile.MapPixelToWorldCoord(targetPixel.X, targetPixel.Y);
 
                 Rect targetRect = SetLocationRects(targetPixel, targetMPworld) ? locationBorderRect : new Rect(targetMPworld.X + MidLo, targetMPworld.Y + MidLo, PSize, PSize);
@@ -431,6 +480,14 @@ namespace TravelOptions
             // An intersection, location, or path end then end travel
             travelControlUI.CloseWindow();
             Debug.Log("Stop following");
+        }
+
+        private static byte GetPathsDataPoint(DFPosition currMapPixel)
+        {
+            int pathsIndex = currMapPixel.X + (currMapPixel.Y * MapsFile.MaxMapPixelX);
+            byte pathsDataPt = TravelOptionsMapWindow.pathsData[path_roads][pathsIndex];
+            pathsDataPt = (byte)(pathsDataPt | TravelOptionsMapWindow.pathsData[path_tracks][pathsIndex]);
+            return pathsDataPt;
         }
 
         float GetNormalisedPlayerYaw(bool invert = false)
