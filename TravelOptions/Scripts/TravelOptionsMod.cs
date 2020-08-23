@@ -248,54 +248,58 @@ namespace TravelOptions
 
         #region Path following
 
-        void FollowPath(bool onPath = false)
+        void FollowPath(bool onPath = false)    // TODO - need the param?
         {
             PlayerGPS playerGPS = GameManager.Instance.PlayerGPS;
             DFPosition currMapPixel = playerGPS.CurrentMapPixel;
-            int pathsIndex = currMapPixel.X + (currMapPixel.Y * MapsFile.MaxMapPixelX);
-            byte roadDataPt = TravelOptionsMapWindow.pathsData[path_roads][pathsIndex];
+            byte pathsDataPt = GetPathsDataPoint(currMapPixel);
 
-            if (roadDataPt != 0)
+            if (pathsDataPt != 0 && !onPath)
             {
-                if (!onPath)
-                {
-                    DFPosition worldOrigin = MapsFile.MapPixelToWorldCoord(currMapPixel.X, currMapPixel.Y);
-                    DFPosition posInMp = new DFPosition(playerGPS.WorldX - worldOrigin.X, playerGPS.WorldZ - worldOrigin.Y);
-                    if ((roadDataPt & N) != 0 && posInMp.X > MidLo && posInMp.X < MidHi && posInMp.Y > MidLo)
-                        onPath = true;
-                    if ((roadDataPt & E) != 0 && posInMp.Y > MidLo && posInMp.Y < MidHi && posInMp.X > MidLo)
-                        onPath = true;
-                    if ((roadDataPt & S) != 0 && posInMp.X > MidLo && posInMp.X < MidHi && posInMp.Y < MidHi)
-                        onPath = true;
-                    if ((roadDataPt & W) != 0 && posInMp.Y > MidLo && posInMp.Y < MidHi && posInMp.X < MidHi)
-                        onPath = true;
-                    if ((roadDataPt & NE) != 0 && (Mathf.Abs(posInMp.X - posInMp.Y) < PSize) && posInMp.X > MidLo)
-                        onPath = true;
-                    if ((roadDataPt & SW) != 0 && (Mathf.Abs(posInMp.X - posInMp.Y) < PSize) && posInMp.X < MidHi)
-                        onPath = true;
-                    if ((roadDataPt & NW) != 0 && (Mathf.Abs(posInMp.X - (32768-posInMp.Y)) < PSize) && posInMp.X > MidLo)
-                        onPath = true;
-                    if ((roadDataPt & SE) != 0 && (Mathf.Abs(posInMp.X - (32768 - posInMp.Y)) < PSize) && posInMp.X < MidHi)
-                        onPath = true;
-                }
+                DFPosition worldOrigin = MapsFile.MapPixelToWorldCoord(currMapPixel.X, currMapPixel.Y);
+                DFPosition posInMp = new DFPosition(playerGPS.WorldX - worldOrigin.X, playerGPS.WorldZ - worldOrigin.Y);
+                if ((pathsDataPt & N) != 0 && posInMp.X > MidLo && posInMp.X < MidHi && posInMp.Y > MidLo)
+                    onPath = true;
+                if ((pathsDataPt & E) != 0 && posInMp.Y > MidLo && posInMp.Y < MidHi && posInMp.X > MidLo)
+                    onPath = true;
+                if ((pathsDataPt & S) != 0 && posInMp.X > MidLo && posInMp.X < MidHi && posInMp.Y < MidHi)
+                    onPath = true;
+                if ((pathsDataPt & W) != 0 && posInMp.Y > MidLo && posInMp.Y < MidHi && posInMp.X < MidHi)
+                    onPath = true;
+                if ((pathsDataPt & NE) != 0 && (Mathf.Abs(posInMp.X - posInMp.Y) < PSize) && posInMp.X > MidLo)
+                    onPath = true;
+                if ((pathsDataPt & SW) != 0 && (Mathf.Abs(posInMp.X - posInMp.Y) < PSize) && posInMp.X < MidHi)
+                    onPath = true;
+                if ((pathsDataPt & NW) != 0 && (Mathf.Abs(posInMp.X - (32768 - posInMp.Y)) < PSize) && posInMp.X < MidHi)
+                    onPath = true;
+                if ((pathsDataPt & SE) != 0 && (Mathf.Abs(posInMp.X - (32768 - posInMp.Y)) < PSize) && posInMp.X > MidLo)
+                    onPath = true;
             }
             if (onPath)
             {
                 byte playerDirection = GetDirection(GetNormalisedPlayerYaw());
                 Debug.Log("Following path in dir: " + playerDirection);
-                if ((roadDataPt & playerDirection) != 0)
+                if ((pathsDataPt & playerDirection) != 0)
                 {
                     BeginTravel(GetTargetPixel(playerDirection, currMapPixel));
                 }
                 else
                 {
                     byte fromDirection = GetDirection(GetNormalisedPlayerYaw(true));
-                    if ((roadDataPt & fromDirection) != 0)
+                    if ((pathsDataPt & fromDirection) != 0)
                     {
                         BeginTravel(GetTargetPixel(0, currMapPixel));
                     }
                 }
             }
+        }
+
+        private static byte GetPathsDataPoint(DFPosition currMapPixel)
+        {
+            int pathsIndex = currMapPixel.X + (currMapPixel.Y * MapsFile.MaxMapPixelX);
+            byte pathsDataPt = TravelOptionsMapWindow.pathsData[path_roads][pathsIndex];
+            pathsDataPt = (byte)(pathsDataPt | TravelOptionsMapWindow.pathsData[path_tracks][pathsIndex]);
+            return pathsDataPt;
         }
 
         public void BeginTravel(DFPosition targetPixel, bool speedCautious = false)
@@ -346,17 +350,16 @@ namespace TravelOptions
         {
             PlayerGPS playerGPS = GameManager.Instance.PlayerGPS;
             DFPosition currMapPixel = playerGPS.CurrentMapPixel;
-            int pathsIndex = currMapPixel.X + (currMapPixel.Y * MapsFile.MaxMapPixelX);
 
-            byte roadDataPt = TravelOptionsMapWindow.pathsData[path_roads][pathsIndex];
+            byte pathsDataPt = GetPathsDataPoint(currMapPixel);
             byte playerDirection = GetDirection(GetNormalisedPlayerYaw());
-            if (CountSetBits(roadDataPt) == 2)
+            if (CountSetBits(pathsDataPt) == 2)
             {
-                playerDirection = (byte)(roadDataPt & playerDirection);
+                playerDirection = (byte)(pathsDataPt & playerDirection);
                 if (playerDirection == 0)
                 {
                     byte fromDirection = GetDirection(GetNormalisedPlayerYaw(true));
-                    playerDirection = (byte)(roadDataPt ^ fromDirection);
+                    playerDirection = (byte)(pathsDataPt ^ fromDirection);
                     Debug.Log("Changing to dir: " + playerDirection);
                 }
                 Debug.Log("Heading in dir: " + playerDirection);
