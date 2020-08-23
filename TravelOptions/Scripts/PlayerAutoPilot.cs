@@ -32,12 +32,16 @@ namespace TravelOptions
         private Vector3 pitchVector = new Vector3(0, 0, 0);
         private Vector3 yawVector = new Vector3(0, 0, 0);
 
-        public PlayerAutoPilot(Rect targetRect, float travelSpeedMultiplier = 1f)
+        public PlayerAutoPilot(DFPosition targetPixel, Rect targetRect, float travelSpeedMultiplier = 1f)
         {
+            InitTargetRect(targetPixel, targetRect, travelSpeedMultiplier);
+        }
+
+        public void InitTargetRect(DFPosition targetPixel, Rect targetRect, float travelSpeedMultiplier)
+        {
+            destinationMapPixel = targetPixel;
             destinationWorldRect = targetRect;
             destinationCentre = new DFPosition((int)targetRect.center.x, (int)targetRect.center.y);
-            destinationMapPixel = MapsFile.WorldCoordToMapPixel((int)targetRect.x, (int)targetRect.y);
-
             this.travelSpeedMultiplier = travelSpeedMultiplier;
             mouseLook.Pitch = 0;
         }
@@ -72,6 +76,7 @@ namespace TravelOptions
                 {
                     // note that event will be raised whenever player is inside destination rect when update is called.
                     RaiseOnArrivalEvent();
+                    Debug.Log("In target rect");
                     return;
                 }
             }
@@ -151,19 +156,17 @@ namespace TravelOptions
         public event OnArrivalHandler OnArrival;
         void RaiseOnArrivalEvent()
         {
-            MouseLookAtDestination();
+            if (destinationSummary.ID != 0)
+                MouseLookAtDestination();
             if (OnArrival != null)
                 OnArrival();
         }
 
         public void MouseLookAtDestination()
         {
-            if (destinationSummary.ID != 0)
-            {
-                // set the player up so he's facing the destination.
-                mouseLook.Pitch = 0f;
-                mouseLook.Yaw = yawVector.y;
-            }
+            // set the player up so he's facing the destination.
+            mouseLook.Pitch = 0f;
+            mouseLook.Yaw = yawVector.y;
         }
     }
 

@@ -24,18 +24,10 @@ namespace TravelOptions
         private const string MsgFollow = "Do you want to follow this road?";
 
         // Path type and direction constants from BasicRoadsTexturing.
-        public const int path_roads = 0;
-        public const int path_tracks = 1;
-        public const int path_rivers = 2;
-        public const int path_streams = 3;
-        public const byte N = 128; //0b_1000_0000;
-        public const byte NE = 64; //0b_0100_0000;
-        public const byte E = 32;  //0b_0010_0000;
-        public const byte SE = 16; //0b_0001_0000;
-        public const byte S = 8;   //0b_0000_1000;
-        public const byte SW = 4;  //0b_0000_0100;
-        public const byte W = 2;   //0b_0000_0010;
-        public const byte NW = 1;  //0b_0000_0001;
+        const int path_roads = TravelOptionsMod.path_roads;
+        const int path_tracks = TravelOptionsMod.path_tracks;
+        const int path_rivers = TravelOptionsMod.path_rivers;
+        const int path_streams = TravelOptionsMod.path_streams;
 
         Color32 roadColor = new Color32(60, 60, 60, 255);
         Color32 trackColor = new Color32(160, 118, 74, 255);
@@ -218,42 +210,6 @@ namespace TravelOptions
                 };
                 resumeMsgBox.Show();
             }
-            // Check whether player is on a path to follow
-/*            else if (TravelOptionsMod.Instance.PathsTravel && IsSetup)
-            {
-                PlayerGPS playerGPS = GameManager.Instance.PlayerGPS;
-                DFPosition currMapPixel = playerGPS.CurrentMapPixel;
-                int pathsIndex = currMapPixel.X + (currMapPixel.Y * MapsFile.MaxMapPixelX);
-                byte roadDataPt = pathsData[path_roads][pathsIndex];
-                if (roadDataPt != 0)
-                {
-                    int midLo = 16384 - 256;
-                    int midHi = 16384 + 256;
-                    DFPosition worldOrigin = MapsFile.MapPixelToWorldCoord(currMapPixel.X, currMapPixel.Y);
-                    DFPosition posInMp = new DFPosition(playerGPS.WorldX - worldOrigin.X, playerGPS.WorldZ - worldOrigin.Y);
-                    if ((roadDataPt & N) != 0 && posInMp.X > midLo && posInMp.X < midHi && posInMp.Y > midHi)
-                    {
-                        DFPosition targetPos = MapsFile.MapPixelToWorldCoord(currMapPixel.X, currMapPixel.Y - 1);
-                        Rect targetRect = new Rect(targetPos.X + midLo + 128, targetPos.Y + midLo + 128, 256, 256);
-                        //string resume = string.Format(MsgResume, travelModInstance.DestinationName);
-                        DaggerfallMessageBox followMsgBox = new DaggerfallMessageBox(uiManager, DaggerfallMessageBox.CommonMessageBoxButtons.YesNo, MsgFollow, uiManager.TopWindow);
-                        followMsgBox.OnButtonClick += (_sender, button) =>
-                        {
-                            CloseWindow();
-                            if (button == DaggerfallMessageBox.MessageBoxButtons.Yes)
-                            {
-                                CloseWindow();
-                                travelModInstance.BeginTravel(targetRect);
-                            }
-                        };
-                        followMsgBox.Show();
-                    }
-
-                    float yaw = GameManager.Instance.PlayerMouseLook.Yaw;
-                    Debug.Log("yaw: " + yaw);
-                    // What next?
-                }
-            }*/
 
             base.OnPush();
         }
@@ -361,42 +317,42 @@ namespace TravelOptions
                 return;
 
             locationDotsPixelBuffer[offset + (width * 2) + 2] = pathColor;
-            if ((pathDataPt & S) != 0)
+            if ((pathDataPt & TravelOptionsMod.S) != 0)
             {
                 locationDotsPixelBuffer[offset + 2] = pathColor;
                 locationDotsPixelBuffer[offset + width + 2] = pathColor;
             }
-            if ((pathDataPt & SE) != 0)
+            if ((pathDataPt & TravelOptionsMod.SE) != 0)
             {
                 locationDotsPixelBuffer[offset + 4] = pathColor;
                 locationDotsPixelBuffer[offset + width + 3] = pathColor;
             }
-            if ((pathDataPt & E) != 0)
+            if ((pathDataPt & TravelOptionsMod.E) != 0)
             {
                 locationDotsPixelBuffer[offset + (width * 2) + 3] = pathColor;
                 locationDotsPixelBuffer[offset + (width * 2) + 4] = pathColor;
             }
-            if ((pathDataPt & NE) != 0)
+            if ((pathDataPt & TravelOptionsMod.NE) != 0)
             {
                 locationDotsPixelBuffer[offset + (width * 3) + 3] = pathColor;
                 locationDotsPixelBuffer[offset + (width * 4) + 4] = pathColor;
             }
-            if ((pathDataPt & N) != 0)
+            if ((pathDataPt & TravelOptionsMod.N) != 0)
             {
                 locationDotsPixelBuffer[offset + (width * 3) + 2] = pathColor;
                 locationDotsPixelBuffer[offset + (width * 4) + 2] = pathColor;
             }
-            if ((pathDataPt & NW) != 0)
+            if ((pathDataPt & TravelOptionsMod.NW) != 0)
             {
                 locationDotsPixelBuffer[offset + (width * 3) + 1] = pathColor;
                 locationDotsPixelBuffer[offset + (width * 4)] = pathColor;
             }
-            if ((pathDataPt & W) != 0)
+            if ((pathDataPt & TravelOptionsMod.W) != 0)
             {
                 locationDotsPixelBuffer[offset + (width * 2)] = pathColor;
                 locationDotsPixelBuffer[offset + (width * 2) + 1] = pathColor;
             }
-            if ((pathDataPt & SW) != 0)
+            if ((pathDataPt & TravelOptionsMod.SW) != 0)
             {
                 locationDotsPixelBuffer[offset] = pathColor;
                 locationDotsPixelBuffer[offset + width + 1] = pathColor;
