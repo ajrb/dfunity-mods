@@ -25,6 +25,8 @@ namespace TravelOptions
     {
         public const string PAUSE_TRAVEL = "pauseTravel";
         public const string IS_TRAVEL_ACTIVE = "isTravelActive";
+        public const string IS_PATH_FOLLOWING = "isPathFollowing";
+        public const string IS_FOLLOWING_ROAD = "isFollowingRoad";
 
         public const string ROADS_MODNAME = "BasicRoads";
 
@@ -118,6 +120,7 @@ namespace TravelOptions
         uint beginTime = 0;
         byte circumnavigatePathsDataPt = 0;
         byte lastCrossed = 0;
+        bool road = false;
 
         [Invoke(StateManager.StateTypes.Start, 0)]
         public static void Init(InitParams initParams)
@@ -350,7 +353,7 @@ namespace TravelOptions
                 if ((inLoc && (pathsDataPt & playerDirection) != 0) || (pathsDataPt & playerDirection & onPath) != 0)
                 {
                     bool road = (roadDataPt & playerDirection) != 0;
-                    BeginPathTravel(GetTargetPixel(playerDirection, currMapPixel), road);
+                    BeginPathTravel(GetTargetPixel(playerDirection, currMapPixel));
                     return;
                 }
                 else
@@ -359,7 +362,7 @@ namespace TravelOptions
                     if ((inLoc && (pathsDataPt & fromDirection) != 0) || (pathsDataPt & fromDirection & onPath) != 0)
                     {
                         bool road = (roadDataPt & fromDirection) != 0;
-                        BeginPathTravel(GetTargetPixel(0, currMapPixel), road);
+                        BeginPathTravel(GetTargetPixel(0, currMapPixel));
                         return;
                     }
                 }
@@ -375,7 +378,7 @@ namespace TravelOptions
             DaggerfallUI.AddHUDText(MsgNoPath);
         }
 
-        protected void BeginPathTravel(DFPosition targetPixel, bool road = false)
+        protected void BeginPathTravel(DFPosition targetPixel)
         {
             if (targetPixel != null)
             {
@@ -420,7 +423,7 @@ namespace TravelOptions
 #endif
                     byte roadDataPt = GetRoadsDataPoint(currMapPixel);
                     bool road = (roadDataPt & playerDirection) != 0;
-                    BeginPathTravel(GetTargetPixel(playerDirection, currMapPixel), road);
+                    BeginPathTravel(GetTargetPixel(playerDirection, currMapPixel));
                     return;
                 }
             }
@@ -786,6 +789,14 @@ namespace TravelOptions
 
                 case IS_TRAVEL_ACTIVE:
                     callBack?.Invoke(IS_TRAVEL_ACTIVE, travelControlUI.isShowing);
+                    break;
+
+                case IS_PATH_FOLLOWING:
+                    callBack?.Invoke(IS_PATH_FOLLOWING, travelControlUI.isShowing && DestinationName == null);
+                    break;
+
+                case IS_FOLLOWING_ROAD:
+                    callBack?.Invoke(IS_FOLLOWING_ROAD, road);
                     break;
 
                 default:
