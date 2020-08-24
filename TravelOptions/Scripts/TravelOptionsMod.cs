@@ -49,7 +49,7 @@ namespace TravelOptions
         const int PSize = TSize * 2;                                // Path size
         const int MidLo = HalfMPworldUnits - TSize;
         const int MidHi = HalfMPworldUnits + TSize;
-        const float AngUnit = 22.5f; // 45/2
+        const float AngUnit = 22.5f; // = 45 / 2
 
         private const string MsgArrived = "You have arrived at your destination.";
         private const string MsgEnemies = "Enemies are seeking to prevent your travel...";
@@ -90,8 +90,8 @@ namespace TravelOptions
         PlayerAutoPilot playerAutopilot;
         TravelControlUI travelControlUI;
         internal TravelControlUI GetTravelControlUI() { return travelControlUI; }
-        DFLocation lastLocation;
 
+        DFLocation lastLocation;
         Rect locationRect = Rect.zero;
         Rect locationBorderRect = Rect.zero;
         Rect locBorderNERect = Rect.zero;
@@ -296,6 +296,34 @@ namespace TravelOptions
             return false;
         }
 
+        byte IsPlayerOnPath(PlayerGPS playerGPS, byte pathsDataPt)
+        {
+            if (pathsDataPt == 0)
+                return 0;
+
+            byte onPath = 0;
+            DFPosition worldOriginMP = MapsFile.MapPixelToWorldCoord(playerGPS.CurrentMapPixel.X, playerGPS.CurrentMapPixel.Y);
+            DFPosition posInMp = new DFPosition(playerGPS.WorldX - worldOriginMP.X, playerGPS.WorldZ - worldOriginMP.Y);
+            if ((pathsDataPt & N) != 0 && posInMp.X > MidLo && posInMp.X < MidHi && posInMp.Y > MidLo)
+                onPath = (byte)(onPath | N);
+            if ((pathsDataPt & E) != 0 && posInMp.Y > MidLo && posInMp.Y < MidHi && posInMp.X > MidLo)
+                onPath = (byte)(onPath | E);
+            if ((pathsDataPt & S) != 0 && posInMp.X > MidLo && posInMp.X < MidHi && posInMp.Y < MidHi)
+                onPath = (byte)(onPath | S);
+            if ((pathsDataPt & W) != 0 && posInMp.Y > MidLo && posInMp.Y < MidHi && posInMp.X < MidHi)
+                onPath = (byte)(onPath | W);
+            if ((pathsDataPt & NE) != 0 && (Mathf.Abs(posInMp.X - posInMp.Y) < PSize) && posInMp.X > MidLo)
+                onPath = (byte)(onPath | NE);
+            if ((pathsDataPt & SW) != 0 && (Mathf.Abs(posInMp.X - posInMp.Y) < PSize) && posInMp.X < MidHi)
+                onPath = (byte)(onPath | SW);
+            if ((pathsDataPt & NW) != 0 && (Mathf.Abs(posInMp.X - (MPworldUnits - posInMp.Y)) < PSize) && posInMp.X < MidHi)
+                onPath = (byte)(onPath | NW);
+            if ((pathsDataPt & SE) != 0 && (Mathf.Abs(posInMp.X - (MPworldUnits - posInMp.Y)) < PSize) && posInMp.X > MidLo)
+                onPath = (byte)(onPath | SE);
+
+            return onPath;
+        }
+
         protected void FollowPath()
         {
             PlayerGPS playerGPS = GameManager.Instance.PlayerGPS;
@@ -305,28 +333,8 @@ namespace TravelOptions
             
             // Start following a path
             byte pathsDataPt = GetPathsDataPoint(currMapPixel);
-            byte onPath = 0;
-            if (pathsDataPt != 0)
-            {
-                DFPosition worldOriginMP = MapsFile.MapPixelToWorldCoord(currMapPixel.X, currMapPixel.Y);
-                DFPosition posInMp = new DFPosition(playerGPS.WorldX - worldOriginMP.X, playerGPS.WorldZ - worldOriginMP.Y);
-                if ((pathsDataPt & N) != 0 && posInMp.X > MidLo && posInMp.X < MidHi && posInMp.Y > MidLo)
-                    onPath = (byte)(onPath | N);
-                if ((pathsDataPt & E) != 0 && posInMp.Y > MidLo && posInMp.Y < MidHi && posInMp.X > MidLo)
-                    onPath = (byte)(onPath | E);
-                if ((pathsDataPt & S) != 0 && posInMp.X > MidLo && posInMp.X < MidHi && posInMp.Y < MidHi)
-                    onPath = (byte)(onPath | S);
-                if ((pathsDataPt & W) != 0 && posInMp.Y > MidLo && posInMp.Y < MidHi && posInMp.X < MidHi)
-                    onPath = (byte)(onPath | W);
-                if ((pathsDataPt & NE) != 0 && (Mathf.Abs(posInMp.X - posInMp.Y) < PSize) && posInMp.X > MidLo)
-                    onPath = (byte)(onPath | NE);
-                if ((pathsDataPt & SW) != 0 && (Mathf.Abs(posInMp.X - posInMp.Y) < PSize) && posInMp.X < MidHi)
-                    onPath = (byte)(onPath | SW);
-                if ((pathsDataPt & NW) != 0 && (Mathf.Abs(posInMp.X - (MPworldUnits - posInMp.Y)) < PSize) && posInMp.X < MidHi)
-                    onPath = (byte)(onPath | NW);
-                if ((pathsDataPt & SE) != 0 && (Mathf.Abs(posInMp.X - (MPworldUnits - posInMp.Y)) < PSize) && posInMp.X > MidLo)
-                    onPath = (byte)(onPath | SE);
-            }
+            byte onPath = IsPlayerOnPath(playerGPS, pathsDataPt);
+
             if (onPath != 0)
             {
                 byte playerDirection = GetDirection(GetNormalisedPlayerYaw());
@@ -596,18 +604,6 @@ namespace TravelOptions
 
         void Update()
         {
-            PlayerGPS playerGPS = GameManager.Instance.PlayerGPS;
-            /*
-            string msg = "";
-            bool inLoc = locationRect.Contains(new Vector2(playerGPS.WorldX, playerGPS.WorldZ));
-            if (!inLoc && locationBorderRect.Contains(new Vector2(playerGPS.WorldX, playerGPS.WorldZ)))
-                msg = "Border of Loc";
-            else if (inLoc)
-                msg = "Inside Loc";
-            else
-                msg = "Outside Loc";
-            GameManager.Instance.StreamingWorld.dbMsg = msg;
-            */
             if (playerAutopilot != null)
             {
                 // Ensure UI is showing
@@ -619,9 +615,10 @@ namespace TravelOptions
                 DaggerfallUI.Instance.DaggerfallHUD.HUDVitals.Update();
 
                 // If circumnavigating a location, check for path crossings
+                PlayerGPS playerGPS = GameManager.Instance.PlayerGPS;
                 if (circumnavigatePathsDataPt != 0)
                 {
-                    byte crossed = IsOnPath(playerGPS);
+                    byte crossed = IsPlayerOnPath(playerGPS, circumnavigatePathsDataPt);
                     Debug.LogFormat("crossed: {0}  last:{1}", GetDirectionStr(crossed), GetDirectionStr(lastCrossed));
                     if (crossed != 0 && crossed != lastCrossed)
                     {
@@ -698,30 +695,6 @@ namespace TravelOptions
             {
                 FollowPath();
             }
-        }
-
-        byte IsOnPath(PlayerGPS playerGPS)
-        {
-            DFPosition worldOriginMP = MapsFile.MapPixelToWorldCoord(playerGPS.CurrentMapPixel.X, playerGPS.CurrentMapPixel.Y);
-            DFPosition posInMp = new DFPosition(playerGPS.WorldX - worldOriginMP.X, playerGPS.WorldZ - worldOriginMP.Y);
-            if ((circumnavigatePathsDataPt & N) != 0 && posInMp.X > MidLo && posInMp.X < MidHi && posInMp.Y > MidLo)
-                return N;
-            if ((circumnavigatePathsDataPt & E) != 0 && posInMp.Y > MidLo && posInMp.Y < MidHi && posInMp.X > MidLo)
-                return E;
-            if ((circumnavigatePathsDataPt & S) != 0 && posInMp.X > MidLo && posInMp.X < MidHi && posInMp.Y < MidHi)
-                return S;
-            if ((circumnavigatePathsDataPt & W) != 0 && posInMp.Y > MidLo && posInMp.Y < MidHi && posInMp.X < MidHi)
-                return W;
-            if ((circumnavigatePathsDataPt & NE) != 0 && (Mathf.Abs(posInMp.X - posInMp.Y) < PSize) && posInMp.X > MidLo)
-                return NE;
-            if ((circumnavigatePathsDataPt & SW) != 0 && (Mathf.Abs(posInMp.X - posInMp.Y) < PSize) && posInMp.X < MidHi)
-                return SW;
-            if ((circumnavigatePathsDataPt & NW) != 0 && (Mathf.Abs(posInMp.X - (MPworldUnits - posInMp.Y)) < PSize) && posInMp.X < MidHi)
-                return NW;
-            if ((circumnavigatePathsDataPt & SE) != 0 && (Mathf.Abs(posInMp.X - (MPworldUnits - posInMp.Y)) < PSize) && posInMp.X > MidLo)
-                return SE;
-
-            return 0;
         }
 
         void StopTravelWithMessage(string message)
