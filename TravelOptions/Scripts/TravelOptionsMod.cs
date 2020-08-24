@@ -87,10 +87,11 @@ namespace TravelOptions
 
         static Mod mod;
 
-        private PlayerAutoPilot playerAutopilot;
-        private TravelControlUI travelControlUI;
+        PlayerAutoPilot playerAutopilot;
+        TravelControlUI travelControlUI;
         internal TravelControlUI GetTravelControlUI() { return travelControlUI; }
-        private DFLocation lastLocation;
+        DFLocation lastLocation;
+
         Rect locationRect = Rect.zero;
         Rect locationBorderRect = Rect.zero;
         Rect locBorderNERect = Rect.zero;
@@ -98,19 +99,21 @@ namespace TravelOptions
         Rect locBorderSWRect = Rect.zero;
         Rect locBorderNWRect = Rect.zero;
 
-        private bool enableWeather;
-        private bool enableSounds;
-        private bool enableRealGrass;
-        private int locationPause;
-        private int defaultStartingAccel;
-        private bool alwaysUseStartingAccel;
-        private int accelerationLimit;
-        private float baseFixedDeltaTime;
-        private int maxAvoidChance;
-        private bool ignoreEncounters;
-        private uint ignoreEncountersTime;
-        private int diseaseCount = 0;
-        private uint beginTime = 0;
+        bool enableWeather;
+        bool enableSounds;
+        bool enableRealGrass;
+        int locationPause;
+        int defaultStartingAccel;
+        bool alwaysUseStartingAccel;
+        int accelerationLimit;
+        float baseFixedDeltaTime;
+        int maxAvoidChance;
+        bool ignoreEncounters;
+        uint ignoreEncountersTime;
+        int diseaseCount = 0;
+        uint beginTime = 0;
+        byte circumnavigatePathsDataPt = 0;
+        byte lastCrossed = 0;
 
         [Invoke(StateManager.StateTypes.Start, 0)]
         public static void Init(InitParams initParams)
@@ -328,7 +331,7 @@ namespace TravelOptions
             {
                 byte playerDirection = GetDirection(GetNormalisedPlayerYaw());
                 byte roadDataPt = GetRoadsDataPoint(currMapPixel);
-                Debug.LogFormat("Following path {0}", GetDirection(playerDirection));
+                Debug.LogFormat("Following path {0}", GetDirectionStr(playerDirection));
                 if ((inLoc && (pathsDataPt & playerDirection) != 0) || (pathsDataPt & playerDirection & onPath) != 0)
                 {
                     bool road = (roadDataPt & playerDirection) != 0;
@@ -348,10 +351,9 @@ namespace TravelOptions
             }
             if (!inLoc && locationBorderRect.Contains(new Vector2(playerGPS.WorldX, playerGPS.WorldZ)))
             {
-                // Player in location border, initiate location skirting
-                Debug.Log("Location skirting...");
+                // Player in location border, initiate location circumnavigation
                 SetupLocBorderCornerRects();
-                SkirtLocation();
+                CircumnavigateLocation();
                 return;
             }
 
@@ -362,6 +364,7 @@ namespace TravelOptions
         {
             if (targetPixel != null)
             {
+                lastCrossed = 0;
                 travelControlUI.SetDestination(road ? "Following a road." : "Following a dirt track.");
                 DFPosition targetMPworld = MapsFile.MapPixelToWorldCoord(targetPixel.X, targetPixel.Y);
 
@@ -395,26 +398,31 @@ namespace TravelOptions
                     {
                         byte fromDirection = GetDirection(GetNormalisedPlayerYaw(true));
                         playerDirection = (byte)(pathsDataPt ^ fromDirection);
-                        Debug.LogFormat("Changing direction to {0}", GetDirection(playerDirection));
+                        Debug.LogFormat("Changing direction to {0}", GetDirectionStr(playerDirection));
                     }
-                    Debug.LogFormat("Heading {0}", GetDirection(playerDirection));
+                    Debug.LogFormat("Heading {0}", GetDirectionStr(playerDirection));
                     byte roadDataPt = GetRoadsDataPoint(currMapPixel);
                     bool road = (roadDataPt & playerDirection) != 0;
                     BeginPathTravel(GetTargetPixel(playerDirection, currMapPixel), road);
                     return;
                 }
             }
+            else
+            {
+                lastCrossed = GetDirection(GetNormalisedPlayerYaw(true));
+            }
             // An intersection, location, or path end then end travel
             travelControlUI.CloseWindow();
             Debug.Log("Stop following");
         }
 
-        protected void SkirtLocation()
+        protected void CircumnavigateLocation()
         {
             PlayerGPS playerGPS = GameManager.Instance.PlayerGPS;
             DFPosition currMapPixel = playerGPS.CurrentMapPixel;
+            if (circumnavigatePathsDataPt == 0)
+                circumnavigatePathsDataPt = GetPathsDataPoint(currMapPixel);
             int yaw = (int)GetNormalisedPlayerYaw();
-            byte playerDir = GetDirection(GetNormalisedPlayerYaw());
 
             Rect targetRect;
             Vector2 worldPos = new Vector2(playerGPS.WorldX, playerGPS.WorldZ);
@@ -440,18 +448,14 @@ namespace TravelOptions
 
             travelControlUI.SetDestination("Circumnavigating " + GameManager.Instance.PlayerGPS.CurrentLocation.Name);
 
-            //DestinationCautious = speedCautious;
+            DestinationCautious = false;
             if (alwaysUseStartingAccel)
                 travelControlUI.TimeAcceleration = defaultStartingAccel;
 
             playerAutopilot = new PlayerAutoPilot(currMapPixel, targetRect, GetTravelSpeedMultiplier());
-            playerAutopilot.OnArrival += () =>
-            {
-                SkirtLocation();
-            };
-            SetTimeScale(5);
+            playerAutopilot.OnArrival += () => { CircumnavigateLocation(); };
+            SetTimeScale(travelControlUI.TimeAcceleration);
             DisableWeatherAndSound();
-            //diseaseCount = GameManager.Instance.PlayerEffectManager.DiseaseCount;
         }
 
         void SetupLocBorderCornerRects()
@@ -541,7 +545,7 @@ namespace TravelOptions
             return count;
         }
 
-        string GetDirection(byte direction)
+        string GetDirectionStr(byte direction)
         {
             switch (direction)
             {
@@ -575,6 +579,7 @@ namespace TravelOptions
         {
             Debug.Log("Travel interrupted");
             SetTimeScale(1);
+            circumnavigatePathsDataPt = 0;
             GameManager.Instance.PlayerMouseLook.enableMouseLook = true;
             GameManager.Instance.PlayerMouseLook.lockCursor = true;
             GameManager.Instance.PlayerMouseLook.simpleCursorLock = false;
@@ -612,6 +617,22 @@ namespace TravelOptions
                 // Run updates for playerAutopilot and HUD
                 playerAutopilot.Update();
                 DaggerfallUI.Instance.DaggerfallHUD.HUDVitals.Update();
+
+                // If circumnavigating a location, check for path crossings
+                if (circumnavigatePathsDataPt != 0)
+                {
+                    byte crossed = IsOnPath(playerGPS);
+                    Debug.LogFormat("crossed: {0}  last:{1}", GetDirectionStr(crossed), GetDirectionStr(lastCrossed));
+                    if (crossed != 0 && crossed != lastCrossed)
+                    {
+                        lastCrossed = crossed;
+                        if (travelControlUI.isShowing)
+                            travelControlUI.CloseWindow();
+                        InterruptTravel();
+                        return;
+                    }
+                    lastCrossed = crossed;
+                }
 
                 // If travelling cautiously, check health and fatigue levels
                 if (DestinationCautious)
@@ -679,14 +700,38 @@ namespace TravelOptions
             }
         }
 
-        private void StopTravelWithMessage(string message)
+        byte IsOnPath(PlayerGPS playerGPS)
+        {
+            DFPosition worldOriginMP = MapsFile.MapPixelToWorldCoord(playerGPS.CurrentMapPixel.X, playerGPS.CurrentMapPixel.Y);
+            DFPosition posInMp = new DFPosition(playerGPS.WorldX - worldOriginMP.X, playerGPS.WorldZ - worldOriginMP.Y);
+            if ((circumnavigatePathsDataPt & N) != 0 && posInMp.X > MidLo && posInMp.X < MidHi && posInMp.Y > MidLo)
+                return N;
+            if ((circumnavigatePathsDataPt & E) != 0 && posInMp.Y > MidLo && posInMp.Y < MidHi && posInMp.X > MidLo)
+                return E;
+            if ((circumnavigatePathsDataPt & S) != 0 && posInMp.X > MidLo && posInMp.X < MidHi && posInMp.Y < MidHi)
+                return S;
+            if ((circumnavigatePathsDataPt & W) != 0 && posInMp.Y > MidLo && posInMp.Y < MidHi && posInMp.X < MidHi)
+                return W;
+            if ((circumnavigatePathsDataPt & NE) != 0 && (Mathf.Abs(posInMp.X - posInMp.Y) < PSize) && posInMp.X > MidLo)
+                return NE;
+            if ((circumnavigatePathsDataPt & SW) != 0 && (Mathf.Abs(posInMp.X - posInMp.Y) < PSize) && posInMp.X < MidHi)
+                return SW;
+            if ((circumnavigatePathsDataPt & NW) != 0 && (Mathf.Abs(posInMp.X - (MPworldUnits - posInMp.Y)) < PSize) && posInMp.X < MidHi)
+                return NW;
+            if ((circumnavigatePathsDataPt & SE) != 0 && (Mathf.Abs(posInMp.X - (MPworldUnits - posInMp.Y)) < PSize) && posInMp.X > MidLo)
+                return SE;
+
+            return 0;
+        }
+
+        void StopTravelWithMessage(string message)
         {
             if (travelControlUI.isShowing)
                 travelControlUI.CloseWindow();
             DaggerfallUI.MessageBox(message);
         }
 
-        private void AttemptAvoidEncounter()
+        void AttemptAvoidEncounter()
         {
             int successChance = Mathf.Min((GameManager.Instance.PlayerEntity.Stats.LiveLuck + GameManager.Instance.PlayerEntity.Skills.GetLiveSkillValue(DFCareer.Skills.Stealth) - 20), maxAvoidChance);
 
@@ -709,7 +754,7 @@ namespace TravelOptions
             }
         }
 
-        private void DisableWeatherAndSound()
+        void DisableWeatherAndSound()
         {
             if (!enableWeather)
             {
@@ -729,7 +774,7 @@ namespace TravelOptions
                 ModManager.Instance.SendModMessage("Real Grass", "toggle", false);
         }
 
-        private void EnableWeatherAndSound()
+        void EnableWeatherAndSound()
         {
             if (!enableWeather)
                 GameManager.Instance.WeatherManager.PlayerWeather.enabled = true;
@@ -744,7 +789,7 @@ namespace TravelOptions
                 ModManager.Instance.SendModMessage("Real Grass", "toggle", true);
         }
 
-        private void MessageReceiver(string message, object data, DFModMessageCallback callBack)
+        void MessageReceiver(string message, object data, DFModMessageCallback callBack)
         {
             switch (message)
             {
