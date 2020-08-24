@@ -76,7 +76,6 @@ namespace TravelOptions
                 {
                     // note that event will be raised whenever player is inside destination rect when update is called.
                     RaiseOnArrivalEvent();
-                    Debug.Log("In target rect");
                     return;
                 }
             }

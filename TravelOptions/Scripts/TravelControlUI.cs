@@ -47,7 +47,8 @@ namespace TravelOptions
 
         Texture2D baseTexture;
         Vector2 baseSize;
-        int accelerationLimit;
+        int accelLimit;
+        int halfAccelLimit;
         uint messageTimer = 0;
 
         public bool isShowing = false;
@@ -59,6 +60,13 @@ namespace TravelOptions
             destinationLabel.Text = destinationName;
         }
 
+        public bool HalfLimit { get; set; } = false;
+
+        public int GetAccelerationLimit()
+        {
+            return HalfLimit ? halfAccelLimit : accelLimit;
+        }
+
         #endregion
 
         #region Constructors
@@ -67,7 +75,8 @@ namespace TravelOptions
             : base(uiManager)
         {
             TimeAcceleration = defaultStartingAccel;
-            this.accelerationLimit = (accelerationLimit / 5) * 5;
+            accelLimit = (accelerationLimit / 5) * 5;
+            halfAccelLimit = (accelerationLimit / 10) * 5;
 
             // Clear background
             ParentPanel.BackgroundColor = Color.clear;
@@ -170,6 +179,8 @@ namespace TravelOptions
         {
             base.OnPush();
             isShowing = true;
+
+            TimeAcceleration = Mathf.Clamp(TimeAcceleration, 1, GetAccelerationLimit());
         }
 
         public override void OnPop()
@@ -208,7 +219,7 @@ namespace TravelOptions
             if (TimeAcceleration < 5)
                 TimeAcceleration += 1;
             else
-                TimeAcceleration = Math.Min(accelerationLimit, TimeAcceleration + 5);
+                TimeAcceleration = Math.Min(GetAccelerationLimit(), TimeAcceleration + 5);
 
             RaiseOnTimeAccelerationChangeEvent(TimeAcceleration);
         }

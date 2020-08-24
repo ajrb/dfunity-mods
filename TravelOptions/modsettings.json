@@ -126,8 +126,7 @@
                     "Options": [
                         "off",
                         "nearby",
-                        "entered",
-                        ""
+                        "entered"
                     ],
                     "Value": 0,
                     "Name": "LocationPause",

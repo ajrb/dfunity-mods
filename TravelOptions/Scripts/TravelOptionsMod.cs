@@ -7,6 +7,8 @@
 using System;
 using UnityEngine;
 using DaggerfallConnect;
+using DaggerfallConnect.Arena2;
+using DaggerfallConnect.Utility;
 using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Utility.ModSupport;
@@ -16,8 +18,6 @@ using DaggerfallWorkshop.Game.Serialization;
 using DaggerfallWorkshop.Game.Utility;
 using DaggerfallWorkshop.Game.Entity;
 using DaggerfallWorkshop.Utility;
-using DaggerfallConnect.Arena2;
-using DaggerfallConnect.Utility;
 
 namespace TravelOptions
 {
@@ -60,10 +60,14 @@ namespace TravelOptions
         private const string MsgOcean = "You've found yourself in the sea, maybe you should travel on a ship.";
         private const string MsgNearLocation = "Paused the journey since a {0} called {1} is nearby.";
         private const string MsgEnterLocation = "Paused the journey as you've entered a {0} called {1}.";
+        private const string MsgCircumnavigate = "Circumnavigating {0}.";
+        private const string MsgNoPath = "There's no path here to follow in that direction.";
+        private const string MsgFollowRoad = "Following a road.";
+        private const string MsgFollowTrack = "Following a dirt track.";
 
-        private const int LocPauseOff = 0;
-        private const int LocPauseNear = 1;
-        private const int LocPauseEnter = 2;
+        const int LocPauseOff = 0;
+        const int LocPauseNear = 1;
+        const int LocPauseEnter = 2;
 
         public static TravelOptionsMod Instance { get; private set; }
 
@@ -213,11 +217,10 @@ namespace TravelOptions
 
         private void PlayerGPS_OnMapPixelChanged(DFPosition mapPixel)
         {
-            if (PathsTravel && playerAutopilot == null)
+            if (PathsTravel && (playerAutopilot == null || DestinationName != null))
             {
                 DFPosition worldOriginMP = MapsFile.MapPixelToWorldCoord(mapPixel.X, mapPixel.Y);
                 SetLocationRects(mapPixel, worldOriginMP);
-                Debug.Log("Set location rects outside of travel");
             }
         }
 
@@ -232,6 +235,7 @@ namespace TravelOptions
                 DestinationCautious = speedCautious;
                 if (alwaysUseStartingAccel)
                     travelControlUI.TimeAcceleration = defaultStartingAccel;
+                travelControlUI.HalfLimit = false;
                 BeginTravel();
                 beginTime = DaggerfallUnity.Instance.WorldTime.Now.ToClassicDaggerfallTime();
             }
@@ -257,12 +261,13 @@ namespace TravelOptions
                 DisableWeatherAndSound();
                 diseaseCount = GameManager.Instance.PlayerEffectManager.DiseaseCount;
 
-                Debug.Log("Begun travel to " + DestinationName);
+                Debug.Log("Begun accelerated travel to " + DestinationName);
             }
         }
 
         #region Path following
 
+        // Sets up rects for location area and border ready for circumnavigation
         protected bool SetLocationRects(DFPosition targetPixel, DFPosition targetMPworld)
         {
             GameObject terrainObject = GameManager.Instance.StreamingWorld.GetTerrainFromPixel(targetPixel);
@@ -339,7 +344,9 @@ namespace TravelOptions
             {
                 byte playerDirection = GetDirection(GetNormalisedPlayerYaw());
                 byte roadDataPt = GetRoadsDataPoint(currMapPixel);
-                Debug.LogFormat("Following path {0}", GetDirectionStr(playerDirection));
+#if UNITY_EDITOR
+                Debug.LogFormat("Begun following path {0}", GetDirectionStr(playerDirection));
+#endif
                 if ((inLoc && (pathsDataPt & playerDirection) != 0) || (pathsDataPt & playerDirection & onPath) != 0)
                 {
                     bool road = (roadDataPt & playerDirection) != 0;
@@ -365,7 +372,7 @@ namespace TravelOptions
                 return;
             }
 
-            DaggerfallUI.AddHUDText("Found no path to follow in that direction.");
+            DaggerfallUI.AddHUDText(MsgNoPath);
         }
 
         protected void BeginPathTravel(DFPosition targetPixel, bool road = false)
@@ -373,7 +380,7 @@ namespace TravelOptions
             if (targetPixel != null)
             {
                 lastCrossed = 0;
-                travelControlUI.SetDestination(road ? "Following a road." : "Following a dirt track.");
+                travelControlUI.SetDestination(road ? MsgFollowRoad : MsgFollowTrack);
                 DFPosition targetMPworld = MapsFile.MapPixelToWorldCoord(targetPixel.X, targetPixel.Y);
 
                 Rect targetRect = SetLocationRects(targetPixel, targetMPworld) ? locationBorderRect : new Rect(targetMPworld.X + MidLo, targetMPworld.Y + MidLo, PSize, PSize);
@@ -381,6 +388,7 @@ namespace TravelOptions
                 DestinationCautious = true;
                 if (alwaysUseStartingAccel)
                     travelControlUI.TimeAcceleration = defaultStartingAccel;
+                travelControlUI.HalfLimit = true;
 
                 playerAutopilot = new PlayerAutoPilot(targetPixel, targetRect, road ? RecklessTravelMultiplier : CautiousTravelMultiplier);
                 playerAutopilot.OnArrival += SelectNextPath;
@@ -406,9 +414,10 @@ namespace TravelOptions
                     {
                         byte fromDirection = GetDirection(GetNormalisedPlayerYaw(true));
                         playerDirection = (byte)(pathsDataPt ^ fromDirection);
-                        Debug.LogFormat("Changing direction to {0}", GetDirectionStr(playerDirection));
                     }
+#if UNITY_EDITOR
                     Debug.LogFormat("Heading {0}", GetDirectionStr(playerDirection));
+#endif
                     byte roadDataPt = GetRoadsDataPoint(currMapPixel);
                     bool road = (roadDataPt & playerDirection) != 0;
                     BeginPathTravel(GetTargetPixel(playerDirection, currMapPixel), road);
@@ -421,7 +430,6 @@ namespace TravelOptions
             }
             // An intersection, location, or path end then end travel
             travelControlUI.CloseWindow();
-            Debug.Log("Stop following");
         }
 
         protected void CircumnavigateLocation()
@@ -454,11 +462,12 @@ namespace TravelOptions
             else
                 return;
 
-            travelControlUI.SetDestination("Circumnavigating " + GameManager.Instance.PlayerGPS.CurrentLocation.Name);
+            travelControlUI.SetDestination(string.Format(MsgCircumnavigate, GameManager.Instance.PlayerGPS.CurrentLocation.Name));
 
             DestinationCautious = false;
             if (alwaysUseStartingAccel)
                 travelControlUI.TimeAcceleration = defaultStartingAccel;
+            travelControlUI.HalfLimit = true;
 
             playerAutopilot = new PlayerAutoPilot(currMapPixel, targetRect, GetTravelSpeedMultiplier());
             playerAutopilot.OnArrival += () => { CircumnavigateLocation(); };
@@ -614,18 +623,22 @@ namespace TravelOptions
                 playerAutopilot.Update();
                 DaggerfallUI.Instance.DaggerfallHUD.HUDVitals.Update();
 
+                if (PathsTravel && DestinationName == null && InputManager.Instance.GetKeyDown(KeyCode.F))
+                {
+                    if (travelControlUI.isShowing)
+                        travelControlUI.CloseWindow();
+                }
+
                 // If circumnavigating a location, check for path crossings
                 PlayerGPS playerGPS = GameManager.Instance.PlayerGPS;
                 if (circumnavigatePathsDataPt != 0)
                 {
                     byte crossed = IsPlayerOnPath(playerGPS, circumnavigatePathsDataPt);
-                    Debug.LogFormat("crossed: {0}  last:{1}", GetDirectionStr(crossed), GetDirectionStr(lastCrossed));
                     if (crossed != 0 && crossed != lastCrossed)
                     {
                         lastCrossed = crossed;
                         if (travelControlUI.isShowing)
                             travelControlUI.CloseWindow();
-                        InterruptTravel();
                         return;
                     }
                     lastCrossed = crossed;
@@ -691,7 +704,7 @@ namespace TravelOptions
                     diseaseCount = currentDiseaseCount;
                 }
             }
-            else if (PathsTravel && InputManager.Instance.GetKeyUp(KeyCode.F))
+            else if (PathsTravel && InputManager.Instance.GetKeyDown(KeyCode.F) && GameManager.Instance.IsPlayerOnHUD)
             {
                 FollowPath();
             }
