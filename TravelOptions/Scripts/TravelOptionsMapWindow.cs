@@ -73,7 +73,7 @@ namespace TravelOptions
         public TravelOptionsMapWindow(IUserInterfaceManager uiManager)
             : base(uiManager)
         {
-            if (TravelOptionsMod.Instance.PathsTravel)
+            if (TravelOptionsMod.Instance.RoadsIntegration)
             {
                 // Try to get path data from BasicRoads mod
                 ModManager.Instance.SendModMessage(TravelOptionsMod.ROADS_MODNAME, "getPathData", path_roads,
@@ -103,7 +103,7 @@ namespace TravelOptions
                 NativePanel.Components.Add(portsFilterButton);
             }
 
-            if (TravelOptionsMod.Instance.PathsTravel)
+            if (TravelOptionsMod.Instance.RoadsIntegration)
             {
                 SetupPathButtons();
                 UpdatePathButtons();
@@ -215,7 +215,7 @@ namespace TravelOptions
         // Updates location dots
         protected override void UpdateMapLocationDotsTexture()
         {
-            if (TravelOptionsMod.Instance.PathsTravel)
+            if (TravelOptionsMod.Instance.RoadsIntegration)
             {
                 UpdateMapLocationDotsTextureWithPaths();
             }
@@ -362,7 +362,7 @@ namespace TravelOptions
         {
             base.ZoomMapTextures();
 
-            if (TravelOptionsMod.Instance.PathsTravel && RegionSelected && zoom)
+            if (TravelOptionsMod.Instance.RoadsIntegration && RegionSelected && zoom)
             {
                 // Adjust cropped location dots overlay to x5 version
                 int width = (int)regionTextureOverlayPanelRect.width;

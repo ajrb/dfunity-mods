@@ -31,6 +31,10 @@
                 "DefaultStartingAcceleration": "4",
                 "AlwaysUseStartingAcceleration": "False",
                 "AccelerationLimit": "40"
+            },
+            "RoadsIntegration": {
+                "Enable": "True",
+                "FollowPathsKey": "1"
             }
         },
         "$version": "v1"

@@ -58,7 +58,7 @@
             "IsAdvanced": false,
             "Keys": [
                 {
-                    "Value": true,
+                    "Value": false,
                     "Name": "PlayerControlledInnsTravel",
                     "Description": "Enables the stop for night travel option \"Inns\" to initiate time accelerated travel, instead of fast travel",
                     "$version": "v1",
@@ -80,7 +80,7 @@
                     "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
                 },
                 {
-                    "Value": true,
+                    "Value": false,
                     "Name": "OnlyToPorts",
                     "Description": "Restricts ship travel to be possible only if destination has a port, if from ports setting is enabled",
                     "$version": "v1",
@@ -94,13 +94,6 @@
             "Description": "Configuration for  general travel options to suit each player and system setup.",
             "IsAdvanced": false,
             "Keys": [
-                {
-                    "Value": true,
-                    "Name": "PathsTravel",
-                    "Description": "Enables time accelerated travelling following paths if BasicRoads mod is installed",
-                    "$version": "v1",
-                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
-                },
                 {
                     "Value": false,
                     "Name": "AllowWeather",
@@ -149,7 +142,9 @@
                         "3",
                         "5",
                         "10",
+                        "15",
                         "20",
+                        "25",
                         "30",
                         "40",
                         "50"
@@ -172,9 +167,39 @@
                     "Max": 100,
                     "Value": 40,
                     "Name": "AccelerationLimit",
-                    "Description": "The maximum limit allowed for time acceleration",
+                    "Description": "The maximum limit allowed for time acceleration, road following is limited half this amount",
                     "$version": "v1",
                     "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.SliderIntKey"
+                }
+            ],
+            "$version": "v1"
+        },
+        {
+            "Name": "RoadsIntegration",
+            "Description": "Configuration for integration of the BasicRoads mod, if it's installed",
+            "IsAdvanced": false,
+            "Keys": [
+                {
+                    "Value": true,
+                    "Name": "Enable",
+                    "Description": "Enhances the travel map with larger location dots for cities & towns, and shows roads & tracks with toggle buttons",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
+                },
+                {
+                    "Options": [
+                        "None",
+                        "F",
+                        "G",
+                        "K",
+                        "O",
+                        "X"
+                    ],
+                    "Value": 1,
+                    "Name": "FollowPathsKey",
+                    "Description": "Sets the key to initiate time accelerated travelling following paths if roads integration enabled",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.MultipleChoiceKey"
                 }
             ],
             "$version": "v1"

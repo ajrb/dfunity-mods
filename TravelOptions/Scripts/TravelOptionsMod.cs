@@ -30,7 +30,21 @@ namespace TravelOptions
 
         public const string ROADS_MODNAME = "BasicRoads";
 
-        // Path type and direction constants from BasicRoadsTexturing
+        protected const string MsgArrived = "You have arrived at your destination.";
+        protected const string MsgEnemies = "Enemies are seeking to prevent your travel...";
+        protected const string MsgAvoidFail = "You failed to avoid an encounter!";
+        protected const string MsgAvoidSuccess = "You successfully avoided an encounter.";
+        protected const string MsgLowHealth = "You are close to the point of death!";
+        protected const string MsgLowFatigue = "You are exhausted and should rest.";
+        protected const string MsgOcean = "You've found yourself in the sea, maybe you should travel on a ship.";
+        protected const string MsgNearLocation = "Paused the journey since a {0} called {1} is nearby.";
+        protected const string MsgEnterLocation = "Paused the journey as you've entered a {0} called {1}.";
+        protected const string MsgCircumnavigate = "Circumnavigating {0}.";
+        protected const string MsgNoPath = "There's no path here to follow in that direction.";
+        protected const string MsgFollowRoad = "Following a road.";
+        protected const string MsgFollowTrack = "Following a dirt track.";
+
+        // Path type and direction constants copied from BasicRoadsTexturing
         public const int path_roads = 0;
         public const int path_tracks = 1;
         public const int path_rivers = 2;
@@ -53,20 +67,7 @@ namespace TravelOptions
         const int MidHi = HalfMPworldUnits + TSize;
         const float AngUnit = 22.5f; // = 45 / 2
 
-        private const string MsgArrived = "You have arrived at your destination.";
-        private const string MsgEnemies = "Enemies are seeking to prevent your travel...";
-        private const string MsgAvoidFail = "You failed to avoid an encounter!";
-        private const string MsgAvoidSuccess = "You successfully avoided an encounter.";
-        private const string MsgLowHealth = "You are close to the point of death!";
-        private const string MsgLowFatigue = "You are exhausted and should rest.";
-        private const string MsgOcean = "You've found yourself in the sea, maybe you should travel on a ship.";
-        private const string MsgNearLocation = "Paused the journey since a {0} called {1} is nearby.";
-        private const string MsgEnterLocation = "Paused the journey as you've entered a {0} called {1}.";
-        private const string MsgCircumnavigate = "Circumnavigating {0}.";
-        private const string MsgNoPath = "There's no path here to follow in that direction.";
-        private const string MsgFollowRoad = "Following a road.";
-        private const string MsgFollowTrack = "Following a dirt track.";
-
+        // Location pause mode enum-alike
         const int LocPauseOff = 0;
         const int LocPauseNear = 1;
         const int LocPauseEnter = 2;
@@ -74,22 +75,23 @@ namespace TravelOptions
         public static TravelOptionsMod Instance { get; private set; }
 
         public string DestinationName { get; private set; }
-        public ContentReader.MapSummary DestinationSummary { get; private set; }
         public bool DestinationCautious { get; private set; }
+        public ContentReader.MapSummary DestinationSummary { get; private set; }
 
-        public bool PathsTravel { get; private set; }
         public bool CautiousTravel { get; private set; }
         public bool StopAtInnsTravel { get; private set; }
         public bool ShipTravelPortsOnly { get; private set; }
         public bool ShipTravelDestinationPortsOnly { get; private set; }
+        public bool RoadsIntegration { get; private set; }
 
         public float RecklessTravelMultiplier { get; private set; } = 1f;
         public float CautiousTravelMultiplier { get; private set; } = 0.8f;
-        private float GetTravelSpeedMultiplier() { return DestinationCautious ? CautiousTravelMultiplier : RecklessTravelMultiplier; }
+        public float GetTravelSpeedMultiplier() { return DestinationCautious ? CautiousTravelMultiplier : RecklessTravelMultiplier; }
         public int CautiousHealthMinPc { get; private set; } = 5;
         public int CautiousFatigueMin { get; private set; } = 6;
 
-        static readonly int[] startAccelVals = { 1, 2, 3, 5, 10, 20, 30, 40, 50 };
+        static readonly int[] startAccelVals = { 1, 2, 3, 5, 10, 15, 20, 25, 30, 40, 50 };
+        static readonly KeyCode[] followKeys = { KeyCode.None, KeyCode.F, KeyCode.G, KeyCode.K, KeyCode.O, KeyCode.X };
 
         static Mod mod;
 
@@ -97,6 +99,7 @@ namespace TravelOptions
         TravelControlUI travelControlUI;
         internal TravelControlUI GetTravelControlUI() { return travelControlUI; }
 
+        KeyCode followKeyCode = KeyCode.None;
         DFLocation lastLocation;
         Rect locationRect = Rect.zero;
         Rect locationBorderRect = Rect.zero;
@@ -139,7 +142,10 @@ namespace TravelOptions
 
             ModSettings settings = mod.GetSettings();
 
-            PathsTravel = settings.GetValue<bool>("GeneralOptions", "PathsTravel") && roadsModEnabled;
+            RoadsIntegration = settings.GetValue<bool>("RoadsIntegration", "Enable") && roadsModEnabled;
+            if (RoadsIntegration)
+                followKeyCode = followKeys[settings.GetValue<int>("RoadsIntegration", "FollowPathsKey")];
+
             enableWeather = settings.GetValue<bool>("GeneralOptions", "AllowWeather");
             enableSounds = settings.GetValue<bool>("GeneralOptions", "AllowAnnoyingSounds");
             enableRealGrass = settings.GetValue<bool>("GeneralOptions", "AllowRealGrass");
@@ -220,7 +226,7 @@ namespace TravelOptions
 
         private void PlayerGPS_OnMapPixelChanged(DFPosition mapPixel)
         {
-            if (PathsTravel && (playerAutopilot == null || DestinationName != null))
+            if (RoadsIntegration && (playerAutopilot == null || DestinationName != null))
             {
                 DFPosition worldOriginMP = MapsFile.MapPixelToWorldCoord(mapPixel.X, mapPixel.Y);
                 SetLocationRects(mapPixel, worldOriginMP);
@@ -633,7 +639,7 @@ namespace TravelOptions
                 playerAutopilot.Update();
                 DaggerfallUI.Instance.DaggerfallHUD.HUDVitals.Update();
 
-                if (PathsTravel && DestinationName == null && InputManager.Instance.GetKeyDown(KeyCode.F))
+                if (DestinationName == null && followKeyCode != KeyCode.None && InputManager.Instance.GetKeyDown(followKeyCode))
                 {
                     if (travelControlUI.isShowing)
                         travelControlUI.CloseWindow();
@@ -714,7 +720,7 @@ namespace TravelOptions
                     diseaseCount = currentDiseaseCount;
                 }
             }
-            else if (PathsTravel && InputManager.Instance.GetKeyDown(KeyCode.F) && GameManager.Instance.IsPlayerOnHUD)
+            else if (followKeyCode != KeyCode.None && InputManager.Instance.GetKeyDown(followKeyCode) && GameManager.Instance.IsPlayerOnHUD)
             {
                 FollowPath();
             }
