@@ -25,7 +25,7 @@ namespace TravelOptions
         private Rect destinationWorldRect;
         private DFPosition destinationCentre;
         private PlayerGPS playerGPS = GameManager.Instance.PlayerGPS;
-        private DFPosition lastPlayerMapPixel = new DFPosition(int.MaxValue, int.MaxValue);
+        private DFPosition lastPlayerMapPixel;
         private bool inDestinationMapPixel = false;
         private Transform cameraTransform = GameManager.Instance.PlayerMouseLook.GetComponent<Transform>();
         private PlayerMouseLook mouseLook = GameManager.Instance.PlayerMouseLook;
@@ -43,6 +43,9 @@ namespace TravelOptions
             destinationWorldRect = targetRect;
             destinationCentre = new DFPosition((int)targetRect.center.x, (int)targetRect.center.y);
             this.travelSpeedMultiplier = travelSpeedMultiplier;
+
+            lastPlayerMapPixel = new DFPosition(int.MaxValue, int.MaxValue);
+            inDestinationMapPixel = false;
             mouseLook.Pitch = 0;
         }
 
@@ -51,6 +54,8 @@ namespace TravelOptions
             this.destinationSummary = destinationSummary;
             this.travelSpeedMultiplier = travelSpeedMultiplier;
             InitDestination();
+
+            lastPlayerMapPixel = new DFPosition(int.MaxValue, int.MaxValue);
         }
 
         private void InitDestination()

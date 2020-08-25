@@ -393,8 +393,15 @@ namespace TravelOptions
                     travelControlUI.TimeAcceleration = defaultStartingAccel;
                 travelControlUI.HalfLimit = true;
 
-                playerAutopilot = new PlayerAutoPilot(targetPixel, targetRect, road ? RecklessTravelMultiplier : CautiousTravelMultiplier);
-                playerAutopilot.OnArrival += SelectNextPath;
+                if (playerAutopilot == null)
+                {
+                    playerAutopilot = new PlayerAutoPilot(targetPixel, targetRect, road ? RecklessTravelMultiplier : CautiousTravelMultiplier);
+                    playerAutopilot.OnArrival += SelectNextPath;
+                }
+                else
+                {
+                    playerAutopilot.InitTargetRect(targetPixel, targetRect, road ? RecklessTravelMultiplier : CautiousTravelMultiplier);
+                }
                 SetTimeScale(travelControlUI.TimeAcceleration);
                 DisableWeatherAndSound();
                 diseaseCount = GameManager.Instance.PlayerEffectManager.DiseaseCount;
