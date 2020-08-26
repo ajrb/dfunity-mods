@@ -189,9 +189,15 @@ namespace TravelOptions
 
         public override void OnPush()
         {
-            // Check if there's an active destination
+            base.OnPush();
+
+            // Open to region map if travel UI showing, else check if there's an active destination and ask to resume
             TravelOptionsMod travelModInstance = TravelOptionsMod.Instance;
-            if (!string.IsNullOrEmpty(travelModInstance.DestinationName) && !travelModInstance.GetTravelControlUI().isShowing)
+            if (travelModInstance.GetTravelControlUI().isShowing)
+            {
+                OpenRegionPanel(GetPlayerRegion());
+            }
+            else if (!string.IsNullOrEmpty(travelModInstance.DestinationName))
             {
                 Debug.Log("Active destination: " + travelModInstance.DestinationName);
 
@@ -208,8 +214,6 @@ namespace TravelOptions
                 };
                 resumeMsgBox.Show();
             }
-
-            base.OnPush();
         }
 
         // Updates location dots

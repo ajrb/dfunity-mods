@@ -735,7 +735,7 @@ namespace TravelOptions
 
         void AttemptAvoidEncounter()
         {
-            int successChance = Mathf.Min((GameManager.Instance.PlayerEntity.Stats.LiveLuck + GameManager.Instance.PlayerEntity.Skills.GetLiveSkillValue(DFCareer.Skills.Stealth) - 20), maxAvoidChance);
+            int successChance = Mathf.Min(GameManager.Instance.PlayerEntity.Stats.LiveLuck + GameManager.Instance.PlayerEntity.Skills.GetLiveSkillValue(DFCareer.Skills.Stealth) - 50, maxAvoidChance);
 
             if (Dice100.SuccessRoll(successChance))
             {
