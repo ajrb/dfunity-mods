@@ -28,6 +28,7 @@ namespace BasicRoads
         public const byte road_dirt = 47;
         public const byte road_grass = 55;
         public const byte water_temp = byte.MaxValue;
+        public const byte no_change = 99;
 
         public const byte N  = 128;//0b_1000_0000;
         public const byte NE = 64; //0b_0100_0000;
@@ -55,12 +56,12 @@ namespace BasicRoads
             null                            // Cardinal - Inside 90o Corners
         };
         static readonly byte[][] trackTiles = {
-            new byte[] { 00, 01, 11, 26 },  // Cardinal - Inner
+            new byte[] { 00, 99, 11, 26 },  // Cardinal - Inner
             null,                           // Cardinal - Outer 
-            new byte[] { 00, 01, 51, 52 },  // Diagonal - Inner
-            new byte[] { 00, 09, 12, 27 },  // Diagonal - Outer 
+            new byte[] { 00, 99, 51, 52 },  // Diagonal - Inner
+            new byte[] { 00, 99, 12, 27 },  // Diagonal - Outer 
             null,                           // Diagonal - Gaps
-            new byte[] { 00, 01, 10, 25 },  // Cardinal - Inside 90o Corners
+            new byte[] { 00, 99, 10, 25 },  // Cardinal - Inside 90o Corners
         };
         static readonly byte[][] streamTiles = {
             new byte[] { 00, 06, 21, 31 },  // Cardinal - Inner
@@ -270,18 +271,23 @@ namespace BasicRoads
                 }
             }
 
-            private void PaintPathTile(int x, int y, int index, byte[] pathTile, bool rotate, bool flip, bool overwrite = true)
+            private bool PaintPathTile(int x, int y, int index, byte[] pathTile, bool rotate, bool flip, bool overwrite = true)
             {
                 if (overwrite || tilemapData[index] == 0)
                 {
                     byte tile = tileData[JobA.Idx(x, y, tdDim)];
                     if (tile > stone)
                         tile = grass;
-                    tilemapData[index] = pathTile[tile];
-                    RotateFlipTile(index, rotate, flip);
-                    if (tilemapData[index] == 0)
-                        tilemapData[index] = water_temp;
+                    if (pathTile[tile] != no_change)
+                    {
+                        tilemapData[index] = pathTile[tile];
+                        RotateFlipTile(index, rotate, flip);
+                        if (tilemapData[index] == 0)
+                            tilemapData[index] = water_temp;
+                        return true;
+                    }
                 }
+                return false;
             }
 
             private void RotateFlipTile(int index, bool rotate, bool flip)
@@ -301,50 +307,42 @@ namespace BasicRoads
                     // N-S
                     if ((((pathDataPt & N) != 0 && (x == midLo || x == midHi) && y > midLo) || ((pathDataPt & S) != 0 && (x == midLo || x == midHi) && y < midHi)) && pathTiles[CardInn] != null)
                     {   // Cardinal - Inner
-                        PaintPathTile(x, y, index, pathTiles[CardInn], false, x == midHi);
-                        hasPath = true;
+                        hasPath |= PaintPathTile(x, y, index, pathTiles[CardInn], false, x == midHi);
                     }
                     if ((((pathDataPt & N) != 0 && (x == midLo || x == midHi) && y == midLo) || ((pathDataPt & S) != 0 && (x == midLo || x == midHi) && y == midHi)) && pathTiles[DiagOut] != null)
                     {   // Cardinal end /\
-                        PaintPathTile(x, y, index, pathTiles[DiagOut], x == y, x == midHi, false);
-                        hasPath = true;
+                        hasPath |= PaintPathTile(x, y, index, pathTiles[DiagOut], x == y, x == midHi, false);
                     }
 
                     // E-W
                     if ((((pathDataPt & E) != 0 && (y == midLo || y == midHi) && x > midLo) || ((pathDataPt & W) != 0 && (y == midLo || y == midHi) && x < midHi)) && pathTiles[CardInn] != null)
                     {   // Cardinal - Inner
-                        PaintPathTile(x, y, index, pathTiles[CardInn], true, y == midHi);
-                        hasPath = true;
+                        hasPath |= PaintPathTile(x, y, index, pathTiles[CardInn], true, y == midHi);
                     }
                     if ((((pathDataPt & E) != 0 && (y == midLo || y == midHi) && x == midLo) || ((pathDataPt & W) != 0 && (y == midLo || y == midHi) && x == midHi)) && pathTiles[DiagOut] != null)
                     {   // Cardinal end /\
-                        PaintPathTile(x, y, index, pathTiles[DiagOut], x == y, x == midHi, false);
-                        hasPath = true;
+                        hasPath |= PaintPathTile(x, y, index, pathTiles[DiagOut], x == y, x == midHi, false);
                     }
 
                     // NE-SW
                     if ((((pathDataPt & NE) != 0 && x == y && x > midLo) || ((pathDataPt & SW) != 0 && x == y && x < midHi)) && pathTiles[DiagInn] != null)
                     {   // Diagonal - Inner
-                        PaintPathTile(x, y, index, pathTiles[DiagInn], false, false);
-                        hasPath = true;
+                        hasPath |= PaintPathTile(x, y, index, pathTiles[DiagInn], false, false);
                     }
                     if ((((pathDataPt & NE) != 0 && ((x == y + 1 && x > midLo) || (x + 1 == y && y > midLo))) || ((pathDataPt & SW) != 0 && ((x == y + 1 && x <= midHi) || (x + 1 == y && y <= midHi)))) && pathTiles[DiagOut] != null && !hasPath)
                     {   // Diagonal - Outer
-                        PaintPathTile(x, y, index, pathTiles[DiagOut], false, (x == y + 1));
-                        hasPath = true;
+                        hasPath |= PaintPathTile(x, y, index, pathTiles[DiagOut], false, (x == y + 1));
                     }
 
                     // NW-SE
                     int _x = 127 - x;
                     if ((((pathDataPt & NW) != 0 && _x == y && x < midHi) || ((pathDataPt & SE) != 0 && _x == y && x > midLo)) && pathTiles[DiagInn] != null)
                     {   // Diagonal - Inner
-                        PaintPathTile(x, y, index, pathTiles[DiagInn], true, false);
-                        hasPath = true;
+                        hasPath |= PaintPathTile(x, y, index, pathTiles[DiagInn], true, false);
                     }
                     if ((((pathDataPt & NW) != 0 && ((_x == y + 1 && x < midHi) || (_x + 1 == y && y > midLo))) || ((pathDataPt & SE) != 0 && ((_x == y + 1 && x >= midLo) || (_x + 1 == y && y <= midHi)))) && pathTiles[DiagOut] != null && !hasPath)
                     {   // Diagonal - Outer
-                        PaintPathTile(x, y, index, pathTiles[DiagOut], true, (_x != y + 1));
-                        hasPath = true;
+                        hasPath |= PaintPathTile(x, y, index, pathTiles[DiagOut], true, (_x != y + 1));
                     }
 
                     // Cardinal - Outer
@@ -352,13 +350,11 @@ namespace BasicRoads
                     {
                         if (((pathDataPt & N) != 0 && (x == midLo - 1 || x == midHi + 1) && y > midLo) || ((pathDataPt & S) != 0 && (x == midLo - 1 || x == midHi + 1) && y < midHi))
                         {   // Cardinal - Outer
-                            PaintPathTile(x, y, index, pathTiles[CardOut], false, x == midHi + 1, false);
-                            hasPath = true;
+                            hasPath |= PaintPathTile(x, y, index, pathTiles[CardOut], false, x == midHi + 1, false);
                         }
                         if (((pathDataPt & E) != 0 && (y == midLo - 1 || y == midHi + 1) && x > midLo) || ((pathDataPt & W) != 0 && (y == midLo - 1 || y == midHi + 1) && x < midHi))
                         {   // Cardinal - Outer
-                            PaintPathTile(x, y, index, pathTiles[CardOut], true, y == midHi + 1);
-                            hasPath = true;
+                            hasPath |= PaintPathTile(x, y, index, pathTiles[CardOut], true, y == midHi + 1);
                         }
                     }
 
@@ -367,13 +363,11 @@ namespace BasicRoads
                     {
                         if (((pathDataPt & NE) != 0 && ((x - 1 == y + 1 && x > midLo) || (x + 1 == y - 1 && y > midLo))) || ((pathDataPt & SW) != 0 && ((x - 1 == y + 1 && x <= midHi) || (x + 1 == y - 1 && y <= midHi))))
                         {   // NE-NW
-                            PaintPathTile(x, y, index, pathTiles[DiagGap], false, (x - 1 == y + 1));
-                            hasPath = true;
+                            hasPath |= PaintPathTile(x, y, index, pathTiles[DiagGap], false, (x - 1 == y + 1));
                         }
                         if (((pathDataPt & NW) != 0 && ((_x - 1 == y + 1 && x < midHi) || (_x + 1 == y - 1 && y > midLo))) || ((pathDataPt & SE) != 0 && ((_x - 1 == y + 1 && x >= midLo) || (_x + 1 == y - 1 && y <= midHi))))
                         {   // NW-SE
-                            PaintPathTile(x, y, index, pathTiles[DiagGap], true, (_x - 1 != y + 1));
-                            hasPath = true;
+                            hasPath |= PaintPathTile(x, y, index, pathTiles[DiagGap], true, (_x - 1 != y + 1));
                         }
                     }
 
@@ -405,23 +399,19 @@ namespace BasicRoads
                 {
                     if ((pathCorners & NW) != 0 && x == tDim-1 && y == tDim-1)
                     {   // NE
-                        PaintPathTile(x, y, index, pathTiles[DiagOut], true, false);
-                        hasPath = true;
+                        hasPath |= PaintPathTile(x, y, index, pathTiles[DiagOut], true, false);
                     }
                     if ((pathCorners & SW) != 0 && x == tDim-1 && y == 0)
                     {   // SE
-                        PaintPathTile(x, y, index, pathTiles[DiagOut], false, false);
-                        hasPath = true;
+                        hasPath |= PaintPathTile(x, y, index, pathTiles[DiagOut], false, false);
                     }
                     if ((pathCorners & SE) != 0 && x == 0 && y == 0)
                     {   // SW
-                        PaintPathTile(x, y, index, pathTiles[DiagOut], true, true);
-                        hasPath = true;
+                        hasPath |= PaintPathTile(x, y, index, pathTiles[DiagOut], true, true);
                     }
                     if ((pathCorners & NE) != 0 && x == 0 && y == tDim-1)
                     {   // NW
-                        PaintPathTile(x, y, index, pathTiles[DiagOut], false, true);
-                        hasPath = true;
+                        hasPath |= PaintPathTile(x, y, index, pathTiles[DiagOut], false, true);
                     }
                 }
 
