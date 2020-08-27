@@ -286,10 +286,9 @@ namespace TravelOptions
                 if (dfTerrain && dfTerrain.MapData.hasLocation)
                 {
                     float locBorder = 1;
-                    ContentReader.MapSummary locationSummary;
-                    if (DaggerfallUnity.Instance.ContentReader.HasLocation(targetPixel.X, targetPixel.Y, out locationSummary))
-                        if (locationSummary.LocationType == DFRegion.LocationTypes.TownCity)
-                            locBorder = 1.5f;
+                    DFLocation location = DaggerfallUnity.Instance.ContentReader.MapFileReader.GetLocation(dfTerrain.MapData.mapRegionIndex, dfTerrain.MapData.mapLocationIndex);
+                    if (location.Loaded && location.MapTableData.LocationType == DFRegion.LocationTypes.TownCity)
+                        locBorder = 1.5f;
 
                     Rect locationTileRect = dfTerrain.MapData.locationRect;
                     locationTileRect.xMin += 1;
@@ -302,7 +301,7 @@ namespace TravelOptions
                     locationTileRect.yMax -= locBorder;
                     locationRect.Set(targetMPworld.X + (locationTileRect.x * TSize), targetMPworld.Y + (locationTileRect.y * TSize), locationTileRect.width * TSize, locationTileRect.height * TSize);
 
-                    return true;
+                    return !location.HasCustomLocationPosition();   // Only aim for location center if it's centered in the map pixel
                 }
             }
             locationBorderRect.Set(0, 0, 0, 0);

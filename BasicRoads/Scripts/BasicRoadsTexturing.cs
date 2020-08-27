@@ -394,7 +394,7 @@ namespace BasicRoads
                     }
                 }
 
-                // Paint map pixel corners
+                // Paint map pixel corners in adjacent pixels
                 if (pathCorners != 0)
                 {
                     if ((pathCorners & NW) != 0 && x == tDim-1 && y == tDim-1)
