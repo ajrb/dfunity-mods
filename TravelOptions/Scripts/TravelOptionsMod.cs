@@ -358,7 +358,7 @@ namespace TravelOptions
 #endif
                 if ((inLoc && (pathsDataPt & playerDirection) != 0) || (pathsDataPt & playerDirection & onPath) != 0)
                 {
-                    bool road = (roadDataPt & playerDirection) != 0;
+                    road = (roadDataPt & playerDirection) != 0;
                     BeginPathTravel(GetTargetPixel(playerDirection, currMapPixel));
                     return;
                 }
@@ -367,7 +367,7 @@ namespace TravelOptions
                     byte fromDirection = GetDirection(GetNormalisedPlayerYaw(true));
                     if ((inLoc && (pathsDataPt & fromDirection) != 0) || (pathsDataPt & fromDirection & onPath) != 0)
                     {
-                        bool road = (roadDataPt & fromDirection) != 0;
+                        road = (roadDataPt & fromDirection) != 0;
                         BeginPathTravel(GetTargetPixel(0, currMapPixel));
                         return;
                     }
@@ -435,7 +435,7 @@ namespace TravelOptions
                     Debug.LogFormat("Heading {0}", GetDirectionStr(playerDirection));
 #endif
                     byte roadDataPt = GetRoadsDataPoint(currMapPixel);
-                    bool road = (roadDataPt & playerDirection) != 0;
+                    road = (roadDataPt & playerDirection) != 0;
                     BeginPathTravel(GetTargetPixel(playerDirection, currMapPixel));
                     return;
                 }
