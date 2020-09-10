@@ -943,23 +943,22 @@ namespace RoleplayRealism
 
         static IDictionary MobLootKeys = new Hashtable()
         {
-            {9, "F"},       // Giant
-            {10, "B"},      // Nymph
-            {19, "J"},      // Mummy
-            {21, "LR2"},    // Orc Shaman
-            {32, "J"},      // Lich
-            {33, "S"},      // Ancient Lich
-            {26, "S"},      // Fire Daedra
-            {27, "S"},      // Daedroth
-            {29, "S"},      // Daedra Seducer
-            {128-G, "LR3"}, // Mage
-            {130-G, "LR3"}, // Battlemage
-            {131-G, "LR3"}, // Sorcerer
-            {132-G, "LR2"}, // Healer
-            {133-G, "LR3"}, // Nightblade
-            {140-G, "O"},   // Monk
-            {143-G, "LR1"}, // Barbarian
-            {144-G, "LR1"}, // Warrior
+            {(int) MobileTypes.Giant, "E"},      
+            {(int) MobileTypes.Nymph, "B"},      
+            {(int) MobileTypes.Mummy, "J"},      
+            {(int) MobileTypes.OrcShaman, "LR2"},
+            {(int) MobileTypes.Lich, "J"},      
+            {(int) MobileTypes.FireDaedra, "S"}, 
+            {(int) MobileTypes.Daedroth, "S"},   
+            {(int) MobileTypes.DaedraSeducer, "S"},
+            {(int) MobileTypes.Mage-G, "LR3"},
+            {(int) MobileTypes.Battlemage-G, "LR3"},
+            {(int) MobileTypes.Sorcerer-G, "LR3"},
+            {(int) MobileTypes.Healer-G, "LR2"},
+            {(int) MobileTypes.Nightblade-G, "LR3"},
+            {(int) MobileTypes.Monk-G, "O"},
+            {(int) MobileTypes.Barbarian-G, "LR1"}, 
+            {(int) MobileTypes.Warrior-G, "LR1"},
         };
 
         static readonly LootChanceMatrix[] LootRealismTables = {
