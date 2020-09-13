@@ -55,7 +55,7 @@ namespace BasicRoads
             null,                           // Diagonal - Gaps
             null                            // Cardinal - Inside 90o Corners
         };
-        static readonly byte[][] trackTiles = {
+        static readonly byte[][] trackTilesNorm = {
             new byte[] { 00, 99, 11, 26 },  // Cardinal - Inner
             null,                           // Cardinal - Outer 
             new byte[] { 00, 99, 51, 52 },  // Diagonal - Inner
@@ -63,6 +63,15 @@ namespace BasicRoads
             null,                           // Diagonal - Gaps
             new byte[] { 00, 99, 10, 25 },  // Cardinal - Inside 90o Corners
         };
+        static readonly byte[][] trackTilesSplat = {
+            new byte[] { 00, 99, 01, 01 },  // Cardinal - Inner
+            null,                           // Cardinal - Outer 
+            new byte[] { 00, 99, 01, 01 },  // Diagonal - Inner
+            new byte[] { 00, 99, 10, 25 },  // Diagonal - Outer 
+            new byte[] { 00, 99, 12, 27 },  // Diagonal - Gaps
+            new byte[] { 00, 99, 10, 25 },  // Cardinal - Inside 90o Corners
+        };
+        static byte[][] trackTiles = trackTilesNorm;
         static readonly byte[][] streamTiles = {
             new byte[] { 00, 06, 21, 31 },  // Cardinal - Inner
             null,                           // Cardinal - Outer 
@@ -96,7 +105,7 @@ namespace BasicRoads
         readonly bool smoothPaths;
         readonly bool editorEnabled;
 
-        public BasicRoadsTexturing(bool smooth, bool editor)
+        public BasicRoadsTexturing(bool smooth, bool editor, bool splatModEnabled)
         {
             // Read in path data.
             pathsData[roads] = ReadPathData(RoadDataFilename);
@@ -104,6 +113,9 @@ namespace BasicRoads
 
             smoothPaths = smooth;
             editorEnabled = editor;
+
+            if (splatModEnabled)
+                trackTiles = trackTilesSplat;
         }
 
         private static byte[] ReadPathData(string filename)

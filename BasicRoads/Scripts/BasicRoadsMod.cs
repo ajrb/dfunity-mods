@@ -30,11 +30,15 @@ namespace BasicRoads
         {
             Debug.Log("Begin mod init: BasicRoads");
 
+            // If splatmapping mod is enabled, paint thicker dirt tracks as thin diagonal ones look awful.
+            Mod splatMod = ModManager.Instance.GetModFromGUID("21a4ed84-12c3-4979-b1ef-8b9169d03922");
+            bool splatModEnabled = splatMod != null && splatMod.Enabled;
+
             ModSettings settings = mod.GetSettings();
             bool smoothRoads = settings.GetBool("Settings", "SmoothRoads");
             bool editingEnabled = settings.GetBool("Editing", "EditingEnabled");
 
-            roadTexturing = new BasicRoadsTexturing(smoothRoads, editingEnabled);
+            roadTexturing = new BasicRoadsTexturing(smoothRoads, editingEnabled, splatModEnabled);
             DaggerfallUnity.Instance.TerrainTexturing = roadTexturing;
 
             if (editingEnabled)
