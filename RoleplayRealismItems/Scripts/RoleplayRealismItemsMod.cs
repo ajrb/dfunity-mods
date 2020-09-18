@@ -21,6 +21,7 @@ using DaggerfallWorkshop.Game.Utility;
 using DaggerfallWorkshop.Game.MagicAndEffects;
 using DaggerfallWorkshop.Game.MagicAndEffects.MagicEffects;
 using DaggerfallWorkshop.Game.Guilds;
+using System.Collections.Generic;
 
 namespace RoleplayRealism
 {
@@ -415,6 +416,7 @@ namespace RoleplayRealism
             if (enemyEntity.EntityType != EntityTypes.EnemyClass)
             {
                 DaggerfallUnity.Instance.ItemHelper.AssignEnemyStartingEquipment(playerEntity, enemyEntity, variant);
+                ConvertOrcish(enemyEntity);
                 return;
             }
 
@@ -549,6 +551,30 @@ namespace RoleplayRealism
             }
         }
 
+        private static void ConvertOrcish(EnemyEntity enemyEntity)
+        {
+            // Orcs have any higher materials converted to Orcish 80% of the time.
+            if (enemyEntity.MobileEnemy.Team == MobileTeams.Orcs && Dice100.SuccessRoll(80))
+            {
+                int convertFrom = (int)WeaponMaterialTypes.Ebony;
+                if (enemyEntity.MobileEnemy.ID == (int)MobileTypes.OrcWarlord)
+                    convertFrom = (int)WeaponMaterialTypes.Mithril;
+                List<DaggerfallUnityItem> items = enemyEntity.Items.SearchItems(ItemGroups.Weapons);
+                items.AddRange(enemyEntity.Items.SearchItems(ItemGroups.Armor));
+                foreach (DaggerfallUnityItem item in items)
+                {
+                    int material = item.nativeMaterialValue & 0xFF;
+                    if (material >= convertFrom)
+                    {
+                        Debug.LogFormat("Converted {0} to Orcish for a {1}", (WeaponMaterialTypes)material, item.shortName);
+                        if (item.ItemGroup == ItemGroups.Armor)
+                            ItemBuilder.ApplyArmorMaterial(item, ArmorMaterialTypes.Orcish);
+                        else
+                            ItemBuilder.ApplyWeaponMaterial(item, WeaponMaterialTypes.Orcish);
+                    }
+                }
+            }
+        }
 
         static DaggerfallUnityItem CreateWeapon(int templateIndex, WeaponMaterialTypes material)
         {
