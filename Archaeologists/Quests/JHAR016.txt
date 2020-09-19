@@ -1,0 +1,113 @@
+Quest: JHAR016
+DisplayName: Dwemer Rumors
+-- Message panels
+QRC:
+
+QuestorOffer:  [1000]
+<ce>         We've received a tip concerning a supposed Dwemer
+<ce>   object of some kind in a cave. Whoever goes for it should
+<ce>   be prepared for a trap of some kind. I have here a
+<ce>   magical _reward_ if you'll do us the honors.
+
+RefuseQuest:  [1001]
+<ce>       We need to learn how to motivate our people better.
+
+AcceptQuest:  [1002]
+<ce>      We're sending you to ___dung_. The artifact
+<ce>   will resemble a torc, we're informed. Its continued
+<ce>   existence in the face of such rarity means it'll spring
+<ce>   some sort of trap on you, no doubt. Be prepared for anything.
+<ce>   Return here within three months for your reward.
+
+QuestFail:  [1003]
+
+QuestComplete:  [1004]
+<ce>              "Stuck to you? Hold on."
+<ce>   
+<ce>   _questgiver_ calls for help, and a few
+<ce>   other members of the guild rush in.
+<ce>   Various enchantments fly through the air,
+<ce>   and the torc falls off.
+<ce>   
+<ce>   "I hope your reward is worth it. Our senior members
+<ce>   will relish this opportunity."
+
+Message:  1010
+<ce>           You reach for the artifact, and it jumps
+<ce>  onto you! It latches onto your body. Nothing
+<ce>  you try can separate itself from you.
+<ce>  It begins to emanate some sort of noxious gas.
+<ce>  For your own well-being, you should get this back to
+<ce>  the Archaeologists quickly.
+
+Message:  1011
+<ce>         The artifact emits a burst of light,
+<ce>   and a guardian materializes to defend it from you.
+
+Message:  1012
+<ce>   You have run out of time to deliver the
+<ce>   artifact to the Archaeologists. It seems
+<ce>   to have lost enough power by now, and you separate
+<ce>   it from your body. It now lies inert.
+
+Message:  1030
+%qdt:
+ The Archaeologists of ___questgiver_
+ have tasked me with delivering them
+ an artifact of apparent Dwemer origin,
+ with the appearance of a common torc,
+ found in ___dung_. I have three months
+ to ensure it reaches their hands.
+ I should be wary of any traps it holds.
+
+Message:  1031
+%qdt:
+ This artifact seems cause disease to whatever
+ possesses it. The only permanent cure is to
+ get rid of it.
+
+QBN:
+
+Person _questgiver_ group Questor male
+
+Item _artif_ torc
+Item _reward_ magic_item
+
+Place _dung_ remote dungeon
+
+Clock _days_ 90.00:00
+
+Foe _atr_ is Iron_atronach
+
+-- Quest start-up:
+    log 1030 step 0
+    place item _artif_ at _dung_
+    start timer _days_
+    reveal _dung_
+    have _artif_ set _sick_
+
+_clickitem_ task:
+    clicked item _artif_ say 1010
+    create foe _atr_ every 60 minutes 1 times with 10% success msg 1011
+    change foe _atr_ infighting true
+    log 1031 step 1
+
+_always_ task:
+    daily from 0:01 to 23:59
+
+_sick_ task:
+    when _clickitem_ and _always_
+    make pc ill with Wound_Rot
+    clear _always_ _sick_
+
+_throwaway_ task:
+    when _sick_ and _days_
+    say 1012
+
+_days_ task:
+    end quest
+
+_victory_ task:
+    toting _artif_ and _questgiver_ clicked
+    give pc _reward_
+    end quest
