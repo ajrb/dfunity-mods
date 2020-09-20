@@ -2,7 +2,7 @@
     {
         "Title": "DefaultSettings",
         "Author": "Hazelnut",
-        "Description": "Default settings the mod ships with",
+        "Description": "Default settings the mod ships with - affects all settings",
         "SettingsVersion": "1.0",
         "Values": {
             "GeneralOptions": {
