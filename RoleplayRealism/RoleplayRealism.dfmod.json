@@ -1,9 +1,9 @@
 {
     "ModTitle": "RoleplayRealism",
-    "ModVersion": "0.11",
+    "ModVersion": "1.0",
     "ModAuthor": "Hazelnut",
     "ContactInfo": "forums.dfworkshop.net",
-    "DFUnity_Version": "0.10.25",
+    "DFUnity_Version": "0.10.26",
     "ModDescription": "Modular roleplay and realism gameplay modifications",
     "GUID": "d828b782-46e9-40e7-8ae6-19cde308032e",
     "Files": [

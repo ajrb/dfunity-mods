@@ -3,7 +3,7 @@
     "ModVersion": "1.2",
     "ModAuthor": "Hazelnut",
     "ContactInfo": "forums.dfworkshop.net",
-    "DFUnity_Version": "0.10.25",
+    "DFUnity_Version": "0.10.26",
     "ModDescription": "Archaeologists guild with quest target locator device and language skill rework",
     "GUID": "5054c2f4-7679-41d5-803e-da737caa69ef",
     "Files": [
@@ -37,7 +37,9 @@
         "Assets/Game/Mods/Archaeologists/WorldData/PAWNAL03.RMB-857-building3.json",
         "Assets/Game/Mods/Archaeologists/Books/Mapping/ArchsGuildBooks.json",
         "Assets/Game/Mods/Archaeologists/Books/ArchGuildHalls.TXT",
-        "Assets/Game/Mods/Archaeologists/ItemTemplates.json"
+        "Assets/Game/Mods/Archaeologists/ItemTemplates.json",
+        "Assets/Game/Mods/Archaeologists/Archaeologists.dfmod.json",
+        "Assets/Game/Mods/Archaeologists/Quests/JHAR016.txt"
     ],
     "Contributes": {
         "BooksMapping": [
