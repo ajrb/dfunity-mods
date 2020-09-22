@@ -1,9 +1,9 @@
 {
     "ModTitle": "TravelOptions",
     "ModVersion": "1.0",
-    "ModAuthor": "Hazelnut & Jedidia",
+    "ModAuthor": "Hazelnut",
     "ContactInfo": "forums.dfworkshop.net",
-    "DFUnity_Version": "0.10.25",
+    "DFUnity_Version": "0.10.26",
     "ModDescription": "Travel options allowing time accelerated travel as well as standard fast travel",
     "GUID": "93f3ad1c-83cc-40ac-b762-96d2f47f2e05",
     "Files": [

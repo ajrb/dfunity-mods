@@ -1,9 +1,9 @@
 {
     "ModTitle": "BasicRoads",
-    "ModVersion": "v0.3",
+    "ModVersion": "v0.5",
     "ModAuthor": "Hazelnut",
     "ContactInfo": "forums.dfworkshop.net",
-    "DFUnity_Version": "0.10.25",
+    "DFUnity_Version": "0.10.26",
     "ModDescription": "Basic Roads for Daggerfall Unity",
     "GUID": "566ab21a-22d8-4eea-8ccd-6cb8f7a7ed25",
     "Files": [

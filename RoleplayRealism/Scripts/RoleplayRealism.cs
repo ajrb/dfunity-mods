@@ -493,7 +493,7 @@ namespace RoleplayRealism
         {
             if (GameManager.Instance.PlayerEntity.LightSource != null && DaggerfallUnity.Instance.WorldTime.Now.IsDay)
             {
-                DaggerfallUI.MessageBox(TextManager.Instance.GetText("DaggerfallUI", "lightDouse"), false, GameManager.Instance.PlayerEntity.LightSource);
+                DaggerfallUI.MessageBox(TextManager.Instance.GetLocalizedText("lightDouse"), false, GameManager.Instance.PlayerEntity.LightSource);
                 GameManager.Instance.PlayerEntity.LightSource = null;
             }
         }
