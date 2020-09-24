@@ -1,6 +1,6 @@
 {
     "ModTitle": "TravelOptions",
-    "ModVersion": "1.0",
+    "ModVersion": "1.1",
     "ModAuthor": "Hazelnut",
     "ContactInfo": "forums.dfworkshop.net",
     "DFUnity_Version": "0.10.26",
@@ -16,6 +16,7 @@
         "Assets/Game/Mods/TravelOptions/Textures/TOcontrolUI.png",
         "Assets/Game/Mods/TravelOptions/Textures/TOportsOff.png",
         "Assets/Game/Mods/TravelOptions/Textures/TOportsOn.png",
-        "Assets/Game/Mods/TravelOptions/modpresets.json"
+        "Assets/Game/Mods/TravelOptions/modpresets.json",
+        "Assets/Game/Mods/TravelOptions/TravelOptions.dfmod.json"
     ]
 }

@@ -255,6 +255,13 @@ namespace TravelOptions
                     int width5 = width * 5;
                     int offset5 = (int)((((height - y - 1) * 5 * width5) + (x * 5)) * scale);
 
+                    int pIdx = originX + x + ((originY + y) * MapsFile.MaxMapPixelX);
+                    if (showPaths[path_tracks])
+                        DrawPath(offset5, width5, pathsData[path_tracks][pIdx], trackColor);
+                    if (showPaths[path_roads])
+                        DrawPath(offset5, width5, pathsData[path_roads][pIdx], roadColor);
+                    //Debug.LogFormat("Found road at x:{0} y:{1}  index:{2}", originX + x, originY + y, rIdx);
+
                     ContentReader.MapSummary summary;
                     if (DaggerfallUnity.ContentReader.HasLocation(originX + x, originY + y, out summary))
                     {
@@ -269,13 +276,6 @@ namespace TravelOptions
                             }
                         }
                     }
-
-                    int pIdx = originX + x + ((originY + y) * MapsFile.MaxMapPixelX);
-                    if (showPaths[path_tracks])
-                        DrawPath(offset5, width5, pathsData[path_tracks][pIdx], trackColor);
-                    if (showPaths[path_roads])
-                        DrawPath(offset5, width5, pathsData[path_roads][pIdx], roadColor);
-                    //Debug.LogFormat("Found road at x:{0} y:{1}  index:{2}", originX + x, originY + y, rIdx);
                 }
             }
 
