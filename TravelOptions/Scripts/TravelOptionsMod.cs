@@ -18,6 +18,7 @@ using DaggerfallWorkshop.Game.Serialization;
 using DaggerfallWorkshop.Game.Utility;
 using DaggerfallWorkshop.Game.Entity;
 using DaggerfallWorkshop.Utility;
+using DaggerfallWorkshop.Game.Weather;
 
 namespace TravelOptions
 {
@@ -124,6 +125,8 @@ namespace TravelOptions
         byte circumnavigatePathsDataPt = 0;
         byte lastCrossed = 0;
         bool road = false;
+        float ridingVolume;
+        bool uiCloseWhenTop = false;
 
         [Invoke(StateManager.StateTypes.Start, 0)]
         public static void Init(InitParams initParams)
@@ -202,6 +205,9 @@ namespace TravelOptions
         public void ClearTravelDestination()
         {
             DestinationName = null;
+            playerAutopilot = null;
+            if (travelControlUI.isShowing)
+                travelControlUI.CloseWindow();
         }
 
         private void GameManager_OnEncounter()
@@ -266,12 +272,19 @@ namespace TravelOptions
                 };
 
                 lastLocation = GameManager.Instance.PlayerGPS.CurrentLocation;
-                SetTimeScale(travelControlUI.TimeAcceleration);
-                DisableWeatherAndSound();
-                diseaseCount = GameManager.Instance.PlayerEffectManager.DiseaseCount;
+                InitTravelUI();
 
                 Debug.Log("Begun accelerated travel to " + DestinationName);
             }
+        }
+
+        private void InitTravelUI()
+        {
+            SetTimeScale(travelControlUI.TimeAcceleration);
+            DisableWeatherAndSound();
+            diseaseCount = GameManager.Instance.PlayerEffectManager.DiseaseCount;
+            if (!travelControlUI.isShowing)
+                DaggerfallUI.UIManager.PushWindow(travelControlUI);
         }
 
         #region Path following
@@ -407,9 +420,7 @@ namespace TravelOptions
                 {
                     playerAutopilot.InitTargetRect(targetPixel, targetRect, road ? RecklessTravelMultiplier : CautiousTravelMultiplier);
                 }
-                SetTimeScale(travelControlUI.TimeAcceleration);
-                DisableWeatherAndSound();
-                diseaseCount = GameManager.Instance.PlayerEffectManager.DiseaseCount;
+                InitTravelUI();
             }
         }
 
@@ -486,8 +497,8 @@ namespace TravelOptions
 
             playerAutopilot = new PlayerAutoPilot(currMapPixel, targetRect, GetTravelSpeedMultiplier());
             playerAutopilot.OnArrival += () => { CircumnavigateLocation(); };
-            SetTimeScale(travelControlUI.TimeAcceleration);
-            DisableWeatherAndSound();
+
+            InitTravelUI();
         }
 
         void SetupLocBorderCornerRects()
@@ -628,11 +639,22 @@ namespace TravelOptions
 
         void Update()
         {
+            if (uiCloseWhenTop && DaggerfallUI.UIManager.TopWindow == travelControlUI)
+            {
+                uiCloseWhenTop = false;
+                travelControlUI.CloseWindow();
+            }
+
             if (playerAutopilot != null)
             {
-                // Ensure UI is showing
-                if (!travelControlUI.isShowing)
-                    DaggerfallUI.UIManager.PushWindow(travelControlUI);
+                // Ensure only the travel UI is showing, stop travel if not.
+                if (GameManager.Instance.IsPlayerOnHUD || DaggerfallUI.UIManager.TopWindow != travelControlUI)
+                {
+                    Debug.Log("Other UI activity detected, stopping travel.");
+                    InterruptTravel();
+                    uiCloseWhenTop = travelControlUI.isShowing;
+                    return;
+                }
 
                 // Run updates for playerAutopilot and HUD
                 playerAutopilot.Update();
@@ -721,7 +743,10 @@ namespace TravelOptions
             }
             else if (followKeyCode != KeyCode.None && InputManager.Instance.GetKeyDown(followKeyCode) && GameManager.Instance.IsPlayerOnHUD)
             {
-                FollowPath();
+                if (GameManager.Instance.AreEnemiesNearby())
+                    DaggerfallUI.MessageBox(TextManager.Instance.GetLocalizedText("cannotTravelWithEnemiesNearby"));
+                else
+                    FollowPath();
             }
         }
 
@@ -759,7 +784,7 @@ namespace TravelOptions
         {
             if (!enableWeather)
             {
-                var playerWeather = GameManager.Instance.WeatherManager.PlayerWeather;
+                PlayerWeather playerWeather = GameManager.Instance.WeatherManager.PlayerWeather;
                 playerWeather.RainParticles.SetActive(false);
                 playerWeather.SnowParticles.SetActive(false);
                 playerWeather.enabled = false;
@@ -768,7 +793,8 @@ namespace TravelOptions
             if (!enableSounds)
             {
                 GameManager.Instance.PlayerActivate.GetComponentInParent<PlayerFootsteps>().enabled = false;
-                GameManager.Instance.TransportManager.GetComponent<AudioSource>().enabled = false;
+                ridingVolume = GameManager.Instance.TransportManager.RidingVolumeScale;
+                GameManager.Instance.TransportManager.RidingVolumeScale = 0f;
             }
 
             if (!enableRealGrass)
@@ -778,12 +804,31 @@ namespace TravelOptions
         void EnableWeatherAndSound()
         {
             if (!enableWeather)
-                GameManager.Instance.WeatherManager.PlayerWeather.enabled = true;
+            {
+                PlayerWeather playerWeather = GameManager.Instance.WeatherManager.PlayerWeather;
+                playerWeather.enabled = true;
+                switch (playerWeather.WeatherType)
+                {
+                    case WeatherType.Rain:
+                    case WeatherType.Thunder:
+                        playerWeather.RainParticles.SetActive(true);
+                        playerWeather.SnowParticles.SetActive(false);
+                        break;
+                    case WeatherType.Snow:
+                        playerWeather.RainParticles.SetActive(false);
+                        playerWeather.SnowParticles.SetActive(true);
+                        break;
+                    default:
+                        playerWeather.RainParticles.SetActive(false);
+                        playerWeather.SnowParticles.SetActive(false);
+                        break;
+                }
+            }
 
             if (!enableSounds)
             {
                 GameManager.Instance.PlayerActivate.GetComponentInParent<PlayerFootsteps>().enabled = true;
-                GameManager.Instance.TransportManager.GetComponent<AudioSource>().enabled = true;
+                GameManager.Instance.TransportManager.RidingVolumeScale = ridingVolume;
             }
 
             if (!enableRealGrass)

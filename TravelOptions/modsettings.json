@@ -104,7 +104,7 @@
                 {
                     "Value": false,
                     "Name": "AllowAnnoyingSounds",
-                    "Description": "Allows annoying sounds during time accelerated travel",
+                    "Description": "Allows footstep and hoof sounds during time accelerated travel",
                     "$version": "v1",
                     "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
                 },
