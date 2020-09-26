@@ -125,7 +125,7 @@ namespace TravelOptions
         byte circumnavigatePathsDataPt = 0;
         byte lastCrossed = 0;
         bool road = false;
-        float ridingVolume;
+        float ridingVolume = 0.6f;
         bool uiCloseWhenTop = false;
 
         [Invoke(StateManager.StateTypes.Start, 0)]
