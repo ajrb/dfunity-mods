@@ -828,7 +828,7 @@ namespace TravelOptions
             if (!enableSounds)
             {
                 GameManager.Instance.PlayerActivate.GetComponentInParent<PlayerFootsteps>().enabled = true;
-                GameManager.Instance.TransportManager.RidingVolumeScale = ridingVolume;
+                GameManager.Instance.TransportManager.RidingVolumeScale = ridingVolume == 0 ? 0.6f : ridingVolume;
             }
 
             if (!enableRealGrass)

@@ -219,7 +219,7 @@ namespace TravelOptions
         // Updates location dots
         protected override void UpdateMapLocationDotsTexture()
         {
-            if (TravelOptionsMod.Instance.RoadsIntegration)
+            if (TravelOptionsMod.Instance.RoadsIntegration && selectedRegion != 61)
             {
                 UpdateMapLocationDotsTextureWithPaths();
             }
