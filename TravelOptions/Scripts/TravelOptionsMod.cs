@@ -19,15 +19,19 @@ using DaggerfallWorkshop.Game.Utility;
 using DaggerfallWorkshop.Game.Entity;
 using DaggerfallWorkshop.Utility;
 using DaggerfallWorkshop.Game.Weather;
+using DaggerfallWorkshop.Game.UserInterface;
 
 namespace TravelOptions
 {
     public class TravelOptionsMod : MonoBehaviour
     {
         public const string PAUSE_TRAVEL = "pauseTravel";
+        public const string NOUISTOP_WINDOW = "noStopForUIWindow";
+        public const string NOUISTOP_REMOVE = "removeNoStopWindow";
         public const string IS_TRAVEL_ACTIVE = "isTravelActive";
         public const string IS_PATH_FOLLOWING = "isPathFollowing";
         public const string IS_FOLLOWING_ROAD = "isFollowingRoad";
+        public const string SHOW_MESSAGE = "showMessage";
 
         public const string ROADS_MODNAME = "BasicRoads";
 
@@ -99,6 +103,7 @@ namespace TravelOptions
         PlayerAutoPilot playerAutopilot;
         TravelControlUI travelControlUI;
         internal TravelControlUI GetTravelControlUI() { return travelControlUI; }
+        IUserInterfaceWindow noStopForUIWindow;
 
         KeyCode followKeyCode = KeyCode.None;
         DFLocation lastLocation;
@@ -647,8 +652,11 @@ namespace TravelOptions
 
             if (playerAutopilot != null)
             {
-                // Ensure only the travel UI is showing, stop travel if not.
-                if (GameManager.Instance.IsPlayerOnHUD || DaggerfallUI.UIManager.TopWindow != travelControlUI)
+                // Ensure only the travel UI is showing, stop travel if not, but allow registered window and travel map to not halt travel.
+                if (GameManager.Instance.IsPlayerOnHUD ||
+                    (DaggerfallUI.UIManager.TopWindow != travelControlUI &&
+                     DaggerfallUI.UIManager.TopWindow != noStopForUIWindow &&
+                     DaggerfallUI.UIManager.TopWindow != DaggerfallUI.Instance.DfTravelMapWindow))
                 {
                     Debug.Log("Other UI activity detected, stopping travel.");
                     InterruptTravel();
@@ -844,6 +852,18 @@ namespace TravelOptions
                         travelControlUI.CloseWindow();
                     break;
 
+                case NOUISTOP_WINDOW:
+                    IUserInterfaceWindow window = data as IUserInterfaceWindow;
+                    if (window != null)
+                        noStopForUIWindow = window;
+                    break;
+
+                case NOUISTOP_REMOVE:
+                    IUserInterfaceWindow remove = data as IUserInterfaceWindow;
+                    if (remove != null && remove == noStopForUIWindow)
+                        noStopForUIWindow = null;
+                    break;
+
                 case IS_TRAVEL_ACTIVE:
                     callBack?.Invoke(IS_TRAVEL_ACTIVE, travelControlUI.isShowing);
                     break;
@@ -854,6 +874,12 @@ namespace TravelOptions
 
                 case IS_FOLLOWING_ROAD:
                     callBack?.Invoke(IS_FOLLOWING_ROAD, road);
+                    break;
+
+                case SHOW_MESSAGE:
+                    string msg = data as string;
+                    if (!string.IsNullOrEmpty(msg))
+                        travelControlUI.ShowMessage(msg);
                     break;
 
                 default:
