@@ -1,6 +1,6 @@
 {
     "ModTitle": "BasicRoads",
-    "ModVersion": "v0.5",
+    "ModVersion": "v0.6",
     "ModAuthor": "Hazelnut",
     "ContactInfo": "forums.dfworkshop.net",
     "DFUnity_Version": "0.10.26",
@@ -16,6 +16,7 @@
         "Assets/Game/Mods/BasicRoads/Textures/tracksOn.png",
         "Assets/Game/Mods/BasicRoads/Textures/roadsOn.png",
         "Assets/Game/Mods/BasicRoads/Textures/roadsOff.png",
-        "Assets/Game/Mods/BasicRoads/Textures/tracksOff.png"
+        "Assets/Game/Mods/BasicRoads/Textures/tracksOff.png",
+        "Assets/Game/Mods/BasicRoads/BasicRoads.dfmod.json"
     ]
 }
