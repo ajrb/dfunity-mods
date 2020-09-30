@@ -401,7 +401,7 @@ namespace TravelOptions
             DaggerfallUI.AddHUDText(MsgNoPath);
         }
 
-        protected void BeginPathTravel(DFPosition targetPixel)
+        protected void BeginPathTravel(DFPosition targetPixel, bool starting = true)
         {
             if (targetPixel != null)
             {
@@ -412,7 +412,7 @@ namespace TravelOptions
                 Rect targetRect = SetLocationRects(targetPixel, targetMPworld) ? locationBorderRect : new Rect(targetMPworld.X + MidLo, targetMPworld.Y + MidLo, PSize, PSize);
 
                 DestinationCautious = true;
-                if (alwaysUseStartingAccel)
+                if (starting && alwaysUseStartingAccel)
                     travelControlUI.TimeAcceleration = defaultStartingAccel;
                 travelControlUI.HalfLimit = true;
 
@@ -451,9 +451,11 @@ namespace TravelOptions
 #endif
                     byte roadDataPt = GetRoadsDataPoint(currMapPixel);
                     road = (roadDataPt & playerDirection) != 0;
-                    BeginPathTravel(GetTargetPixel(playerDirection, currMapPixel));
+                    BeginPathTravel(GetTargetPixel(playerDirection, currMapPixel), false);
                     return;
                 }
+                else
+                    DaggerfallUI.AddHUDText("You've arrived at a junction.");
             }
             else
             {
@@ -705,10 +707,11 @@ namespace TravelOptions
                 }
 
                 // If location pause set to nearby and travelling to destination, check for a nearby location and stop if found
-                if (locationPause == LocPauseNear && DestinationName != null && playerGPS.HasCurrentLocation && !playerGPS.CurrentLocation.Equals(lastLocation))
+                if (locationPause == LocPauseNear && DestinationName != null && playerGPS.HasCurrentLocation && !playerGPS.CurrentLocation.Equals(lastLocation) && playerGPS.CurrentLocation.Name != DestinationName)
                 {
                     lastLocation = playerGPS.CurrentLocation;
-                    StopTravelWithMessage(string.Format(MsgNearLocation, MacroHelper.LocationTypeName(), playerGPS.CurrentLocation.Name));
+
+                    StopTravelWithMessage(string.Format(MsgNearLocation, LocationTypeString(), playerGPS.CurrentLocation.Name));
                     return;
                 }
 
@@ -755,6 +758,21 @@ namespace TravelOptions
                     DaggerfallUI.MessageBox(TextManager.Instance.GetLocalizedText("cannotTravelWithEnemiesNearby"));
                 else
                     FollowPath();
+            }
+        }
+
+        string LocationTypeString()
+        {
+            switch (GameManager.Instance.PlayerGPS.CurrentLocationType)
+            {
+                case DFRegion.LocationTypes.DungeonKeep:
+                    return "Keep";
+                case DFRegion.LocationTypes.DungeonLabyrinth:
+                    return "Labyrinth";
+                case DFRegion.LocationTypes.DungeonRuin:
+                    return "Ruin";
+                default:
+                    return MacroHelper.LocationTypeName();
             }
         }
 
