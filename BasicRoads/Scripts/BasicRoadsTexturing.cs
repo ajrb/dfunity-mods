@@ -19,6 +19,8 @@ namespace BasicRoads
     /// </summary>
     public class BasicRoadsTexturing : DefaultTerrainTexturing
     {
+        public const int MP_ARRAY_SIZE = MapsFile.MaxMapPixelX * MapsFile.MaxMapPixelY;
+
         public const byte water = 0;
         public const byte dirt = 1;
         public const byte grass = 2;
@@ -99,7 +101,6 @@ namespace BasicRoads
         public const int tracks = 1;
         public const int rivers = 2;
         public const int streams = 3;
-
         static byte[][] pathsData = new byte[4][];
 
         readonly bool smoothPaths;
@@ -126,22 +127,27 @@ namespace BasicRoads
             {
                 pathData = dataAsset.bytes;
             }
-            if (pathData == null || pathData.Length != MapsFile.MaxMapPixelX * MapsFile.MaxMapPixelY)
+            if (pathData == null || pathData.Length != MP_ARRAY_SIZE)
             {
                 Debug.LogWarningFormat("BasicRoads: Unable to load path data from {0}, starting with blank path data.", filename);
-                pathData = new byte[MapsFile.MaxMapPixelX * MapsFile.MaxMapPixelY];
+                pathData = new byte[MP_ARRAY_SIZE];
             }
             return pathData;
         }
 
         internal byte[] GetPathData(int pathType)
         {
-            byte[] data = new byte[MapsFile.MaxMapPixelX * MapsFile.MaxMapPixelY];
+            byte[] data = new byte[MP_ARRAY_SIZE];
 
             if (pathType >= roads && pathType <= streams)
                 pathsData[pathType].CopyTo(data, 0);
 
             return data;
+        }
+
+        public bool InRange(int pathsIndex)
+        {
+            return pathsIndex > 0 && pathsIndex < MP_ARRAY_SIZE;
         }
 
         public override JobHandle ScheduleAssignTilesJob(ITerrainSampler terrainSampler, ref MapPixelData mapData, JobHandle dependencies, bool march = true)
@@ -165,24 +171,17 @@ namespace BasicRoads
             // Assign tile data to terrain, painting paths in the process
             int pathsIndex = mapData.mapPixelX + (mapData.mapPixelY * MapsFile.MaxMapPixelX);
             byte roadDataPt = pathsData[roads][pathsIndex];
-            byte roadCorners = (byte)((pathsData[roads][pathsIndex + 1] & 0x5) | (pathsData[roads][pathsIndex - 1] & 0x50));
+            byte roadCorners = (byte)(InRange(pathsIndex) ? (pathsData[roads][pathsIndex + 1] & 0x5) | (pathsData[roads][pathsIndex - 1] & 0x50) : 0);
             byte trackDataPt = pathsData[tracks][pathsIndex];
-            byte trackCorners = (byte)((pathsData[tracks][pathsIndex + 1] & 0x5) | (pathsData[tracks][pathsIndex - 1] & 0x50));
+            byte trackCorners = (byte)(InRange(pathsIndex) ? (pathsData[tracks][pathsIndex + 1] & 0x5) | (pathsData[tracks][pathsIndex - 1] & 0x50) : 0);
             if (editorEnabled)
             {
                 roadDataPt = BasicRoadsPathEditor.pathsData[roads][pathsIndex];
-                roadCorners = (byte)((BasicRoadsPathEditor.pathsData[roads][pathsIndex + 1] & 0x5) | (BasicRoadsPathEditor.pathsData[roads][pathsIndex - 1] & 0x50));
+                roadCorners = (byte)(InRange(pathsIndex) ? (BasicRoadsPathEditor.pathsData[roads][pathsIndex + 1] & 0x5) | (BasicRoadsPathEditor.pathsData[roads][pathsIndex - 1] & 0x50) : 0);
                 trackDataPt = BasicRoadsPathEditor.pathsData[tracks][pathsIndex];
-                trackCorners = (byte)((BasicRoadsPathEditor.pathsData[tracks][pathsIndex + 1] & 0x5) | (BasicRoadsPathEditor.pathsData[tracks][pathsIndex - 1] & 0x50));
+                trackCorners = (byte)(InRange(pathsIndex) ? (BasicRoadsPathEditor.pathsData[tracks][pathsIndex + 1] & 0x5) | (BasicRoadsPathEditor.pathsData[tracks][pathsIndex - 1] & 0x50) : 0);
             }
-            /*
-                        roadDataPt = N;//|E|S|W;
-                        if (mapData.mapPixelX > 207)
-                        {
-                            int i = mapData.mapPixelX - 208;
-                            roadDataPt = (byte)(roadDataPt | (1 << i));
-                        }
-            */
+
             NativeArray<byte> lookupData = new NativeArray<byte>(lookupTable, Allocator.TempJob);
             AssignTilesWithRoadsJob assignTilesJob = new AssignTilesWithRoadsJob
             {
