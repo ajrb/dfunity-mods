@@ -190,6 +190,7 @@ namespace TravelOptions
             GameManager.OnEncounter += GameManager_OnEncounter;
             PlayerGPS.OnEnterLocationRect += PlayerGPS_OnEnterLocationRect;
             PlayerGPS.OnMapPixelChanged += PlayerGPS_OnMapPixelChanged;
+            StreamingWorld.OnUpdateLocationGameObject += StreamingWorld_OnUpdateLocationGameObject;
 
             mod.MessageReceiver = MessageReceiver;
             mod.IsReady = true;
@@ -236,6 +237,20 @@ namespace TravelOptions
         }
 
         private void PlayerGPS_OnMapPixelChanged(DFPosition mapPixel)
+        {
+            InitLocationRects(mapPixel);
+        }
+
+        private void StreamingWorld_OnUpdateLocationGameObject(GameObject locationObject, bool allowYield)
+        {
+            if (allowYield == false && locationBorderRect.Equals(Rect.zero) && locationRect.Equals(Rect.zero))
+            {
+                DFPosition mapPixel = GameManager.Instance.PlayerGPS.CurrentMapPixel;
+                InitLocationRects(mapPixel);
+            }
+        }
+
+        private void InitLocationRects(DFPosition mapPixel)
         {
             if (RoadsIntegration && (playerAutopilot == null || DestinationName != null))
             {
@@ -357,6 +372,7 @@ namespace TravelOptions
 
         protected void FollowPath()
         {
+            DestinationName = null;     // Remove any specified destination
             PlayerGPS playerGPS = GameManager.Instance.PlayerGPS;
             DFPosition currMapPixel = playerGPS.CurrentMapPixel;
 
