@@ -372,7 +372,6 @@ namespace TravelOptions
 
         protected void FollowPath()
         {
-            DestinationName = null;     // Remove any specified destination
             PlayerGPS playerGPS = GameManager.Instance.PlayerGPS;
             DFPosition currMapPixel = playerGPS.CurrentMapPixel;
 
@@ -392,6 +391,7 @@ namespace TravelOptions
                 if ((inLoc && (pathsDataPt & playerDirection) != 0) || (pathsDataPt & playerDirection & onPath) != 0)
                 {
                     road = (roadDataPt & playerDirection) != 0;
+                    DestinationName = null;     // Remove any specified destination
                     BeginPathTravel(GetTargetPixel(playerDirection, currMapPixel));
                     return;
                 }
@@ -401,6 +401,7 @@ namespace TravelOptions
                     if ((inLoc && (pathsDataPt & fromDirection) != 0) || (pathsDataPt & fromDirection & onPath) != 0)
                     {
                         road = (roadDataPt & fromDirection) != 0;
+                        DestinationName = null;     // Remove any specified destination
                         BeginPathTravel(GetTargetPixel(0, currMapPixel));
                         return;
                     }
