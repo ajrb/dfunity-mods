@@ -145,6 +145,12 @@ namespace BasicRoads
             return data;
         }
 
+        internal byte GetPathDataPoint(int pathType, int x, int y)
+        {
+            int pathsIndex = x + (y * MapsFile.MaxMapPixelX);
+            return pathsData[pathType][pathsIndex];
+        }
+
         public bool InRange(int pathsIndex)
         {
             return pathsIndex > 0 && pathsIndex < MP_ARRAY_SIZE;
