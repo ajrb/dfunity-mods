@@ -22,6 +22,7 @@ using DaggerfallWorkshop.Game.MagicAndEffects;
 using DaggerfallWorkshop.Game.MagicAndEffects.MagicEffects;
 using DaggerfallWorkshop.Game.Guilds;
 using System.Collections.Generic;
+using DaggerfallConnect.FallExe;
 
 namespace RoleplayRealism
 {
@@ -567,6 +568,13 @@ namespace RoleplayRealism
                     if (material >= convertFrom)
                     {
                         Debug.LogFormat("Converted {0} to Orcish for a {1}", (WeaponMaterialTypes)material, item.shortName);
+                        ItemTemplate template = item.ItemTemplate;
+                        item.weightInKg = template.baseWeight;
+                        item.value = template.basePrice;
+                        item.currentCondition = template.hitPoints;
+                        item.maxCondition = template.hitPoints;
+                        item.enchantmentPoints = template.enchantmentPoints;
+
                         if (item.ItemGroup == ItemGroups.Armor)
                             ItemBuilder.ApplyArmorMaterial(item, ArmorMaterialTypes.Orcish);
                         else
