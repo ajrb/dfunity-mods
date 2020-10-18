@@ -660,7 +660,7 @@ namespace RoleplayRealism
 
             // Add spellbook, all players start with one - also a little gold and a crappy iron dagger for those with no weapon skills.
             playerEntity.Items.AddItem(ItemBuilder.CreateItem(ItemGroups.MiscItems, (int)MiscItems.Spellbook));
-            playerEntity.Items.AddItem(ItemBuilder.CreateGoldPieces(UnityEngine.Random.Range(5, playerEntity.Career.Luck)));
+            playerEntity.GoldPieces += UnityEngine.Random.Range(5, playerEntity.Career.Luck);
             playerEntity.Items.AddItem(ItemBuilder.CreateWeapon(Weapons.Dagger, WeaponMaterialTypes.Iron));
 
             // Add some torches and candles if player torch is from items setting enabled
@@ -729,7 +729,7 @@ namespace RoleplayRealism
                     items.AddItem(bandages);
                     return;
                 case DFCareer.Skills.Mercantile:
-                    items.AddItem(ItemBuilder.CreateGoldPieces(UnityEngine.Random.Range(playerEntity.Career.Luck, playerEntity.Career.Luck * 4))); return;
+                    playerEntity.GoldPieces += UnityEngine.Random.Range(playerEntity.Career.Luck, playerEntity.Career.Luck * 4); return;
                 case DFCareer.Skills.Pickpocket:
                     items.AddItem(ItemBuilder.CreateRandomGem()); return;
                 case DFCareer.Skills.Running:
