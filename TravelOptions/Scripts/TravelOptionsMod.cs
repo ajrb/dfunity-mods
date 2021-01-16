@@ -88,6 +88,7 @@ namespace TravelOptions
         public bool ShipTravelPortsOnly { get; private set; }
         public bool ShipTravelDestinationPortsOnly { get; private set; }
         public bool RoadsIntegration { get; private set; }
+        public bool VariableSizeDots { get; private set; }
 
         public float RecklessTravelMultiplier { get; private set; } = 1f;
         public float CautiousTravelMultiplier { get; private set; } = 0.8f;
@@ -151,8 +152,10 @@ namespace TravelOptions
             ModSettings settings = mod.GetSettings();
 
             RoadsIntegration = settings.GetValue<bool>("RoadsIntegration", "Enable") && roadsModEnabled;
-            if (RoadsIntegration)
+            if (RoadsIntegration) {
+                VariableSizeDots = settings.GetValue<bool>("RoadsIntegration", "VariableSizeDots");
                 followKeyCode = followKeys[settings.GetValue<int>("RoadsIntegration", "FollowPathsKey")];
+            }
 
             enableWeather = settings.GetValue<bool>("GeneralOptions", "AllowWeather");
             enableSounds = settings.GetValue<bool>("GeneralOptions", "AllowAnnoyingSounds");

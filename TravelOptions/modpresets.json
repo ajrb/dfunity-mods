@@ -34,7 +34,8 @@
             },
             "RoadsIntegration": {
                 "Enable": "True",
-                "FollowPathsKey": "1"
+                "FollowPathsKey": "1",
+                "VariableSizeDots": "True"
             }
         },
         "$version": "v1"

@@ -16,7 +16,7 @@ namespace TravelOptions
         private const string MsgPlayerControlled = "Player Controlled Journey";
         private string MsgTimeFormat = " {0} hours {1} mins (approx)";
         private const string MsgNoPort = "You cannot travel by ship from here, since there's no port.";
-        private const string MsgNoDestPort = "You cannot travel by ship to their, as that location has no port.";
+        private const string MsgNoDestPort = "You cannot travel by ship to there, as that location has no port.";
         private const string MsgNoSailing = "Your journey doesn't cross any ocean, so a ship is not needed.";
 
         public TravelOptionsPopUp(IUserInterfaceManager uiManager, IUserInterfaceWindow previousWindow = null, DaggerfallTravelMapWindow travelWindow = null)

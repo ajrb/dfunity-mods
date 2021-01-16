@@ -66,6 +66,8 @@ namespace TravelOptions
 
         protected bool portsFilter = false;
 
+        protected bool onlyLargeDots = false;
+
         internal static byte[][] pathsData = new byte[4][];
         protected bool[] showPaths = { true, true, false, false };
 
@@ -81,6 +83,8 @@ namespace TravelOptions
                 ModManager.Instance.SendModMessage(TravelOptionsMod.ROADS_MODNAME, "getPathData", path_tracks,
                     (string message, object data) => { pathsData[path_tracks] = (byte[])data; });
             }
+
+            onlyLargeDots = !TravelOptionsMod.Instance.VariableSizeDots;
         }
 
         protected override void Setup()
@@ -310,7 +314,7 @@ namespace TravelOptions
 
         bool IsLocationLarge(DFRegion.LocationTypes locationType)
         {
-            return locationType == DFRegion.LocationTypes.TownCity || locationType == DFRegion.LocationTypes.TownHamlet;
+            return locationType == DFRegion.LocationTypes.TownCity || locationType == DFRegion.LocationTypes.TownHamlet || onlyLargeDots;
         }
 
         private void DrawPath(int offset, int width, byte pathDataPt, Color32 pathColor)
