@@ -837,8 +837,17 @@ Clock _killAll_ 02.00:00
 
 
 -- Guild contact speech to find the fort & meet DB
-_clickedContact_ task:
-    clicked npc _contact_
+--_clickedContact_ task:
+--    clicked npc _contact_
+
+variable _clickedContact_
+variable _metContact_
+variable _hasGold_
+
+_clickedContactWith7kGold_ task:
+    clicked _contact_ and at least 7000 gold otherwise do _clickedContact_
+    setvar _hasGold_
+    unset _clickedContactWith7kGold_
 
 _clearNpcClicks_ task:
     when _atFort_
@@ -869,7 +878,7 @@ _cancelTrackers_ task:
     clear _cancelTrackers_ _clickedContact_
 
 _employTrackers_ task:
-    when _metContact_ and not _request_
+    when _hasGold_ and _metContact_ and not _request_
     clicked _contact_ and at least 7000 gold otherwise do _cancelTrackers_
     say 1064
     log 1018 step 1
@@ -1011,7 +1020,6 @@ _noContract_ task:
     when _clickedBrother_ and _atFort_ and not _haveContract_
     say 1024
 
-variable _metContact_
 
 variable _dbRepHigh_
 variable _meetDB_
