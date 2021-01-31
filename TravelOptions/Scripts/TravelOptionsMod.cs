@@ -774,6 +774,8 @@ namespace TravelOptions
             }
             else if (followKeyCode != KeyCode.None && InputManager.Instance.GetKeyDown(followKeyCode) && GameManager.Instance.IsPlayerOnHUD)
             {
+                if (GameManager.Instance.PlayerEnterExit.IsPlayerInside)
+                    return;
                 if (GameManager.Instance.AreEnemiesNearby())
                     DaggerfallUI.MessageBox(TextManager.Instance.GetLocalizedText("cannotTravelWithEnemiesNearby"));
                 else
