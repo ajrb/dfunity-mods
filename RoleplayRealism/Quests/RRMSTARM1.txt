@@ -9,7 +9,7 @@ QuestFail:  [1003]
 
 QuestComplete:  [1004]
 <ce>Excellent work Master, I'm so pleased that 
-<ce>you managed to rescue _armorer_ from 
+<ce>you were able to rescue _armorer_ from 
 <ce>__fort_ all the way out here in the
 <ce>____fort_. I feel much better now 
 <ce>that the sitution has been resolved
@@ -155,8 +155,8 @@ Message: 1020
 <ce>
 <ce>You'd best go 'n speak to _captain_ immediately!
 <ce> 
-<ce>Continue further down this way, go to the right,
-<ce>an' into the large hall. He wears a yellow tunic 
+<ce>Continue further down to the left here, an' then
+<ce>go inna the large hall. He wears a yellow tunic 
 <ce>an' red cape, you can't miss 'im. Keep ya weapons 
 <ce>sheathed and don't try any funny stuff, or we'll 
 <ce>'ave your guts fer garters.
@@ -197,14 +197,16 @@ Message: 1025
 <ce>be searching for you for the next couple of days
 
 Message: 1026
-<ce>You've found __fort_ out here in the hills, way off the
-<ce>beaten track and miles away from anywhere else. They must
-<ce>have rebuilt the place from an old ruin, as you can see
-<ce>signs of repairs. There are also indications that a large
-<ce>group is living at the fort, and significant construction
+<ce>You've finally found __fort_ out here in the remote hills
+<ce>of ____guild_. It's way off the beaten track and 
+<ce>miles away from anyplace else. 
+<ce>
+<ce>They must have rebuilt the place from an old ruin, as you 
+<ce>can see obvious sign of repairs and evidence that a large
+<ce>group is living at the fort. Significant construction work
 <ce>has taken place relatively recently. You suspect the fort 
 <ce>cellars have been converted to a barracks. This place is 
-<ce>likely to be more dangerous than it might appear at first.
+<ce>likely to be more dangerous than it might first appear.
 
 Message: 1027
 <ce>Eyewitness reports regarding the finely armored warriors 
@@ -468,6 +470,11 @@ Message: 1061
 <ce>I'll obviously need you to provide the 7000 
 <ce>gold to cover their price, if that's okay?
 
+Message: 1161
+<ce>You don't have the 7000 gold? So should I cancel hiring
+<ce>the rangers? You'll need to track them down yourself 
+<ce>using my notes of the witness accounts if we cancel.
+
 Message: 1062
 <ce>Fair enough, it's not a trivial sum so I understand not 
 <ce>wanting to spend that much. Here you go, here are my
@@ -497,7 +504,7 @@ Message: 1064
 
 Message:  1065
 <ce>A youthful redguard, wearing mismatched pieces of 
-<ce>of worn armor, steps confidently up to you with a
+<ce>worn armor, steps confidently up to you with a
 <ce>letter in his calloused hand.
 <ce>
 <ce>"Letter from the Guild, Master %pcl."
@@ -515,16 +522,15 @@ Message:  1065
 Message: 1066
 Master %pcn,
  
-    Great news, the trackers we employed have found where
-the noble and his warriors are. Turns out they've taken up
-residence in an old fortified monastery somewhere east of 
-__guild_. It is in the hills, way off the beaten track, 
-and miles away from anywhere.
+    Great news, the trackers we employed have found the 
+noble and his warriors. Turns out they've taken residence 
+in an old fortified monastery somewhere east of __guild_. 
+It is in the hills, way off the beaten track, and miles 
+away from anywhere else.
 <ce>
-    They must have rebuilt the place somewhat, as by all 
-accounts it's been rundown for several generations to the 
-point where most local people are not even aware of its 
-existence. 
+    They must have rebuilt the place, as by all accounts
+it's been rundown for several generations to the point 
+where most locals are not even aware of its existence. 
 <ce>
     The place is called __fort_ and I've enclosed
 a map of how to reach it. Good luck and let me know if
@@ -761,10 +767,10 @@ Place _dbTavern_ remote tavern
 Place _dbHideout_ remote clothingshop
 
 Person _contact_ faction The_Fighters_Guild
-Person _armorer_ named Orthus_Dharjen male
+Person _armorer_ named Orthus_Dharjen
 
-Person _lord_ named Lord_Verathon male
-Person _captain_ named Captain_Ulthega male
+Person _lord_ named Lord_Verathon
+Person _captain_ named Captain_Ulthega
 
 Person _dbContact_ faction The_Dark_Brotherhood male
 Foe _darkBrother_ is Assassin
@@ -831,10 +837,17 @@ Clock _killAll_ 02.00:00
     give item _dbContract_ to _darkBrother_
     have _dbContract_ set _haveContract_
 
-
 -- Guild contact speech to find the fort & meet DB
+_clickedContact_ task:
+    clicked npc _contact_
+
+_clearNpcClicks_ task:
+    when _atFort_
+    clear _clickedContact_ _clickedCaptain_ _clickedArmorer_
+
 _contactFirst_ task:
-    clicked npc _contact_ say 1060
+    when _clickedContact_ and not _request_ and not _metContact_
+    say 1060
     log 1010 step 0
     prompt 1061 yes _negotiateTrackers_ no _talkToWitnesses_
 
@@ -842,27 +855,32 @@ _talkToWitnesses_ task:
     get item _reports_
     say 1062
     log 1019 step 1
-    unset _employTrackers_
+    unset _negotiateTrackers_ _payForTrackers_
+    clear _clickedContact_
+    setvar _metContact_
 
 _negotiateTrackers_ task:
     say 1063
+    clear _clickedContact_ _cancelTrackers_ _payForTrackers_
+    setvar _metContact_
+
+_payForTrackers_ task:
+    when _clickedContact_ and not _request_ and _metContact_ and _negotiateTrackers_
+    pay 7000 gold do _employTrackers_ otherwise do _cancelTrackers_
 
 _employTrackers_ task:
-    clicked _contact_ and at least 7000 gold otherwise do _talkToWitnesses_
     say 1064
     log 1018 step 1
     start timer _trackers_
+    unset _cancelTrackers_ _payForTrackers_
+
+_cancelTrackers_ task:
+    prompt 1161 yes _talkToWitnesses_ no _negotiateTrackers_
+    clear _clickedContact_ _cancelTrackers_ _payForTrackers_
 
 _trackers_ task:
     reveal _fort_
     give pc _letter1_ notify 1065
-
-_clickedContact_ task:
-    clicked npc _contact_
-
-_clearNpcClicks_ task:
-    when _atFort_
-    clear _clickedContact_ _clickedCaptain_
 
 _contactQuery_ task:
     when _clickedContact_ and _request_ and not _meetDB_ and not _rescued_
@@ -996,6 +1014,7 @@ _noContract_ task:
     when _clickedBrother_ and _atFort_ and not _haveContract_
     say 1024
 
+variable _metContact_
 variable _dbRepHigh_
 variable _meetDB_
 variable _haveContract_
@@ -1123,6 +1142,7 @@ _lordGoAway_ task:
 _lordPaid_ task:
     say 1035
     clear _clickedCaptain_ _clickedLord_ _clickedArmorer_
+    unset _lordPay_
     setvar _permit_
 
 _lordHavePermit_ task:
