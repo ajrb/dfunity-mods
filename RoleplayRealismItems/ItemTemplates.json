@@ -268,4 +268,25 @@
         "playerTextureArchive": 245,
         "playerTextureRecord": 10
     },
+    {
+        "index": 522,
+        "name": "Helmet",
+        "baseWeight": 1.5,
+        "hitPoints": 1400,
+        "capacityOrTarget": 0,
+        "basePrice": 65,
+        "enchantmentPoints": 500,
+        "rarity": 4,
+        "variants": 1,
+        "drawOrderOrEffect": 0,
+        "isBluntWeapon": false,
+        "isLiquid": false,
+        "isOneHanded": false,
+        "isIngredient": false,
+        "worldTextureArchive": 207,
+        "worldTextureRecord": 12,
+        "playerTextureArchive": 245,
+        "playerTextureRecord": 27
+    },
+
 ]
