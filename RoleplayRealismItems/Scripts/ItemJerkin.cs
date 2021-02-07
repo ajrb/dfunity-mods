@@ -124,10 +124,10 @@ namespace RoleplayRealism
             switch (material)
             {
                 case (int)ArmorMaterialTypes.Leather:   // Leather (0) / Fur (1)
-                    return message == 0 ? 1 : 4;
-                case (int)ArmorMaterialTypes.Chain:     // Fur (unused)
+                    return message == 0 ? 2 : 5;
+                case (int)ArmorMaterialTypes.Chain:     // Chain (unused)
                 case (int)ArmorMaterialTypes.Chain2:
-                    return 5;
+                    return 6;
                 case (int)ArmorMaterialTypes.Iron:      // Brigandine
                     return 4;
                 case (int)ArmorMaterialTypes.Steel:

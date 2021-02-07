@@ -288,5 +288,25 @@
         "playerTextureArchive": 245,
         "playerTextureRecord": 27
     },
+    {
+        "index": 523,
+        "name": "Boots",
+        "baseWeight": 1.25,
+        "hitPoints": 1250,
+        "capacityOrTarget": 0,
+        "basePrice": 38,
+        "enchantmentPoints": 140,
+        "rarity": 4,
+        "variants": 1,
+        "drawOrderOrEffect": 20,
+        "isBluntWeapon": false,
+        "isLiquid": false,
+        "isOneHanded": false,
+        "isIngredient": false,
+        "worldTextureArchive": 204,
+        "worldTextureRecord": 1,
+        "playerTextureArchive": 245,
+        "playerTextureRecord": 0
+    },
 
 ]

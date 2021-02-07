@@ -11,11 +11,11 @@ using DaggerfallWorkshop;
 
 namespace RoleplayRealism
 {
-    public class ItemHelmet : DaggerfallUnityItem
+    public class ItemBoots : DaggerfallUnityItem
     {
-        public const int templateIndex = 522;
+        public const int templateIndex = 523;
 
-        public ItemHelmet() : base(ItemGroups.Armor, templateIndex)
+        public ItemBoots() : base(ItemGroups.Armor, templateIndex)
         {
         }
 
@@ -67,7 +67,7 @@ namespace RoleplayRealism
 
         public override EquipSlots GetEquipSlot()
         {
-            return EquipSlots.Head;
+            return EquipSlots.Feet;
         }
 
         public override int GetMaterialArmorValue()
@@ -89,7 +89,7 @@ namespace RoleplayRealism
         public override ItemData_v1 GetSaveData()
         {
             ItemData_v1 data = base.GetSaveData();
-            data.className = typeof(ItemHelmet).ToString();
+            data.className = typeof(ItemBoots).ToString();
             return data;
         }
 
