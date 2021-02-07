@@ -227,5 +227,25 @@
         "worldTextureRecord": 1,
         "playerTextureArchive": 245,
         "playerTextureRecord": 0
-    }
+    },
+    {
+        "index": 520,
+        "name": "Jerkin",
+        "baseWeight": 8,
+        "hitPoints": 1600,
+        "capacityOrTarget": 0,
+        "basePrice": 60,
+        "enchantmentPoints": 320,
+        "rarity": 4,
+        "variants": 1,
+        "drawOrderOrEffect": 50,
+        "isBluntWeapon": false,
+        "isLiquid": false,
+        "isOneHanded": false,
+        "isIngredient": false,
+        "worldTextureArchive": 207,
+        "worldTextureRecord": 11,
+        "playerTextureArchive": 245,
+        "playerTextureRecord": 3
+    },
 ]
