@@ -89,7 +89,7 @@ namespace RoleplayRealism
         public override ItemData_v1 GetSaveData()
         {
             ItemData_v1 data = base.GetSaveData();
-            data.className = typeof(ItemCuisse).ToString();
+            data.className = typeof(ItemHelmet).ToString();
             return data;
         }
 
