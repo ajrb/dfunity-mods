@@ -135,6 +135,7 @@ namespace RoleplayRealism
                 DaggerfallUnity.Instance.ItemHelper.RegisterCustomItem(ItemSollerets.templateIndex, ItemGroups.Armor, typeof(ItemSollerets));
 
                 DaggerfallUnity.Instance.ItemHelper.RegisterCustomItem(ItemJerkin.templateIndex, ItemGroups.Armor, typeof(ItemJerkin));
+                DaggerfallUnity.Instance.ItemHelper.RegisterCustomItem(ItemCuisse.templateIndex, ItemGroups.Armor, typeof(ItemCuisse));
             }
 
             Debug.Log("Finished mod init: RoleplayRealismItems");

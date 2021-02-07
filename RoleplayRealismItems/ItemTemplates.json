@@ -248,4 +248,24 @@
         "playerTextureArchive": 245,
         "playerTextureRecord": 3
     },
+    {
+        "index": 521,
+        "name": "Cuisse",
+        "baseWeight": 1.5,
+        "hitPoints": 1400,
+        "capacityOrTarget": 0,
+        "basePrice": 55,
+        "enchantmentPoints": 40,
+        "rarity": 4,
+        "variants": 1,
+        "drawOrderOrEffect": 30,
+        "isBluntWeapon": false,
+        "isLiquid": false,
+        "isOneHanded": false,
+        "isIngredient": false,
+        "worldTextureArchive": 207,
+        "worldTextureRecord": 13,
+        "playerTextureArchive": 245,
+        "playerTextureRecord": 10
+    },
 ]
