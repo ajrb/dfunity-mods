@@ -42,19 +42,35 @@ namespace RoleplayRealism
             get { return templateIndex; }
         }
 
-        // Use 0-7 for fur and 8-15 for brigandine, 16-17 for normal leather.
+        // Use 0-7 for fur and 8-15 for brigandine, 16-19 for normal leather.
         public override int InventoryTextureRecord
         {
             get {
                 int offset = PlayerTextureArchive - ItemBuilder.firstFemaleArchive;
-                // Only use 2 & 6 / 10 & 14 human morphology for now..
-                offset = (offset < 4) ? 2 : 6;
+                int leather = 16;
+                switch (offset)
+                {
+                    // argonian(male) & human & elf(female) & kajjit(female) use 2 & 6 / 10 & 14
+                    case 1:
+                    case 2:
+                    case 3:
+                        offset = 2; leather = 16; break;
+                    case 4:
+                    case 6:
+                        offset = 6; leather = 17; break;
+                    // argonian(female) & kajjit(male) & elf(male) use 1 & 5 / 9 & 13
+                    case 0:
+                        offset = 1; leather = 18; break;
+                    case 5:
+                    case 7:
+                        offset = 5; leather = 19; break;
+                }
                 if (nativeMaterialValue == (int)ArmorMaterialTypes.Leather && message == 1)
                     return offset;
                 else if (nativeMaterialValue >= (int)ArmorMaterialTypes.Iron)
                     return 8 + offset;
                 else
-                    return (offset < 4) ? 16 : 17;
+                    return leather;
             }
         }
 
