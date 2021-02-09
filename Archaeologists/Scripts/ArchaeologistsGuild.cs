@@ -26,7 +26,7 @@ namespace DaggerfallWorkshop.Game.Guilds
 
         const int notEnoughGoldId = 454;
         const int recallEffectId = 94;
-        private const int replaceMarkCost = 10000;
+        private const int replaceMarkCost = 20000;
         private const int ArchGuildLocationsBookId = 1000;
 
         #endregion
@@ -361,7 +361,7 @@ namespace DaggerfallWorkshop.Game.Guilds
                     DaggerfallUI.MessageBox(new string[] {
                         "You don't appear to have your Mark of Recall on you, or enough",
                         "for a replacement. If you have been careless and lost or broken",
-                        "it, I can replace it for a price of 10,000 gold pieces. They're",
+                        "it, I can replace it for a price of 20,000 gold pieces. They're",
                         "expensive, and the guild only provides one free Mark per member."
                     });
                 }
@@ -371,7 +371,7 @@ namespace DaggerfallWorkshop.Game.Guilds
                     string[] message = {
                         "   You don't appear to have your Mark of Recall on you.",
                         "   If you have been careless and lost or broken it, then",
-                        "      I can replace it at a cost of 10,000 gold.",
+                        "      I can replace it at a cost of 20,000 gold.",
                         "",
                         "      Would you like a replacement Mark of Recall?"
                     };
@@ -491,7 +491,7 @@ namespace DaggerfallWorkshop.Game.Guilds
         private static int CalculateRepairCost(DaggerfallUnityItem markOfRecall)
         {
             int repairAmount = markOfRecall.maxCondition - markOfRecall.currentCondition;
-            int cost = repairAmount * 2;    // 20gp per use, or 1200 for a full repair
+            int cost = repairAmount * 16;    // 160gp per use, or 9600 for a full repair
             return cost;
         }
 

@@ -240,10 +240,6 @@ namespace Archaeologists
             int roll = UnityEngine.Random.Range(0, 130);
             bool success = (roll < chance);
 
-            // Allow close calls with humans to train the skills.
-            if (!success && roll - chance < 30 && languageSkill == DFCareer.Skills.Etiquette && languageSkill == DFCareer.Skills.Streetwise)
-                player.TallySkill(languageSkill, 1);
-
 #if UNITY_EDITOR
             Debug.LogFormat("Archaeologists Pacification {3} using {0} skill: chance= {1}  roll= {2}", languageSkill, chance, roll, success ? "success" : "failure");
 #endif            

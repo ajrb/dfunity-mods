@@ -29,7 +29,7 @@ namespace Archaeologists
         public override void SetPotionProperties()
         {
             PotionRecipe teleport = new PotionRecipe(
-                "Recall",
+                "teleport",
                 150,
                 DefaultEffectSettings(),
                 (int)MiscellaneousIngredients1.Medium_tooth,
