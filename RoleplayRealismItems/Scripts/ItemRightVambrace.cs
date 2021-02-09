@@ -11,11 +11,11 @@ using DaggerfallWorkshop;
 
 namespace RoleplayRealism
 {
-    public class ItemGloves : DaggerfallUnityItem
+    public class ItemRightVambrace : DaggerfallUnityItem
     {
-        public const int templateIndex = 524;
+        public const int templateIndex = 526;
 
-        public ItemGloves() : base(ItemGroups.Armor, templateIndex)
+        public ItemRightVambrace() : base(ItemGroups.Armor, templateIndex)
         {
         }
 
@@ -45,8 +45,7 @@ namespace RoleplayRealism
         // Use 0-7 for fur and 8-15 for brigandine, 16-17 for normal leather.
         public override int InventoryTextureRecord
         {
-            get
-            {
+            get {
                 int offset = PlayerTextureArchive - ItemBuilder.firstFemaleArchive;
                 // Only use 2 & 6 / 10 & 14 human morphology for now..
                 offset = (offset < 4) ? 2 : 6;
@@ -68,7 +67,7 @@ namespace RoleplayRealism
 
         public override EquipSlots GetEquipSlot()
         {
-            return EquipSlots.Gloves;
+            return EquipSlots.RightArm;
         }
 
         public override int GetMaterialArmorValue()
@@ -90,7 +89,7 @@ namespace RoleplayRealism
         public override ItemData_v1 GetSaveData()
         {
             ItemData_v1 data = base.GetSaveData();
-            data.className = typeof(ItemGloves).ToString();
+            data.className = typeof(ItemRightVambrace).ToString();
             return data;
         }
 
