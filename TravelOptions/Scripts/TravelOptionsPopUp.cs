@@ -70,7 +70,7 @@ namespace TravelOptions
 
         public bool HasNoOceanTravel()
         {
-            return travelTimeCalculator.OceanPixels == 0;
+            return travelTimeCalculator.OceanPixels == 0 && !GameManager.Instance.TransportManager.IsOnShip();
         }
 
         public bool IsDestNotValidPort()
