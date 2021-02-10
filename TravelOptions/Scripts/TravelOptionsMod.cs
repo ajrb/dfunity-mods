@@ -690,7 +690,7 @@ namespace TravelOptions
                 playerAutopilot.Update();
                 DaggerfallUI.Instance.DaggerfallHUD.HUDVitals.Update();
 
-                if (DestinationName == null && followKeyCode != KeyCode.None && InputManager.Instance.GetKeyDown(followKeyCode))
+                if (DestinationName == null && followKeyCode != KeyCode.None && !InputManager.Instance.IsPaused && InputManager.Instance.GetKeyDown(followKeyCode))
                 {
                     if (travelControlUI.isShowing)
                         travelControlUI.CloseWindow();
@@ -772,7 +772,7 @@ namespace TravelOptions
                     diseaseCount = currentDiseaseCount;
                 }
             }
-            else if (followKeyCode != KeyCode.None && InputManager.Instance.GetKeyDown(followKeyCode) && GameManager.Instance.IsPlayerOnHUD)
+            else if (followKeyCode != KeyCode.None && !InputManager.Instance.IsPaused && InputManager.Instance.GetKeyDown(followKeyCode) && GameManager.Instance.IsPlayerOnHUD)
             {
                 if (GameManager.Instance.PlayerEnterExit.IsPlayerInside)
                     return;
