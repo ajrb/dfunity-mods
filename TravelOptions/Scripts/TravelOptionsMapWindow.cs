@@ -418,6 +418,8 @@ namespace TravelOptions
 
         public static readonly int[] portLocationExtraIds = {
             // Extras allowing travel to :
+            2002,       // Small Ship
+            5005,       // Large Ship
             205676,     // "Isle of Balfiera", "Blackhead"
             278901,     // "Mournoth", "Zagoparia"
             263119,     // "Betony", "Whitefort"
