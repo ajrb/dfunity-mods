@@ -39,18 +39,14 @@ namespace RoleplayRealism
         // Always use same archive for both genders as the same image set is used
         public override int InventoryTextureArchive
         {
-            get {
-                if (nativeMaterialValue == (int)ArmorMaterialTypes.Leather && message == 0)
-                    return base.InventoryTextureArchive;
-                else
-                    return templateIndex;
-            }
+            get { return templateIndex; }
         }
 
-        // Use leather record, or 0-7 for fur and 8-15 for brigandine.
+        // Use 0-7 for fur and 8-15 for brigandine, 16-17 for normal leather.
         public override int InventoryTextureRecord
         {
-            get {
+            get
+            {
                 int offset = PlayerTextureArchive - ItemBuilder.firstFemaleArchive;
                 // Only use 2 & 6 / 10 & 14 human morphology for now..
                 offset = (offset < 4) ? 2 : 6;
@@ -59,7 +55,7 @@ namespace RoleplayRealism
                 else if (nativeMaterialValue >= (int)ArmorMaterialTypes.Iron)
                     return 8 + offset;
                 else
-                    return 10;
+                    return (offset < 4) ? 16 : 17;
             }
         }
 
