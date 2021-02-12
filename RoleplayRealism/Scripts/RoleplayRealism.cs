@@ -175,7 +175,7 @@ namespace RoleplayRealism
 
             if (autoExtinguishLight)
             {
-                PlayerEnterExit.OnTransitionDungeonExterior += OnTransitionToDungeonExterior_ExtinguishLight;
+                PlayerEnterExit.OnPreTransition += OnTransitionToDungeonExterior_ExtinguishLight;
             }
 
             if (classicStrDmgBonus)
@@ -516,7 +516,7 @@ namespace RoleplayRealism
 
         private static void OnTransitionToDungeonExterior_ExtinguishLight(PlayerEnterExit.TransitionEventArgs args)
         {
-            if (GameManager.Instance.PlayerEntity.LightSource != null && DaggerfallUnity.Instance.WorldTime.Now.IsDay)
+            if (args.TransitionType == PlayerEnterExit.TransitionType.ToDungeonExterior && GameManager.Instance.PlayerEntity.LightSource != null && DaggerfallUnity.Instance.WorldTime.Now.IsDay)
             {
                 DaggerfallUI.MessageBox(TextManager.Instance.GetLocalizedText("lightDouse"), false, GameManager.Instance.PlayerEntity.LightSource);
                 GameManager.Instance.PlayerEntity.LightSource = null;

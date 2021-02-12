@@ -56,7 +56,13 @@ namespace Archaeologists
         {
             if (!GameManager.Instance.PlayerEnterExit.IsPlayerInsideDungeon)
             {
-                DaggerfallUI.MessageBox(FAIL_ACTIVATE_MSG);
+                if (nativeMaterialValue == ACTIVATED)
+                {
+                    collection.RemoveItem(this);
+                    DaggerfallUI.MessageBox(DEACTIVATION_MSG);
+                }
+                else
+                    DaggerfallUI.MessageBox(FAIL_ACTIVATE_MSG);
             }
             else
             {

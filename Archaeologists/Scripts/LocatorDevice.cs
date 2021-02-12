@@ -35,8 +35,9 @@ namespace Archaeologists
 
             // Register listeners for loading game and exiting dungeons - so that state can be updated
             SaveLoadManager.OnLoad += SaveLoadManager_OnLoad;
+            PlayerEnterExit.OnPreTransition += OnTransitionToDungeonExterior;
             PlayerEnterExit.OnTransitionDungeonExterior += OnTransitionToDungeonExterior;
-            
+
             enabled = false;
         }
 
@@ -140,9 +141,12 @@ namespace Archaeologists
 
         private void OnTransitionToDungeonExterior(PlayerEnterExit.TransitionEventArgs args)
         {
-            DeactivateDevice();
-            RemoveActiveDevices(GameManager.Instance.PlayerEntity.Items);
-            RemoveActiveDevices(GameManager.Instance.PlayerEntity.WagonItems);
+            if (args.TransitionType == PlayerEnterExit.TransitionType.ToDungeonExterior)
+            {
+                DeactivateDevice();
+                RemoveActiveDevices(GameManager.Instance.PlayerEntity.Items);
+                RemoveActiveDevices(GameManager.Instance.PlayerEntity.WagonItems);
+            }
         }
 
         #endregion
