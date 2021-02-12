@@ -710,7 +710,7 @@ namespace RoleplayRealism
             // Add some torches and candles if player torch is from items setting enabled
             if (DaggerfallUnity.Settings.PlayerTorchFromItems)
             {
-                for (int i = 0; i < 2; i++)
+                for (int i = 0; i < 6; i++)
                     playerEntity.Items.AddItem(ItemBuilder.CreateItem(ItemGroups.UselessItems2, (int)UselessItems2.Torch));
                 for (int i = 0; i < 4; i++)
                     playerEntity.Items.AddItem(ItemBuilder.CreateItem(ItemGroups.UselessItems2, (int)UselessItems2.Candle));
