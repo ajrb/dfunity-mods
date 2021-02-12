@@ -89,9 +89,9 @@ namespace RoleplayRealism
                     return 8;
                 case (int)ArmorMaterialTypes.Dwarven:
                     return 9;
-                case (int)ArmorMaterialTypes.Adamantium:
-                    return 11;
                 case (int)ArmorMaterialTypes.Mithril:
+                    return 11;
+                case (int)ArmorMaterialTypes.Adamantium:
                     return 12;
                 case (int)ArmorMaterialTypes.Ebony:
                     return 14;

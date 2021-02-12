@@ -127,12 +127,21 @@ namespace RoleplayRealism
 
             if (newArmor)
             {
-                // Add new medium armor set as custom armor pieces.
+                // Add new medium 'chain' armor set as custom armor pieces.
                 DaggerfallUnity.Instance.ItemHelper.RegisterCustomItem(ItemHauberk.templateIndex, ItemGroups.Armor, typeof(ItemHauberk));
                 DaggerfallUnity.Instance.ItemHelper.RegisterCustomItem(ItemChausses.templateIndex, ItemGroups.Armor, typeof(ItemChausses));
                 DaggerfallUnity.Instance.ItemHelper.RegisterCustomItem(ItemLeftSpaulder.templateIndex, ItemGroups.Armor, typeof(ItemLeftSpaulder));
                 DaggerfallUnity.Instance.ItemHelper.RegisterCustomItem(ItemRightSpaulder.templateIndex, ItemGroups.Armor, typeof(ItemRightSpaulder));
                 DaggerfallUnity.Instance.ItemHelper.RegisterCustomItem(ItemSollerets.templateIndex, ItemGroups.Armor, typeof(ItemSollerets));
+
+                // Add new light 'leather' armor set as custom armor pieces.
+                DaggerfallUnity.Instance.ItemHelper.RegisterCustomItem(ItemJerkin.templateIndex, ItemGroups.Armor, typeof(ItemJerkin));
+                DaggerfallUnity.Instance.ItemHelper.RegisterCustomItem(ItemCuisse.templateIndex, ItemGroups.Armor, typeof(ItemCuisse));
+                DaggerfallUnity.Instance.ItemHelper.RegisterCustomItem(ItemHelmet.templateIndex, ItemGroups.Armor, typeof(ItemHelmet));
+                DaggerfallUnity.Instance.ItemHelper.RegisterCustomItem(ItemBoots.templateIndex, ItemGroups.Armor, typeof(ItemBoots));
+                DaggerfallUnity.Instance.ItemHelper.RegisterCustomItem(ItemGloves.templateIndex, ItemGroups.Armor, typeof(ItemGloves));
+                DaggerfallUnity.Instance.ItemHelper.RegisterCustomItem(ItemLeftVambrace.templateIndex, ItemGroups.Armor, typeof(ItemLeftVambrace));
+                DaggerfallUnity.Instance.ItemHelper.RegisterCustomItem(ItemRightVambrace.templateIndex, ItemGroups.Armor, typeof(ItemRightVambrace));
             }
 
             Debug.Log("Finished mod init: RoleplayRealismItems");
