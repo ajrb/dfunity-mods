@@ -52,6 +52,7 @@ namespace RoleplayRealism
                     shortName = ItemJerkin.fur + shortName;
                     nativeMaterialValue = (int)ArmorMaterialTypes.Leather;
                     message = 1;
+                    weightInKg -= 2f;
                 }
             }
         }
@@ -119,7 +120,7 @@ namespace RoleplayRealism
             switch (material)
             {
                 case (int)ArmorMaterialTypes.Leather:   // Leather (0) / Fur (1)
-                    return message == 0 ? 2 : 5;
+                    return message == 0 ? 2 : 4;
                 case (int)ArmorMaterialTypes.Chain:     // Chain (unused)
                 case (int)ArmorMaterialTypes.Chain2:
                     return 6;
