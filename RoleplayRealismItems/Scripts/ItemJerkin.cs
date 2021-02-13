@@ -120,30 +120,29 @@ namespace RoleplayRealism
             switch (material)
             {
                 case (int)ArmorMaterialTypes.Leather:   // Leather (0) / Fur (1)
-                    return message == 0 ? 2 : 4;
+                    return message == 0 ? 3 : 5;
                 case (int)ArmorMaterialTypes.Chain:     // Chain (unused)
                 case (int)ArmorMaterialTypes.Chain2:
                     return 6;
                 case (int)ArmorMaterialTypes.Iron:      // Brigandine
-                    return 4;
-                case (int)ArmorMaterialTypes.Steel:
                     return 5;
+                case (int)ArmorMaterialTypes.Steel:
                 case (int)ArmorMaterialTypes.Silver:
-                    return 6;
-                case (int)ArmorMaterialTypes.Elven:
                     return 7;
-                case (int)ArmorMaterialTypes.Dwarven:
+                case (int)ArmorMaterialTypes.Elven:
                     return 8;
-                case (int)ArmorMaterialTypes.Mithril:
+                case (int)ArmorMaterialTypes.Dwarven:
                     return 9;
-                case (int)ArmorMaterialTypes.Adamantium:
-                    return 10;
-                case (int)ArmorMaterialTypes.Ebony:
+                case (int)ArmorMaterialTypes.Mithril:
                     return 11;
-                case (int)ArmorMaterialTypes.Orcish:
+                case (int)ArmorMaterialTypes.Adamantium:
+                    return 11;
+                case (int)ArmorMaterialTypes.Ebony:
                     return 12;
-                case (int)ArmorMaterialTypes.Daedric:
+                case (int)ArmorMaterialTypes.Orcish:
                     return 13;
+                case (int)ArmorMaterialTypes.Daedric:
+                    return 14;
                 default:
                     return 0;
             }
