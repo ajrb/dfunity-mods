@@ -71,6 +71,8 @@ namespace Archaeologists
                 Services.RegisterGuildService(1006, GuildServices.BuyPotions);
                 // Register the make potions service id
                 Services.RegisterGuildService(1007, GuildServices.MakePotions);
+                // Register the make potions service id
+                Services.RegisterGuildService(1008, GuildServices.MakeMagicItems);
 
                 // Register the Teleport potion
                 GameManager.Instance.EntityEffectBroker.RegisterEffectTemplate(new TeleportPotion(), true);
@@ -202,6 +204,21 @@ namespace Archaeologists
                 parent = 1000,
                 type = 2,
                 name = "Archaeologist Mixers",
+                summon = -1,
+                region = -1,
+                power = 25,
+                face = -1,
+                race = -1,
+                sgroup = 2,
+                ggroup = 0,
+                children = null
+            }) && success;
+            success = FactionFile.RegisterCustomFaction(1008, new FactionFile.FactionData()
+            {
+                id = 1008,
+                parent = 1000,
+                type = 2,
+                name = "Archaeologist Enchanters",
                 summon = -1,
                 region = -1,
                 power = 25,

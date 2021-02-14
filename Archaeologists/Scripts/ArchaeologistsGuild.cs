@@ -249,6 +249,8 @@ namespace DaggerfallWorkshop.Game.Guilds
                     return (rank >= 3);
                 case GuildServices.DaedraSummoning:
                     return (rank >= 7);
+                case GuildServices.MakeMagicItems:
+                    return (rank >= 6);
             }
             if ((int)service == LocatorServiceId)
                 return true;
