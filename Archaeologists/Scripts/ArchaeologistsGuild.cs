@@ -129,6 +129,7 @@ namespace DaggerfallWorkshop.Game.Guilds
                 DFCareer.Skills.Lockpicking,
                 DFCareer.Skills.Nymph,
                 DFCareer.Skills.Orcish,
+                DFCareer.Skills.Spriggan,
                 DFCareer.Skills.Stealth,
             };
 
@@ -146,6 +147,7 @@ namespace DaggerfallWorkshop.Game.Guilds
                 DFCareer.Skills.Nymph,
                 DFCareer.Skills.Orcish,
                 DFCareer.Skills.Running,
+                DFCareer.Skills.Spriggan,
                 DFCareer.Skills.Stealth,
                 DFCareer.Skills.Swimming,
             };
