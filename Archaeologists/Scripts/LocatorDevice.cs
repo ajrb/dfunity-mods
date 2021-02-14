@@ -95,8 +95,8 @@ namespace Archaeologists
 
         private static void RemoveActiveDevices(ItemCollection collection)
         {
-            List<DaggerfallUnityItem> wands = collection.SearchItems(ItemGroups.Jewellery, 140);
-            foreach (DaggerfallUnityItem item in wands)
+            List<DaggerfallUnityItem> locators = GetLocators();
+            foreach (DaggerfallUnityItem item in locators)
             {
                 if (item.nativeMaterialValue == LocatorItem.ACTIVATED)
                     collection.RemoveItem(item);
@@ -128,8 +128,8 @@ namespace Archaeologists
         private void SaveLoadManager_OnLoad(SaveData_v1 saveData)
         {
             DeactivateDevice();
-            List<DaggerfallUnityItem> wands = GameManager.Instance.PlayerEntity.Items.SearchItems(ItemGroups.Jewellery, 140);
-            foreach(DaggerfallUnityItem item in wands)
+            List<DaggerfallUnityItem> locators = GetLocators();
+            foreach (DaggerfallUnityItem item in locators)
             {
                 if (item.nativeMaterialValue == LocatorItem.ACTIVATED)
                 {
@@ -137,6 +137,14 @@ namespace Archaeologists
                     return;
                 }
             }
+        }
+
+        private static List<DaggerfallUnityItem> GetLocators()
+        {
+            List<DaggerfallUnityItem> locators = GameManager.Instance.PlayerEntity.Items.SearchItems(ItemGroups.MiscItems, 512);
+            if (locators.Count == 0)
+                locators = GameManager.Instance.PlayerEntity.Items.SearchItems(ItemGroups.Jewellery, 140);  // Old wands
+            return locators;
         }
 
         private void OnTransitionToDungeonExterior(PlayerEnterExit.TransitionEventArgs args)
