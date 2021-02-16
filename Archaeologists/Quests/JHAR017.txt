@@ -60,7 +60,7 @@ Message:  1021
 
 QBN:
 Item _notes_ letter
-Item _reward_ gold
+Item _reward_ gold range 201 to 399
 
 Person _qgiver_ group Questor
 Person _mg_ faction The_Mages_Guild
