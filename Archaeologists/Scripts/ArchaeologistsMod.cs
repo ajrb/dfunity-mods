@@ -58,7 +58,7 @@ namespace Archaeologists
                 // Register the custom locator service
                 Services.RegisterGuildService(1001, ArchaeologistsGuild.LocatorService, "Locator Devices");
                 // Register the custom locator item
-                DaggerfallUnity.Instance.ItemHelper.RegisterCustomItem(LocatorItem.templateIndex, ItemGroups.UselessItems1, typeof(LocatorItem));
+                DaggerfallUnity.Instance.ItemHelper.RegisterCustomItem(LocatorItem.templateIndex, ItemGroups.MiscItems, typeof(LocatorItem));
                 // Register the daedra summoning service
                 Services.RegisterGuildService(1002, GuildServices.DaedraSummoning);
                 // Register the custom repair service for teleport mark
@@ -71,6 +71,8 @@ namespace Archaeologists
                 Services.RegisterGuildService(1006, GuildServices.BuyPotions);
                 // Register the make potions service id
                 Services.RegisterGuildService(1007, GuildServices.MakePotions);
+                // Register the make potions service id
+                Services.RegisterGuildService(1008, GuildServices.MakeMagicItems);
 
                 // Register the Teleport potion
                 GameManager.Instance.EntityEffectBroker.RegisterEffectTemplate(new TeleportPotion(), true);
@@ -211,6 +213,21 @@ namespace Archaeologists
                 ggroup = 0,
                 children = null
             }) && success;
+            success = FactionFile.RegisterCustomFaction(1008, new FactionFile.FactionData()
+            {
+                id = 1008,
+                parent = 1000,
+                type = 2,
+                name = "Archaeologist Enchanters",
+                summon = -1,
+                region = -1,
+                power = 25,
+                face = -1,
+                race = -1,
+                sgroup = 2,
+                ggroup = 0,
+                children = null
+            }) && success;
             return success;
         }
 
@@ -239,10 +256,6 @@ namespace Archaeologists
            
             int roll = UnityEngine.Random.Range(0, 130);
             bool success = (roll < chance);
-
-            // Allow close calls with humans to train the skills.
-            if (!success && roll - chance < 30 && languageSkill == DFCareer.Skills.Etiquette && languageSkill == DFCareer.Skills.Streetwise)
-                player.TallySkill(languageSkill, 1);
 
 #if UNITY_EDITOR
             Debug.LogFormat("Archaeologists Pacification {3} using {0} skill: chance= {1}  roll= {2}", languageSkill, chance, roll, success ? "success" : "failure");

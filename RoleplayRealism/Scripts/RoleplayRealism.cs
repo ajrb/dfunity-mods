@@ -23,6 +23,7 @@ using DaggerfallWorkshop.Game.UserInterfaceWindows;
 using DaggerfallWorkshop.Game.Utility.ModSupport;
 using DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings;
 using DaggerfallWorkshop.Utility;
+using DaggerfallWorkshop.Utility.AssetInjection;
 
 namespace RoleplayRealism
 {
@@ -174,7 +175,7 @@ namespace RoleplayRealism
 
             if (autoExtinguishLight)
             {
-                PlayerEnterExit.OnTransitionDungeonExterior += OnTransitionToDungeonExterior_ExtinguishLight;
+                PlayerEnterExit.OnPreTransition += OnTransitionToDungeonExterior_ExtinguishLight;
             }
 
             if (classicStrDmgBonus)
@@ -198,10 +199,34 @@ namespace RoleplayRealism
             questMachine.PlacesTable.AddIntoTable(placesTable);
             questMachine.FactionsTable.AddIntoTable(factionsTable);
 
-            // Register the custom armor service
+            // Register the custom armor service and location detection
             Services.RegisterMerchantService(1022, CustomArmorService, "Custom Armor");
+            PlayerGPS.OnEnterLocationRect += PlayerGPS_OnEnterLocationRect;
 
             Debug.Log("Finished mod init: RoleplayRealism");
+        }
+
+        private static void PlayerGPS_OnEnterLocationRect(DFLocation location)
+        {
+            if (WorldDataVariants.GetBuildingVariant(location.RegionIndex, location.LocationIndex, "ARMRAM03.RMB", 14) != null)
+            {
+                // Entered the location of the master armorer, so discover his shop with a custom name
+                GameManager.Instance.PlayerGPS.DiscoverBuilding(GetMasterArmBuildingKey(location.RegionIndex), "Dharjen Custom Armor");
+            }
+        }
+
+        static int GetMasterArmBuildingKey(int index)
+        {
+            switch (index)
+            {
+                case 52:    // Pjiga
+                    return 131342;
+                case 18:    // Penmore
+                    return 197134;
+                case 48:    // Paponirea
+                    return 131598;
+            }
+            return 0;
         }
 
         public static int DamageModifier_classicDisplay(int strength)
@@ -491,9 +516,9 @@ namespace RoleplayRealism
 
         private static void OnTransitionToDungeonExterior_ExtinguishLight(PlayerEnterExit.TransitionEventArgs args)
         {
-            if (GameManager.Instance.PlayerEntity.LightSource != null && DaggerfallUnity.Instance.WorldTime.Now.IsDay)
+            if (args.TransitionType == PlayerEnterExit.TransitionType.ToDungeonExterior && GameManager.Instance.PlayerEntity.LightSource != null && DaggerfallUnity.Instance.WorldTime.Now.IsDay)
             {
-                DaggerfallUI.MessageBox(TextManager.Instance.GetText("DaggerfallUI", "lightDouse"), false, GameManager.Instance.PlayerEntity.LightSource);
+                DaggerfallUI.MessageBox(TextManager.Instance.GetLocalizedText("lightDouse"), false, GameManager.Instance.PlayerEntity.LightSource);
                 GameManager.Instance.PlayerEntity.LightSource = null;
             }
         }

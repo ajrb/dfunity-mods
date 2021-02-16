@@ -18,7 +18,7 @@ namespace Archaeologists
         internal const int INACTIVE = 1;
         internal const int ACTIVATED = 2;
 
-        internal const int BASEVALUE = 800;                 // Base value of a locator device. Actual cost will depend on guild rank.
+        internal const int BASEVALUE = 1200;                // Base value of a locator device. Actual cost will depend on guild rank.
         internal const int BASEACTIVATION_EXPLORATION = 20; // Percentage of dungeon that must be explored before device will activate.
 
         internal const string NAME = "Locator device";
@@ -56,7 +56,13 @@ namespace Archaeologists
         {
             if (!GameManager.Instance.PlayerEnterExit.IsPlayerInsideDungeon)
             {
-                DaggerfallUI.MessageBox(FAIL_ACTIVATE_MSG);
+                if (nativeMaterialValue == ACTIVATED)
+                {
+                    collection.RemoveItem(this);
+                    DaggerfallUI.MessageBox(DEACTIVATION_MSG);
+                }
+                else
+                    DaggerfallUI.MessageBox(FAIL_ACTIVATE_MSG);
             }
             else
             {
@@ -68,7 +74,7 @@ namespace Archaeologists
                     {
                         if (!locatorDevice.enabled)
                         {
-                            int requiredExploration = (value * BASEACTIVATION_EXPLORATION) / BASEVALUE;
+                            int requiredExploration = Mathf.Min((value * BASEACTIVATION_EXPLORATION) / BASEVALUE, 40);
                             if (DaggerfallUnity.Settings.SmallerDungeons)
                                 requiredExploration *= 2;
                             Debug.LogFormat("Explored: {0}  Required: {1}", exploredPercent, requiredExploration);

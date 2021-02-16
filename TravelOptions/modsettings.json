@@ -104,7 +104,7 @@
                 {
                     "Value": false,
                     "Name": "AllowAnnoyingSounds",
-                    "Description": "Allows annoying sounds during time accelerated travel",
+                    "Description": "Allows footstep and hoof sounds during time accelerated travel",
                     "$version": "v1",
                     "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
                 },
@@ -183,6 +183,13 @@
                     "Value": true,
                     "Name": "Enable",
                     "Description": "Enhances the travel map with larger location dots for cities & towns, and shows roads & tracks with toggle buttons",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
+                },
+                {
+                    "Value": true,
+                    "Name": "VariableSizeDots",
+                    "Description": "All locations, except for cities & towns, are rendered as smaller dots",
                     "$version": "v1",
                     "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
                 },

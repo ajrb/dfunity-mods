@@ -8,12 +8,16 @@ using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Utility.ModSupport;
 using DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings;
+using DaggerfallConnect.Arena2;
 
 namespace BasicRoads
 {
     public class BasicRoadsMod : MonoBehaviour
     {
         public const string GET_PATH_DATA = "getPathData";
+        public const string GET_ROAD_POINT = "getRoadPoint";
+        public const string GET_TRACK_POINT = "getTrackPoint";
+        public const string GET_PATHS_POINT = "getPathsPoint";
 
         static Mod mod;
         static BasicRoadsTexturing roadTexturing;
@@ -53,10 +57,32 @@ namespace BasicRoads
 
         private void MessageReceiver(string message, object data, DFModMessageCallback callBack)
         {
+            Vector2Int mpCoords;
+            byte point;
             switch (message)
             {
                 case GET_PATH_DATA:
                     callBack?.Invoke(GET_PATH_DATA, roadTexturing.GetPathData((int)data));
+                    break;
+
+                case GET_ROAD_POINT:
+                    mpCoords = (Vector2Int)data;
+                    point = roadTexturing.GetPathDataPoint(BasicRoadsTexturing.roads, mpCoords.x, mpCoords.y);
+                    callBack?.Invoke(GET_ROAD_POINT, point);
+                    break;
+
+                case GET_TRACK_POINT:
+                    mpCoords = (Vector2Int)data;
+                    point = roadTexturing.GetPathDataPoint(BasicRoadsTexturing.tracks, mpCoords.x, mpCoords.y);
+                    callBack?.Invoke(GET_TRACK_POINT, point);
+                    break;
+
+                case GET_PATHS_POINT:
+                    mpCoords = (Vector2Int)data;
+                    byte roadPt = roadTexturing.GetPathDataPoint(BasicRoadsTexturing.roads, mpCoords.x, mpCoords.y);
+                    byte trackPt = roadTexturing.GetPathDataPoint(BasicRoadsTexturing.tracks, mpCoords.x, mpCoords.y);
+                    point = (byte)(roadPt | trackPt);
+                    callBack?.Invoke(GET_PATHS_POINT, point);
                     break;
 
                 default:

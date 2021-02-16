@@ -16,7 +16,7 @@ namespace TravelOptions
         private const string MsgPlayerControlled = "Player Controlled Journey";
         private string MsgTimeFormat = " {0} hours {1} mins (approx)";
         private const string MsgNoPort = "You cannot travel by ship from here, since there's no port.";
-        private const string MsgNoDestPort = "You cannot travel by ship to their, as that location has no port.";
+        private const string MsgNoDestPort = "You cannot travel by ship to there, as that location has no port.";
         private const string MsgNoSailing = "Your journey doesn't cross any ocean, so a ship is not needed.";
 
         public TravelOptionsPopUp(IUserInterfaceManager uiManager, IUserInterfaceWindow previousWindow = null, DaggerfallTravelMapWindow travelWindow = null)
@@ -65,12 +65,12 @@ namespace TravelOptions
         public bool IsNotAtPort()
         {
             DFLocation location = GameManager.Instance.PlayerGPS.CurrentLocation;
-            return location.Loaded == false || location.Exterior.ExteriorData.PortTownAndUnknown == 0 || TravelOptionsMapWindow.HasPortExtra(location.MapTableData);
+            return location.Loaded == false || (location.Exterior.ExteriorData.PortTownAndUnknown == 0 && !TravelOptionsMapWindow.HasPortExtra(location.MapTableData));
         }
 
         public bool HasNoOceanTravel()
         {
-            return travelTimeCalculator.OceanPixels == 0;
+            return travelTimeCalculator.OceanPixels == 0 && !GameManager.Instance.TransportManager.IsOnShip();
         }
 
         public bool IsDestNotValidPort()

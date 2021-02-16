@@ -25,7 +25,7 @@ namespace RoleplayRealism
         {
             EffectSettings cureSettings = SetEffectChance(DefaultEffectSettings(), 1, 10, 1);
             PotionRecipe cureDisease = new PotionRecipe(
-                TextManager.Instance.GetLocalizedText("cureDisease"),
+                "cureDisease",
                 100,
                 cureSettings,
                 (int)MiscellaneousIngredients1.Elixir_vitae,
@@ -35,7 +35,7 @@ namespace RoleplayRealism
             EffectSettings purificationSettings = SetEffectChance(DefaultEffectSettings(), 1, 10, 1);
             purificationSettings = SetEffectMagnitude(purificationSettings, 5, 5, 19, 19, 1);
             PotionRecipe purification = new PotionRecipe(
-                TextManager.Instance.GetLocalizedText("purification"),
+                "purification",
                 500,
                 purificationSettings,
                 (int)MiscellaneousIngredients1.Elixir_vitae,

@@ -18,15 +18,20 @@ using DaggerfallWorkshop.Game.Serialization;
 using DaggerfallWorkshop.Game.Utility;
 using DaggerfallWorkshop.Game.Entity;
 using DaggerfallWorkshop.Utility;
+using DaggerfallWorkshop.Game.Weather;
+using DaggerfallWorkshop.Game.UserInterface;
 
 namespace TravelOptions
 {
     public class TravelOptionsMod : MonoBehaviour
     {
         public const string PAUSE_TRAVEL = "pauseTravel";
+        public const string NOUISTOP_WINDOW = "noStopForUIWindow";
+        public const string NOUISTOP_REMOVE = "removeNoStopWindow";
         public const string IS_TRAVEL_ACTIVE = "isTravelActive";
         public const string IS_PATH_FOLLOWING = "isPathFollowing";
         public const string IS_FOLLOWING_ROAD = "isFollowingRoad";
+        public const string SHOW_MESSAGE = "showMessage";
 
         public const string ROADS_MODNAME = "BasicRoads";
 
@@ -83,6 +88,7 @@ namespace TravelOptions
         public bool ShipTravelPortsOnly { get; private set; }
         public bool ShipTravelDestinationPortsOnly { get; private set; }
         public bool RoadsIntegration { get; private set; }
+        public bool VariableSizeDots { get; private set; }
 
         public float RecklessTravelMultiplier { get; private set; } = 1f;
         public float CautiousTravelMultiplier { get; private set; } = 0.8f;
@@ -98,6 +104,7 @@ namespace TravelOptions
         PlayerAutoPilot playerAutopilot;
         TravelControlUI travelControlUI;
         internal TravelControlUI GetTravelControlUI() { return travelControlUI; }
+        IUserInterfaceWindow noStopForUIWindow;
 
         KeyCode followKeyCode = KeyCode.None;
         DFLocation lastLocation;
@@ -124,6 +131,8 @@ namespace TravelOptions
         byte circumnavigatePathsDataPt = 0;
         byte lastCrossed = 0;
         bool road = false;
+        float ridingVolume = 0.6f;
+        bool uiCloseWhenTop = false;
 
         [Invoke(StateManager.StateTypes.Start, 0)]
         public static void Init(InitParams initParams)
@@ -143,8 +152,10 @@ namespace TravelOptions
             ModSettings settings = mod.GetSettings();
 
             RoadsIntegration = settings.GetValue<bool>("RoadsIntegration", "Enable") && roadsModEnabled;
-            if (RoadsIntegration)
+            if (RoadsIntegration) {
+                VariableSizeDots = settings.GetValue<bool>("RoadsIntegration", "VariableSizeDots");
                 followKeyCode = followKeys[settings.GetValue<int>("RoadsIntegration", "FollowPathsKey")];
+            }
 
             enableWeather = settings.GetValue<bool>("GeneralOptions", "AllowWeather");
             enableSounds = settings.GetValue<bool>("GeneralOptions", "AllowAnnoyingSounds");
@@ -182,6 +193,7 @@ namespace TravelOptions
             GameManager.OnEncounter += GameManager_OnEncounter;
             PlayerGPS.OnEnterLocationRect += PlayerGPS_OnEnterLocationRect;
             PlayerGPS.OnMapPixelChanged += PlayerGPS_OnMapPixelChanged;
+            StreamingWorld.OnUpdateLocationGameObject += StreamingWorld_OnUpdateLocationGameObject;
 
             mod.MessageReceiver = MessageReceiver;
             mod.IsReady = true;
@@ -202,6 +214,9 @@ namespace TravelOptions
         public void ClearTravelDestination()
         {
             DestinationName = null;
+            playerAutopilot = null;
+            if (travelControlUI.isShowing)
+                travelControlUI.CloseWindow();
         }
 
         private void GameManager_OnEncounter()
@@ -225,6 +240,20 @@ namespace TravelOptions
         }
 
         private void PlayerGPS_OnMapPixelChanged(DFPosition mapPixel)
+        {
+            InitLocationRects(mapPixel);
+        }
+
+        private void StreamingWorld_OnUpdateLocationGameObject(GameObject locationObject, bool allowYield)
+        {
+            if (allowYield == false && locationBorderRect.Equals(Rect.zero) && locationRect.Equals(Rect.zero))
+            {
+                DFPosition mapPixel = GameManager.Instance.PlayerGPS.CurrentMapPixel;
+                InitLocationRects(mapPixel);
+            }
+        }
+
+        private void InitLocationRects(DFPosition mapPixel)
         {
             if (RoadsIntegration && (playerAutopilot == null || DestinationName != null))
             {
@@ -266,12 +295,19 @@ namespace TravelOptions
                 };
 
                 lastLocation = GameManager.Instance.PlayerGPS.CurrentLocation;
-                SetTimeScale(travelControlUI.TimeAcceleration);
-                DisableWeatherAndSound();
-                diseaseCount = GameManager.Instance.PlayerEffectManager.DiseaseCount;
+                InitTravelUI();
 
                 Debug.Log("Begun accelerated travel to " + DestinationName);
             }
+        }
+
+        private void InitTravelUI()
+        {
+            SetTimeScale(travelControlUI.TimeAcceleration);
+            DisableWeatherAndSound();
+            diseaseCount = GameManager.Instance.PlayerEffectManager.DiseaseCount;
+            if (!travelControlUI.isShowing)
+                DaggerfallUI.UIManager.PushWindow(travelControlUI);
         }
 
         #region Path following
@@ -358,6 +394,7 @@ namespace TravelOptions
                 if ((inLoc && (pathsDataPt & playerDirection) != 0) || (pathsDataPt & playerDirection & onPath) != 0)
                 {
                     road = (roadDataPt & playerDirection) != 0;
+                    DestinationName = null;     // Remove any specified destination
                     BeginPathTravel(GetTargetPixel(playerDirection, currMapPixel));
                     return;
                 }
@@ -367,6 +404,7 @@ namespace TravelOptions
                     if ((inLoc && (pathsDataPt & fromDirection) != 0) || (pathsDataPt & fromDirection & onPath) != 0)
                     {
                         road = (roadDataPt & fromDirection) != 0;
+                        DestinationName = null;     // Remove any specified destination
                         BeginPathTravel(GetTargetPixel(0, currMapPixel));
                         return;
                     }
@@ -383,7 +421,7 @@ namespace TravelOptions
             DaggerfallUI.AddHUDText(MsgNoPath);
         }
 
-        protected void BeginPathTravel(DFPosition targetPixel)
+        protected void BeginPathTravel(DFPosition targetPixel, bool starting = true)
         {
             if (targetPixel != null)
             {
@@ -394,7 +432,7 @@ namespace TravelOptions
                 Rect targetRect = SetLocationRects(targetPixel, targetMPworld) ? locationBorderRect : new Rect(targetMPworld.X + MidLo, targetMPworld.Y + MidLo, PSize, PSize);
 
                 DestinationCautious = true;
-                if (alwaysUseStartingAccel)
+                if (starting && alwaysUseStartingAccel)
                     travelControlUI.TimeAcceleration = defaultStartingAccel;
                 travelControlUI.HalfLimit = true;
 
@@ -407,9 +445,7 @@ namespace TravelOptions
                 {
                     playerAutopilot.InitTargetRect(targetPixel, targetRect, road ? RecklessTravelMultiplier : CautiousTravelMultiplier);
                 }
-                SetTimeScale(travelControlUI.TimeAcceleration);
-                DisableWeatherAndSound();
-                diseaseCount = GameManager.Instance.PlayerEffectManager.DiseaseCount;
+                InitTravelUI();
             }
         }
 
@@ -435,9 +471,11 @@ namespace TravelOptions
 #endif
                     byte roadDataPt = GetRoadsDataPoint(currMapPixel);
                     road = (roadDataPt & playerDirection) != 0;
-                    BeginPathTravel(GetTargetPixel(playerDirection, currMapPixel));
+                    BeginPathTravel(GetTargetPixel(playerDirection, currMapPixel), false);
                     return;
                 }
+                else
+                    DaggerfallUI.AddHUDText("You've arrived at a junction.");
             }
             else
             {
@@ -486,8 +524,8 @@ namespace TravelOptions
 
             playerAutopilot = new PlayerAutoPilot(currMapPixel, targetRect, GetTravelSpeedMultiplier());
             playerAutopilot.OnArrival += () => { CircumnavigateLocation(); };
-            SetTimeScale(travelControlUI.TimeAcceleration);
-            DisableWeatherAndSound();
+
+            InitTravelUI();
         }
 
         void SetupLocBorderCornerRects()
@@ -628,17 +666,31 @@ namespace TravelOptions
 
         void Update()
         {
+            if (uiCloseWhenTop && DaggerfallUI.UIManager.TopWindow == travelControlUI)
+            {
+                uiCloseWhenTop = false;
+                travelControlUI.CloseWindow();
+            }
+
             if (playerAutopilot != null)
             {
-                // Ensure UI is showing
-                if (!travelControlUI.isShowing)
-                    DaggerfallUI.UIManager.PushWindow(travelControlUI);
+                // Ensure only the travel UI is showing, stop travel if not, but allow registered window and travel map to not halt travel.
+                if (GameManager.Instance.IsPlayerOnHUD ||
+                    (DaggerfallUI.UIManager.TopWindow != travelControlUI &&
+                     DaggerfallUI.UIManager.TopWindow != noStopForUIWindow &&
+                     DaggerfallUI.UIManager.TopWindow != DaggerfallUI.Instance.DfTravelMapWindow))
+                {
+                    Debug.Log("Other UI activity detected, stopping travel.");
+                    InterruptTravel();
+                    uiCloseWhenTop = travelControlUI.isShowing;
+                    return;
+                }
 
                 // Run updates for playerAutopilot and HUD
                 playerAutopilot.Update();
                 DaggerfallUI.Instance.DaggerfallHUD.HUDVitals.Update();
 
-                if (DestinationName == null && followKeyCode != KeyCode.None && InputManager.Instance.GetKeyDown(followKeyCode))
+                if (DestinationName == null && followKeyCode != KeyCode.None && !InputManager.Instance.IsPaused && InputManager.Instance.GetKeyDown(followKeyCode))
                 {
                     if (travelControlUI.isShowing)
                         travelControlUI.CloseWindow();
@@ -675,10 +727,11 @@ namespace TravelOptions
                 }
 
                 // If location pause set to nearby and travelling to destination, check for a nearby location and stop if found
-                if (locationPause == LocPauseNear && DestinationName != null && playerGPS.HasCurrentLocation && !playerGPS.CurrentLocation.Equals(lastLocation))
+                if (locationPause == LocPauseNear && DestinationName != null && playerGPS.HasCurrentLocation && !playerGPS.CurrentLocation.Equals(lastLocation) && playerGPS.CurrentLocation.Name != DestinationName)
                 {
                     lastLocation = playerGPS.CurrentLocation;
-                    StopTravelWithMessage(string.Format(MsgNearLocation, MacroHelper.LocationTypeName(), playerGPS.CurrentLocation.Name));
+
+                    StopTravelWithMessage(string.Format(MsgNearLocation, LocationTypeString(), playerGPS.CurrentLocation.Name));
                     return;
                 }
 
@@ -719,9 +772,29 @@ namespace TravelOptions
                     diseaseCount = currentDiseaseCount;
                 }
             }
-            else if (followKeyCode != KeyCode.None && InputManager.Instance.GetKeyDown(followKeyCode) && GameManager.Instance.IsPlayerOnHUD)
+            else if (followKeyCode != KeyCode.None && !InputManager.Instance.IsPaused && InputManager.Instance.GetKeyDown(followKeyCode) && GameManager.Instance.IsPlayerOnHUD)
             {
-                FollowPath();
+                if (GameManager.Instance.PlayerEnterExit.IsPlayerInside)
+                    return;
+                if (GameManager.Instance.AreEnemiesNearby())
+                    DaggerfallUI.MessageBox(TextManager.Instance.GetLocalizedText("cannotTravelWithEnemiesNearby"));
+                else
+                    FollowPath();
+            }
+        }
+
+        string LocationTypeString()
+        {
+            switch (GameManager.Instance.PlayerGPS.CurrentLocationType)
+            {
+                case DFRegion.LocationTypes.DungeonKeep:
+                    return "Keep";
+                case DFRegion.LocationTypes.DungeonLabyrinth:
+                    return "Labyrinth";
+                case DFRegion.LocationTypes.DungeonRuin:
+                    return "Ruin";
+                default:
+                    return MacroHelper.LocationTypeName();
             }
         }
 
@@ -759,7 +832,7 @@ namespace TravelOptions
         {
             if (!enableWeather)
             {
-                var playerWeather = GameManager.Instance.WeatherManager.PlayerWeather;
+                PlayerWeather playerWeather = GameManager.Instance.WeatherManager.PlayerWeather;
                 playerWeather.RainParticles.SetActive(false);
                 playerWeather.SnowParticles.SetActive(false);
                 playerWeather.enabled = false;
@@ -768,7 +841,8 @@ namespace TravelOptions
             if (!enableSounds)
             {
                 GameManager.Instance.PlayerActivate.GetComponentInParent<PlayerFootsteps>().enabled = false;
-                GameManager.Instance.TransportManager.GetComponent<AudioSource>().enabled = false;
+                ridingVolume = GameManager.Instance.TransportManager.RidingVolumeScale;
+                GameManager.Instance.TransportManager.RidingVolumeScale = 0f;
             }
 
             if (!enableRealGrass)
@@ -778,12 +852,31 @@ namespace TravelOptions
         void EnableWeatherAndSound()
         {
             if (!enableWeather)
-                GameManager.Instance.WeatherManager.PlayerWeather.enabled = true;
+            {
+                PlayerWeather playerWeather = GameManager.Instance.WeatherManager.PlayerWeather;
+                playerWeather.enabled = true;
+                switch (playerWeather.WeatherType)
+                {
+                    case WeatherType.Rain:
+                    case WeatherType.Thunder:
+                        playerWeather.RainParticles.SetActive(true);
+                        playerWeather.SnowParticles.SetActive(false);
+                        break;
+                    case WeatherType.Snow:
+                        playerWeather.RainParticles.SetActive(false);
+                        playerWeather.SnowParticles.SetActive(true);
+                        break;
+                    default:
+                        playerWeather.RainParticles.SetActive(false);
+                        playerWeather.SnowParticles.SetActive(false);
+                        break;
+                }
+            }
 
             if (!enableSounds)
             {
                 GameManager.Instance.PlayerActivate.GetComponentInParent<PlayerFootsteps>().enabled = true;
-                GameManager.Instance.TransportManager.GetComponent<AudioSource>().enabled = true;
+                GameManager.Instance.TransportManager.RidingVolumeScale = ridingVolume == 0 ? 0.6f : ridingVolume;
             }
 
             if (!enableRealGrass)
@@ -799,6 +892,18 @@ namespace TravelOptions
                         travelControlUI.CloseWindow();
                     break;
 
+                case NOUISTOP_WINDOW:
+                    IUserInterfaceWindow window = data as IUserInterfaceWindow;
+                    if (window != null)
+                        noStopForUIWindow = window;
+                    break;
+
+                case NOUISTOP_REMOVE:
+                    IUserInterfaceWindow remove = data as IUserInterfaceWindow;
+                    if (remove != null && remove == noStopForUIWindow)
+                        noStopForUIWindow = null;
+                    break;
+
                 case IS_TRAVEL_ACTIVE:
                     callBack?.Invoke(IS_TRAVEL_ACTIVE, travelControlUI.isShowing);
                     break;
@@ -809,6 +914,12 @@ namespace TravelOptions
 
                 case IS_FOLLOWING_ROAD:
                     callBack?.Invoke(IS_FOLLOWING_ROAD, road);
+                    break;
+
+                case SHOW_MESSAGE:
+                    string msg = data as string;
+                    if (!string.IsNullOrEmpty(msg))
+                        travelControlUI.ShowMessage(msg);
                     break;
 
                 default:

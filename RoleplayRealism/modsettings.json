@@ -3,7 +3,7 @@
     "Sections": [
         {
             "Name": "Modules",
-            "Description": "Enable or disable the optional modules contained in this mod",
+            "Description": "Enable or disable the optional modules contained in this mod depending on personal preferences and playstyle.",
             "IsAdvanced": false,
             "Keys": [
                 {

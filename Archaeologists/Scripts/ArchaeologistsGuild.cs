@@ -39,32 +39,45 @@ namespace DaggerfallWorkshop.Game.Guilds
 
         protected static TextFile.Token[] welcomeTokens =
         {
-            TextFile.CreateTextToken("Excellent, %pcn, welcome to the Archaeologists! "), newLine,
+            TextFile.CreateTextToken("Excellent, %pcn, welcome to the Archaeologists! "), newLine, newLine,
+
             TextFile.CreateTextToken("We'll get you started on field work as soon as possible. "), newLine,
-            TextFile.CreateTextToken("You'll begin your Archaeologists career with the title "), newLine,
-            TextFile.CreateTextToken("of %lev, however, with hard work and dedication, "), newLine,
-            TextFile.CreateTextToken("I'm sure that you'll be recognised for promotion soon enough. "), newLine,
-            TextFile.CreateTextToken("Please ensure you make use of our training facilities to "), newLine,
-            TextFile.CreateTextToken("study and improve your skills. Here is a book containing "), newLine,
-            TextFile.CreateTextToken("all our guild hall locations, and also a Mark of Recall. "), newLine,
+            TextFile.CreateTextToken("You'll begin your Archaeologists career with the title of "), newLine,
+            TextFile.CreateTextToken("%lev. However, with hard work and dedication, "), newLine,
+            TextFile.CreateTextToken("you may be recognised for promotion soon enough. Please"), newLine,
+            TextFile.CreateTextToken("do make use of our training facilities to study languages "), newLine,
+            TextFile.CreateTextToken("or to improve your field work skills. "), newLine, newLine,
+
+            TextFile.CreateTextToken("Here's a book containing guild ranks and locations of all guild "), newLine,
+            TextFile.CreateTextToken("halls. Also here's a Mark of Recall, and a free locator device "), newLine,
+            TextFile.CreateTextToken("to try out the next time you find yourself lost in a labyrinth "), newLine,
+            TextFile.CreateTextToken("unable to find whatever it is you're seeking. Locators look like"), newLine,
+            TextFile.CreateTextToken("Ankh symbols and will activate once you've explored enough. "), newLine, newLine,
+
+            TextFile.CreateTextToken("Locators are provided free for guild quests involving dungeon "), newLine,
+            TextFile.CreateTextToken("delving, but you can also purchase them from us for a price, "), newLine,
+            TextFile.CreateTextToken("with discounts given for any relics you can find for the guild. "), newLine, newLine
         };
 
         protected static TextFile.Token[] eligibleTokens =
         {
-            TextFile.CreateTextToken("Yes, you seem like a suitable candidate to assist us in"), newLine,
-            TextFile.CreateTextToken("the kind of field work we require for our research. "), newLine, newLine,
+            TextFile.CreateTextToken("Hmm, yes, you seem like a suitable candidate to assist us with"), newLine,
+            TextFile.CreateTextToken("our field work and finding the relics that we need for research. "), newLine, newLine,
+
             TextFile.CreateTextToken("We offer classes in all the various obscure languages "), newLine,
             TextFile.CreateTextToken("of Tamriel, as well as some of the more practical skills "), newLine,
             TextFile.CreateTextToken("required in the field while searching remote locations "), newLine,
             TextFile.CreateTextToken("for interesting antiquities and rare artifacts. "), newLine, newLine,
-            TextFile.CreateTextToken("Once you rise in our ranks to the title of Field Officer, you"), newLine,
-            TextFile.CreateTextToken("will gain access to charges for our magicka-powered locator"), newLine,
-            TextFile.CreateTextToken("device to purchase for whatever purpose you wish. Until then"), newLine,
-            TextFile.CreateTextToken("you will be restricted to a single locator for each task. "), newLine, newLine,
+
+            TextFile.CreateTextToken("New members receive a free recall mark with 30 charges "), newLine,
+            TextFile.CreateTextToken("to assist with transport without dabbling in magic arts. "), newLine,
+            TextFile.CreateTextToken("Once you rise in our ranks to Field Officer level, then you'll "), newLine,
+            TextFile.CreateTextToken("be able to get your recall mark repaired and recharged. "), newLine, newLine,
+
             TextFile.CreateTextToken("Beyond field work, our higher ranks are open to the more "), newLine,
-            TextFile.CreateTextToken("accomplished scholars among us, and provide a great "), newLine,
+            TextFile.CreateTextToken("accomplished scholars among us, and provide a large "), newLine,
             TextFile.CreateTextToken("reduction to the cost of locator devices. Note that "), newLine,
-            TextFile.CreateTextToken("only those with sufficient intellect will be promoted. "), newLine,
+            TextFile.CreateTextToken("only those with sufficient intellect will be promoted. "), newLine, newLine,
         };
 
         protected static TextFile.Token[] ineligibleLowSkillTokens =
@@ -72,7 +85,7 @@ namespace DaggerfallWorkshop.Game.Guilds
             TextFile.CreateTextToken("I am sad to say that you are not eligible to join our guild."), newLine,
             TextFile.CreateTextToken("We only accept members who have studied languages or the "), newLine,
             TextFile.CreateTextToken("other skills useful for field work; such as climbing, "), newLine,
-            TextFile.CreateTextToken("lockpicking and stealth. "), newLine,
+            TextFile.CreateTextToken("lockpicking, or stealth. "), newLine,
         };
 
         protected static TextFile.Token[] ineligibleBadRepTokens =
@@ -96,13 +109,13 @@ namespace DaggerfallWorkshop.Game.Guilds
             TextFile.CreateTextToken("Keep up the good work, and continue to study hard. "), newLine,
         };
 
-        protected static int[] intReqs = { 40, 55, 55, 60, 60, 65, 65, 70, 70, 75 };
+        protected static int[] intReqs = { 30, 50, 55, 60, 60, 65, 65, 70, 70, 75 };
 
         protected static string[] rankTitles = {
             "Field Assistant", "Field Agent", "Field Officer", "Field Director", "Apprentice", "Novice", "Journeyman", "Associate", "Professor", "Master"
         };
 
-        protected static int[] RankLocatorCosts = { 2000, 1800, 1600, 1400, 1200, 1000, 800, 600, 400, 200 };
+        protected static int[] RankLocatorCosts = { 2100, 1800, 1500, 1200, 1050, 900, 750, 600, 200, 180 };
 
         protected static List<DFCareer.Skills> guildSkills = new List<DFCareer.Skills>() {
                 DFCareer.Skills.Centaurian,
@@ -116,6 +129,7 @@ namespace DaggerfallWorkshop.Game.Guilds
                 DFCareer.Skills.Lockpicking,
                 DFCareer.Skills.Nymph,
                 DFCareer.Skills.Orcish,
+                DFCareer.Skills.Spriggan,
                 DFCareer.Skills.Stealth,
             };
 
@@ -133,6 +147,7 @@ namespace DaggerfallWorkshop.Game.Guilds
                 DFCareer.Skills.Nymph,
                 DFCareer.Skills.Orcish,
                 DFCareer.Skills.Running,
+                DFCareer.Skills.Spriggan,
                 DFCareer.Skills.Stealth,
                 DFCareer.Skills.Swimming,
             };
@@ -201,11 +216,10 @@ namespace DaggerfallWorkshop.Game.Guilds
 
         public override bool AvoidDeath()
         {
-            if (rank >= 6 && Random.Range(0, 50) < rank &&
+            if (rank >= 4 && Random.Range(0, 50) < rank &&
                 GameManager.Instance.PlayerEntity.FactionData.GetReputation((int) FactionFile.FactionIDs.Stendarr) >= 0 &&
                 !GameManager.Instance.PlayerEnterExit.IsPlayerSubmerged)
             {
-                //DaggerfallUI.AddHUDText(HardStrings.avoidDeath);
                 DaggerfallUI.AddHUDText(TextManager.Instance.GetLocalizedText("avoidDeath"));
                 return true;
             }
@@ -237,6 +251,8 @@ namespace DaggerfallWorkshop.Game.Guilds
                     return (rank >= 3);
                 case GuildServices.DaedraSummoning:
                     return (rank >= 7);
+                case GuildServices.MakeMagicItems:
+                    return (rank >= 6);
             }
             if ((int)service == LocatorServiceId)
                 return true;
@@ -255,60 +271,61 @@ namespace DaggerfallWorkshop.Game.Guilds
             // Get the guild instance.
             IGuild thisGuild = GameManager.Instance.GuildManager.GetGuild(FactionFile.GuildGroups.GGroup0);
 
-            // Check how many holy items the player has if rank 0. Offer 16 if no limit.
-            int holyCount = 16;
-            if (thisGuild.Rank < 1)
-            {
-                PlayerEntity playerEntity = GameManager.Instance.PlayerEntity;
-                List<DaggerfallUnityItem> tomes = playerEntity.Items.SearchItems(ItemGroups.ReligiousItems, (int)ReligiousItems.Holy_tome);
-                tomes.AddRange(playerEntity.WagonItems.SearchItems(ItemGroups.ReligiousItems, (int)ReligiousItems.Holy_tome));
-                List<DaggerfallUnityItem> daggers = playerEntity.Items.SearchItems(ItemGroups.ReligiousItems, (int)ReligiousItems.Holy_dagger);
-                daggers.AddRange(playerEntity.WagonItems.SearchItems(ItemGroups.ReligiousItems, (int)ReligiousItems.Holy_dagger));
-                holyCount = tomes.Count + daggers.Count;
-            }
-            if (thisGuild.Rank >= 1 || holyCount > 0)
-            {
-                // Show trade window and a popup message to inform player how many locators they can purchase.
-                DaggerfallTradeWindow tradeWindow = (DaggerfallTradeWindow)
-                    UIWindowFactory.GetInstanceWithArgs(UIWindowType.Trade, new object[] { DaggerfallUI.UIManager, null, DaggerfallTradeWindow.WindowModes.Buy, thisGuild });
-                tradeWindow.MerchantItems = GetLocatorDevices(holyCount, RankLocatorCosts[thisGuild.Rank]);
-                DaggerfallUI.UIManager.PushWindow(tradeWindow);
+            // Check how many holy items the player has and offer that many discounted.
+            PlayerEntity playerEntity = GameManager.Instance.PlayerEntity;
+            List<DaggerfallUnityItem> tomes = playerEntity.Items.SearchItems(ItemGroups.ReligiousItems, (int)ReligiousItems.Holy_tome);
+            tomes.AddRange(playerEntity.WagonItems.SearchItems(ItemGroups.ReligiousItems, (int)ReligiousItems.Holy_tome));
+            List<DaggerfallUnityItem> daggers = playerEntity.Items.SearchItems(ItemGroups.ReligiousItems, (int)ReligiousItems.Holy_dagger);
+            daggers.AddRange(playerEntity.WagonItems.SearchItems(ItemGroups.ReligiousItems, (int)ReligiousItems.Holy_dagger));
+            int holyCount = tomes.Count + daggers.Count;
 
-                if (thisGuild.Rank < 1)
-                {
-                    tradeWindow.OnTrade += LocatorPurchase_OnTrade;
-                    DaggerfallMessageBox messageBox = new DaggerfallMessageBox(DaggerfallUI.UIManager, window, true);
-                    string[] message = {
-                        "We require that you provide the guild with either a holy tome",
-                        "   or holy dagger for each locator device we supply you.",
-                        " At least until you reach the first rank within the guild.", "",
-                        "  You currently have " + holyCount + " holy items in your posession, so you",
-                        "    can purchase up to that many locators at this time.",
-                    };
-                    messageBox.SetText(message);
-                    messageBox.ClickAnywhereToClose = true;
-                    messageBox.Show();
-                }
-            }
-            else
+            // Show trade window and a popup message to inform player how many discounted locators they can purchase.
+            DaggerfallTradeWindow tradeWindow = (DaggerfallTradeWindow)
+                UIWindowFactory.GetInstanceWithArgs(UIWindowType.Trade, new object[] { DaggerfallUI.UIManager, null, DaggerfallTradeWindow.WindowModes.Buy, thisGuild });
+            tradeWindow.MerchantItems = GetLocatorDevices(holyCount, RankLocatorCosts[thisGuild.Rank]);
+            DaggerfallUI.UIManager.PushWindow(tradeWindow);
+            tradeWindow.OnTrade += LocatorPurchase_OnTrade;
+
+            if (thisGuild.Rank < 8)
             {
-                DaggerfallUI.MessageBox(new string[] {
-                    "You need to provide the guild either a holy tome or holy dagger",
-                    " for each locator device we supply you with. You have neither." });
+                DaggerfallMessageBox messageBox = new DaggerfallMessageBox(DaggerfallUI.UIManager, window);
+                string[] message = {
+                    "   If you can supply the guild with either a holy tome or holy dagger,",
+                    "  then we can sell locator devices at a third of normal price per relic.",
+                    "    Locator prices will reduce as you gain higher ranks in the guild.",
+                    "",
+                    "      You currently have " + holyCount + " holy relics in your posession, so you can",
+                    "     purchase up to that many discounted locators at this time.",
+                };
+                if (holyCount == 0)
+                {
+                    message[4] = "       You don't have any holy relics with you right now, so";
+                    message[5] = "     unfortunately we can't offer you any discounts this time.";
+                }
+                messageBox.SetText(message);
+                messageBox.ClickAnywhereToClose = true;
+                messageBox.Show();
             }
         }
 
         static ItemCollection GetLocatorDevices(int number, int value)
         {
             ItemCollection locators = new ItemCollection();
-            for (int i = 0; i < number; i++)
-                locators.AddItem(new LocatorItem(value), ItemCollection.AddPosition.DontCare, true);
+            if (number > 0)
+                for (int i = 0; i < number; i++)
+                    locators.AddItem(new LocatorItem(value / 3), ItemCollection.AddPosition.DontCare, true);
+            else
+                for (int i = 0; i < 16; i++)
+                    locators.AddItem(new LocatorItem(value), ItemCollection.AddPosition.DontCare, true);
             return locators;
         }
 
         static void LocatorPurchase_OnTrade(DaggerfallTradeWindow.WindowModes mode, int numItems, int value)
         {
-            if (mode == DaggerfallTradeWindow.WindowModes.Buy && numItems > 0)
+            // Get the guild instance.
+            IGuild thisGuild = GameManager.Instance.GuildManager.GetGuild(FactionFile.GuildGroups.GGroup0);
+
+            if (mode == DaggerfallTradeWindow.WindowModes.Buy && numItems > 0 && thisGuild.Rank < 8)
             {   // Remove holy items from player items.
                 ItemCollection coll = GameManager.Instance.PlayerEntity.Items;
                 numItems = RemoveItems(coll, numItems, (int)ReligiousItems.Holy_tome);
@@ -361,7 +378,7 @@ namespace DaggerfallWorkshop.Game.Guilds
                     DaggerfallUI.MessageBox(new string[] {
                         "You don't appear to have your Mark of Recall on you, or enough",
                         "for a replacement. If you have been careless and lost or broken",
-                        "it, I can replace it for a price of 10,000 gold pieces. They're",
+                        "it, I can replace it for a price of 20,000 gold pieces. They're",
                         "expensive, and the guild only provides one free Mark per member."
                     });
                 }
@@ -491,7 +508,7 @@ namespace DaggerfallWorkshop.Game.Guilds
         private static int CalculateRepairCost(DaggerfallUnityItem markOfRecall)
         {
             int repairAmount = markOfRecall.maxCondition - markOfRecall.currentCondition;
-            int cost = repairAmount * 2;    // 20gp per use, or 1200 for a full repair
+            int cost = repairAmount * 16;    // 160gp per use, or 9600 for a full repair
             return cost;
         }
 
@@ -506,6 +523,8 @@ namespace DaggerfallWorkshop.Game.Guilds
             GivePlayerMarkOfRecall();
             // Give a guild hall locations book.
             GivePlayerLocationsBook();
+            // Give player a free locator device.
+            GameManager.Instance.PlayerEntity.Items.AddItem(new LocatorItem(), ItemCollection.AddPosition.DontCare, true);
         }
 
         private static void GivePlayerMarkOfRecall()
@@ -521,6 +540,7 @@ namespace DaggerfallWorkshop.Game.Guilds
             };
             item.shortName = "%it of Recall";
             item.IdentifyItem();
+            item.currentCondition = item.maxCondition / 2;
             GameManager.Instance.PlayerEntity.Items.AddItem(item);
         }
 

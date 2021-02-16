@@ -66,6 +66,8 @@ namespace TravelOptions
 
         protected bool portsFilter = false;
 
+        protected bool onlyLargeDots = false;
+
         internal static byte[][] pathsData = new byte[4][];
         protected bool[] showPaths = { true, true, false, false };
 
@@ -81,6 +83,8 @@ namespace TravelOptions
                 ModManager.Instance.SendModMessage(TravelOptionsMod.ROADS_MODNAME, "getPathData", path_tracks,
                     (string message, object data) => { pathsData[path_tracks] = (byte[])data; });
             }
+
+            onlyLargeDots = !TravelOptionsMod.Instance.VariableSizeDots;
         }
 
         protected override void Setup()
@@ -219,7 +223,7 @@ namespace TravelOptions
         // Updates location dots
         protected override void UpdateMapLocationDotsTexture()
         {
-            if (TravelOptionsMod.Instance.RoadsIntegration)
+            if (TravelOptionsMod.Instance.RoadsIntegration && selectedRegion != 61)
             {
                 UpdateMapLocationDotsTextureWithPaths();
             }
@@ -255,6 +259,13 @@ namespace TravelOptions
                     int width5 = width * 5;
                     int offset5 = (int)((((height - y - 1) * 5 * width5) + (x * 5)) * scale);
 
+                    int pIdx = originX + x + ((originY + y) * MapsFile.MaxMapPixelX);
+                    if (showPaths[path_tracks])
+                        DrawPath(offset5, width5, pathsData[path_tracks][pIdx], trackColor);
+                    if (showPaths[path_roads])
+                        DrawPath(offset5, width5, pathsData[path_roads][pIdx], roadColor);
+                    //Debug.LogFormat("Found road at x:{0} y:{1}  index:{2}", originX + x, originY + y, rIdx);
+
                     ContentReader.MapSummary summary;
                     if (DaggerfallUnity.ContentReader.HasLocation(originX + x, originY + y, out summary))
                     {
@@ -269,13 +280,6 @@ namespace TravelOptions
                             }
                         }
                     }
-
-                    int pIdx = originX + x + ((originY + y) * MapsFile.MaxMapPixelX);
-                    if (showPaths[path_tracks])
-                        DrawPath(offset5, width5, pathsData[path_tracks][pIdx], trackColor);
-                    if (showPaths[path_roads])
-                        DrawPath(offset5, width5, pathsData[path_roads][pIdx], roadColor);
-                    //Debug.LogFormat("Found road at x:{0} y:{1}  index:{2}", originX + x, originY + y, rIdx);
                 }
             }
 
@@ -310,7 +314,7 @@ namespace TravelOptions
 
         bool IsLocationLarge(DFRegion.LocationTypes locationType)
         {
-            return locationType == DFRegion.LocationTypes.TownCity || locationType == DFRegion.LocationTypes.TownHamlet;
+            return locationType == DFRegion.LocationTypes.TownCity || locationType == DFRegion.LocationTypes.TownHamlet || onlyLargeDots;
         }
 
         private void DrawPath(int offset, int width, byte pathDataPt, Color32 pathColor)
@@ -414,6 +418,8 @@ namespace TravelOptions
 
         public static readonly int[] portLocationExtraIds = {
             // Extras allowing travel to :
+            2002,       // Small Ship
+            5005,       // Large Ship
             205676,     // "Isle of Balfiera", "Blackhead"
             278901,     // "Mournoth", "Zagoparia"
             263119,     // "Betony", "Whitefort"

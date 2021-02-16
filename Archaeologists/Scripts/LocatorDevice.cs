@@ -35,8 +35,9 @@ namespace Archaeologists
 
             // Register listeners for loading game and exiting dungeons - so that state can be updated
             SaveLoadManager.OnLoad += SaveLoadManager_OnLoad;
+            PlayerEnterExit.OnPreTransition += OnTransitionToDungeonExterior;
             PlayerEnterExit.OnTransitionDungeonExterior += OnTransitionToDungeonExterior;
-            
+
             enabled = false;
         }
 
@@ -94,8 +95,8 @@ namespace Archaeologists
 
         private static void RemoveActiveDevices(ItemCollection collection)
         {
-            List<DaggerfallUnityItem> wands = collection.SearchItems(ItemGroups.Jewellery, 140);
-            foreach (DaggerfallUnityItem item in wands)
+            List<DaggerfallUnityItem> locators = GetLocators();
+            foreach (DaggerfallUnityItem item in locators)
             {
                 if (item.nativeMaterialValue == LocatorItem.ACTIVATED)
                     collection.RemoveItem(item);
@@ -127,8 +128,8 @@ namespace Archaeologists
         private void SaveLoadManager_OnLoad(SaveData_v1 saveData)
         {
             DeactivateDevice();
-            List<DaggerfallUnityItem> wands = GameManager.Instance.PlayerEntity.Items.SearchItems(ItemGroups.Jewellery, 140);
-            foreach(DaggerfallUnityItem item in wands)
+            List<DaggerfallUnityItem> locators = GetLocators();
+            foreach (DaggerfallUnityItem item in locators)
             {
                 if (item.nativeMaterialValue == LocatorItem.ACTIVATED)
                 {
@@ -138,11 +139,22 @@ namespace Archaeologists
             }
         }
 
+        private static List<DaggerfallUnityItem> GetLocators()
+        {
+            List<DaggerfallUnityItem> locators = GameManager.Instance.PlayerEntity.Items.SearchItems(ItemGroups.MiscItems, 512);
+            if (locators.Count == 0)
+                locators = GameManager.Instance.PlayerEntity.Items.SearchItems(ItemGroups.Jewellery, 140);  // Old wands
+            return locators;
+        }
+
         private void OnTransitionToDungeonExterior(PlayerEnterExit.TransitionEventArgs args)
         {
-            DeactivateDevice();
-            RemoveActiveDevices(GameManager.Instance.PlayerEntity.Items);
-            RemoveActiveDevices(GameManager.Instance.PlayerEntity.WagonItems);
+            if (args.TransitionType == PlayerEnterExit.TransitionType.ToDungeonExterior)
+            {
+                DeactivateDevice();
+                RemoveActiveDevices(GameManager.Instance.PlayerEntity.Items);
+                RemoveActiveDevices(GameManager.Instance.PlayerEntity.WagonItems);
+            }
         }
 
         #endregion
