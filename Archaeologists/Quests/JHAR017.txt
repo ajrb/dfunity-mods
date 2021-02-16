@@ -1,0 +1,116 @@
+Quest: JHAR017
+DisplayName: Leveling the Playing Field
+-- Message panels
+QRC:
+
+QuestorOffer:  [1000]
+<ce>     We recently gained knowledge of a Mages Guild plot
+<ce>  to steal our research by means of scrying.
+<ce>  It's an intensive task that they can't often
+<ce>  repeat, but when they do, it's always for valuable
+<ce>  information we possess. We need someone to go directly
+<ce>  into a Mages Guild hall and take back what's ours.
+
+RefuseQuest:  [1001]
+<ce>     Still have friends among the mages, %pcf?
+
+AcceptQuest:  [1002]
+<ce>    The scried research lies in ___mhall_.
+<ce>  Get in, get the papers, and get out.
+<ce>  If you harm any person inside, the consequences
+<ce>  will fall on your head. Atronachs I suppose
+<ce>  are fair game, but no humans. You'll be paid
+<ce>  _reward_ gold pieces upon your return. We need
+<ce>  them here in =timer_ days. Luck be on your side.
+
+QuestFail:   [1003]
+<ce>  Papers or not, it's too late to return to
+<ce>  the Archaeologists for your reward now.
+
+QuestComplete:  [1004]
+<ce>  Good work, %pcf. Another march forward for
+<ce> selfless enlightenment. And if the Mages Guild
+<ce> loses as a result, who are we to complain?
+<ce> Take your payment.
+
+QuestLogEntry:   [1010]
+%qdt:
+ __qgiver_ of ___qgiver_ has
+ sent me to _mhall_
+ in ___mhall_ to take back
+ some notes that were magically
+ copied without authorization.
+ I am to harm no human within,
+ though atronachs probably don't
+ count. I have to deliver them within =timer_ days.
+
+Message:  1020
+<ce> Your entry immediately garners attention.
+<ce> A whisper sounds from somewhere within.
+<ce> 
+<ce> "The papers! Quickly, hide them!"
+<ce> 
+<ce> Most people in the guild prefer to play innocent,
+<ce> though you hear some shuffling about nearby.
+
+Message:  1021
+<ce> Indeed, these papers even carry the Archaeologists'
+<ce> own seal. The Mages Guild is certainly competent
+<ce> at their theft.
+
+QBN:
+Item _notes_ letter
+Item _reward_ gold
+
+Person _qgiver_ group Questor
+Person _mg_ faction The_Mages_Guild
+
+Place _mhall_ remote magery
+
+Foe _mage1_ is Mage
+Foe _mage2_ is Battle_mage
+Foe _e1_ is Iron_atronach
+Foe _e2_ is Flesh_atronach
+
+Clock _timer_ 00:00 0 flag 17 range 1 2
+
+--	Quest start-up:
+	start timer _timer_
+	log 1010 step 0
+    place item _notes_ at _mhall_
+    pc at _mhall_ set _inside_
+
+_timer_ task:
+    say 1003
+	end quest 
+
+_inside_ task:
+    say 1020
+    create foe _mage1_ every 2 minutes 1 times with 100% success
+    create foe _mage2_ every 4 minutes 1 times with 100% success
+    create foe _e1_ every 1 minutes indefinitely with 10% success
+    create foe _e2_ every 1 minutes indefinitely with 10% success
+
+_harm1_ task:
+    injured _mage1_
+    change repute with _mg_ by -3
+
+_harm2_ task:
+    injured _mage2_
+    change repute with _mg_ by -3
+
+_kill1_ task:
+    killed _mage1_
+    change repute with _mg_ by -7
+
+_kill2_ task:
+    killed _mage2_
+    change repute with _mg_ by -7
+
+_grabnotes_ task:
+    clicked item _notes_ say 1021
+
+_delivery_ task:
+    toting _notes_ and _qgiver_ clicked
+    give pc _reward_
+    end quest
