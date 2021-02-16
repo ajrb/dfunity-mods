@@ -1,0 +1,103 @@
+-- Archaeologists
+Quest: JHAR018
+DisplayName: One-upmanship
+-- Message panels
+QRC:
+
+QuestorOffer:  [1000]
+<ce>  Some more perverse members of the Mages Guild
+<ce>  have given us an opportunity we can't pass up.
+<ce>  They've summoned some magical creatures into
+<ce>  a local palace, claimed they came from witches,
+<ce>  and are offering to clean them up for a price.
+<ce>  While they're bartering with the nobles,
+<ce>  we can flip their tables on them.
+<ce>  If you can fight imps and atronachs,
+<ce>  you can handle this one.
+
+RefuseQuest:  [1001]
+<ce>  We need someone to attend to this, fast.
+<ce>  If the Mages Guild profits from this,
+<ce>  everyone else loses.
+
+AcceptQuest:  [1002]
+<ce>  Then hurry. The palace is in ___pal_.
+<ce>  Kill everything non-human inside and
+<ce>  tell the people there of the Mages Guild's
+<ce>  plot. Word has it negotiations will end
+<ce>  within =timer_ days and %crn will
+<ce>  give in, so get to undercutting them
+<ce>  before then.
+
+QuestFail:  [1003]
+<ce>  The palace of ___pal_ will have
+<ce>  been emptied of its monsters by now.
+
+QuestComplete:  [1004]
+<ce>  With the last monster dead, people begin
+<ce>  cautiously entering the building once more.
+<ce>  
+<ce>  "So the Mages Guild has indeed come
+<ce>  to rescue us! Thank you, good mage!"
+<ce>  
+<ce>  You stop them and tell the true story,
+<ce>  stunning some and riling others.
+<ce>  They can't believe they let themselves fall for such
+<ce>  deception. They storm outdoors to take their anger
+<ce>  out on any spellcasters they see, though one stops to
+<ce>  give you the mages' pending payment.
+
+QuestLogEntry:   [1010]
+%qdt:
+ The Archaeologists discovered
+ a Mages Guild plot to fill a palace
+ with monsters and demand payment
+ to clear them out. I am to go to
+ ___pal_, do the job myself, and tell
+ the truth about the supposed monster invasion.
+ I have =timer_ days to finish it.
+
+Message: 1020
+<ce>  This whole palace reeks of scorched materials.
+<ce>  Clearly the monsters here have not been idle.
+
+QBN:
+Item _reward_ gold range 401 to 599
+
+Place _pal_ remote palace
+
+Clock _timer_ 00:00 0 flag 17 range 0 2
+
+Foe _e1_ is Imp
+Foe _e2_ is Fire_atronach
+Foe _e3_ is Ice_atronach
+
+--	Quest start-up:
+	start timer _timer_
+	log 1010 step 0 
+	pc at _pal_ set _inside_
+
+_inside_ task:
+    say 1020
+    create foe _e1_ every 2 minutes 2 times with 100% success
+    create foe _e2_ every 3 minutes 2 times with 100% success
+    create foe _e3_ every 4 minutes 2 times with 100% success
+
+_kill1_ task:
+    killed 2 _e1_
+
+_kill2_ task:
+    killed 2 _e2_
+
+_kill3_ task:
+    killed 2 _e3_
+
+_victory_ task:
+    when _kill1_ and _kill2_ and _kill3_
+    legal repute +5
+    give pc _reward_
+    end quest
+
+_timer_ task:
+  say 1003
+	end quest
