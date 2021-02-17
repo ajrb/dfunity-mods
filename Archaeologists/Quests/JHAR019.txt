@@ -1,0 +1,194 @@
+Quest: JHAR019
+DisplayName: Outsourcing
+-- Message panels
+QRC:
+
+QuestorOffer:  [1000]
+<ce>  Occasionally we require the aid of experts beyond
+<ce>  our own ranks, much as we try to avoid it.
+<ce>  Some pieces of history are simply beyond our grasp.
+<ce>  If you have some time and coin, we need you to
+<ce>  act as our agent for one such errand. You will
+<ce>  be fully reimbursed, I assure you.
+
+RefuseQuest:  [1001]
+<ce>     Too poor or too cheap, %pcf?
+
+AcceptQuest:  [1002]
+<ce>  We have here this _tri_ which has some particular
+<ce>  purpose, but we can't figure out what it is.
+<ce>  Our testing has failed us. We're certain we can
+<ce>  rely on _exp_, who's visiting this region
+<ce>  for a short while. Find %g2, get %g3 assessment,
+<ce>  and finish the investigation with %g3 expertise.
+<ce>  I understand %g3 fee is 400 gold pieces this
+<ce>  season, so go prepared. Return in two months
+<ce>  or earlier with the investigation finished.
+
+QuestFail:   [1003]
+<ce>  Your two months to consult with _exp_
+<ce>  and finish the investigation are over.
+
+QuestComplete:  [1004]
+<ce>  Well done, %pcf. Take your 400 gold piece
+<ce>  reimbursement for _exp_, as well as your
+<ce>  own payment. We'll take our time to get this
+<ce>  thing open and see its contents.
+
+QuestLogEntry:   [1010]
+%qdt:
+ __qgiver_ of ___qgiver_
+ needs me to find _exp_, a particular
+ expert for one _tri_ that I carry.
+ I am to pay %g3 for the help I need, then
+ use _tri_ for its intended purpose and
+ deliver the results to the Archaeologists.
+ My work is due within =timer_ days.
+
+Message:  1011
+%qdt:
+ _exp_ informed me that the trinket
+ came from ___farmhome_ and is likely
+ linked to some object buried there.
+
+Message:  1012
+%qdt:
+ _exp_ offered to buy the trinket for
+ =bribe_ gold pieces, and I took %g2 up
+ on it. All's well that ends well, right?
+
+Message:  1013
+Staying in ___lib_, I hear.
+<--->
+_exp_ was seen in ___lib_, I think.
+<--->
+_exp_? Dunno how long %g1's been in ___lib_, I'd try there.
+
+Message:  1020
+<ce> "Fair day, %ra. How can I assist you?
+<ce> 
+<ce> "Yes, I believe I can help you. The payment will
+<ce> be 400 gold pieces, and I can tell you where this
+<ce> came from and what its purpose is. However, perhaps you'd
+<ce> give me a chance? I'd be more than happy to buy it from you
+<ce> for =bribe_ gold pieces. It's worth more than what you'll
+<ce> get from it, I'm sure, but one of my expertise could
+<ce> stand to gain more still. What do you say?"
+<ce> 
+<ce> Do you sell the object (yes) or pay for %g3 help (no)?
+
+Message:  1021
+<ce> "A good deal for us all, I think. It'd take years of my expertise
+<ce> to fully develop this thing's potential. Take your money.
+<ce> Farewell, and safe travels."
+
+Message:  1022
+<ce> You... what? You idiot! That was guild property! You had
+<ce> no right to sell it! Stupid! Moron! I need to find someone
+<ce> to contact _exp_, right now. Maybe we can get it back.
+<ce> 
+<ce> How could you be so thoughtless?!
+
+Message:  1030
+<ce> "As you wish. Let me read this for a minute.
+<ce> 
+<ce> "Its locational signature points to... Let me see
+<ce> your map. ___farmhome_, here in %crn.
+<ce> This _tri_ has some attraction power to it, so if you
+<ce> activate it on the property, it should lead you
+<ce> to the thing you're looking for. I hope it's
+<ce> worth it. Safe travels."
+
+Message:  1031
+<ce> The _tri_ has started to buzz. It must be
+<ce> reacting to something nearby.
+
+Message:  1032
+<ce> The _tri_ leads you only a few steps away before
+<ce> it seems to pull itself downward. A shallow
+<ce> mound beneath your feet yields easily,
+<ce> and you find a wooden chest in the ground.
+<ce> No one stops you from taking it.
+<ce> It looks too frail for casual probing, so
+<ce> you decide not to open it yourself.
+
+Message:  1033
+<ce> "Ahem. You don't have 400 gold pieces, do you?"
+
+QBN:
+Item _tri_ trinket
+Item _bribe_ gold range 2201 to 2699
+Item _reward_ gold range 651 to 899
+Item _chest_ item class 1 subclass 10
+
+Person _qgiver_ group Questor
+Person _exp_ group Librarian anyInfo 1013
+
+Place _lib_ remote library
+Place _farmhome_ remote poorhome
+
+Clock _timer_ 60.00:00
+
+--	Quest start-up:
+	start timer _timer_
+	log 1010 step 0
+    place npc _exp_ at _lib_
+    pc at _farmhome_ set _inside_
+    get item _tri_
+
+_timer_ task:
+    say 1003
+	end quest 
+
+_decision_ task:
+    clicked npc _exp_
+    prompt 1020 yes _sell_ no _paymoney_
+
+_sell_ task:
+    say 1021
+    get item _bribe_
+    log 1012 step 1
+    change repute with _qgiver_ by -3
+
+_paymoney_ task:
+    pay 400 money do _reveal_ otherwise do _nomoney_
+    clear _paymoney_
+
+_nomoney_ task:
+    say 1033
+    clear _decision_
+
+_retry_ task:
+    when _decision_ and _nomoney_
+    pay 400 money do _reveal_ otherwise do _nomoney_
+
+_reveal_ task:
+    say 1030
+    reveal _farmhome_
+    log 1011 step 1
+
+_inside_ task:
+    say 1031
+    _tri_ used do _dig_
+
+_dig_ task:
+    say 1032
+    get item _chest_
+
+_delivery_ task:
+    toting _chest_ and _qgiver_ clicked
+    take _tri_ from pc
+    give pc _reward_
+    end quest
+
+_qgclicked_ task:
+  clicked npc _qgiver_
+
+_clearclick_ task:
+  when _qgclicked_ and not _delivery_ and not _sell_
+  clear _qgclicked_ _clearclick_
+
+_failure_ task:
+    when _qgclicked_ and _sell_
+    say 1022
+    end quest

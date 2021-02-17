@@ -26,5 +26,6 @@ JHAR013, GGroup0, M, 3, 0, get forbearance from an angry noble
 JHAR014, GGroup0, M, 2, 0, demonstrate Orcish skill in a dungeon
 JHAR015, GGroup0, M, 90, 1, deliver the Staff of Magnus
 JHAR016, GGroup0, M, 30, 1, find a Dwemer artifact
-JHAR017, GGroup0, M, 2, 0, take back stolen papers from the Mages Guild
+JHAR017, GGroup0, M, 10, 0, take back stolen papers from the Mages Guild
 JHAR018, GGroup0, M, 25, 1, defame the Mages Guild by spoiling a summoning conspiracy
+JHAR019, GGroup0, M, 10, 1, pay for an expert's help to uncover an artifact
