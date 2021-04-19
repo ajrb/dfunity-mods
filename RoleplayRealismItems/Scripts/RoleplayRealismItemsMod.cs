@@ -75,7 +75,6 @@ namespace RoleplayRealism
                 foreach (int mobDataId in MobLootKeys.Keys)
                 {
                     // Log a message indicating the enemy mob being updated and update the loot key.
-                    //Debug.LogFormat("Updating enemy loot key for {0} to {1}.", EnemyBasics.Enemies[mobDataId].Name, MobLootKeys[mobDataId]);
                     Debug.LogFormat("Updating enemy loot key for {0} to {1}.", TextManager.Instance.GetLocalizedEnemyName(mobDataId), MobLootKeys[mobDataId]);
                     EnemyBasics.Enemies[mobDataId].LootTableKey = (string) MobLootKeys[mobDataId];
                 }
@@ -91,7 +90,7 @@ namespace RoleplayRealism
 
             if (conditionBasedPrices)
             {
-                FormulaHelper.RegisterOverride(mod, "ModifyFoundLootItems", (Func<DaggerfallUnityItem[], int>)RandomConditionFoundLootItems);
+                FormulaHelper.RegisterOverride(mod, "ModifyFoundLootItems", (Func<DaggerfallUnityItem[], DaggerfallUnityItem[]>)RandomConditionFoundLootItems);
                 FormulaHelper.RegisterOverride(mod, "CalculateCost", (Func<int, int, int, int>)CalculateConditionCost);
                 FormulaHelper.RegisterOverride(mod, "CalculateItemRepairCost", (Func<int, int, int, int, IGuild, int>)CalculateItemRepairCost);
             }
@@ -169,9 +168,9 @@ namespace RoleplayRealism
             return true;
         }
 
-        public static int RandomConditionFoundLootItems(DaggerfallUnityItem[] lootItems)
+        public static DaggerfallUnityItem[] RandomConditionFoundLootItems(DaggerfallUnityItem[] lootItems)
         {
-            int changes = 0;
+            List<DaggerfallUnityItem> lootItemList = new List<DaggerfallUnityItem>();
             for (int i = 0; i < lootItems.Length; i++)
             {
                 DaggerfallUnityItem item = lootItems[i];
@@ -180,10 +179,9 @@ namespace RoleplayRealism
                     // Apply a random condition between 20% and 70%.
                     float conditionMod = UnityEngine.Random.Range(0.2f, 0.75f);
                     item.currentCondition = (int)(item.maxCondition * conditionMod);
-                    changes++;
                 }
             }
-            return changes;
+            return lootItems;
         }
 
         public static int CalculateConditionCost(int baseValue, int shopQuality, int conditionPercentage = -1)
