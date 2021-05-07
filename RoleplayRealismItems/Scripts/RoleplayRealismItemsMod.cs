@@ -90,7 +90,9 @@ namespace RoleplayRealism
 
             if (conditionBasedPrices)
             {
-                FormulaHelper.RegisterOverride(mod, "ModifyFoundLootItems", (Func<DaggerfallUnityItem[], DaggerfallUnityItem[]>)RandomConditionFoundLootItems);
+                EnemyEntity.OnLootSpawned += RandomConditionEnemyItems;     // Enemy random loot (not allocated equipment)
+                LootTables.OnLootSpawned += RandomConditionLootItems;       // Container random loot
+
                 FormulaHelper.RegisterOverride(mod, "CalculateCost", (Func<int, int, int, int>)CalculateConditionCost);
                 FormulaHelper.RegisterOverride(mod, "CalculateItemRepairCost", (Func<int, int, int, int, IGuild, int>)CalculateItemRepairCost);
             }
@@ -168,12 +170,22 @@ namespace RoleplayRealism
             return true;
         }
 
-        public static DaggerfallUnityItem[] RandomConditionFoundLootItems(DaggerfallUnityItem[] lootItems)
+        private static void RandomConditionEnemyItems(object sender, EnemyLootSpawnedEventArgs lootArgs)
         {
-            List<DaggerfallUnityItem> lootItemList = new List<DaggerfallUnityItem>();
-            for (int i = 0; i < lootItems.Length; i++)
+            RandomConditionFoundLootItems(lootArgs.Items);
+        }
+
+        private static void RandomConditionLootItems(object sender, TabledLootSpawnedEventArgs lootArgs)
+        {
+            RandomConditionFoundLootItems(lootArgs.Items);
+        }
+
+        private static void RandomConditionFoundLootItems(ItemCollection lootItems)
+        {
+            for (int i = 0; i < lootItems.Count; i++)
             {
-                DaggerfallUnityItem item = lootItems[i];
+                DaggerfallUnityItem item = lootItems.GetItem(i);
+
                 if ((item.ItemGroup == ItemGroups.Armor || item.ItemGroup == ItemGroups.Weapons || item.ItemGroup == ItemGroups.Books) && !item.IsArtifact)
                 {
                     // Apply a random condition between 20% and 70%.
@@ -181,7 +193,6 @@ namespace RoleplayRealism
                     item.currentCondition = (int)(item.maxCondition * conditionMod);
                 }
             }
-            return lootItems;
         }
 
         public static int CalculateConditionCost(int baseValue, int shopQuality, int conditionPercentage = -1)
