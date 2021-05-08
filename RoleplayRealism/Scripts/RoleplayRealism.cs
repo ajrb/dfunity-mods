@@ -61,7 +61,6 @@ namespace RoleplayRealism
             ModSettings settings = mod.GetSettings();
             bool bedSleeping = settings.GetBool("Modules", "bedSleeping");
             bool archery = settings.GetBool("Modules", "advancedArchery");
-            bool riding = settings.GetBool("Modules", "enhancedRiding");
             bool encumbrance = settings.GetBool("Modules", "encumbranceEffects");
             bool bandaging = settings.GetBool("Modules", "bandaging");
             bool shipPorts = settings.GetBool("Modules", "shipPorts");
@@ -76,13 +75,16 @@ namespace RoleplayRealism
             bool classicStrDmgBonus = settings.GetBool("Modules", "classicStrengthDamageBonus");
             bool variantNpcs = settings.GetBool("Modules", "variantNpcs");
 
-            InitMod(bedSleeping, archery, riding, encumbrance, bandaging, shipPorts, expulsion, climbing, weaponSpeed, weaponMaterials, equipDamage, enemyAppearance, purifyPot, autoExtinguishLight, classicStrDmgBonus, variantNpcs);
+            bool riding = settings.GetBool("EnhancedRiding", "enhancedRiding");
+            bool training = settings.GetBool("RefinedTraining", "refinedTraining");
+
+            InitMod(bedSleeping, archery, riding, encumbrance, bandaging, shipPorts, expulsion, climbing, weaponSpeed, weaponMaterials, equipDamage, enemyAppearance, purifyPot, autoExtinguishLight, classicStrDmgBonus, variantNpcs, training);
 
             mod.IsReady = true;
         }
 
         public static void InitMod(bool bedSleeping, bool archery, bool riding, bool encumbrance, bool bandaging, bool shipPorts, bool expulsion, bool climbing, bool weaponSpeed, bool weaponMaterials, bool equipDamage, bool enemyAppearance,
-            bool purifyPot, bool autoExtinguishLight, bool classicStrDmgBonus, bool variantNpcs)
+            bool purifyPot, bool autoExtinguishLight, bool classicStrDmgBonus, bool variantNpcs, bool training)
         {
             Debug.Log("Begin mod init: RoleplayRealism");
 
@@ -170,7 +172,7 @@ namespace RoleplayRealism
 
             if (purifyPot)
             {
-                GameManager.Instance.EntityEffectBroker.RegisterEffectTemplate(new CureDiseaseRR(), true);
+                GameManager.Instance.EntityEffectBroker.RegisterEffectTemplate(new CureDiseasePotionRR(), true);
             }
 
             if (autoExtinguishLight)
@@ -186,6 +188,11 @@ namespace RoleplayRealism
             if (variantNpcs)
             {
                 PlayerEnterExit.OnTransitionInterior += OnTransitionToInterior_VariantNPCsprites;
+            }
+
+            if (training)
+            {
+                UIWindowFactory.RegisterCustomUIWindow(UIWindowType.GuildServiceTraining, typeof(GuildServiceTrainingRR));
             }
 
             // Initialise the FG master quest.

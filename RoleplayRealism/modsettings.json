@@ -22,13 +22,6 @@
                 },
                 {
                     "Value": true,
-                    "Name": "enhancedRiding",
-                    "Description": "Enhances horse riding, improving presentation and allowing galloping.",
-                    "$version": "v1",
-                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
-                },
-                {
-                    "Value": true,
                     "Name": "encumbranceEffects",
                     "Description": "Provides speed and fatigue penalties when carrying too much weight.",
                     "$version": "v1",
@@ -117,6 +110,13 @@
                     "Description": "Enable variant NPC sprites in shops & taverns",
                     "$version": "v1",
                     "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
+                },
+                {
+                    "Value": true,
+                    "Name": "placeholder",
+                    "Description": "Placeholder for future module - does nothing",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
                 }
             ],
             "$version": "v1"
@@ -126,6 +126,13 @@
             "Description": "Enhanced horse riding implementation settings.",
             "IsAdvanced": false,
             "Keys": [
+                {
+                    "Value": true,
+                    "Name": "enhancedRiding",
+                    "Description": "Enable enhanced horse riding module, improving presentation and allowing galloping.",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
+                },
                 {
                     "Value": true,
                     "Name": "RealisticMovement",
@@ -151,6 +158,29 @@
                 }
             ],
             "$version": "v1"
+        },
+        {
+            "Name": "RefinedTraining",
+            "Description": "Refines guild training service so skill is selected first.",
+            "IsAdvanced": false,
+            "Keys": [
+                {
+                    "Value": true,
+                    "Name": "refinedTraining",
+                    "Description": "Enable refined skill training service.",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
+                },
+                {
+                    "Value": true,
+                    "Name": "variableTrainingPrice",
+                    "Description": "Makes price of training based on skill level as well as player level.",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
+                }
+            ],
+            "$version": "v1"
         }
+
     ]
 }

@@ -3,7 +3,6 @@
 // License:         MIT License (http://www.opensource.org/licenses/mit-license.php)
 // Author:          Hazelnut
 
-using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Items;
 using DaggerfallWorkshop.Game.MagicAndEffects;
 using DaggerfallWorkshop.Game.MagicAndEffects.MagicEffects;
@@ -13,7 +12,7 @@ namespace RoleplayRealism
     /// <summary>
     /// Cure Disease effect with change of purification potion effect invisibility changed to cure poison
     /// </summary>
-    public class CureDiseaseRR : CureDisease
+    public class CureDiseasePotionRR : CureDisease
     {
         public override void SetProperties()
         {
