@@ -10,9 +10,6 @@ using DaggerfallWorkshop.Utility;
 using DaggerfallWorkshop.Game.Guilds;
 using DaggerfallWorkshop.Game.UserInterface;
 using DaggerfallWorkshop.Game.Utility.ModSupport;
-using DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings;
-
-// add mcp to alter amount?
 
 namespace DaggerfallWorkshop.Game.UserInterfaceWindows
 {
