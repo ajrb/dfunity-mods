@@ -20,6 +20,7 @@
     },
     {
         "index": 117,
+        "baseWeight": 2.25,
         "hitPoints": 150,
         "rarity": 2
     },
@@ -30,11 +31,13 @@
     },
     {
         "index": 121,
+        "baseWeight": 3.5,
         "hitPoints": 350,
         "rarity": 2
     },
     {
         "index": 123,
+        "baseWeight": 5.5,
         "hitPoints": 450,
         "rarity": 3
     },
