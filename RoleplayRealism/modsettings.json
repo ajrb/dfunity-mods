@@ -177,10 +177,16 @@
                     "Description": "Makes price of training based on skill level as well as player level.",
                     "$version": "v1",
                     "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
+                },
+                {
+                    "Value": false,
+                    "Name": "intensiveTraining",
+                    "Description": "Enables intensive training option for a session per day for five days, for extra cost.",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
                 }
             ],
             "$version": "v1"
         }
-
     ]
 }

@@ -603,24 +603,14 @@ Message: 1071
 <ce>Although I can't ever repay you for rescuing me, I  
 <ce>can forge custom armor for you once I'm settled down.
 <ce>down. Please do drop in and see me anytime.
-<ce>
-<ce>Hmmm, so which direction shall I go?
-<ce>What do you think, Master %pcl?
-<ce>
-<ce>Shall I head West, South, or maybe 
-<ce>to the warmer South West?
 
 Message: 1072
-<ce>So do you think I should head South to  
-<ce>find a place to settle?
-
-Message: 1073
-<ce>What do you think about me heading West to  
-<ce>find somewhere to settle?
-
-Message: 1074
-<ce>Okay then maybe I should head South-West and 
-<ce>find somewhere nice and warm to settle?
+<ce>Hmmm, which direction shall I head in then?
+<ce>
+<ce>Should I head to the West, maybe to the South, or
+<ce>perhaps even to the warmer climes of the South West?
+<ce>
+<ce>Any advice or thoughts on this matter Master %pcl?
 
 Message: 1075
 <ce>Okay then %pcf, I've decided to head south and settle in
@@ -907,16 +897,7 @@ _contactRescued_ task:
     when _clickedContact_ and _rescued_
     say 1070
     say 1071
-    start task _dirSouth_
-
-_dirSouth_ task:
-    prompt 1072 yes _headS_ no _dirWest_
-
-_dirWest_ task:
-    prompt 1073 yes _headW_ no _dirSWest_
-
-_dirSWest_ task:
-    prompt 1074 yes _headSW_ no _dirRand_
+    promptmulti 1072 4:noChoice _dirRand_ 24:south _headS_ 25:west _headW_ 28:swest _headSW_ 
 
 _dirRand_ task:
     pick one of _headS_ _headW_ _headSW_

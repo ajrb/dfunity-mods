@@ -1,0 +1,35 @@
+0   Accept
+1   Reject
+2   Cancel
+3   Yes
+4   No
+5   OK
+6   Male
+7   Female
+8   Add
+9   Delete
+10  Edit
+11  Counter
+12  12 MON
+13  36 MON
+14  Copy
+15  Guilty
+16  Not Guilty
+17  Debate
+18  Lie
+19  Anchor
+20  Teleport
+21  5 Days
+22  North
+23  East
+24  South
+25  West
+26  N East
+27  S East
+28  S West
+29  N West
+30  Attack
+31  Flee
+32  Persuade
+33  Distract
+34  Sneak

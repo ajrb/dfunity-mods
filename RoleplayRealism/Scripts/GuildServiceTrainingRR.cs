@@ -1,22 +1,30 @@
 // Project:         RoleplayRealism mod for Daggerfall Unity (http://www.dfworkshop.net)
-// Copyright:       Copyright (C) 2020 Hazelnut
+// Copyright:       Copyright (C) 2021 Hazelnut
 // License:         MIT License (http://www.opensource.org/licenses/mit-license.php)
 // Author:          Hazelnut
 
 using System.Collections.Generic;
 using DaggerfallConnect;
 using DaggerfallConnect.Arena2;
-using DaggerfallWorkshop.Utility;
+using DaggerfallWorkshop;
+using DaggerfallWorkshop.Game;
+using DaggerfallWorkshop.Game.Entity;
 using DaggerfallWorkshop.Game.Guilds;
 using DaggerfallWorkshop.Game.UserInterface;
+using DaggerfallWorkshop.Game.UserInterfaceWindows;
 using DaggerfallWorkshop.Game.Utility.ModSupport;
+using DaggerfallWorkshop.Utility;
 
-namespace DaggerfallWorkshop.Game.UserInterfaceWindows
+namespace RoleplayRealism
 {
     public class GuildServiceTrainingRR : DaggerfallGuildServiceTraining, IMacroContextProvider
     {
+        protected const DaggerfallMessageBox.MessageBoxButtons weekButton = (DaggerfallMessageBox.MessageBoxButtons)21;
+        protected static TextFile.Token newLine = TextFile.CreateFormatToken(TextFile.Formatting.JustifyCenter);
+
         DFCareer.Skills skillToTrain;
         int trainingCost = 0;
+        int intensiveCost = 0;
 
         public GuildServiceTrainingRR(IUserInterfaceManager uiManager, GuildNpcServices npcService, IGuild guild)
             : base(uiManager, npcService, guild)
@@ -50,6 +58,10 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
 
         protected void TrainingSkillPicker_OnItemPicked(int index, string skillName)
         {
+            Mod rrMod = ModManager.Instance.GetMod("RoleplayRealism");
+            bool skillPrices = rrMod.GetSettings().GetBool("RefinedTraining", "variableTrainingPrice");
+            bool intensive = rrMod.GetSettings().GetBool("RefinedTraining", "intensiveTraining");
+
             CloseWindow();
             List<DFCareer.Skills> trainingSkills = GetTrainingSkills();
             skillToTrain = trainingSkills[index];
@@ -69,23 +81,38 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
             {
                 // Calculate training price, modifying based on current skill value as well as player level if enabled
                 trainingCost = Guild.GetTrainingPrice();
-
-                Mod rrMod = ModManager.Instance.GetMod("RoleplayRealism");
-                bool skillPrices = rrMod.GetSettings().GetBool("RefinedTraining", "variableTrainingPrice");
                 if (skillPrices)
                 {
                     float skillOfMax = 1 - ((float)skillValue / trainingMax);
                     trainingCost -= (int)(trainingCost * skillOfMax / 2);
                 }
 
-                // Offer training price
+                // Offer training and cost to player
                 TextFile.Token[] tokens = DaggerfallUnity.Instance.TextProvider.GetRSCTokens(TrainingOfferId);
                 int pos = tokens[0].text.IndexOf(" ");
                 tokens[0].text = tokens[0].text.Substring(0, pos) + " " + skillToTrain + tokens[0].text.Substring(pos);
 
+                intensiveCost = (trainingCost + (playerEntity.Level * 8) + 72) * 5;
+                TextFile.Token[] trainingTokens =
+                {
+                    TextFile.CreateTextToken("Training your " + skillToTrain + " skill will cost %a for a single session."), newLine, newLine,
+                    TextFile.CreateTextToken("You can also pay extra to train intensively for five days if you wish,"), newLine,
+                    TextFile.CreateTextToken("with a training session each day, this will cost " + intensiveCost + " gold in total."), newLine, newLine,
+                    TextFile.CreateTextToken("So would you like to train your " + skillToTrain + " skill with me?"), newLine,
+                };
+
                 DaggerfallMessageBox messageBox = new DaggerfallMessageBox(uiManager, uiManager.TopWindow);
-                messageBox.SetTextTokens(tokens, this);
-                messageBox.AddButton(DaggerfallMessageBox.MessageBoxButtons.Yes);
+                if (intensive && skillValue < trainingMax - 4)
+                {
+                    messageBox.SetTextTokens(trainingTokens, this);
+                    messageBox.AddButton(DaggerfallMessageBox.MessageBoxButtons.Yes);
+                    messageBox.AddButton(weekButton);
+                }
+                else
+                {
+                    messageBox.SetTextTokens(tokens, this);
+                    messageBox.AddButton(DaggerfallMessageBox.MessageBoxButtons.Yes);
+                }
                 messageBox.AddButton(DaggerfallMessageBox.MessageBoxButtons.No);
                 messageBox.OnButtonClick += ConfirmTrainingPayment_OnButtonClick;
                 messageBox.Show();
@@ -96,19 +123,50 @@ namespace DaggerfallWorkshop.Game.UserInterfaceWindows
         protected void ConfirmTrainingPayment_OnButtonClick(DaggerfallMessageBox sender, DaggerfallMessageBox.MessageBoxButtons messageBoxButton)
         {
             CloseWindow();
-            if (messageBoxButton == DaggerfallMessageBox.MessageBoxButtons.Yes && skillToTrain != DFCareer.Skills.None)
+            if (skillToTrain != DFCareer.Skills.None)
             {
-                if (playerEntity.GetGoldAmount() >= trainingCost)
+                if (messageBoxButton == DaggerfallMessageBox.MessageBoxButtons.Yes)
                 {
-                    // Take payment
-                    playerEntity.DeductGoldAmount(trainingCost);
-                    // Train the skill
-                    TrainSkill(skillToTrain);
+                    if (playerEntity.GetGoldAmount() >= trainingCost)
+                    {
+                        // Take payment
+                        playerEntity.DeductGoldAmount(trainingCost);
+                        // Train the skill
+                        TrainSkill(skillToTrain);
+                    }
+                    else
+                        DaggerfallUI.MessageBox(DaggerfallTradeWindow.NotEnoughGoldId);
                 }
-                else
-                    DaggerfallUI.MessageBox(DaggerfallTradeWindow.NotEnoughGoldId);
+                else if (messageBoxButton == weekButton)
+                {
+                    UnityEngine.Debug.Log("Train for a week!");
+                    if (playerEntity.GetGoldAmount() >= intensiveCost)
+                    {
+                        // Take payment
+                        playerEntity.DeductGoldAmount(intensiveCost);
+                        // Train the skill
+                        TrainSkillIntense(skillToTrain);
+                    }
+                    else
+                        DaggerfallUI.MessageBox(DaggerfallTradeWindow.NotEnoughGoldId);
+                }
             }
         }
+
+        protected void TrainSkillIntense(DFCareer.Skills skillToTrain)
+        {
+            DaggerfallDateTime now = DaggerfallUnity.Instance.WorldTime.Now;
+            now.RaiseTime(DaggerfallDateTime.SecondsPerDay * 5);
+            playerEntity.TimeOfLastSkillTraining = now.ToClassicDaggerfallTime();
+            playerEntity.DecreaseFatigue(PlayerEntity.DefaultFatigueLoss * 180);
+            playerEntity.Skills.SetPermanentSkillValue(skillToTrain, (short)(playerEntity.Skills.GetPermanentSkillValue(skillToTrain) + 4));
+            int skillAdvancementMultiplier = DaggerfallSkills.GetAdvancementMultiplier(skillToTrain);
+            short tallyAmount = (short)(UnityEngine.Random.Range(10, 20 + 1) * skillAdvancementMultiplier);
+            playerEntity.TallySkill(skillToTrain, tallyAmount);
+            DaggerfallUI.MessageBox(TrainSkillId);
+        }
+
+
 
         #region Macro handling
 

@@ -1,9 +1,9 @@
 {
     "ModTitle": "RoleplayRealism",
-    "ModVersion": "1.1",
+    "ModVersion": "1.2",
     "ModAuthor": "Hazelnut",
     "ContactInfo": "forums.dfworkshop.net",
-    "DFUnity_Version": "0.11.1",
+    "DFUnity_Version": "0.11.4",
     "ModDescription": "Modular roleplay and realism gameplay modifications",
     "GUID": "d828b782-46e9-40e7-8ae6-19cde308032e",
     "Files": [
@@ -34,6 +34,22 @@
         "Assets/Game/Mods/RoleplayRealism/Textures/197_5-0.png",
         "Assets/Game/Mods/RoleplayRealism/Textures/197_6-0.png",
         "Assets/Game/Mods/RoleplayRealism/Textures/197_6-0.xml",
-        "Assets/Game/Mods/RoleplayRealism/RoleplayRealism.dfmod.json"
+        "Assets/Game/Mods/RoleplayRealism/RoleplayRealism.dfmod.json",
+        "Assets/Game/Mods/RoleplayRealism/Scripts/CureDiseasePotionRR.cs",
+        "Assets/Game/Mods/RoleplayRealism/Scripts/GuildServiceTrainingRR.cs",
+        "Assets/Game/Mods/RoleplayRealism/Textures/Buttons/BUTTONS.RCI_31-0.png",
+        "Assets/Game/Mods/RoleplayRealism/Textures/Buttons/BUTTONS.RCI_32-0.png",
+        "Assets/Game/Mods/RoleplayRealism/Textures/Buttons/BUTTONS.RCI_25-0.png",
+        "Assets/Game/Mods/RoleplayRealism/Textures/Buttons/BUTTONS.RCI_28-0.png",
+        "Assets/Game/Mods/RoleplayRealism/Textures/Buttons/BUTTONS.RCI_33-0.png",
+        "Assets/Game/Mods/RoleplayRealism/Textures/Buttons/BUTTONS.RCI_29-0.png",
+        "Assets/Game/Mods/RoleplayRealism/Textures/Buttons/BUTTONS.RCI_34-0.png",
+        "Assets/Game/Mods/RoleplayRealism/Textures/Buttons/BUTTONS.RCI_21-0.png",
+        "Assets/Game/Mods/RoleplayRealism/Textures/Buttons/BUTTONS.RCI_24-0.png",
+        "Assets/Game/Mods/RoleplayRealism/Textures/Buttons/BUTTONS.RCI_27-0.png",
+        "Assets/Game/Mods/RoleplayRealism/Textures/Buttons/BUTTONS.RCI_22-0.png",
+        "Assets/Game/Mods/RoleplayRealism/Textures/Buttons/BUTTONS.RCI_30-0.png",
+        "Assets/Game/Mods/RoleplayRealism/Textures/Buttons/BUTTONS.RCI_23-0.png",
+        "Assets/Game/Mods/RoleplayRealism/Textures/Buttons/BUTTONS.RCI_26-0.png"
     ]
 }
