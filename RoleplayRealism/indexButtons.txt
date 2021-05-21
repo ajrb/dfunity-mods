@@ -33,3 +33,5 @@
 32  Persuade
 33  Distract
 34  Sneak
+35  Rest
+36  Pack
