@@ -14,8 +14,8 @@ using DaggerfallWorkshop.Game.Utility.ModSupport;
 namespace BasicRoads
 {
     /// <summary>
-    /// Generates texture tiles for terrains and uses marching squares for tile transitions.
-    /// Paints roads onto terrain.
+    /// Paints roads onto terrain and uses default DFU jobs for generating
+    /// texture tiles for terrains.
     /// </summary>
     public class BasicRoadsTexturing : DefaultTerrainTexturing
     {
@@ -158,7 +158,7 @@ namespace BasicRoads
 
         public override JobHandle ScheduleAssignTilesJob(ITerrainSampler terrainSampler, ref MapPixelData mapData, JobHandle dependencies, bool march = true)
         {
-            // Cache tile data to minimise noise sampling during march.
+            // Cache tile data to minimise noise sampling during march (using default job)
             NativeArray<byte> tileData = new NativeArray<byte>(tileDataDim * tileDataDim, Allocator.TempJob);
             GenerateTileDataJob tileDataJob = new GenerateTileDataJob
             {
@@ -174,6 +174,32 @@ namespace BasicRoads
             };
             JobHandle tileDataHandle = tileDataJob.Schedule(tileDataDim * tileDataDim, 64, dependencies);
 
+            // Schedule painting of roads, including smoothing if enabled
+            JobHandle paintRoadsHandle = SchedulePaintRoadsJob(ref mapData, ref tileData, tileDataHandle);
+
+            // Assign tile data to terrain (using default job)
+            NativeArray<byte> lookupData = new NativeArray<byte>(lookupTable, Allocator.TempJob);
+            AssignTilesJob assignTilesJob = new AssignTilesJob
+            {
+                lookupTable = lookupData,
+                tileData = tileData,
+                tilemapData = mapData.tilemapData,
+                tdDim = tileDataDim,
+                tDim = assignTilesDim,
+                march = march,
+                locationRect = mapData.locationRect,
+            };
+            JobHandle assignTilesHandle = assignTilesJob.Schedule(assignTilesDim * assignTilesDim, 64, paintRoadsHandle);
+
+            // Add both working native arrays to disposal list.
+            mapData.nativeArrayList.Add(tileData);
+            mapData.nativeArrayList.Add(lookupData);
+
+            return assignTilesHandle;
+        }
+
+        public JobHandle SchedulePaintRoadsJob(ref MapPixelData mapData, ref NativeArray<byte> tileData, JobHandle dependencies)
+        {
             // Assign tile data to terrain, painting paths in the process
             int pathsIndex = mapData.mapPixelX + (mapData.mapPixelY * MapsFile.MaxMapPixelX);
             byte roadDataPt = pathsData[roads][pathsIndex];
@@ -188,16 +214,12 @@ namespace BasicRoads
                 trackCorners = (byte)(InRange(pathsIndex) ? (BasicRoadsPathEditor.pathsData[tracks][pathsIndex + 1] & 0x5) | (BasicRoadsPathEditor.pathsData[tracks][pathsIndex - 1] & 0x50) : 0);
             }
 
-            NativeArray<byte> lookupData = new NativeArray<byte>(lookupTable, Allocator.TempJob);
-            AssignTilesWithRoadsJob assignTilesJob = new AssignTilesWithRoadsJob
+            PaintRoadsJob paintRoadsJob = new PaintRoadsJob
             {
-                lookupTable = lookupData,
                 tileData = tileData,
                 tilemapData = mapData.tilemapData,
                 tdDim = tileDataDim,
                 tDim = assignTilesDim,
-                hDim = terrainSampler.HeightmapDimension,
-                march = march,
                 locationRect = mapData.locationRect,
                 midLo = (assignTilesDim / 2) - 1,
                 midHi = assignTilesDim / 2,
@@ -206,9 +228,9 @@ namespace BasicRoads
                 trackDataPt = trackDataPt,
                 trackCorners = trackCorners,
             };
-            JobHandle assignTilesHandle = assignTilesJob.Schedule(assignTilesDim * assignTilesDim, 64, tileDataHandle);
+            JobHandle paintRoadsHandle = paintRoadsJob.Schedule(assignTilesDim * assignTilesDim, 64, dependencies);
 
-            JobHandle returnHandle = assignTilesHandle;
+            JobHandle returnHandle = paintRoadsHandle;
             if (smoothPaths)
             {
                 SmoothRoadsTerrainJob smoothRoadTerrainJob = new SmoothRoadsTerrainJob()
@@ -219,31 +241,23 @@ namespace BasicRoads
                     tDim = assignTilesDim,
                     locationRect = mapData.locationRect,
                 };
-                JobHandle smoothRoadHandle = smoothRoadTerrainJob.Schedule(assignTilesHandle);
+                JobHandle smoothRoadHandle = smoothRoadTerrainJob.Schedule(paintRoadsHandle);
                 returnHandle = smoothRoadHandle;
             }
-
-            // Add both working native arrays to disposal list.
-            mapData.nativeArrayList.Add(tileData);
-            mapData.nativeArrayList.Add(lookupData);
 
             return returnHandle;
         }
 
-        // Very basic marching squares from default texturer, with road painting added.
-        struct AssignTilesWithRoadsJob : IJobParallelFor
+        // Road painting job.
+        struct PaintRoadsJob : IJobParallelFor
         {
             [ReadOnly]
             public NativeArray<byte> tileData;
-            [ReadOnly]
-            public NativeArray<byte> lookupTable;
 
             public NativeArray<byte> tilemapData;
 
             public int tdDim;
             public int tDim;
-            public int hDim;
-            public bool march;
             public Rect locationRect;
             public int midLo;   // 63
             public int midHi;   // 64
@@ -265,27 +279,6 @@ namespace BasicRoads
                 if (PaintPath(x, y, index, roadTiles, roadDataPt, roadCorners) ||
                     PaintPath(x, y, index, trackTiles, trackDataPt, trackCorners))
                     return;
-
-                // Assign tile texture
-                if (march)
-                {
-                    // Get sample points
-                    int tdIdx = JobA.Idx(x, y, tdDim);
-                    int b0 = tileData[tdIdx];               // tileData[x, y]
-                    int b1 = tileData[tdIdx + 1];           // tileData[x + 1, y]
-                    int b2 = tileData[tdIdx + tdDim];       // tileData[x, y + 1]
-                    int b3 = tileData[tdIdx + tdDim + 1];   // tileData[x + 1, y + 1]
-
-                    int shape = (b0 & 1) | (b1 & 1) << 1 | (b2 & 1) << 2 | (b3 & 1) << 3;
-                    int ring = (b0 + b1 + b2 + b3) >> 2;
-                    int tileID = shape | ring << 4;
-
-                    tilemapData[index] = lookupTable[tileID];
-                }
-                else
-                {
-                    tilemapData[index] = tileData[JobA.Idx(x, y, tdDim)];
-                }
             }
 
             private bool PaintPathTile(int x, int y, int index, byte[] pathTile, bool rotate, bool flip, bool overwrite = true)
