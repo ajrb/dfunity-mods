@@ -729,7 +729,9 @@ namespace TravelOptions
                 // If location pause set to nearby and travelling to destination, check for a nearby location and stop if found
                 if (locationPause == LocPauseNear && DestinationName != null && playerGPS.HasCurrentLocation && !playerGPS.CurrentLocation.Equals(lastLocation) && playerGPS.CurrentLocation.Name != DestinationName)
                 {
+                    // Store location so it doesn't trigger again and ensure discovered
                     lastLocation = playerGPS.CurrentLocation;
+                    playerGPS.DiscoverLocation(playerGPS.CurrentLocation.RegionName, playerGPS.CurrentLocation.Name);
 
                     StopTravelWithMessage(string.Format(MsgNearLocation, LocationTypeString(), playerGPS.CurrentLocation.Name));
                     return;
