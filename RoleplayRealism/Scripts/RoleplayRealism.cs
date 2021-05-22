@@ -470,15 +470,15 @@ namespace RoleplayRealism
                 !GameManager.Instance.EntityEffectBroker.SyntheticTimeIncrease &&
                 !DaggerfallUI.Instance.FadeBehaviour.FadeInProgress)
             {
-                float encPc = playerEntity.CarriedWeight / playerEntity.MaxEncumbrance;
+                float encPc = Mathf.Min(playerEntity.CarriedWeight / playerEntity.MaxEncumbrance, 1.2f);
                 float encOver = Mathf.Max(encPc - 0.75f, 0f) * EncEffectScaleFactor;
                 if (encOver > 0)
                 {
-                    int speedEffect = Mathf.Min(playerEntity.Stats.PermanentSpeed - 2, (int)(playerEntity.Stats.PermanentSpeed * encOver));
+                    int speedEffect = Mathf.Min(playerEntity.Stats.LiveSpeed - 2, (int)(playerEntity.Stats.PermanentSpeed * encOver));
                     int fatigueEffect = Mathf.Min(playerEntity.CurrentFatigue - 100, (int)(encOver * 100));
 
 #if UNITY_EDITOR
-                    Debug.LogFormat("Encumbrance {0}, over {1} = effects: {2} speed, {3} fatigue", encPc, encOver, speedEffect, fatigueEffect);
+                    Debug.LogFormat("Encumbrance {0}, over {1} = effects: {2} speed, {3} fatigue  speed={4}", encPc, encOver, speedEffect, fatigueEffect, playerEntity.Stats.LiveSpeed);
 #endif
                     playerEntity.DecreaseFatigue(fatigueEffect, false);
 

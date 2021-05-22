@@ -19,7 +19,6 @@
         "Assets/Game/Mods/RoleplayRealism/WorldData/locationnew-RRfort01-16.json",
         "Assets/Game/Mods/RoleplayRealism/Quests/RRMSTARM0.txt",
         "Assets/Game/Mods/RoleplayRealism/Quests/RRMSTARM2.txt",
-        "Assets/Game/Mods/RoleplayRealism/Scripts/CureDiseaseRR.cs",
         "Assets/Game/Mods/RoleplayRealism/Textures/197_0-0.xml",
         "Assets/Game/Mods/RoleplayRealism/Textures/197_0-0.png",
         "Assets/Game/Mods/RoleplayRealism/Textures/197_2-0.png",
@@ -50,6 +49,8 @@
         "Assets/Game/Mods/RoleplayRealism/Textures/Buttons/BUTTONS.RCI_22-0.png",
         "Assets/Game/Mods/RoleplayRealism/Textures/Buttons/BUTTONS.RCI_30-0.png",
         "Assets/Game/Mods/RoleplayRealism/Textures/Buttons/BUTTONS.RCI_23-0.png",
-        "Assets/Game/Mods/RoleplayRealism/Textures/Buttons/BUTTONS.RCI_26-0.png"
+        "Assets/Game/Mods/RoleplayRealism/Textures/Buttons/BUTTONS.RCI_26-0.png",
+        "Assets/Game/Mods/RoleplayRealism/Textures/Buttons/BUTTONS.RCI_35-0.png",
+        "Assets/Game/Mods/RoleplayRealism/Textures/Buttons/BUTTONS.RCI_36-0.png"
     ]
 }
