@@ -44,9 +44,11 @@ namespace RoleplayRealism
             "Captain_Ulthega,       0, -1, 1021",
             "Orthus_Dharjen,        0, -1, 1022"
         };
+        static readonly int[] loanVals = { 2000, 4000, 6000, 8000, 10000, 20000, 30000, 40000, 50000 };
 
 
         static Mod mod;
+        static int loanMaxPerLevel;
 
         [Invoke(StateManager.StateTypes.Start, 0)]
         public static void Init(InitParams initParams)
@@ -77,6 +79,9 @@ namespace RoleplayRealism
 
             bool riding = settings.GetBool("EnhancedRiding", "enhancedRiding");
             bool training = settings.GetBool("RefinedTraining", "refinedTraining");
+
+            loanMaxPerLevel = loanVals[settings.GetInt("Modules", "loanAmountPerLevel")];
+            FormulaHelper.RegisterOverride(mod, "CalculateMaxBankLoan", (Func<int>)CalculateMaxBankLoan);
 
             InitMod(bedSleeping, archery, riding, encumbrance, bandaging, shipPorts, expulsion, climbing, weaponSpeed, weaponMaterials, equipDamage, enemyAppearance, purifyPot, autoExtinguishLight, classicStrDmgBonus, variantNpcs, training);
 
@@ -234,6 +239,11 @@ namespace RoleplayRealism
                     return 131598;
             }
             return 0;
+        }
+
+        public static int CalculateMaxBankLoan()
+        {
+            return GameManager.Instance.PlayerEntity.Level * loanMaxPerLevel;
         }
 
         public static int DamageModifier_classicDisplay(int strength)

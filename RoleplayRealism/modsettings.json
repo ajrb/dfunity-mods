@@ -112,11 +112,22 @@
                     "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
                 },
                 {
-                    "Value": true,
-                    "Name": "placeholder",
-                    "Description": "Placeholder for future module - does nothing",
+                    "Options": [
+                        "2000",
+                        "4000",
+                        "6000",
+                        "8000",
+                        "10000",
+                        "20000",
+                        "30000",
+                        "40000",
+                        "50000"
+                    ],
+                    "Value": 4,
+                    "Name": "loanAmountPerLevel",
+                    "Description": "Sets the maximum amount per level that can be borrowed from banks",
                     "$version": "v1",
-                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.MultipleChoiceKey"
                 }
             ],
             "$version": "v1"
