@@ -167,7 +167,7 @@
                     "Max": 100,
                     "Value": 40,
                     "Name": "AccelerationLimit",
-                    "Description": "The maximum limit allowed for time acceleration, road following is limited half this amount",
+                    "Description": "The maximum limit allowed for time acceleration, road following is limited to half this amount",
                     "$version": "v1",
                     "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.SliderIntKey"
                 }

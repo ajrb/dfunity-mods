@@ -35,6 +35,8 @@ namespace TravelOptions
 
         public const string ROADS_MODNAME = "BasicRoads";
 
+        public const int MaxCircumnavigationAccel = 15;
+
         protected const string MsgArrived = "You have arrived at your destination.";
         protected const string MsgEnemies = "Enemies are seeking to prevent your travel...";
         protected const string MsgAvoidFail = "You failed to avoid an encounter!";
@@ -301,9 +303,12 @@ namespace TravelOptions
             }
         }
 
-        private void InitTravelUI()
+        private void InitTravelUI(bool circumnavSpeedLimiter = false)
         {
-            SetTimeScale(travelControlUI.TimeAcceleration);
+            if (circumnavSpeedLimiter && travelControlUI.TimeAcceleration > MaxCircumnavigationAccel)
+                SetTimeScale(MaxCircumnavigationAccel);
+            else
+                SetTimeScale(travelControlUI.TimeAcceleration);
             DisableWeatherAndSound();
             diseaseCount = GameManager.Instance.PlayerEffectManager.DiseaseCount;
             if (!travelControlUI.isShowing)
@@ -525,7 +530,7 @@ namespace TravelOptions
             playerAutopilot = new PlayerAutoPilot(currMapPixel, targetRect, GetTravelSpeedMultiplier());
             playerAutopilot.OnArrival += () => { CircumnavigateLocation(); };
 
-            InitTravelUI();
+            InitTravelUI(true);
         }
 
         void SetupLocBorderCornerRects()
