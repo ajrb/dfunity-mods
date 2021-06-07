@@ -32,6 +32,8 @@ namespace BasicRoads
         public const string RoadDataFilename = "roadData.txt";
         public const string TrackDataFilename = "trackData.txt";
 
+        public const bool allowDeletions = true;    // Allows edits of zero to be loaded over existing data if true.
+
         Color32 roadColor = new Color32(60, 60, 60, 255);
         Color32 trackColor = new Color32(160, 118, 74, 255);
 
@@ -558,7 +560,7 @@ namespace BasicRoads
                             {
                                 int index = (l * MapsFile.MaxMapPixelX) + i;
                                 byte b = Convert.ToByte(line.Substring(i * 2, 2), 16);
-                                if (b != 0)
+                                if (allowDeletions || b != 0)
                                     pathsData[pathType][index] = b;
                             }
                         }
@@ -585,7 +587,7 @@ namespace BasicRoads
                 {
                     if (i != 0 && i % MapsFile.MaxMapPixelX == 0)
                         file.WriteLine();
-                    file.Write((existingData[i] == pathsData[pathType][i]) ? "00" : pathsData[pathType][i].ToString("x2"));
+                    file.Write((!allowDeletions && existingData[i] == pathsData[pathType][i]) ? "00" : pathsData[pathType][i].ToString("x2"));
                 }
             }
         }

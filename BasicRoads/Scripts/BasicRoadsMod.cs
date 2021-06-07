@@ -8,7 +8,6 @@ using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Utility.ModSupport;
 using DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings;
-using DaggerfallConnect.Arena2;
 using Unity.Collections;
 using Unity.Jobs;
 
