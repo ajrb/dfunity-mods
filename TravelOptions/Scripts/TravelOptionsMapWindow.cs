@@ -27,8 +27,8 @@ namespace TravelOptions
         const int path_rivers = TravelOptionsMod.path_rivers;
         const int path_streams = TravelOptionsMod.path_streams;
 
-        Color32 roadColor = new Color32(60, 60, 60, 255);
-        Color32 trackColor = new Color32(160, 118, 74, 255);
+        static Color32 roadColor = new Color32(60, 60, 60, 255);
+        static Color32 trackColor = new Color32(160, 118, 74, 255);
 
         const string roadsOffName = "roadsOff.png";
         const string roadsOnName = "roadsOn.png";
