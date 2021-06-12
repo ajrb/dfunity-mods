@@ -117,6 +117,15 @@ namespace TravelOptions
         Rect locBorderSWRect = Rect.zero;
         Rect locBorderNWRect = Rect.zero;
 
+        const int junctionMapWidth = 20;
+        const int junctionMapHeight = 20;
+        const int junctionMapWidthD2 = junctionMapWidth / 2;
+        const int junctionMapHeightD2 = junctionMapHeight / 2;
+        Rect junctionMapPanelRect = new Rect(107.5f, 47.5f, 100, 100);
+        Panel junctionMapPanel;
+        Texture2D junctionMapTexture;
+        Color32[] junctionMapPixelBuffer = new Color32[junctionMapWidth * junctionMapHeight * 25];
+
         bool enableWeather;
         bool enableSounds;
         bool enableRealGrass;
@@ -201,6 +210,16 @@ namespace TravelOptions
             mod.IsReady = true;
 
             Debug.Log("Finished mod init: TravelOptions");
+        }
+
+        void Start()
+        {
+            DaggerfallHUD hud = DaggerfallUI.Instance.DaggerfallHUD;
+            junctionMapPanel = DaggerfallUI.AddPanel(junctionMapPanelRect, hud.NativePanel);
+            junctionMapPanel.Enabled = false;
+            //junctionMapPanel.BackgroundColor = Color.cyan;
+            junctionMapTexture = new Texture2D(junctionMapWidth * 5, junctionMapHeight * 5, TextureFormat.ARGB32, false);
+            junctionMapTexture.filterMode = FilterMode.Point;
         }
 
         private void SetTimeScale(int timeScale)
@@ -480,7 +499,32 @@ namespace TravelOptions
                     return;
                 }
                 else
+                {
                     DaggerfallUI.AddHUDText("You've arrived at a junction.");
+
+                    if (true)
+                    {
+                        Debug.Log("Displaying junction map on HUD.");
+                        /*
+                        Array.Clear(junctionMapPixelBuffer, 0, junctionMapPixelBuffer.Length);
+                        for (int i = 0; i < junctionMapWidth * 5; i++)
+                            junctionMapPixelBuffer[(i * junctionMapWidth * 5) + i] = TravelOptionsMapWindow.roadColor;
+                            */
+                        TravelOptionsMapWindow travelMapWindow = (TravelOptionsMapWindow) DaggerfallUI.Instance.DfTravelMapWindow;
+                        if (!travelMapWindow.IsSetup)
+                            travelMapWindow.Update();
+                        int originX = currMapPixel.X - junctionMapWidthD2;
+                        int originY = currMapPixel.Y - junctionMapHeightD2;
+                        travelMapWindow.DrawMapSection(originX, originY, junctionMapWidth, junctionMapHeight, ref junctionMapPixelBuffer);
+                        junctionMapPixelBuffer[(junctionMapHeightD2 * junctionMapWidth * 25) - (3 * junctionMapWidth * 5) + (junctionMapWidthD2 * 5) + 2] = Color.red;
+                        
+
+                        junctionMapTexture.SetPixels32(junctionMapPixelBuffer);
+                        junctionMapTexture.Apply();
+                        junctionMapPanel.BackgroundTexture = junctionMapTexture;
+                        junctionMapPanel.Enabled = true;
+                    }
+                }
             }
             else
             {
