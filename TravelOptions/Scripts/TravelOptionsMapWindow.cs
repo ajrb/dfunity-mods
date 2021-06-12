@@ -261,9 +261,9 @@ namespace TravelOptions
 
                     int pIdx = originX + x + ((originY + y) * MapsFile.MaxMapPixelX);
                     if (showPaths[path_tracks])
-                        DrawPath(offset5, width5, pathsData[path_tracks][pIdx], trackColor);
+                        DrawPath(offset5, width5, pathsData[path_tracks][pIdx], trackColor, ref locationDotsPixelBuffer);
                     if (showPaths[path_roads])
-                        DrawPath(offset5, width5, pathsData[path_roads][pIdx], roadColor);
+                        DrawPath(offset5, width5, pathsData[path_roads][pIdx], roadColor, ref locationDotsPixelBuffer);
                     //Debug.LogFormat("Found road at x:{0} y:{1}  index:{2}", originX + x, originY + y, rIdx);
 
                     ContentReader.MapSummary summary;
@@ -317,51 +317,51 @@ namespace TravelOptions
             return locationType == DFRegion.LocationTypes.TownCity || locationType == DFRegion.LocationTypes.TownHamlet || onlyLargeDots;
         }
 
-        private void DrawPath(int offset, int width, byte pathDataPt, Color32 pathColor)
+        private static void DrawPath(int offset, int width, byte pathDataPt, Color32 pathColor, ref Color32[] pixelBuffer)
         {
             if (pathDataPt == 0)
                 return;
 
-            locationDotsPixelBuffer[offset + (width * 2) + 2] = pathColor;
+            pixelBuffer[offset + (width * 2) + 2] = pathColor;
             if ((pathDataPt & TravelOptionsMod.S) != 0)
             {
-                locationDotsPixelBuffer[offset + 2] = pathColor;
-                locationDotsPixelBuffer[offset + width + 2] = pathColor;
+                pixelBuffer[offset + 2] = pathColor;
+                pixelBuffer[offset + width + 2] = pathColor;
             }
             if ((pathDataPt & TravelOptionsMod.SE) != 0)
             {
-                locationDotsPixelBuffer[offset + 4] = pathColor;
-                locationDotsPixelBuffer[offset + width + 3] = pathColor;
+                pixelBuffer[offset + 4] = pathColor;
+                pixelBuffer[offset + width + 3] = pathColor;
             }
             if ((pathDataPt & TravelOptionsMod.E) != 0)
             {
-                locationDotsPixelBuffer[offset + (width * 2) + 3] = pathColor;
-                locationDotsPixelBuffer[offset + (width * 2) + 4] = pathColor;
+                pixelBuffer[offset + (width * 2) + 3] = pathColor;
+                pixelBuffer[offset + (width * 2) + 4] = pathColor;
             }
             if ((pathDataPt & TravelOptionsMod.NE) != 0)
             {
-                locationDotsPixelBuffer[offset + (width * 3) + 3] = pathColor;
-                locationDotsPixelBuffer[offset + (width * 4) + 4] = pathColor;
+                pixelBuffer[offset + (width * 3) + 3] = pathColor;
+                pixelBuffer[offset + (width * 4) + 4] = pathColor;
             }
             if ((pathDataPt & TravelOptionsMod.N) != 0)
             {
-                locationDotsPixelBuffer[offset + (width * 3) + 2] = pathColor;
-                locationDotsPixelBuffer[offset + (width * 4) + 2] = pathColor;
+                pixelBuffer[offset + (width * 3) + 2] = pathColor;
+                pixelBuffer[offset + (width * 4) + 2] = pathColor;
             }
             if ((pathDataPt & TravelOptionsMod.NW) != 0)
             {
-                locationDotsPixelBuffer[offset + (width * 3) + 1] = pathColor;
-                locationDotsPixelBuffer[offset + (width * 4)] = pathColor;
+                pixelBuffer[offset + (width * 3) + 1] = pathColor;
+                pixelBuffer[offset + (width * 4)] = pathColor;
             }
             if ((pathDataPt & TravelOptionsMod.W) != 0)
             {
-                locationDotsPixelBuffer[offset + (width * 2)] = pathColor;
-                locationDotsPixelBuffer[offset + (width * 2) + 1] = pathColor;
+                pixelBuffer[offset + (width * 2)] = pathColor;
+                pixelBuffer[offset + (width * 2) + 1] = pathColor;
             }
             if ((pathDataPt & TravelOptionsMod.SW) != 0)
             {
-                locationDotsPixelBuffer[offset] = pathColor;
-                locationDotsPixelBuffer[offset + width + 1] = pathColor;
+                pixelBuffer[offset] = pathColor;
+                pixelBuffer[offset + width + 1] = pathColor;
             }
         }
 
