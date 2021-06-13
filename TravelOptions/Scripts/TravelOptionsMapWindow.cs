@@ -396,7 +396,7 @@ namespace TravelOptions
             }
         }
 
-        public void DrawMapSection(int originX, int originY, int width, int height, ref Color32[] pixelBuffer)
+        public void DrawMapSection(int originX, int originY, int width, int height, ref Color32[] pixelBuffer, bool circular = false)
         {
             Array.Clear(pixelBuffer, 0, pixelBuffer.Length);
 
@@ -404,6 +404,9 @@ namespace TravelOptions
             {
                 for (int x = 0; x < width; x++)
                 {
+                    if (circular && height == width && Mathf.Sqrt(Mathf.Pow(Mathf.Abs(x - (width / 2) + 0.5f), 2) + Mathf.Pow(Mathf.Abs(y - (height / 2) + 0.5f), 2)) >= (height + 1.5) / 2) 
+                        continue;
+
                     int offset = ((height - y - 1) * width) + x;
                     if (offset >= (width * height))
                         continue;

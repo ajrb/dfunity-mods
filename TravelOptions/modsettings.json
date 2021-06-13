@@ -210,6 +210,98 @@
                 }
             ],
             "$version": "v1"
+        },
+        {
+            "Name": "RoadsJunctionMap",
+            "Description": "Configure a mini-map that pops up at junctions when following roads",
+            "IsAdvanced": false,
+            "Keys": [
+                {
+                    "Value": true,
+                    "Name": "Enable",
+                    "Description": "Enables the junction mini-map",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
+                },
+                {
+                    "Min": 40,
+                    "Max": 200,
+                    "Value": 100,
+                    "Name": "ScreenSize",
+                    "Description": "The width and height the mini-map is rendered on the screen",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.SliderIntKey"
+                },
+                {
+                    "Min": 0,
+                    "Max": 280,
+                    "Value": 107,
+                    "Name": "ScreenPositionX",
+                    "Description": "The X coordinate the mini-map is rendered on the screen",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.SliderIntKey"
+                },
+                {
+                    "Min": 0,
+                    "Max": 160,
+                    "Value": 10,
+                    "Name": "ScreenPositionY",
+                    "Description": "The Y coordinate the mini-map is rendered on the screen",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.SliderIntKey"
+                },
+                {
+                    "Options": [
+                        "Point",
+                        "Bilinear",
+                        "Trilinear"
+                    ],
+                    "Value": 0,
+                    "Name": "FilterMode",
+                    "Description": "Pixel filtering to use when rendering the mini-map",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.MultipleChoiceKey"
+                },
+                {
+                    "Value": true,
+                    "Name": "Circular",
+                    "Description": "Draw the mini-map in a circle around the player",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
+                },
+                {
+                    "Value": {
+                        "r": 255,
+                        "g": 0,
+                        "b": 0,
+                        "a": 255
+                    },
+                    "Name": "PlayerColor",
+                    "Description": "The colour of the player position and direction indicator",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ColorKey"
+                },
+                {
+                    "Value": false,
+                    "Name": "Opaque",
+                    "Description": "Render the mini-map with an opaque background color",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
+                },
+                {
+                    "Value": {
+                        "r": 50,
+                        "g": 127,
+                        "b": 25,
+                        "a": 255
+                    },
+                    "Name": "BackgroundColor",
+                    "Description": "The opaque background color to use for the mini-map",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ColorKey"
+                }
+            ],
+            "$version": "v1"
         }
     ]
 }
