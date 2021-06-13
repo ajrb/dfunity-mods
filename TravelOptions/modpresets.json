@@ -170,8 +170,8 @@
         "Values": {
             "RoadsJunctionMap": {
                 "Enable": "True",
-                "ScreenSize": "100",
-                "ScreenPositionX": "107",
+                "ScreenSize": "75",
+                "ScreenPositionX": "235",
                 "ScreenPositionY": "10"
             }
         },
