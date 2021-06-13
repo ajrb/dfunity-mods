@@ -197,6 +197,7 @@ namespace TravelOptions
 
             // Open to region map if travel UI showing, else check if there's an active destination and ask to resume
             TravelOptionsMod travelModInstance = TravelOptionsMod.Instance;
+            travelModInstance.DisableJunctionMap();
             if (travelModInstance.GetTravelControlUI().isShowing)
             {
                 OpenRegionPanel(GetPlayerRegion());

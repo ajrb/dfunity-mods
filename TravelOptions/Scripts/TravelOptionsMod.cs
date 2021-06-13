@@ -287,6 +287,7 @@ namespace TravelOptions
 
         private void PlayerGPS_OnMapPixelChanged(DFPosition mapPixel)
         {
+            DisableJunctionMap();
             InitLocationRects(mapPixel);
         }
 
@@ -349,8 +350,7 @@ namespace TravelOptions
 
         private void InitTravelUI(bool circumnavSpeedLimiter = false)
         {
-            if (roadsJunctionMap)
-                junctionMapPanel.Enabled = false;
+            DisableJunctionMap();
 
             if (circumnavSpeedLimiter && travelControlUI.TimeAcceleration > MaxCircumnavigationAccel)
                 SetTimeScale(MaxCircumnavigationAccel);
@@ -744,6 +744,12 @@ namespace TravelOptions
                 default:
                     return 0;
             }
+        }
+
+        internal void DisableJunctionMap()
+        {
+            if (roadsJunctionMap)
+                junctionMapPanel.Enabled = false;
         }
 
         #endregion
