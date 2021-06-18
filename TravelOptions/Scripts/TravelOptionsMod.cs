@@ -748,7 +748,7 @@ namespace TravelOptions
 
         internal void DisableJunctionMap()
         {
-            if (roadsJunctionMap)
+            if (roadsJunctionMap && junctionMapPanel != null)
                 junctionMapPanel.Enabled = false;
         }
 
@@ -786,20 +786,26 @@ namespace TravelOptions
 
             if (roadsJunctionMap && junctionMapPanel.Enabled)
             {
-                // Check if player has moved off the junction
-                PlayerGPS playerGPS = GameManager.Instance.PlayerGPS;
-                DFPosition currMapPixel = playerGPS.CurrentMapPixel;
-                byte pathsDataPt = GetPathsDataPoint(currMapPixel);
-                byte onPath = IsPlayerOnPath(playerGPS, pathsDataPt);
-                if (onPath == 0)
+                // Disable junction map if enemies are near or player moved off path
+                if (GameManager.Instance.AreEnemiesNearby())
                     junctionMapPanel.Enabled = false;
                 else
-                {   // Update junction map if needed
-                    byte playerDirection = GetDirection(GetNormalisedPlayerYaw());
-                    if (lastPlayerFacing != playerDirection)
-                    {
-                        DrawJunctionMap(currMapPixel, playerDirection);
-                        lastPlayerFacing = playerDirection;
+                {
+                    // Has player has moved off the junction
+                    PlayerGPS playerGPS = GameManager.Instance.PlayerGPS;
+                    DFPosition currMapPixel = playerGPS.CurrentMapPixel;
+                    byte pathsDataPt = GetPathsDataPoint(currMapPixel);
+                    byte onPath = IsPlayerOnPath(playerGPS, pathsDataPt);
+                    if (onPath == 0)
+                        junctionMapPanel.Enabled = false;
+                    else
+                    {   // Update junction map if needed
+                        byte playerDirection = GetDirection(GetNormalisedPlayerYaw());
+                        if (lastPlayerFacing != playerDirection)
+                        {
+                            DrawJunctionMap(currMapPixel, playerDirection);
+                            lastPlayerFacing = playerDirection;
+                        }
                     }
                 }
             }
