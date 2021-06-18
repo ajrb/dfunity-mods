@@ -136,6 +136,24 @@ namespace TravelOptions
         float ridingVolume = 0.6f;
         bool uiCloseWhenTop = false;
 
+        // Junction map variables
+        bool roadsJunctionMap = false;
+        bool junctionMapCircular = true;
+        const int junctionMapWidth = 20;
+        const int junctionMapHeight = 20;
+        const int junctionMapWidthD2 = junctionMapWidth / 2;
+        const int junctionMapHeightD2 = junctionMapHeight / 2;
+        const int junctionMapWidthX5 = junctionMapWidth * 5;
+        const int herePt = (junctionMapHeightD2 * junctionMapWidth * 25) - (3 * junctionMapWidth * 5) + (junctionMapWidthD2 * 5) + 2;
+        static readonly FilterMode[] filterModes = { FilterMode.Point, FilterMode.Bilinear, FilterMode.Trilinear };
+        static Color32 playerColor = Color.red;
+
+        Rect junctionMapPanelRect = new Rect(107.5f, 47.5f, 100, 100);
+        Panel junctionMapPanel;
+        Texture2D junctionMapTexture;
+        Color32[] junctionMapPixelBuffer = new Color32[junctionMapWidth * junctionMapHeight * 25];
+        byte lastPlayerFacing = 0;
+
         [Invoke(StateManager.StateTypes.Start, 0)]
         public static void Init(InitParams initParams)
         {
@@ -157,6 +175,7 @@ namespace TravelOptions
             if (RoadsIntegration) {
                 VariableSizeDots = settings.GetValue<bool>("RoadsIntegration", "VariableSizeDots");
                 followKeyCode = followKeys[settings.GetValue<int>("RoadsIntegration", "FollowPathsKey")];
+                roadsJunctionMap = settings.GetValue<bool>("RoadsJunctionMap", "Enable");
             }
 
             enableWeather = settings.GetValue<bool>("GeneralOptions", "AllowWeather");
@@ -203,6 +222,31 @@ namespace TravelOptions
             Debug.Log("Finished mod init: TravelOptions");
         }
 
+        void Start()
+        {
+            if (roadsJunctionMap)
+            {
+                ModSettings settings = mod.GetSettings();
+                int size = settings.GetValue<int>("RoadsJunctionMap", "ScreenSize");
+                int x = settings.GetValue<int>("RoadsJunctionMap", "ScreenPositionX");
+                int y = settings.GetValue<int>("RoadsJunctionMap", "ScreenPositionY");
+                junctionMapPanelRect = new Rect(x, y, size, size);
+
+                DaggerfallHUD hud = DaggerfallUI.Instance.DaggerfallHUD;
+                junctionMapPanel = DaggerfallUI.AddPanel(junctionMapPanelRect, hud.NativePanel);
+                junctionMapPanel.Enabled = false;
+                junctionMapTexture = new Texture2D(junctionMapWidth * 5, junctionMapHeight * 5, TextureFormat.ARGB32, false);
+
+                junctionMapTexture.filterMode = filterModes[settings.GetValue<int>("RoadsJunctionMap", "FilterMode")];
+
+                junctionMapCircular = settings.GetValue<bool>("RoadsJunctionMap", "Circular");
+                playerColor = settings.GetValue<Color32>("RoadsJunctionMap", "PlayerColor");
+
+                if (settings.GetValue<bool>("RoadsJunctionMap", "Opaque"))
+                    junctionMapPanel.BackgroundColor = settings.GetValue<Color32>("RoadsJunctionMap", "BackgroundColor");
+            }
+        }
+
         private void SetTimeScale(int timeScale)
         {
             // Must set fixed delta time to scale the fixed (physics) updates as well.
@@ -243,6 +287,7 @@ namespace TravelOptions
 
         private void PlayerGPS_OnMapPixelChanged(DFPosition mapPixel)
         {
+            DisableJunctionMap();
             InitLocationRects(mapPixel);
         }
 
@@ -305,6 +350,8 @@ namespace TravelOptions
 
         private void InitTravelUI(bool circumnavSpeedLimiter = false)
         {
+            DisableJunctionMap();
+
             if (circumnavSpeedLimiter && travelControlUI.TimeAcceleration > MaxCircumnavigationAccel)
                 SetTimeScale(MaxCircumnavigationAccel);
             else
@@ -480,7 +527,15 @@ namespace TravelOptions
                     return;
                 }
                 else
+                {
                     DaggerfallUI.AddHUDText("You've arrived at a junction.");
+                    if (true)
+                    {
+                        Debug.Log("Displaying junction map on HUD.");
+                        DrawJunctionMap(currMapPixel);
+                        junctionMapPanel.Enabled = true;
+                    }
+                }
             }
             else
             {
@@ -604,7 +659,7 @@ namespace TravelOptions
                 return SE;
             if (yaw > 225 - AngUnit && yaw < 225 + AngUnit)
                 return SW;
-            if (yaw > 295 - AngUnit && yaw < 295 + AngUnit)
+            if (yaw > 315 - AngUnit && yaw < 315 + AngUnit)
                 return NW;
             return 0;
         }
@@ -645,6 +700,58 @@ namespace TravelOptions
             }
         }
 
+        private void DrawJunctionMap(DFPosition currMapPixel, byte playerDirection = 0)
+        {
+            TravelOptionsMapWindow travelMapWindow = (TravelOptionsMapWindow)DaggerfallUI.Instance.DfTravelMapWindow;
+            if (!travelMapWindow.IsSetup)
+                travelMapWindow.Update();
+
+            int originX = currMapPixel.X - junctionMapWidthD2;
+            int originY = currMapPixel.Y - junctionMapHeightD2;
+            travelMapWindow.DrawMapSection(originX, originY, junctionMapWidth, junctionMapHeight, ref junctionMapPixelBuffer, junctionMapCircular);
+
+            junctionMapPixelBuffer[herePt] = playerColor;
+            if (playerDirection == 0)
+                playerDirection = GetDirection(GetNormalisedPlayerYaw());
+            junctionMapPixelBuffer[GetDirectionIndex(playerDirection)] = playerColor;
+
+            junctionMapTexture.SetPixels32(junctionMapPixelBuffer);
+            junctionMapTexture.Apply();
+
+            junctionMapPanel.BackgroundTexture = junctionMapTexture;
+        }
+
+        int GetDirectionIndex(byte direction)
+        {
+            switch (direction)
+            {
+                case N:
+                    return herePt + junctionMapWidthX5;
+                case NE:
+                    return herePt + junctionMapWidthX5 + 1;
+                case E:
+                    return herePt + 1;
+                case SE:
+                    return herePt - junctionMapWidthX5 + 1;
+                case S:
+                    return herePt - junctionMapWidthX5;
+                case SW:
+                    return herePt - junctionMapWidthX5 - 1;
+                case W:
+                    return herePt - 1;
+                case NW:
+                    return herePt + junctionMapWidthX5 - 1;
+                default:
+                    return 0;
+            }
+        }
+
+        internal void DisableJunctionMap()
+        {
+            if (roadsJunctionMap && junctionMapPanel != null)
+                junctionMapPanel.Enabled = false;
+        }
+
         #endregion
 
         /// <summary>
@@ -675,6 +782,32 @@ namespace TravelOptions
             {
                 uiCloseWhenTop = false;
                 travelControlUI.CloseWindow();
+            }
+
+            if (roadsJunctionMap && junctionMapPanel.Enabled)
+            {
+                // Disable junction map if enemies are near or player moved off path
+                if (GameManager.Instance.AreEnemiesNearby())
+                    junctionMapPanel.Enabled = false;
+                else
+                {
+                    // Has player has moved off the junction
+                    PlayerGPS playerGPS = GameManager.Instance.PlayerGPS;
+                    DFPosition currMapPixel = playerGPS.CurrentMapPixel;
+                    byte pathsDataPt = GetPathsDataPoint(currMapPixel);
+                    byte onPath = IsPlayerOnPath(playerGPS, pathsDataPt);
+                    if (onPath == 0)
+                        junctionMapPanel.Enabled = false;
+                    else
+                    {   // Update junction map if needed
+                        byte playerDirection = GetDirection(GetNormalisedPlayerYaw());
+                        if (lastPlayerFacing != playerDirection)
+                        {
+                            DrawJunctionMap(currMapPixel, playerDirection);
+                            lastPlayerFacing = playerDirection;
+                        }
+                    }
+                }
             }
 
             if (playerAutopilot != null)

@@ -2,7 +2,7 @@
     {
         "Title": "DefaultSettings",
         "Author": "Hazelnut",
-        "Description": "Default settings the mod ships with - affects all settings",
+        "Description": "Default settings the mod ships with - affects all settings, except for junction map",
         "SettingsVersion": "1.0",
         "Values": {
             "GeneralOptions": {
@@ -93,6 +93,86 @@
             },
             "StopAtInnsTravel": {
                 "PlayerControlledInnsTravel": "True"
+            }
+        },
+        "$version": "v1"
+    },
+    {
+        "Title": "JunctionMap-DefaultSettings",
+        "Author": null,
+        "Description": "Default settings the mod ships with for junction map",
+        "SettingsVersion": "1.0",
+        "Values": {
+            "RoadsJunctionMap": {
+                "Enable": "True",
+                "ScreenSize": "100",
+                "ScreenPositionX": "107",
+                "ScreenPositionY": "10",
+                "FilterMode": "0",
+                "Circular": "True",
+                "PlayerColor": "FF0000FF",
+                "Opaque": "False",
+                "BackgroundColor": "327F19FF"
+            }
+        },
+        "$version": "v1"
+    },
+    {
+        "Title": "JunctionMap-Center",
+        "Author": null,
+        "Description": "Display normal size junction map in the center of the screen",
+        "SettingsVersion": "1.0",
+        "Values": {
+            "RoadsJunctionMap": {
+                "Enable": "True",
+                "ScreenSize": "100",
+                "ScreenPositionX": "107",
+                "ScreenPositionY": "46"
+            }
+        },
+        "$version": "v1"
+    },
+    {
+        "Title": "JunctionMap-TopCenter",
+        "Author": null,
+        "Description": "Display normal size junction map at the top center of the screen",
+        "SettingsVersion": "1.0",
+        "Values": {
+            "RoadsJunctionMap": {
+                "Enable": "True",
+                "ScreenSize": "100",
+                "ScreenPositionX": "107",
+                "ScreenPositionY": "10"
+            }
+        },
+        "$version": "v1"
+    },
+    {
+        "Title": "JunctionMap-MediumTopLeft",
+        "Author": null,
+        "Description": "Display smaller size junction map at the top left of the screen",
+        "SettingsVersion": "1.0",
+        "Values": {
+            "RoadsJunctionMap": {
+                "Enable": "True",
+                "ScreenSize": "75",
+                "ScreenPositionX": "10",
+                "ScreenPositionY": "10"
+            }
+        },
+        "$version": "v1"
+    },
+    {
+        "Title": "JunctionMap-MediumTopRight",
+        "Author": null,
+        "Description": "Display smaller size junction map at the top right of the screen",
+        "SettingsVersion": "1.0",
+        "Values": {
+            "RoadsJunctionMap": {
+                "Enable": "True",
+                "ScreenSize": "75",
+                "ScreenPositionX": "235",
+                "ScreenPositionY": "10"
             }
         },
         "$version": "v1"

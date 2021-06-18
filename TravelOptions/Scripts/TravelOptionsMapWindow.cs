@@ -27,8 +27,8 @@ namespace TravelOptions
         const int path_rivers = TravelOptionsMod.path_rivers;
         const int path_streams = TravelOptionsMod.path_streams;
 
-        static Color32 roadColor = new Color32(60, 60, 60, 255);
-        static Color32 trackColor = new Color32(160, 118, 74, 255);
+        public static Color32 roadColor = new Color32(60, 60, 60, 255);
+        public static Color32 trackColor = new Color32(160, 118, 74, 255);
 
         const string roadsOffName = "roadsOff.png";
         const string roadsOnName = "roadsOn.png";
@@ -197,6 +197,7 @@ namespace TravelOptions
 
             // Open to region map if travel UI showing, else check if there's an active destination and ask to resume
             TravelOptionsMod travelModInstance = TravelOptionsMod.Instance;
+            travelModInstance.DisableJunctionMap();
             if (travelModInstance.GetTravelControlUI().isShowing)
             {
                 OpenRegionPanel(GetPlayerRegion());
@@ -276,7 +277,7 @@ namespace TravelOptions
                             {
                                 if (DaggerfallUnity.Settings.TravelMapLocationsOutline)
                                     locationDotsOutlinePixelBuffer[offset] = dotOutlineColor;
-                                DrawLocation(offset5, width5, locationPixelColors[index], IsLocationLarge(summary.LocationType));
+                                DrawLocation(offset5, width5, locationPixelColors[index], IsLocationLarge(summary.LocationType), ref locationDotsPixelBuffer);
                             }
                         }
                     }
@@ -299,7 +300,7 @@ namespace TravelOptions
             regionLocationDotsOverlayPanel.BackgroundTexture = locationDotsTexture;
         }
 
-        void DrawLocation(int offset, int width, Color32 color, bool large)
+        void DrawLocation(int offset, int width, Color32 color, bool large, ref Color32[] pixelBuffer)
         {
             int st = large ? 0 : 1;
             int en = large ? 5 : 4;
@@ -307,7 +308,7 @@ namespace TravelOptions
             {
                 for (int x = st; x < en; x++)
                 {
-                    locationDotsPixelBuffer[offset + (y * width) + x] = color;
+                    pixelBuffer[offset + (y * width) + x] = color;
                 }
             }
         }
@@ -317,7 +318,7 @@ namespace TravelOptions
             return locationType == DFRegion.LocationTypes.TownCity || locationType == DFRegion.LocationTypes.TownHamlet || onlyLargeDots;
         }
 
-        private static void DrawPath(int offset, int width, byte pathDataPt, Color32 pathColor, ref Color32[] pixelBuffer)
+        public static void DrawPath(int offset, int width, byte pathDataPt, Color32 pathColor, ref Color32[] pixelBuffer)
         {
             if (pathDataPt == 0)
                 return;
@@ -394,7 +395,46 @@ namespace TravelOptions
 
                 UpdateBorder();
             }
+        }
 
+        public void DrawMapSection(int originX, int originY, int width, int height, ref Color32[] pixelBuffer, bool circular = false)
+        {
+            Array.Clear(pixelBuffer, 0, pixelBuffer.Length);
+
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    if (circular && height == width && Mathf.Sqrt(Mathf.Pow(Mathf.Abs(x - (width / 2) + 0.5f), 2) + Mathf.Pow(Mathf.Abs(y - (height / 2) + 0.5f), 2)) >= (height + 1.5) / 2) 
+                        continue;
+
+                    int offset = ((height - y - 1) * width) + x;
+                    if (offset >= (width * height))
+                        continue;
+                    int width5 = width * 5;
+                    int offset5 = ((height - y - 1) * 5 * width5) + (x * 5);
+
+                    int pIdx = originX + x + ((originY + y) * MapsFile.MaxMapPixelX);
+                    if (showPaths[path_tracks])
+                        DrawPath(offset5, width5, pathsData[path_tracks][pIdx], trackColor, ref pixelBuffer);
+                    if (showPaths[path_roads])
+                        DrawPath(offset5, width5, pathsData[path_roads][pIdx], roadColor, ref pixelBuffer);
+                    //Debug.LogFormat("Found road at x:{0} y:{1}  index:{2}", originX + x, originY + y, rIdx);
+
+                    ContentReader.MapSummary summary;
+                    if (DaggerfallUnity.Instance.ContentReader.HasLocation(originX + x, originY + y, out summary))
+                    {
+                        if (checkLocationDiscovered(summary))
+                        {
+                            int index = GetPixelColorIndex(summary.LocationType);
+                            if (index != -1)
+                            {
+                                DrawLocation(offset5, width5, locationPixelColors[index], IsLocationLarge(summary.LocationType), ref pixelBuffer);
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         protected override bool checkLocationDiscovered(ContentReader.MapSummary summary)
