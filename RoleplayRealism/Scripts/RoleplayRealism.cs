@@ -32,6 +32,8 @@ namespace RoleplayRealism
         public static float EncEffectScaleFactor = 2f;
         const int G = 85;   // Mob Array Gap from 42 .. 128 = 85
 
+        public const string VILLAGERVARIETY_MODNAME = "VillagerVariety";
+
         protected static string[] placesTable =
         {
             "Aldleigh,              0x3181, 1, -1",
@@ -49,6 +51,8 @@ namespace RoleplayRealism
 
         static Mod mod;
         static int loanMaxPerLevel;
+        static Mod villagerVarietyMod;
+        static int villagerVarietyNumVariants = 0;
 
         [Invoke(StateManager.StateTypes.Start, 0)]
         public static void Init(InitParams initParams)
@@ -95,6 +99,11 @@ namespace RoleplayRealism
 
             Mod rrItemsMod = ModManager.Instance.GetMod("RoleplayRealismItems");
             ModSettings rrItemsSettings = rrItemsMod != null ? rrItemsMod.GetSettings() : null;
+
+            villagerVarietyMod = ModManager.Instance.GetMod(VILLAGERVARIETY_MODNAME);
+            if (villagerVarietyMod != null && !villagerVarietyMod.Enabled)
+                villagerVarietyMod = null;
+
 
             if (bedSleeping)
             {
@@ -192,7 +201,8 @@ namespace RoleplayRealism
 
             if (variantNpcs)
             {
-                PlayerEnterExit.OnTransitionInterior += OnTransitionToInterior_VariantNPCsprites;
+                PlayerEnterExit.OnTransitionInterior += OnTransitionToInterior_VariantShopTavernNPCsprites;
+                PlayerEnterExit.OnTransitionInterior += OnTransitionToInterior_VariantResidenceNPCsprites;
             }
 
             if (training)
@@ -658,7 +668,202 @@ namespace RoleplayRealism
             EnemyBasics.Enemies[(int)MobileTypes.Knight - G].ChanceForAttack3 = 0;
         }
 
-        private static void OnTransitionToInterior_VariantNPCsprites(PlayerEnterExit.TransitionEventArgs args)
+        private static void OnTransitionToInterior_VariantResidenceNPCsprites(PlayerEnterExit.TransitionEventArgs args)
+        {
+            if (villagerVarietyMod != null && villagerVarietyNumVariants == 0)
+                ModManager.Instance.SendModMessage(VILLAGERVARIETY_MODNAME, "getNumVariants", null, (string message, object data) => { villagerVarietyNumVariants = (int)data; });
+
+            PlayerEnterExit playerEnterExit = GameManager.Instance.PlayerEnterExit;
+            DFLocation.BuildingData buildingData = playerEnterExit.Interior.BuildingData;
+            if (RMBLayout.IsResidence(buildingData.BuildingType))
+            {
+                Races race = GetClimateRace();
+                int gender = -1;
+                DaggerfallBillboard[] dfBillboards = playerEnterExit.Interior.GetComponentsInChildren<DaggerfallBillboard>();
+                foreach (DaggerfallBillboard billboard in dfBillboards)
+                {
+                    if (billboard.Summary.Archive == 182)
+                        gender = GetGender182(billboard.Summary.Record);
+                    else if (billboard.Summary.Archive == 184)
+                        gender = GetGender184(billboard.Summary.Record);
+
+                    if (gender != -1)
+                    {
+                        StaticNPC npc = billboard.GetComponent<StaticNPC>();
+                        if (npc && npc.Data.factionID == 0)
+                        {
+                            int faceVariant = npc.Data.nameSeed % 29;
+                            Debug.LogFormat("Replace house NPC {0}.{1} with faceVariant {2} - {3}", billboard.Summary.Archive, billboard.Summary.Record, faceVariant, faceVariant < 24);
+
+                            if (faceVariant < 24)
+                            {
+                                int outfitVariant = npc.Data.nameSeed % 4;
+                                int archive = gender == (int)Genders.Male ? raceArchivesMale[race][outfitVariant] : raceArchivesFemale[race][outfitVariant];
+                                int record = 5;
+                                int faceRecord = gender == (int)Genders.Male ? raceFaceRecordMale[race][outfitVariant] : raceFaceRecordFemale[race][outfitVariant];
+                                faceRecord += faceVariant;
+
+//                                archive = 396;
+//                                faceRecord = 158;
+
+                                bool materialSet = false;
+                                if (villagerVarietyMod != null)
+                                {
+                                    Debug.Log(villagerVarietyNumVariants);
+                                    int variant = npc.Data.nameSeed % villagerVarietyNumVariants;
+                                    string season = "";
+                                    //ModManager.Instance.SendModMessage(VILLAGERVARIETY_MODNAME, "getSeasonStr", null, (string message, object data) => { season = (string)data; });
+
+                                    Debug.LogFormat("Replace house NPC {0}.{1} with {2}.{3}, outfit: {4} faceRecord: {5} ({6}) variant: {7} season: {8}", billboard.Summary.Archive, billboard.Summary.Record, archive, record, outfitVariant, faceRecord, faceVariant, variant, season);
+
+                                    string imageName = null;
+                                    ModManager.Instance.SendModMessage(VILLAGERVARIETY_MODNAME, "getImageName",
+                                        new object[] { archive, record, 0, faceRecord, variant, season },
+                                        (string message, object data) => { imageName = (string)data; });
+
+                                    if (!string.IsNullOrEmpty(imageName) && villagerVarietyMod.HasAsset(imageName))
+                                    {
+                                        Debug.Log("Found VV image! " + imageName);
+
+                                        // Get texture and create material
+                                        Texture2D texture = villagerVarietyMod.GetAsset<Texture2D>(imageName);
+                                        Material material = MaterialReader.CreateStandardMaterial(MaterialReader.CustomBlendMode.Cutout);
+                                        material.mainTexture = texture;
+
+                                        // Apply material to mesh renderer
+                                        MeshRenderer meshRenderer = billboard.GetComponent<MeshRenderer>();
+                                        meshRenderer.sharedMaterial = material;
+
+                                        // Create mesh and setup UV map for mesh filter
+                                        Vector2 size;
+                                        Mesh mesh = DaggerfallUnity.Instance.MeshReader.GetBillboardMesh(new Rect(0, 0, 1, 1), archive, record, out size);
+                                        mesh.uv = new Vector2[] { new Vector2(0, 1), new Vector2(1, 1), new Vector2(0, 0), new Vector2(1, 0) };
+                                        MeshFilter meshFilter = billboard.GetComponent<MeshFilter>();
+                                        Destroy(meshFilter.sharedMesh);
+                                        meshFilter.sharedMesh = mesh;
+                                        materialSet = true;
+                                    }
+                                }
+                                if (!materialSet)
+                                {
+                                    billboard.SetMaterial(archive, record);
+                                    billboard.FramesPerSecond = 1;
+                                }
+                                GameObjectHelper.AlignBillboardToGround(billboard.gameObject, billboard.Summary.Size);
+
+                                Dictionary<int, FlatsFile.FlatData> flatsDict = DaggerfallUnity.Instance.ContentReader.FlatsFileReader.FlatsDict;
+                                int flatId = FlatsFile.GetFlatID(npc.Data.billboardArchiveIndex, npc.Data.billboardRecordIndex);
+                                Debug.LogFormat("Replacing face dict for {0} with {1} (for {2}.{3} / {4}.{5})", flatsDict[flatId].faceIndex, faceRecord, npc.Data.billboardArchiveIndex, npc.Data.billboardRecordIndex, billboard.Summary.Archive, billboard.Summary.Record);
+                                flatsDict[flatId] = new FlatsFile.FlatData()
+                                {
+                                    archive = billboard.Summary.Archive,
+                                    record = billboard.Summary.Record,
+                                    faceIndex = faceRecord,
+                                };
+
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        static Races GetClimateRace()
+        {
+            switch (GameManager.Instance.PlayerGPS.ClimateSettings.People)
+            {
+                case FactionFile.FactionRaces.Redguard:
+                    return Races.Redguard;
+                case FactionFile.FactionRaces.Nord:
+                    return Races.Nord;
+                default:
+                case FactionFile.FactionRaces.Breton:
+                    return Races.Breton;
+            }
+        }
+
+        static readonly Dictionary<Races, int[]> raceArchivesMale = new Dictionary<Races, int[]>()
+        {
+            { Races.Breton,   new int[] { 385, 386, 391, 394 } },
+            { Races.Nord,     new int[] { 387, 388, 389, 390 } },
+            { Races.Redguard, new int[] { 381, 382, 383, 384 } }
+        };
+        static readonly Dictionary<Races, int[]> raceArchivesFemale = new Dictionary<Races, int[]>()
+        {
+            { Races.Breton,   new int[] { 453, 454, 455, 456 } },
+            { Races.Nord,     new int[] { 392, 393, 451, 452 } },
+            { Races.Redguard, new int[] { 395, 396, 397, 398 } }
+        };
+
+        static readonly Dictionary<Races, int[]> raceFaceRecordMale = new Dictionary<Races, int[]>()
+        {
+            { Races.Breton,   new int[] { 192, 216, 240, 240 } },
+            { Races.Nord,     new int[] { 240, 264, 168, 216 } },
+            { Races.Redguard, new int[] { 336, 312, 336, 312 } }
+        };
+        static readonly Dictionary<Races, int[]> raceFaceRecordFemale = new Dictionary<Races, int[]>()
+        {
+            { Races.Breton,   new int[] { 72, 72, 24, 72 } },
+            { Races.Nord,     new int[] { 72, 0, 48, 72 } },
+            { Races.Redguard, new int[] { 144, 144, 120, 96 } }
+        };
+
+        private static int GetGender182(int record)
+        {
+            switch (record)
+            {
+                case 10:
+                case 12:
+                case 28:
+                case 41:
+                case 45:
+                    return (int)Genders.Female;
+                case 15:
+                case 17:
+                case 19:
+                case 20:
+                case 35:
+                case 39:
+                case 46:
+                    return (int)Genders.Male;
+                default:
+                    return -1;
+            }
+        }
+
+        private static int GetGender184(int record)
+        {
+            switch (record)
+            {
+                case 1:
+                case 7:
+                case 9:
+                case 10:
+                case 19:
+                case 22:
+                case 23:
+                case 26:
+                case 28:
+                case 29:
+                case 30:
+                case 33:
+                    return (int)Genders.Female;
+                case 0:
+                case 4:
+                case 16:
+                case 17:
+                case 20:
+                case 21:
+                case 24:
+                case 25:
+                    return (int)Genders.Male;
+                default:
+                    return -1;
+            }
+        }
+
+
+        private static void OnTransitionToInterior_VariantShopTavernNPCsprites(PlayerEnterExit.TransitionEventArgs args)
         {
             PlayerEnterExit playerEnterExit = GameManager.Instance.PlayerEnterExit;
             DFLocation.BuildingData buildingData = playerEnterExit.Interior.BuildingData;
