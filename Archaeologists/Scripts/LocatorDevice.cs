@@ -51,11 +51,26 @@ namespace Archaeologists
                     Vector3 screenPos = mainCamera.WorldToScreenPoint(questTargetPos);
                     if (screenPos.z > 0)
                     {
+                        Vector2 screenPos2d;
+                        if (DaggerfallUnity.Settings.RetroRenderingMode > 0)
+                        {
+                            // Need to scale viewport position to match actual screen area when retro rendering enabled
+                            float screenHeight = Screen.height;
+                            if (DaggerfallUI.Instance.DaggerfallHUD != null && DaggerfallUI.Instance.DaggerfallHUD.LargeHUD.Enabled && DaggerfallUnity.Settings.LargeHUDDocked)
+                                screenHeight = Screen.height - DaggerfallUI.Instance.DaggerfallHUD.LargeHUD.ScreenHeight;
+                            float xm = screenPos.x / mainCamera.targetTexture.width;
+                            float ym = screenPos.y / mainCamera.targetTexture.height;
+                            screenPos2d = new Vector2(Screen.width * xm, screenHeight - screenHeight * ym);
+                        }
+                        else
+                        {
+                            screenPos2d = new Vector2(screenPos.x, Screen.height - screenPos.y);
+                        }
                         // Draw texture behind other HUD elements & weapons.
                         GUI.depth = 2;
                         // Calculate position for indicator and draw it.
                         float dist = Mathf.Clamp(screenPos.z / 16, 1, 16);
-                        Rect pos = new Rect(new Vector2(screenPos.x, Screen.height - screenPos.y), indicatorSize / dist);
+                        Rect pos = new Rect(screenPos2d, indicatorSize / dist);
                         GUI.DrawTexture(pos, indicatorTexure);
                     }
                 }
