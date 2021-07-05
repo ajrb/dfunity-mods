@@ -80,6 +80,7 @@ namespace RoleplayRealism
             bool autoExtinguishLight = settings.GetBool("Modules", "autoExtinguishLight");
             bool classicStrDmgBonus = settings.GetBool("Modules", "classicStrengthDamageBonus");
             bool variantNpcs = settings.GetBool("Modules", "variantNpcs");
+            bool variantResidents = settings.GetBool("Modules", "variantResidents");
 
             bool riding = settings.GetBool("EnhancedRiding", "enhancedRiding");
             bool training = settings.GetBool("RefinedTraining", "refinedTraining");
@@ -87,13 +88,13 @@ namespace RoleplayRealism
             loanMaxPerLevel = loanVals[settings.GetInt("Modules", "loanAmountPerLevel")];
             FormulaHelper.RegisterOverride(mod, "CalculateMaxBankLoan", (Func<int>)CalculateMaxBankLoan);
 
-            InitMod(bedSleeping, archery, riding, encumbrance, bandaging, shipPorts, expulsion, climbing, weaponSpeed, weaponMaterials, equipDamage, enemyAppearance, purifyPot, autoExtinguishLight, classicStrDmgBonus, variantNpcs, training);
+            InitMod(bedSleeping, archery, riding, encumbrance, bandaging, shipPorts, expulsion, climbing, weaponSpeed, weaponMaterials, equipDamage, enemyAppearance, purifyPot, autoExtinguishLight, classicStrDmgBonus, variantNpcs, variantResidents, training);
 
             mod.IsReady = true;
         }
 
         public static void InitMod(bool bedSleeping, bool archery, bool riding, bool encumbrance, bool bandaging, bool shipPorts, bool expulsion, bool climbing, bool weaponSpeed, bool weaponMaterials, bool equipDamage, bool enemyAppearance,
-            bool purifyPot, bool autoExtinguishLight, bool classicStrDmgBonus, bool variantNpcs, bool training)
+            bool purifyPot, bool autoExtinguishLight, bool classicStrDmgBonus, bool variantNpcs, bool variantResidents, bool training)
         {
             Debug.Log("Begin mod init: RoleplayRealism");
 
@@ -202,6 +203,10 @@ namespace RoleplayRealism
             if (variantNpcs)
             {
                 PlayerEnterExit.OnTransitionInterior += OnTransitionToInterior_VariantShopTavernNPCsprites;
+            }
+
+            if (variantResidents)
+            {
                 PlayerEnterExit.OnTransitionInterior += OnTransitionToInterior_VariantResidenceNPCsprites;
             }
 
@@ -668,6 +673,108 @@ namespace RoleplayRealism
             EnemyBasics.Enemies[(int)MobileTypes.Knight - G].ChanceForAttack3 = 0;
         }
 
+
+        private static void OnTransitionToInterior_VariantShopTavernNPCsprites(PlayerEnterExit.TransitionEventArgs args)
+        {
+            PlayerEnterExit playerEnterExit = GameManager.Instance.PlayerEnterExit;
+            DFLocation.BuildingData buildingData = playerEnterExit.Interior.BuildingData;
+            if (buildingData.BuildingType == DFLocation.BuildingTypes.Tavern || RMBLayout.IsShop(buildingData.BuildingType))
+            {
+                DaggerfallBillboard[] dfBillboards = playerEnterExit.Interior.GetComponentsInChildren<DaggerfallBillboard>();
+                foreach (DaggerfallBillboard billboard in dfBillboards)
+                {
+                    int record = -1;
+                    if (billboard.Summary.Archive == 182 && billboard.Summary.Record == 0)
+                    {
+                        record = GetRecord_182_0(buildingData.Quality);     // (buildingData.Quality - 1) / 4;
+                        Debug.LogFormat("Shop quality {0} using record {1} to replace 182_0", buildingData.Quality, record);
+                    }
+                    else if (billboard.Summary.Archive == 182 && billboard.Summary.Record == 1)
+                    {
+                        if (buildingData.Quality < 12)
+                        {   // Using big test flats version
+                            record = 4;
+                        }
+                        else if (buildingData.Quality > 14)
+                        {
+                            record = 5;
+                        }
+                        Debug.LogFormat("Tavern quality {0} using record {1} to replace 182_1", buildingData.Quality, record);
+                    }
+                    else if (billboard.Summary.Archive == 182 && billboard.Summary.Record == 2)
+                    {
+                        if (buildingData.Quality > 12)
+                        {
+                            record = 6;
+                        }
+                        Debug.LogFormat("Tavern quality {0} using record {1} to replace 182_2", buildingData.Quality, record);
+                    }
+
+                    if (record > -1)
+                    {
+                        billboard.SetMaterial(197, record);
+                        GameObjectHelper.AlignBillboardToGround(billboard.gameObject, billboard.Summary.Size);
+                    }
+                }
+            }
+        }
+
+        private static int GetRecord_182_0(byte quality)
+        {
+            switch (quality)
+            {
+                case 6:
+                case 7:
+                case 8:
+                case 9:
+                    return 0;
+                case 10:
+                case 11:
+                case 12:
+                case 13:
+                    return 1;
+                case 14:
+                case 15:
+                case 16:
+                case 17:
+                    return 2;
+                case 18:
+                case 19:
+                case 20:
+                    return 3;
+                default:
+                    return -1;
+            }
+        }
+
+        private static int GetRecord_182_1(byte quality)
+        {
+            switch (quality)
+            {
+                case 6:
+                case 7:
+                case 8:
+                case 9:
+                    return 0;
+                case 10:
+                case 11:
+                case 12:
+                case 13:
+                    return 1;
+                case 14:
+                case 15:
+                case 16:
+                case 17:
+                    return 2;
+                case 18:
+                case 19:
+                case 20:
+                    return 3;
+                default:
+                    return -1;
+            }
+        }
+
         private static void OnTransitionToInterior_VariantResidenceNPCsprites(PlayerEnterExit.TransitionEventArgs args)
         {
             if (villagerVarietyMod != null && villagerVarietyNumVariants == 0)
@@ -703,13 +810,9 @@ namespace RoleplayRealism
                                 int faceRecord = gender == (int)Genders.Male ? raceFaceRecordMale[race][outfitVariant] : raceFaceRecordFemale[race][outfitVariant];
                                 faceRecord += faceVariant;
 
-//                                archive = 396;
-//                                faceRecord = 158;
-
                                 bool materialSet = false;
                                 if (villagerVarietyMod != null)
                                 {
-                                    Debug.Log(villagerVarietyNumVariants);
                                     int variant = npc.Data.nameSeed % villagerVarietyNumVariants;
                                     string season = "";
                                     //ModManager.Instance.SendModMessage(VILLAGERVARIETY_MODNAME, "getSeasonStr", null, (string message, object data) => { season = (string)data; });
@@ -723,8 +826,6 @@ namespace RoleplayRealism
 
                                     if (!string.IsNullOrEmpty(imageName) && villagerVarietyMod.HasAsset(imageName))
                                     {
-                                        Debug.Log("Found VV image! " + imageName);
-
                                         // Get texture and create material
                                         Texture2D texture = villagerVarietyMod.GetAsset<Texture2D>(imageName);
                                         Material material = MaterialReader.CreateStandardMaterial(MaterialReader.CustomBlendMode.Cutout);
@@ -857,108 +958,6 @@ namespace RoleplayRealism
                 case 24:
                 case 25:
                     return (int)Genders.Male;
-                default:
-                    return -1;
-            }
-        }
-
-
-        private static void OnTransitionToInterior_VariantShopTavernNPCsprites(PlayerEnterExit.TransitionEventArgs args)
-        {
-            PlayerEnterExit playerEnterExit = GameManager.Instance.PlayerEnterExit;
-            DFLocation.BuildingData buildingData = playerEnterExit.Interior.BuildingData;
-            if (buildingData.BuildingType == DFLocation.BuildingTypes.Tavern || RMBLayout.IsShop(buildingData.BuildingType))
-            {
-                DaggerfallBillboard[] dfBillboards = playerEnterExit.Interior.GetComponentsInChildren<DaggerfallBillboard>();
-                foreach (DaggerfallBillboard billboard in dfBillboards)
-                {
-                    int record = -1;
-                    if (billboard.Summary.Archive == 182 && billboard.Summary.Record == 0)
-                    {
-                        record = GetRecord_182_0(buildingData.Quality);     // (buildingData.Quality - 1) / 4;
-                        Debug.LogFormat("Shop quality {0} using record {1} to replace 182_0", buildingData.Quality, record);
-                    }
-                    else if (billboard.Summary.Archive == 182 && billboard.Summary.Record == 1)
-                    {
-                        if (buildingData.Quality < 12)
-                        {   // Using big test flats version
-                            record = 4;
-                        }
-                        else if (buildingData.Quality > 14)
-                        {
-                            record = 5;
-                        }
-                        Debug.LogFormat("Tavern quality {0} using record {1} to replace 182_1", buildingData.Quality, record);
-                    }
-                    else if (billboard.Summary.Archive == 182 && billboard.Summary.Record == 2)
-                    {
-                        if (buildingData.Quality > 12)
-                        {
-                            record = 6;
-                        }
-                        Debug.LogFormat("Tavern quality {0} using record {1} to replace 182_2", buildingData.Quality, record);
-                    }
-
-                    if (record > -1)
-                    {
-                        billboard.SetMaterial(197, record);
-                        GameObjectHelper.AlignBillboardToGround(billboard.gameObject, billboard.Summary.Size);
-                    }
-                }
-            }
-        }
-
-        private static int GetRecord_182_0(byte quality)
-        {
-            switch (quality)
-            {
-                case 6:
-                case 7:
-                case 8:
-                case 9:
-                    return 0;
-                case 10:
-                case 11:
-                case 12:
-                case 13:
-                    return 1;
-                case 14:
-                case 15:
-                case 16:
-                case 17:
-                    return 2;
-                case 18:
-                case 19:
-                case 20:
-                    return 3;
-                default:
-                    return -1;
-            }
-        }
-
-        private static int GetRecord_182_1(byte quality)
-        {
-            switch (quality)
-            {
-                case 6:
-                case 7:
-                case 8:
-                case 9:
-                    return 0;
-                case 10:
-                case 11:
-                case 12:
-                case 13:
-                    return 1;
-                case 14:
-                case 15:
-                case 16:
-                case 17:
-                    return 2;
-                case 18:
-                case 19:
-                case 20:
-                    return 3;
                 default:
                     return -1;
             }

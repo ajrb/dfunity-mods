@@ -112,6 +112,13 @@
                     "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
                 },
                 {
+                    "Value": true,
+                    "Name": "variantResidents",
+                    "Description": "This populates 80% of houses with the townsfolk you see walking around insteam of random adventurer flats",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
+                },
+                {
                     "Options": [
                         "2000",
                         "4000",

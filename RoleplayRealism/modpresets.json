@@ -1,0 +1,41 @@
+[
+    {
+        "Title": "DefaultSettings",
+        "Author": "Hazelnut",
+        "Description": "Default mod settings",
+        "SettingsVersion": "1.0",
+        "Values": {
+            "Modules": {
+                "bedSleeping": "True",
+                "advancedArchery": "True",
+                "encumbranceEffects": "True",
+                "bandaging": "True",
+                "shipPorts": "True",
+                "underworldExpulsion": "True",
+                "climbingRestriction": "True",
+                "weaponSpeed": "True",
+                "weaponMaterials": "True",
+                "equipDamage": "True",
+                "enemyAppearance": "True",
+                "purificationPotion": "True",
+                "autoExtinguishLight": "True",
+                "classicStrengthDamageBonus": "True",
+                "variantNpcs": "True",
+                "variantResidents": "True",
+                "loanAmountPerLevel": "4"
+            },
+            "EnhancedRiding": {
+                "enhancedRiding": "True",
+                "RealisticMovement": "True",
+                "followTerrainEnabled": "True",
+                "followTerrainSoftenFactor": "8"
+            },
+            "RefinedTraining": {
+                "refinedTraining": "True",
+                "variableTrainingPrice": "True",
+                "intensiveTraining": "False"
+            }
+        },
+        "$version": "v1"
+    }
+]
