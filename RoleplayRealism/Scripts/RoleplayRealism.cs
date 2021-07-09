@@ -905,7 +905,7 @@ namespace RoleplayRealism
         static readonly Dictionary<Races, int[]> raceFaceRecordFemale = new Dictionary<Races, int[]>()
         {
             { Races.Breton,   new int[] { 72, 72, 24, 72 } },
-            { Races.Nord,     new int[] { 72, 0, 48, 72 } },
+            { Races.Nord,     new int[] { 72, 0, 48, 0 } },
             { Races.Redguard, new int[] { 144, 144, 120, 96 } }
         };
 
