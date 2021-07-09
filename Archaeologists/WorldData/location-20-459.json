@@ -1,0 +1,211 @@
+{
+    "Loaded": true,
+    "Name": "Khajogujer",
+    "RegionName": "Sentinel",
+    "HasDungeon": false,
+    "MapTableData": {
+        "MapId": 481700723,
+        "Latitude": 12192,
+        "Longitude": 43424,
+        "LocationType": "TownVillage",
+        "DungeonType": "NoDungeon",
+        "Discovered": true,
+        "Key": 16793600
+    },
+    "Exterior": {
+        "RecordElement": {
+            "Header": {
+                "X": 11120640,
+                "Y": 3125249,
+                "IsExterior": 32768,
+                "Unknown2": 459,
+                "LocationId": 26730,
+                "IsInterior": 0,
+                "ExteriorLocationId": 0,
+                "LocationName": "Khajogujer"
+            }
+        },
+        "BuildingCount": 19,
+        "Buildings": [
+            {
+                "NameSeed": 20474,
+                "FactionId": 510,
+                "Sector": 4,
+                "LocationId": 26730,
+                "BuildingType": "ClothingStore",
+                "Quality": 9
+            },
+            {
+                "NameSeed": 3248,
+                "FactionId": 0,
+                "Sector": 11,
+                "LocationId": 26730,
+                "BuildingType": "House2",
+                "Quality": 14
+            },
+            {
+                "NameSeed": 13193,
+                "FactionId": 0,
+                "Sector": 21,
+                "LocationId": 26730,
+                "BuildingType": "House2",
+                "Quality": 5
+            },
+            {
+                "NameSeed": 9413,
+                "FactionId": 0,
+                "Sector": 27,
+                "LocationId": 26730,
+                "BuildingType": "House2",
+                "Quality": 7
+            },
+            {
+                "NameSeed": 25173,
+                "FactionId": 0,
+                "Sector": 33,
+                "LocationId": 26730,
+                "BuildingType": "House2",
+                "Quality": 8
+            },
+            {
+                "NameSeed": 874,
+                "FactionId": 0,
+                "Sector": 43,
+                "LocationId": 26730,
+                "BuildingType": "House2",
+                "Quality": 13
+            },
+            {
+                "NameSeed": 23396,
+                "FactionId": 0,
+                "Sector": 46,
+                "LocationId": 26730,
+                "BuildingType": "House2",
+                "Quality": 4
+            },
+            {
+                "NameSeed": 3984,
+                "FactionId": 510,
+                "Sector": 50,
+                "LocationId": 26730,
+                "BuildingType": "GeneralStore",
+                "Quality": 6
+            },
+            {
+                "NameSeed": 15214,
+                "FactionId": 0,
+                "Sector": 61,
+                "LocationId": 26730,
+                "BuildingType": "House2",
+                "Quality": 9
+            },
+            {
+                "NameSeed": 12992,
+                "FactionId": 0,
+                "Sector": 65,
+                "LocationId": 26730,
+                "BuildingType": "House2",
+                "Quality": 6
+            },
+            {
+                "NameSeed": 17023,
+                "FactionId": 0,
+                "Sector": 70,
+                "LocationId": 26730,
+                "BuildingType": "House2",
+                "Quality": 15
+            },
+            {
+                "NameSeed": 11406,
+                "FactionId": 0,
+                "Sector": 76,
+                "LocationId": 26730,
+                "BuildingType": "House2",
+                "Quality": 5
+            },
+            {
+                "NameSeed": 25662,
+                "FactionId": 0,
+                "Sector": 81,
+                "LocationId": 26730,
+                "BuildingType": "House2",
+                "Quality": 10
+            },
+            {
+                "NameSeed": 28110,
+                "FactionId": 0,
+                "Sector": 93,
+                "LocationId": 26730,
+                "BuildingType": "House2",
+                "Quality": 10
+            },
+            {
+                "NameSeed": 20905,
+                "FactionId": 0,
+                "Sector": 101,
+                "LocationId": 26730,
+                "BuildingType": "House2",
+                "Quality": 15
+            },
+            {
+                "NameSeed": 22167,
+                "FactionId": 0,
+                "Sector": 104,
+                "LocationId": 26730,
+                "BuildingType": "House2",
+                "Quality": 2
+            },
+            {
+                "NameSeed": 17517,
+                "FactionId": 0,
+                "Sector": 110,
+                "LocationId": 26730,
+                "BuildingType": "House2",
+                "Quality": 10
+            },
+            {
+                "NameSeed": 27319,
+                "FactionId": 0,
+                "Sector": 118,
+                "LocationId": 26730,
+                "BuildingType": "House2",
+                "Quality": 14
+            },
+            {
+                "NameSeed": 20111,
+                "FactionId": 0,
+                "Sector": 121,
+                "LocationId": 26730,
+                "BuildingType": "House2",
+                "Quality": 10
+            }
+        ],
+        "ExteriorData": {
+            "AnotherName": "Khajogujer",
+            "MapId": 404339,
+            "LocationId": 0,
+            "Width": 2,
+            "Height": 2,
+            "PortTownAndUnknown": 0,
+            "BlockNames": [
+                "CLOTGS01.RMB",
+                "GENRGS01.RMB",
+                "RESIGS04.RMB",
+                "RESIBS04.RMB"
+            ]
+        }
+    },
+    "Climate": {
+        "WorldClimate": 229,
+        "ClimateType": "Desert",
+        "NatureSet": "Nature_SubTropical",
+        "GroundArchive": 2,
+        "NatureArchive": 501,
+        "SkyBase": 24,
+        "People": "Breton",
+        "Names": "Nord"
+    },
+    "Politic": 148,
+    "RegionIndex": 20,
+    "LocationIndex": 459
+}

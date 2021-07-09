@@ -1,0 +1,187 @@
+{
+    "Loaded": true,
+    "Name": "Lajrea",
+    "RegionName": "Tigonus",
+    "HasDungeon": false,
+    "MapTableData": {
+        "MapId": 340118198,
+        "Latitude": 15392,
+        "Longitude": 73504,
+        "LocationType": "TownVillage",
+        "DungeonType": "NoDungeon",
+        "Discovered": true,
+        "Key": 16777472
+    },
+    "Exterior": {
+        "RecordElement": {
+            "Header": {
+                "X": 18821120,
+                "Y": 3944449,
+                "IsExterior": 32768,
+                "Unknown2": 324,
+                "LocationId": 25949,
+                "IsInterior": 0,
+                "ExteriorLocationId": 0,
+                "LocationName": "Lajrea"
+            }
+        },
+        "BuildingCount": 16,
+        "Buildings": [
+            {
+                "NameSeed": 18327,
+                "FactionId": 0,
+                "Sector": 4,
+                "LocationId": 25949,
+                "BuildingType": "House2",
+                "Quality": 12
+            },
+            {
+                "NameSeed": 17769,
+                "FactionId": 510,
+                "Sector": 11,
+                "LocationId": 25949,
+                "BuildingType": "HouseForSale",
+                "Quality": 11
+            },
+            {
+                "NameSeed": 30052,
+                "FactionId": 0,
+                "Sector": 19,
+                "LocationId": 25949,
+                "BuildingType": "House2",
+                "Quality": 13
+            },
+            {
+                "NameSeed": 6735,
+                "FactionId": 0,
+                "Sector": 29,
+                "LocationId": 25949,
+                "BuildingType": "House2",
+                "Quality": 9
+            },
+            {
+                "NameSeed": 26248,
+                "FactionId": 510,
+                "Sector": 43,
+                "LocationId": 25949,
+                "BuildingType": "GeneralStore",
+                "Quality": 6
+            },
+            {
+                "NameSeed": 5356,
+                "FactionId": 0,
+                "Sector": 55,
+                "LocationId": 25949,
+                "BuildingType": "House2",
+                "Quality": 12
+            },
+            {
+                "NameSeed": 3182,
+                "FactionId": 0,
+                "Sector": 63,
+                "LocationId": 25949,
+                "BuildingType": "House2",
+                "Quality": 1
+            },
+            {
+                "NameSeed": 9668,
+                "FactionId": 0,
+                "Sector": 66,
+                "LocationId": 25949,
+                "BuildingType": "House2",
+                "Quality": 3
+            },
+            {
+                "NameSeed": 9410,
+                "FactionId": 0,
+                "Sector": 72,
+                "LocationId": 25949,
+                "BuildingType": "House2",
+                "Quality": 14
+            },
+            {
+                "NameSeed": 19470,
+                "FactionId": 0,
+                "Sector": 80,
+                "LocationId": 25949,
+                "BuildingType": "House2",
+                "Quality": 7
+            },
+            {
+                "NameSeed": 12241,
+                "FactionId": 0,
+                "Sector": 83,
+                "LocationId": 25949,
+                "BuildingType": "House2",
+                "Quality": 5
+            },
+            {
+                "NameSeed": 17864,
+                "FactionId": 0,
+                "Sector": 89,
+                "LocationId": 25949,
+                "BuildingType": "House2",
+                "Quality": 1
+            },
+            {
+                "NameSeed": 5226,
+                "FactionId": 0,
+                "Sector": 94,
+                "LocationId": 25949,
+                "BuildingType": "House2",
+                "Quality": 12
+            },
+            {
+                "NameSeed": 32057,
+                "FactionId": 0,
+                "Sector": 99,
+                "LocationId": 25949,
+                "BuildingType": "House2",
+                "Quality": 12
+            },
+            {
+                "NameSeed": 32034,
+                "FactionId": 0,
+                "Sector": 103,
+                "LocationId": 25949,
+                "BuildingType": "House2",
+                "Quality": 13
+            },
+            {
+                "NameSeed": 31861,
+                "FactionId": 510,
+                "Sector": 108,
+                "LocationId": 25949,
+                "BuildingType": "Tavern",
+                "Quality": 3
+            }
+        ],
+        "ExteriorData": {
+            "AnotherName": "Lajrea",
+            "MapId": 379574,
+            "LocationId": 0,
+            "Width": 2,
+            "Height": 2,
+            "PortTownAndUnknown": 0,
+            "BlockNames": [
+                "GENRGS02.RMB",
+                "RESIGS04.RMB",
+                "RESIBS04.RMB",
+                "TVRNGS01.RMB"
+            ]
+        }
+    },
+    "Climate": {
+        "WorldClimate": 229,
+        "ClimateType": "Desert",
+        "NatureSet": "Nature_SubTropical",
+        "GroundArchive": 2,
+        "NatureArchive": 501,
+        "SkyBase": 24,
+        "People": "Breton",
+        "Names": "Nord"
+    },
+    "Politic": 176,
+    "RegionIndex": 48,
+    "LocationIndex": 324
+}

@@ -1,0 +1,83 @@
+{
+    "Loaded": true,
+    "Name": "Cudogudax",
+    "RegionName": "Abibon-Gora",
+    "HasDungeon": false,
+    "MapTableData": {
+        "MapId": 103238607,
+        "Latitude": 2720,
+        "Longitude": 20384,
+        "LocationType": "TownVillage",
+        "DungeonType": "NoDungeon",
+        "Discovered": true,
+        "Key": 16777474
+    },
+    "Exterior": {
+        "RecordElement": {
+            "Header": {
+                "X": 5222400,
+                "Y": 700417,
+                "IsExterior": 32768,
+                "Unknown2": 98,
+                "LocationId": 28888,
+                "IsInterior": 0,
+                "ExteriorLocationId": 0,
+                "LocationName": "Cudogudax"
+            }
+        },
+        "BuildingCount": 3,
+        "Buildings": [
+            {
+                "NameSeed": 25893,
+                "FactionId": 21,
+                "Sector": 4,
+                "LocationId": 28888,
+                "BuildingType": "Temple",
+                "Quality": 9
+            },
+            {
+                "NameSeed": 15843,
+                "FactionId": 41,
+                "Sector": 232,
+                "LocationId": 28888,
+                "BuildingType": "GuildHall",
+                "Quality": 8
+            },
+            {
+                "NameSeed": 31515,
+                "FactionId": 510,
+                "Sector": 0,
+                "LocationId": 28888,
+                "BuildingType": "GeneralStore",
+                "Quality": 5
+            }
+        ],
+        "ExteriorData": {
+            "AnotherName": "Cudogudax",
+            "MapId": 478159,
+            "LocationId": 0,
+            "Width": 2,
+            "Height": 2,
+            "PortTownAndUnknown": 12,
+            "BlockNames": [
+                "TEMPAAA0.RMB",
+                "RESIGS04.RMB",
+                "FIGHGL00.RMB",
+                "GENRGS00.RMB"
+            ]
+        }
+    },
+    "Climate": {
+        "WorldClimate": 229,
+        "ClimateType": "Desert",
+        "NatureSet": "Nature_SubTropical",
+        "GroundArchive": 2,
+        "NatureArchive": 501,
+        "SkyBase": 24,
+        "People": "Breton",
+        "Names": "Nord"
+    },
+    "Politic": 64,
+    "RegionIndex": 43,
+    "LocationIndex": 98
+}
