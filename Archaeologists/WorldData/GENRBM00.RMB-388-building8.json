@@ -882,6 +882,16 @@
                     "TextureRecord": 18,
                     "FactionID": 1003,
                     "Flags": 0
+                },
+                {
+                    "Position": 8,
+                    "XPos": -59,
+                    "YPos": 0,
+                    "ZPos": -353,
+                    "TextureArchive": 184,
+                    "TextureRecord": 32,
+                    "FactionID": 1002,
+                    "Flags": 64
                 }
             ],
             "BlockDoorRecords": [
