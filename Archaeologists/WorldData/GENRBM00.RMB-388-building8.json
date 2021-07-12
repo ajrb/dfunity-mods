@@ -885,13 +885,13 @@
                 },
                 {
                     "Position": 8,
-                    "XPos": -59,
+                    "XPos": -81,
                     "YPos": 0,
-                    "ZPos": -353,
+                    "ZPos": -323,
                     "TextureArchive": 184,
                     "TextureRecord": 32,
                     "FactionID": 1002,
-                    "Flags": 64
+                    "Flags": 32
                 }
             ],
             "BlockDoorRecords": [
