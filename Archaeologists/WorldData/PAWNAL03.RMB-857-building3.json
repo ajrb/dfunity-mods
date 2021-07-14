@@ -601,7 +601,6 @@
                     "TextureArchive": 208,
                     "TextureRecord": 2
                 },
-
                 {
                     "XPos": 474,
                     "YPos": -31,
@@ -609,7 +608,66 @@
                     "TextureArchive": 209,
                     "TextureRecord": 1
                 },
-
+                {
+                    "Position": 0,
+                    "XPos": 64,
+                    "YPos": -123,
+                    "ZPos": 291,
+                    "TextureArchive": 210,
+                    "TextureRecord": 24,
+                    "FactionID": 0,
+                    "Flags": 0
+                },
+                {
+                    "Position": 0,
+                    "XPos": 64,
+                    "YPos": -123,
+                    "ZPos": 83,
+                    "TextureArchive": 210,
+                    "TextureRecord": 24,
+                    "FactionID": 0,
+                    "Flags": 0
+                },
+                {
+                    "Position": 0,
+                    "XPos": 498,
+                    "YPos": -74,
+                    "ZPos": -113,
+                    "TextureArchive": 210,
+                    "TextureRecord": 27,
+                    "FactionID": 0,
+                    "Flags": 0
+                },
+                {
+                    "Position": 0,
+                    "XPos": -496,
+                    "YPos": -82,
+                    "ZPos": -496,
+                    "TextureArchive": 210,
+                    "TextureRecord": 27,
+                    "FactionID": 0,
+                    "Flags": 0
+                },
+                {
+                    "Position": 0,
+                    "XPos": -578,
+                    "YPos": -88,
+                    "ZPos": -383,
+                    "TextureArchive": 210,
+                    "TextureRecord": 22,
+                    "FactionID": 0,
+                    "Flags": 0
+                },
+                {
+                    "Position": 0,
+                    "XPos": -512,
+                    "YPos": -88,
+                    "ZPos": -192,
+                    "TextureArchive": 210,
+                    "TextureRecord": 22,
+                    "FactionID": 0,
+                    "Flags": 0
+                }
             ],
             "BlockSection3Records": [
                 {
