@@ -340,8 +340,8 @@
                     "ZRotation": 0
                 },
                 {
-                    "ModelId": "41031",
-                    "ModelIdNum": 41031,
+                    "ModelId": "41026",
+                    "ModelIdNum": 41026,
                     "ObjectType": 3,
                     "XPos": -114,
                     "YPos": 2,
@@ -397,9 +397,9 @@
                 {
                     "ModelId": "41013",
                     "ModelIdNum": 41013,
-                    "ObjectType": 3,
+                    "ObjectType": 0,
                     "XPos": -7,
-                    "YPos": -2,
+                    "YPos": -34,
                     "ZPos": 305,
                     "XRotation": 0,
                     "YRotation": 0,
@@ -508,7 +508,7 @@
                 {
                     "Position": 0,
                     "XPos": -64,
-                    "YPos": -69,
+                    "YPos": -70,
                     "ZPos": 255,
                     "TextureArchive": 210,
                     "TextureRecord": 11,
