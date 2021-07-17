@@ -292,8 +292,9 @@ namespace RoleplayRealism
             // Skill Check
             int chance = (int)(Mathf.Lerp(basePercentSuccess, 100, skill * .01f) + luckFactor);
 
+#if UNITY_EDITOR
             Debug.LogFormat("RoleplayRealism CalculateClimbingChance = {0} with basePcSuccess={1}, climbing skill={2}, luck={3}", chance, basePercentSuccess, skill, luck);
-
+#endif
             return chance;
         }
 
@@ -687,7 +688,9 @@ namespace RoleplayRealism
                     if (billboard.Summary.Archive == 182 && billboard.Summary.Record == 0)
                     {
                         record = GetRecord_182_0(buildingData.Quality);     // (buildingData.Quality - 1) / 4;
+#if UNITY_EDITOR
                         Debug.LogFormat("Shop quality {0} using record {1} to replace 182_0", buildingData.Quality, record);
+#endif
                     }
                     else if (billboard.Summary.Archive == 182 && billboard.Summary.Record == 1)
                     {
@@ -699,7 +702,9 @@ namespace RoleplayRealism
                         {
                             record = 5;
                         }
+#if UNITY_EDITOR
                         Debug.LogFormat("Tavern quality {0} using record {1} to replace 182_1", buildingData.Quality, record);
+#endif
                     }
                     else if (billboard.Summary.Archive == 182 && billboard.Summary.Record == 2)
                     {
@@ -707,7 +712,9 @@ namespace RoleplayRealism
                         {
                             record = 6;
                         }
+#if UNITY_EDITOR
                         Debug.LogFormat("Tavern quality {0} using record {1} to replace 182_2", buildingData.Quality, record);
+#endif
                     }
 
                     if (record > -1)
@@ -854,7 +861,9 @@ namespace RoleplayRealism
 
                                 Dictionary<int, FlatsFile.FlatData> flatsDict = DaggerfallUnity.Instance.ContentReader.FlatsFileReader.FlatsDict;
                                 int flatId = FlatsFile.GetFlatID(npc.Data.billboardArchiveIndex, npc.Data.billboardRecordIndex);
+#if UNITY_EDITOR
                                 Debug.LogFormat("Replacing face dict for {0} with {1} (for {2}.{3} / {4}.{5})", flatsDict[flatId].faceIndex, faceRecord, npc.Data.billboardArchiveIndex, npc.Data.billboardRecordIndex, billboard.Summary.Archive, billboard.Summary.Record);
+#endif
                                 flatsDict[flatId] = new FlatsFile.FlatData()
                                 {
                                     archive = billboard.Summary.Archive,
