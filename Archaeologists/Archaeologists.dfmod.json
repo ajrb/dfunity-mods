@@ -3,7 +3,7 @@
     "ModVersion": "2.0",
     "ModAuthor": "Hazelnut",
     "ContactInfo": "forums.dfworkshop.net",
-    "DFUnity_Version": "0.11.0",
+    "DFUnity_Version": "0.11.5",
     "ModDescription": "Archaeologists guild with quest target locator device and language skill rework",
     "GUID": "5054c2f4-7679-41d5-803e-da737caa69ef",
     "Files": [
@@ -53,7 +53,8 @@
         "Assets/Game/Mods/Archaeologists/WorldData/location-23-100.json",
         "Assets/Game/Mods/Archaeologists/WorldData/FIGHGL00.RMB.json",
         "Assets/Game/Mods/Archaeologists/WorldData/location-20-459.json",
-        "Assets/Game/Mods/Archaeologists/WorldData/location-43-98.json"
+        "Assets/Game/Mods/Archaeologists/WorldData/location-43-98.json",
+        "Assets/Game/Mods/Archaeologists/Quests/JHAR019.txt"
     ],
     "Contributes": {
         "BooksMapping": [

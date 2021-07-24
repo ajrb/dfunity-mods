@@ -384,7 +384,7 @@ namespace DaggerfallWorkshop.Game.Guilds
                 }
                 else
                 {
-                    DaggerfallMessageBox replaceMarkBox = new DaggerfallMessageBox(DaggerfallUI.UIManager, window, true);
+                    DaggerfallMessageBox replaceMarkBox = new DaggerfallMessageBox(DaggerfallUI.UIManager, window);
                     string[] message = {
                         "   You don't appear to have your Mark of Recall on you.",
                         "   If you have been careless and lost or broken it, then",
@@ -414,7 +414,7 @@ namespace DaggerfallWorkshop.Game.Guilds
                     }
                     else
                     {
-                        DaggerfallMessageBox replaceBookBox = new DaggerfallMessageBox(DaggerfallUI.UIManager, window, true);
+                        DaggerfallMessageBox replaceBookBox = new DaggerfallMessageBox(DaggerfallUI.UIManager, window);
                         string[] message = {
                             "Your Mark of Recall shows no signs of wear that I can see.",
                             "",
