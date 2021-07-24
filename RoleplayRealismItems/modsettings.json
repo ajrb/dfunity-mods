@@ -68,6 +68,13 @@
                     "Description": "Adds new chest, arm, leg and foot armor pieces to the game",
                     "$version": "v1",
                     "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
+                },
+                {
+                    "Value": true,
+                    "Name": "alchemistPotions",
+                    "Description": "Adds random potions for sale at alchemist stores, for a premium price",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
                 }
             ],
             "$version": "v1"

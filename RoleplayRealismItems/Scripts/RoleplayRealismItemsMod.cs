@@ -59,13 +59,14 @@ namespace RoleplayRealism
             bool weaponBalance = settings.GetBool("Modules", "weaponBalance");
             newWeapons = settings.GetBool("Modules", "newWeapons");
             newArmor = settings.GetBool("Modules", "newArmor");
+            bool alchemistPotions = settings.GetBool("Modules", "alchemistPotions");
 
-            InitMod(lootRebalance, bandaging, conditionBasedPrices, enemyEquipment, skillStartEquip, skillStartSpells, weaponBalance, newWeapons, newArmor);
+            InitMod(lootRebalance, bandaging, conditionBasedPrices, enemyEquipment, skillStartEquip, skillStartSpells, weaponBalance, newWeapons, newArmor, alchemistPotions);
 
             mod.IsReady = true;
         }
 
-        private static void InitMod(bool lootRebalance, bool bandaging, bool conditionBasedPrices, bool enemyEquipment, bool skillStartEquip, bool skillStartSpells, bool weaponBalance, bool newWeapons, bool newArmor)
+        private static void InitMod(bool lootRebalance, bool bandaging, bool conditionBasedPrices, bool enemyEquipment, bool skillStartEquip, bool skillStartSpells, bool weaponBalance, bool newWeapons, bool newArmor, bool alchemistPotions)
         {
             Debug.Log("Begin mod init: RoleplayRealismItems");
 
@@ -75,7 +76,7 @@ namespace RoleplayRealism
                 foreach (int mobDataId in MobLootKeys.Keys)
                 {
                     // Log a message indicating the enemy mob being updated and update the loot key.
-                    Debug.LogFormat("Updating enemy loot key for {0} to {1}.", TextManager.Instance.GetLocalizedEnemyName(mobDataId), MobLootKeys[mobDataId]);
+                    Debug.LogFormat("Updating enemy loot key for {0} to {1}.", TextManager.Instance.GetLocalizedEnemyName(EnemyBasics.Enemies[mobDataId].ID), MobLootKeys[mobDataId]);
                     EnemyBasics.Enemies[mobDataId].LootTableKey = (string) MobLootKeys[mobDataId];
                 }
                 // Replace the default loot matrix table with custom data.
@@ -145,6 +146,11 @@ namespace RoleplayRealism
                 DaggerfallUnity.Instance.ItemHelper.RegisterCustomItem(ItemRightVambrace.templateIndex, ItemGroups.Armor, typeof(ItemRightVambrace));
             }
 
+            if (alchemistPotions)
+            {
+                PlayerActivate.OnLootSpawned += AddPotions_OnLootSpawned;
+            }
+
             Debug.Log("Finished mod init: RoleplayRealismItems");
         }
 
@@ -168,6 +174,25 @@ namespace RoleplayRealism
 #endif
             }
             return true;
+        }
+
+        public static void AddPotions_OnLootSpawned(object sender, ContainerLootSpawnedEventArgs e)
+        {
+            DaggerfallInterior interior = GameManager.Instance.PlayerEnterExit.Interior;
+            if (interior != null &&
+                e.ContainerType == LootContainerTypes.ShopShelves &&
+                interior.BuildingData.BuildingType == DFLocation.BuildingTypes.Alchemist)
+            {
+                int numPotions = Mathf.Clamp(UnityEngine.Random.Range(0, interior.BuildingData.Quality), 1, 12);
+
+                while (numPotions > 0)
+                {
+                    DaggerfallUnityItem item = ItemBuilder.CreateRandomPotion();
+                    item.value *= 2;
+                    e.Loot.AddItem(item);
+                    numPotions--;
+                }
+            }
         }
 
         private static void RandomConditionEnemyItems(object sender, EnemyLootSpawnedEventArgs lootArgs)
