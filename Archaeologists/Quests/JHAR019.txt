@@ -138,6 +138,8 @@ Clock _timer_ 60.00:00
 
 _timer_ task:
     say 1003
+    make _tri_ permanent
+    make _chest_ permanent
 	end quest 
 
 _decision_ task:
