@@ -51,10 +51,10 @@
         "Assets/Game/Mods/Archaeologists/WorldData/location-40-517.json",
         "Assets/Game/Mods/Archaeologists/WorldData/location-48-324.json",
         "Assets/Game/Mods/Archaeologists/WorldData/location-23-100.json",
-        "Assets/Game/Mods/Archaeologists/WorldData/FIGHGL00.RMB.json",
         "Assets/Game/Mods/Archaeologists/WorldData/location-20-459.json",
         "Assets/Game/Mods/Archaeologists/WorldData/location-43-98.json",
-        "Assets/Game/Mods/Archaeologists/Quests/JHAR019.txt"
+        "Assets/Game/Mods/Archaeologists/Quests/JHAR019.txt",
+        "Assets/Game/Mods/Archaeologists/WorldData/ARFG00.RMB.json"
     ],
     "Contributes": {
         "BooksMapping": [
