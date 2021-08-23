@@ -1,0 +1,87 @@
+Quest: JHAR020
+DisplayName: Map Delivery
+-- Message panels
+QRC:
+
+QuestorOffer:  [1000]
+<ce>  It won't pay much, but we need someone to deliver
+<ce>  a map to one of our higher ranked members.
+<ce>  I don't anticipate any fighting on this one,
+<ce>  besides the normal peril of the road.
+<ce>  Are you interested?
+
+RefuseQuest:  [1001]
+<ce>  This would get your foot in the door, %pct.
+
+AcceptQuest:  [1002]
+<ce>  Fine enough. You'll need to deliver it to
+<ce>  =member_ who's staying in _tavern_,
+<ce>  found in ___tavern_.
+<ce>  He'll be heading out to some expedition
+<ce>  after =timer_ days have passed, so be sure
+<ce>  he has it before then. He mentioned it's
+<ce>  absolutely vital. Expect =reward_ gold
+<ce>  for your payment. Safe journey.
+
+QuestFail:   [1003]
+<ce>  You needed to deliver the map to the
+<ce>  =member_ in ___tavern_ by now.
+
+QuestComplete:  [1004]
+<ce>  Hello there. Yes, I'll take that. Thank you.
+<ce>  Are you a new member of the guild? How long
+<ce>  have you been with us? Stick with it for
+<ce>  a while. Those locator devices are absolutely
+<ce>  worth it. They've saved my hide more times
+<ce>  than I want to admit.
+<ce>  
+<ce>  Are you from around here?
+<ce>  I've been all across Tamriel, but the one place
+<ce>  I want to go before I retire is Morrowind.
+<ce>  I've heard about all kinds of tombs and ruins over
+<ce>  there. Just imagine the treasure and history
+<ce>  for a skilled archaeologist in that area.
+<ce>  Give it some thought. I'd need to save up for the trip,
+<ce>  but I have to go sooner or later. And if you
+<ce>  end up heading there, ask around for "Indie"
+<ce>  and see if we don't bump into each other.
+<ce>  Thanks, kid.
+
+QuestLogEntry:   [1010]
+%qdt:
+ __qgiver_ of ___qgiver_
+ have tasked me with delivering
+ some map to another guild
+ member in _tavern_
+ at ___tavern_. I am to look
+ for a =member_. I have
+ =timer_ days to be paid =reward_
+ gold pieces.
+
+QBN:
+Item _reward_ gold range 101 to 149
+Item _map_ map
+
+Person _qgiver_ group Questor
+Person _member_ faction The_Thieves_Guild male
+
+Place _tavern_ remote tavern
+
+Clock _timer_ 00:00 0 flag 17 range 0 2
+
+--	Quest start-up:
+	start timer _timer_
+	log 1010 step 0
+    place npc _member_ at _tavern_
+    get item _map_
+
+_timer_ task:
+    say 1003
+    make _map_ permanent
+	end quest 
+
+_decision_ task:
+    clicked npc _member_
+    give pc _reward_
+    hide npc _member_
+    end quest
