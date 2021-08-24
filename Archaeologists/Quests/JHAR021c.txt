@@ -80,7 +80,7 @@ Message:  1016
 QBN:
 Item _letter_ letter used 1012
 
-Place _res_ remote poorhome
+Place _res_ remote farmhome
 
 Foe _harpy_ is 2 Burglar
 
