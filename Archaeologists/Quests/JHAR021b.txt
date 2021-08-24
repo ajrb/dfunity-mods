@@ -1,0 +1,116 @@
+Quest: JHAR021b
+DisplayName: The Cursed Finger, Part 3
+-- Message panels
+QRC:
+
+QuestComplete:   [1004]
+<ce> The spriggans are destroyed.
+<ce> Surely Lord Spode will leave you alone now.
+
+RumorsPostFailure:   [1006]
+<ce>  Yer %pcn. Lord Spode says you're a barbarian.
+<--->
+<ce>  Wait, are you %pcn? People in Glenpoint say you have the manners of a donkey.
+<--->
+<ce>  Hey, you're %pcn! That one who's a spy for the Underking! Or was it the King of Worms?
+<--->
+<ce>  Wait, you're %pcn. You took out a bunch of loans you couldn't pay, didn't you?
+<--->
+<ce>  Hey, are you %pcn? Bertram Spode says you're a filthy liar.
+<--->
+<ce>  I hear talk of some %ra who's cheating all the merchants out of their goods.
+<--->
+<ce>  Oh, you're %pcn! Bertram Spode says you're some kind of cat burglar!
+<--->
+<ce>  I hear some %ra in ____res_ has illegimate children all over the place.
+
+
+Message:  1011
+<ce>  A page with the crest of Glenpoint gives you
+<ce> a parchment and departs.
+
+Message:  1012
+%pcn
+<ce>
+  Lord Spode has no time to write to you, and demands
+that I speak in his stead. He has encountered another
+problem. His desire was that one of his properties in
+____res_, ___res_, overcome its barren
+nature and begin to yield all kinds of useful produce.
+Sadly, the "good luck" finger, which we have begun
+to question, sprouted up three spriggans
+as an interpretation of "useful produce." We disagree
+with the finger and need someone to clean out the
+property. Lord Spode blames you for this and demands
+that you go to it. Should you fail to do so within
+=timer_ days, your reputation will be sullied.
+Best of luck.
+<ce> 
+                    _random_
+                    Scribe to Lord Bertram Spode          
+                    Glenpoint 
+
+Message:  1013
+<ce> You can easily make out the three spriggans
+<ce> stalking about the property. They groan and
+<ce> march toward you.
+
+Message:  1015
+%qdt:
+ Lord Bertram Spode has made another poor decision
+ with the "good luck" finger I delivered to
+ him on behalf of the Archaeologists.
+ He demands that I go
+ to ___res_ of ____res_ and
+ kill three spriggans which are now haunting
+ his property. I have =timer_ days to do so,
+ lest he ruin my reputation.
+
+Message:  1016
+<ce>  Lord Spode demanded that you kill the spriggans
+<ce>  on his property by now.
+
+QBN:
+Item _letter_ letter used 1012
+
+Place _res_ remote poorhome
+
+Foe _harpy_ is 3 Spriggan
+
+Person _random_ group Local_3.0 male
+
+Clock _timer_ 00:00 0 flag 17 range 0 2
+Clock _delay_ 7.00:00 9.00:00
+
+--	Quest start-up:
+    start timer _delay_
+    have _letter_ set _received_
+    _letter_ used do _log_
+
+_delay_ task:
+    give pc _letter_ notify 1011
+
+_log_ task:
+    log 1015 step 0
+
+_received_ task:
+	start timer _timer_
+    pc at _res_ set _begin_
+
+_begin_ task:
+    start task _spawn_
+
+_spawn_ task:
+    say 1013
+    create foe _harpy_ every 0 minutes 1 times with 100% success
+
+_slain_ task:
+    killed 3 _harpy_
+    give pc nothing
+    start quest JHAR021c
+    end quest
+
+_timer_ task:
+    say 1016
+    legal repute -20
+	end quest 
