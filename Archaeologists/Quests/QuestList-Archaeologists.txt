@@ -30,3 +30,4 @@ JHAR017, GGroup0, M, 10, 0, take back stolen papers from the Mages Guild
 JHAR018, GGroup0, M, 25, 1, defame the Mages Guild by spoiling a summoning conspiracy
 JHAR019, GGroup0, M, 10, 1, pay for an expert's help to uncover an artifact
 JHAR020, GGroup0, M, 0, 1, deliver a map to a known guild member
+JHAR021, GGroup0, M, 20, 1, deliver a finger to Bertram Spode
