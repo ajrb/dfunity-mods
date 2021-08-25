@@ -1,0 +1,156 @@
+Quest: JHAR022
+DisplayName: Voices of the Dead
+-- Message panels
+QRC:
+
+QuestorOffer:  [1000]
+<ce>  If you're feeling particularly brave, we have a request
+<ce>  to unearth an object in some ruins that could prove
+<ce>  a bit perilous. If you're going to accept this one,
+<ce>  make sure you're combat-ready and capable of harming
+<ce>  the supernatural.
+
+RefuseQuest:  [1001]
+<ce>     Well, we need members for clerical work too, I suppose.
+
+AcceptQuest:  [1002]
+<ce>    I'll mark ___dungeon_ on your map.
+<ce>    The _mitem_ you'll recover has caused some trouble with the dead.
+<ce>    I'd think you would be doing them a favor by removing it,
+<ce>    but perhaps rational thought is expecting too much of them.
+<ce>    Have it here by =traveltime_ days. You'll be given a training
+<ce>    session as a reward, in addition to =reward_ gold pieces.
+
+QuestFail:   [1003]
+<ce>  You needed to return to the
+<ce>  Archaeologists in ___questgiver_ by now.
+
+QuestComplete:  [1004]
+<ce>    You show _questgiver_ the dissolved remains
+<ce>  of the _mitem_, and the intact inscription.
+<ce>  After burying %g3 face in %g3 hands, %g1 pounds
+<ce>  the wall out of frustration.
+<ce>  
+<ce>  "Cursed _mitem_, very funny. What a waste of time.
+<ce>  I can't take this out on you, though.
+<ce>  You did your part. First, take your gold reward."
+
+QuestLogEntry:  [1010]
+%qdt:
+ _questgiver_ of the
+ Archaeologists has sent me to
+ ___dungeon_ to get some _mitem_
+ with a connection to the dead.
+ I must return with it to
+ ___questgiver_ in =traveltime_ days
+ for my reward of gold and training.
+
+Message:  1011
+<ce>  You reach to pick up the _mitem_
+<ce>  the guild sent you to find, and you're surprised
+<ce>  to see an inscription on it.
+<ce>  
+<ce>  "Must remain underground!"
+<ce>  
+<ce>  Warning or not, you have no choice.
+<ce>  You grab it and put it away.
+<ce>  The air turns oppressive. You're concerned
+<ce>  that the dead have only grown more agitated now.
+
+Message:  1012
+<ce>  Free of the haunted depths, you reach back and look
+<ce>  for the _mitem_. To your horror, you find it dissolving
+<ce>  into dust. You try to grab at it, but within moments
+<ce>  it is mere powder. The only thing remaining is the
+<ce>  inscription: "Must remain underground!"
+<ce>  
+<ce>  You hope the Archaeologists will still accept it.
+
+Message:  1013
+<ce>  "Next, you can have complimentary training in exchange
+<ce>  for your service. Would you like a lesson in Orcish
+<ce>  or Impish?"
+<ce>  
+<ce>  (ACCEPT: Orcish)
+<ce>  (YES: Impish)
+<ce>  (CANCEL: Skip the training)
+
+Message:  1014
+<ce>  You enjoy an in-depth training session on the
+<ce>  nature of the Orcish language by one of the
+<ce>  higher-ranking members of this location.
+
+Message:  1015
+<ce>  You enjoy an in-depth training session on the
+<ce>  nature of the Impish language by one of the
+<ce>  higher-ranking members of this location.
+
+Message:  1016
+<ce>  You forego the lesson reward.
+<ce>  
+<ce>  "Very well then. Your service is appreciated."
+
+QBN:
+Item _mitem_ trinket
+Item _reward_ gold range 501 to 799
+
+Person _questgiver_ group Questor female
+
+Place _dungeon_ remote dungeon0
+
+Clock _traveltime_ 00:00 0 flag 17 range 0 2
+
+Foe _e1_ is Ghost
+Foe _e2_ is Wraith
+
+--	Quest start-up:
+	place item _mitem_ at _dungeon_ 
+	start timer _traveltime_ 
+	reveal _dungeon_ 
+	log 1010 step 0
+    pc at _dungeon_ do _inside_
+
+_traveltime_ task:
+	end quest 
+
+_grabbed_ task:
+    clicked item _mitem_
+    say 1011
+
+variable _inside_
+
+_spawn_ task:
+    when _inside_ and _grabbed_
+    create foe _e1_ every 3 minutes indefinitely with 10% success
+    create foe _e2_ every 4 minutes indefinitely with 15% success
+
+_vanish_ task:
+    when _grabbed_ and not _inside_
+    say 1012
+    take _mitem_ from pc
+
+_reward_ task:
+	when _qgclicked_ and _vanish_
+	give pc _reward_
+    promptmulti 1013 0:orcish _orky_ 3:impish _impy_ 2:none _avoid_
+
+_orky_ task:
+    say 1014
+    train pc Orcish
+	end quest
+
+_impy_ task:
+    say 1015
+    train pc Impish
+	end quest
+
+_avoid_ task:
+    say 1016
+	end quest
+
+_qgclicked_ task:
+	clicked npc _questgiver_
+
+_S.04_ task:
+	when _qgclicked_ and not _vanish_
+	clear _qgclicked_ _S.04_
