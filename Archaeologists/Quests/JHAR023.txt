@@ -1,0 +1,213 @@
+Quest: JHAR023
+DisplayName: A Thief in Our Midst
+-- Message panels
+QRC:
+
+QuestorOffer:  [1000]
+<ce>     You're a trusted member of the guild, and we
+<ce>  feel to entrust certain sensitive matters to you.
+<ce>  We can offer you some gold and a language training
+<ce>  session if you can root out an apparent spy
+<ce>  in the guild.
+
+RefuseQuest:  [1001]
+<ce>    So be it. We'll handle it ourselves.
+
+AcceptQuest:  [1002]
+<ce>    What a relief. Our concern deals with a colleague
+<ce>  named _person_ who also resides here in town,
+<ce>  living in a house called _res_.
+<ce>  We find that many matters that he's explored
+<ce>  end up getting spearheaded by the Mages Guild,
+<ce>  or that the Thieves Guild gets a jump start on
+<ce>  our work. We suspect %g2 too much to ignore the matter.
+<ce>  Find proof of his doings, and we'll reward you accordingly.
+<ce>  I don't want this to take longer than three days.
+
+Message:  1003
+<ce>  You were to deliver proof of _person_'s
+<ce>  treachery to the Archaeologists by now.
+
+QuestComplete:  [1004]
+<ce>  "Very clever. I trusted in you with good cause.
+<ce>  I have gold here for you, first of all."
+
+QuestLogEntry:  [1010]
+%qdt:
+ _qgiver_ of the Archaeologists
+ in ___qgiver_ needs me to find proof that
+ _person_ has been going behind the
+ guild's back and giving sensitive material
+ to outsiders. I have =timer_ days
+ to find such proof, if any exists.
+ _person_ lives in _res_,
+ if that's relevant.
+
+Message:  1011
+If you're looking for _person_, you might also want to check %g3 room at _tav_.
+<--->
+Spends %g3 time at _tav_ when %g1's too drunk to stay at home, I guess.
+
+Message:  1012
+<ce>  What in Oblivion? Who are you? %oth,
+<ce>  get out of here. I don't want to be bothered
+<ce>  by upstarts like yourself, lest a fight break out
+<ce>  and you find yourself on the losing end.
+
+Message:  1013
+<ce>  This letter appears to belong to _person_
+<ce>  and contain highly relevant information.
+
+Message:  1014
+With regards to your previous letter
+<ce>
+No, they're going to ___dung_ soon. Some kind of
+exceptional find down there. It's going to take them
+a few days to get their act together and start moving
+so you can still beat them
+<ce>
+I am also not impressed by my recent lack of payment
+Other people would pay me double for all the
+help I've given you. Rethink your priorities
+
+Message:  1015
+%qdt:
+ I have found incriminating evidence against
+ _person_. The choice is now mine to
+ confront %g1 with the proof or deliver
+ it to the guild hall.
+
+Message:  1016
+<ce>  You show the letter to _person_
+<ce>  and demand an answer.
+<ce>  Rather than respond for %g2self, %g1 shouts,
+<ce>  "You'll not take me alive!"
+
+Message:  1017
+<ce>  You've resolved the matter yourself.
+<ce>  It's time to report your success
+<ce>  to _qgiver_.
+
+Message:  1018
+<ce>  You deliver the letter to _qgiver_.
+<ce>  
+<ce>  "Yes! Precisely! This is the kind of proof
+<ce>  we need. Excellent work! This is grounds
+<ce>  for expulsion. We'll get moving on this right
+<ce>  away. Well done, %pcf!"
+
+Message:  1019
+<ce>  "Next, you can choose between a complimentary
+<ce>  lesson in Nymph or Dragonish. Do either of
+<ce>  those appeal to you?"
+<ce>  
+<ce>  (ACCEPT: Nymph)
+<ce>  (YES: Dragonish)
+<ce>  (CANCEL: Skip the training)
+
+Message:  1020
+<ce>  You enjoy an in-depth training session on the
+<ce>  nature of the Nymph language by one of the
+<ce>  higher-ranking members of this location.
+
+Message:  1021
+<ce>  You enjoy an in-depth training session on the
+<ce>  nature of the Dragonish language by one of the
+<ce>  higher-ranking members of this location.
+
+Message:  1022
+<ce>  You forego the lesson reward.
+<ce>  
+<ce>  "Very well then. Your service is appreciated."
+
+Message:  1023
+<ce>  You tell _qgiver_ of the proof you found
+<ce>  and of _person_'s death.
+<ce>  
+<ce>  "Well, I don't think anyone will make a controversy
+<ce>  of it. We're all much better off without a spy.
+<ce>  As far as I'm concerned, this settles the matter."
+
+Message:  1024
+%qdt:
+ In the service of the Archaeologists, I have
+ slain _person_ in self-defense.
+
+QBN:
+
+Person _qgiver_ group Questor male
+Person _person_ group Local_4.0 anyInfo 1011
+
+Foe _p1_ is Thief
+
+Place _res_ local house
+Place _tav_ local tavern
+Place _dung_ remote dungeon
+
+Item _letter_ letter used 1014
+Item _reward_ gold range 185 to 250
+
+Clock _timer_ 3.00:00
+
+--	Quest start-up:
+	start timer _timer_
+	log 1010 step 0
+    place npc _person_ at _res_
+	place item _letter_ at _tav_
+
+_timer_ task:
+	say 1003
+	end quest
+
+_talk_ task:
+	clicked npc _person_
+	say 1012
+
+_grab_ task:
+	clicked item _letter_
+	say 1013
+	log 1015 step 1
+
+_confront_ task:
+	toting _letter_ and _person_ clicked
+	say 1016
+	hide npc _person_
+	place foe _p1_ at _res_
+
+_murder_ task:
+	killed _p1_
+	log 1024 step 2
+	say 1017
+
+_expose_ task:
+	toting _letter_ and _qgiver_ clicked
+	say 1018
+	give pc _reward_
+    promptmulti 1019 0:nymph _nym_ 3:dragonish _drag_ 2:none _avoid_
+
+_reward_ task:
+	when _qgclicked_ and _murder_
+	say 1023
+	give pc _reward_
+    promptmulti 1019 0:nymph _nym_ 3:dragonish _drag_ 2:none _avoid_
+
+_qgclicked_ task:
+	clicked npc _qgiver_
+
+_S.04_ task:
+	when _qgclicked_ and not _murder_
+	clear _qgclicked_ _S.04_
+
+_nym_ task:
+	say 1020
+	train pc Nymph
+	end quest
+
+_drag_ task:
+	say 1021
+	train pc Dragonish
+	end quest
+
+_avoid_ task:
+	say 1022
+	end quest

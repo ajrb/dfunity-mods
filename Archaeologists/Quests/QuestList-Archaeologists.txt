@@ -32,3 +32,4 @@ JHAR019, GGroup0, M, 10, 1, pay for an expert's help to uncover an artifact
 JHAR020, GGroup0, M, 0, 1, deliver a map to a known guild member
 JHAR021, GGroup0, M, 20, 1, deliver a finger to Bertram Spode
 JHAR022, GGroup0, M, 4, 1, retrieve a cursed undead trinket for language training
+JHAR023, GGroup0, M, 3, 1, expose a spy in the guild
