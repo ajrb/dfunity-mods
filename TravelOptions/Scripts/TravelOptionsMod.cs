@@ -216,6 +216,8 @@ namespace TravelOptions
             PlayerGPS.OnMapPixelChanged += PlayerGPS_OnMapPixelChanged;
             StreamingWorld.OnUpdateLocationGameObject += StreamingWorld_OnUpdateLocationGameObject;
 
+            GameManager.Instance.EntityEffectBroker.RegisterEffectTemplate(new TravelOptionsCastWhenHeld(), true);
+
             mod.MessageReceiver = MessageReceiver;
             mod.IsReady = true;
 

@@ -13,10 +13,11 @@
         "Assets/Game/Mods/TravelOptions/Scripts/TravelOptionsMod.cs",
         "Assets/Game/Mods/TravelOptions/Scripts/TravelControlUI.cs",
         "Assets/Game/Mods/TravelOptions/Scripts/TravelOptionsMapWindow.cs",
+        "Assets/Game/Mods/TravelOptions/Scripts/TravelOptionsCastWhenHeld.cs",
         "Assets/Game/Mods/TravelOptions/Textures/TOcontrolUI.png",
         "Assets/Game/Mods/TravelOptions/Textures/TOportsOff.png",
         "Assets/Game/Mods/TravelOptions/Textures/TOportsOn.png",
         "Assets/Game/Mods/TravelOptions/modpresets.json",
-        "Assets/Game/Mods/TravelOptions/TravelOptions.dfmod.json"
+        "Assets/Game/Mods/TravelOptions/TravelOptions.dfmod.json",
     ]
 }
