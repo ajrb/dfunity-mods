@@ -1,0 +1,116 @@
+Quest: JHAR024
+DisplayName: Book Round-Up
+-- Message panels
+QRC:
+
+QuestorOffer:  [1000]
+<ce>  If you're looking for a break from the action,
+<ce>  we need someone to round up a few books
+<ce>  across %crn. It won't pay a lot, but you
+<ce>  won't be in any danger, and won't even have
+<ce>  to talk to anyone.
+
+RefuseQuest:  [1001]
+<ce>   Fair enough.
+
+AcceptQuest:  [1002]
+<ce>   All right, we have three books that need
+<ce>   to be brought here. One is a copy of
+<ce>   _book1_ in _shop1_, ___shop1_.
+<ce>   Another is _book2_ in _shop2_,
+<ce>   found in ___shop2_. The final one
+<ce>   is in _shop3_ of ___shop3_,
+<ce>   a copy of _book3_. Bring them
+<ce>   here within =timer_ days for
+<ce>   =reward_ gold as compensation.
+
+Message:  1003
+<ce>  You were to deliver three books to
+<ce>   the Archaeologists of ___qgiver_.
+
+QuestComplete:  [1004]
+<ce>  Yes, they're all in fair condition.
+<ce>   Good enough. Take your gold.
+
+QuestLogEntry:  [1010]
+%qdt:
+ _qgiver_ of __qgiver_ has assigned
+ me to deliver to %g2 three books.
+ One is _book1_ at _shop1_,
+ found in ___shop1_. The other two
+ are _book2_ at _shop2_ in ___shop2_
+ and _book3_, at _shop3_, ___shop3_.
+ I need to deliver them all to
+ ___qgiver_ within =timer_ days
+ for a reward of =reward_ gold.
+
+Message:  1011
+<ce>  You see a note pasted onto the front
+<ce>   of this book: "For the Archaeologists."
+<--->
+<ce>  You have found the copy of _book1_.
+
+Message:  1012
+<ce>   A parchment is tucked into this book, saying,
+<ce>   "For the Archaeologists, ___qgiver_."
+<--->
+<ce>  This is the copy of _book2_.
+
+Message:  1013
+<ce>   This is the copy of _book3_ you were sent to find.
+<--->
+<ce>  A note on the front of the book says,
+<ce>  "The Archaeologists owe us for this."
+
+QBN:
+
+Person _qgiver_ group Questor male
+
+Place _shop1_ remote library
+Place _shop2_ remote bookstore
+Place _shop3_ remote library
+
+Item _reward_ gold range 100 to 200
+Item _book1_ book
+Item _book2_ book
+Item _book3_ book
+
+Clock _timer_ 00:00 0 flag 17 range 0 2
+
+--	Quest start-up:
+	start timer _timer_
+	log 1010 step 0
+    place item _book1_ at _shop1_
+    place item _book2_ at _shop2_
+    place item _book3_ at _shop3_
+
+_timer_ task:
+	say 1003
+	end quest
+
+_grab1_ task:
+    clicked item _book1_
+    say 1011
+
+_grab2_ task:
+    clicked item _book2_
+    say 1012
+
+_grab3_ task:
+    clicked item _book3_
+    say 1013
+
+_clickedqg_ task:
+    clicked npc _qgiver_
+
+_clearclick_ task:
+    when _clickedqg_ and not _victory_
+    clear _clickedqg_ _clearclick_
+
+_victory_ task:
+    when _grab1_ and _grab2_ and _grab3_
+
+_pcgetsgold_ task:
+    when _clickedqg_ and _victory_
+    give pc _reward_
+    end quest
