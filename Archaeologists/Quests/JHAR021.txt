@@ -1,0 +1,81 @@
+Quest: JHAR021
+DisplayName: The Cursed Finger
+-- Message panels
+QRC:
+
+QuestorOffer:  [1000]
+<ce>  Lord Bertram Spode, when he isn't on the
+<ce>  governing council of Glenpoint, has a
+<ce>  retirement home here in %crn.
+<ce>  He has made a large donation to the guild
+<ce>  in exchange for an odd artifact we
+<ce>  recently unearthed in the area.
+<ce>  We need someone trustworthy to deliver
+<ce>  it to him. Can you go?
+
+RefuseQuest:  [1001]
+<ce>  Please change your mind.
+<ce>  This needs to get delivered.
+
+AcceptQuest:  [1002]
+<ce>  Here. It's this decrepit finger.
+<ce>  No, it doesn't summon mummies or anything
+<ce>  grotesque like that. Spode has some bizarre
+<ce>  fascination with it, and we don't know why.
+<ce>  Sufficient to say, his donation will keep
+<ce>  us in %crn for the next few years, so
+<ce>  he deserves it. Find him at _farmhome_.
+<ce>  If he doesn't have it within =timer_ days
+<ce>  your standing with us will fall drastically.
+<ce>  Ever onward, %pcf.
+
+QuestFail:   [1003]
+<ce>  You needed to deliver the finger to
+<ce>  Lord Spode by now.
+
+QuestComplete:  [1004]
+<ce>  Aah, yesss, the Archaeologists have
+<ce>  come through for me. They didn't forget
+<ce>  after all. I was worried. And to think
+<ce>  they have no idea what this little thing
+<ce>  is capable of! No one does! Ha ha!
+<ce>  Here, take this money. I expect
+<ce>  it'll keep you quiet, hmm?
+
+QuestLogEntry:   [1010]
+%qdt:
+ __qgiver_ of ___qgiver_
+ need me to deliver a decrepit
+ finger to Lord Bertram Spode,
+ who is staying at ___farmhome_
+ of ____farmhome_. He expects it
+ to be delivered within =timer_ days.
+
+QBN:
+Item _reward_ gold range 1001 to 1499
+Item _map_ finger
+
+Person _qgiver_ group Questor
+Person _member_ named Lord_Bertram_Spode
+
+Place _farmhome_ remote farmhome
+
+Clock _timer_ 00:00 0 flag 17 range 0 2
+
+--	Quest start-up:
+	start timer _timer_
+	log 1010 step 0
+    place npc _member_ at _farmhome_
+    get item _map_
+
+_timer_ task:
+    say 1003
+	end quest 
+
+_decision_ task:
+    clicked npc _member_
+    take _map_ from pc
+    start quest JHAR021a
+    give pc _reward_
+    hide npc _member_
+    end quest
