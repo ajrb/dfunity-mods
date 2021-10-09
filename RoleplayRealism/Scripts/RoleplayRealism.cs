@@ -98,7 +98,7 @@ namespace RoleplayRealism
         {
             Debug.Log("Begin mod init: RoleplayRealism");
 
-            Mod rrItemsMod = ModManager.Instance.GetMod("RoleplayRealismItems");
+            Mod rrItemsMod = ModManager.Instance.GetMod("RoleplayRealism-Items");
             ModSettings rrItemsSettings = rrItemsMod != null ? rrItemsMod.GetSettings() : null;
 
             villagerVarietyMod = ModManager.Instance.GetMod(VILLAGERVARIETY_MODNAME);
@@ -527,7 +527,7 @@ namespace RoleplayRealism
                 playerEntity.IncreaseHealth(heal);
                 playerEntity.TallySkill(DFCareer.Skills.Medical, 1);
 #if UNITY_EDITOR
-                Debug.LogFormat("Applied a Bandage to heal {0} health.", heal);
+                Debug.LogFormat("RR Applied a Bandage to heal {0} health.", heal);
 #endif
             }
             return true;

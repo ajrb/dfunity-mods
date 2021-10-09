@@ -170,7 +170,7 @@ namespace RoleplayRealism
                 playerEntity.IncreaseHealth(heal);
                 playerEntity.TallySkill(DFCareer.Skills.Medical, 1);
 #if UNITY_EDITOR
-                Debug.LogFormat("Applied a Bandage and healed {0} health.", heal);
+                Debug.LogFormat("RRI Applied a Bandage and healed {0} health.", heal);
 #endif
             }
             return true;
