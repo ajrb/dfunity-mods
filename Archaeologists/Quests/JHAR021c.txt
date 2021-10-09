@@ -1,0 +1,122 @@
+Quest: JHAR021c
+DisplayName: The Cursed Finger, Part 4
+-- Message panels
+QRC:
+
+QuestComplete:   [1004]
+<ce> The bandits are no more.
+<ce> You hope Lord Spode will stop bothering you.
+
+RumorsPostFailure:   [1006]
+<ce>  Yer %pcn. Lord Spode says you're a troglodyte.
+<--->
+<ce>  Wait, are you %pcn? People in Glenpoint say you have the manners of a donkey.
+<--->
+<ce>  Hey, you're %pcn! That one who's a spy for the Underking! Or was it the King of Worms?
+<--->
+<ce>  Wait, you're %pcn. You took out a bunch of loans you couldn't pay, didn't you?
+<--->
+<ce>  Hey, are you %pcn? Bertram Spode says you're a filthy liar.
+<--->
+<ce>  I hear talk of some %ra who's cheating all the merchants out of their goods.
+<--->
+<ce>  Oh, you're %pcn! Bertram Spode says you're some kind of cat burglar!
+<--->
+<ce>  I hear some %ra in ____res_ has illegimate children all over the place.
+
+
+Message:  1011
+<ce>  A squire bearing the crest of Glenpoint gives you
+<ce> a parchment and departs.
+
+Message:  1012
+%pcn
+<ce>
+  Lord Spode has gotten himself into another problem.
+Thankfully he does not bear the burden of it himself,
+but he needs it resolved nonetheless.
+He's getting better with the "cursed" finger.
+His most recent wish was that his business exceed
+that of his most prominent rival in ____res_.
+However, rather than the finger granting him
+excess wealth, it decided to ruin his
+foe's property, ___res_.
+Bandits have taken up residence on it and
+demand fees of the people who live there.
+Residents across ____res_ have grown suspicious
+of this strange turn of events and wonder
+whether the rumors of Spode's "enchanted finger"
+are true. You'll want to get over there and clean
+the property of the criminals, lest someone believe
+the rumors enough to try to steal it.
+Surely if it has been in poor hands until now,
+it would be worse in the possession of a stranger.
+<ce> 
+                    _random_
+                    Assistant Scribe to Lord Bertram Spode          
+                    Glenpoint 
+
+Message:  1013
+<ce> You arrive on the property and see two
+<ce> burglars separate themselves from the crowd.
+<ce> They signal to each other and move
+<ce> to intercept you.
+
+Message:  1015
+%qdt:
+ Lord Bertram Spode has cursed someone else
+ with the "good luck" finger I delivered to
+ him on behalf of the Archaeologists.
+ He demands that I go
+ to ___res_ of ____res_ and
+ kill some bandits which are now haunting
+ his property. I have =timer_ days to do so,
+ lest he ruin my reputation.
+
+Message:  1016
+<ce>  Lord Spode demanded that you kill the bandits
+<ce>  on his rival's property by now.
+
+QBN:
+Item _letter_ letter used 1012
+
+Place _res_ remote farmhome
+
+Foe _harpy_ is 2 Burglar
+
+Person _random_ group Local_3.0 female
+
+Clock _timer_ 00:00 0 flag 17 range 0 2
+Clock _delay_ 7.00:00 9.00:00
+
+--	Quest start-up:
+    start timer _delay_
+    have _letter_ set _received_
+    _letter_ used do _log_
+
+_delay_ task:
+    give pc _letter_ notify 1011
+
+_log_ task:
+    log 1015 step 0
+
+_received_ task:
+	start timer _timer_
+    pc at _res_ set _begin_
+
+_begin_ task:
+    start task _spawn_
+
+_spawn_ task:
+    say 1013
+    create foe _harpy_ every 0 minutes 1 times with 100% success
+
+_slain_ task:
+    killed 2 _harpy_
+    give pc nothing
+    end quest
+
+_timer_ task:
+    say 1016
+    legal repute -20
+	end quest 

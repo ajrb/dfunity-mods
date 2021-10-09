@@ -1,0 +1,120 @@
+Quest: JHAR021a
+DisplayName: The Cursed Finger, Part 2
+-- Message panels
+QRC:
+
+QuestComplete:   [1004]
+<ce> The harpy is slain, and your reputation in
+<ce> %crn is safe... you trust.
+
+RumorsPostFailure:   [1006]
+<ce>  Yer %pcn. Lord Spode says you're a troglodyte.
+<--->
+<ce>  Wait, are you %pcn? People in Glenpoint say you have the manners of a donkey.
+<--->
+<ce>  Hey, you're %pcn! That one who's a spy for the Underking! Or was it the King of Worms?
+<--->
+<ce>  Wait, you're %pcn. You took out a bunch of loans you couldn't pay, didn't you?
+<--->
+<ce>  Hey, are you %pcn? Bertram Spode says you're a filthy liar.
+<--->
+<ce>  I hear talk of some %ra who's cheating all the merchants out of their goods.
+<--->
+<ce>  Oh, you're %pcn! Bertram Spode says you're some kind of cat burglar!
+<--->
+<ce>  I hear some %ra in ____res_ has illegimate children all over the place.
+
+
+Message:  1011
+<ce>  A messenger bearing the crest of Glenpoint gives you
+<ce> a letter and departs.
+
+Message:  1012
+%pcn
+<ce>
+  It seems this "good luck" finger has some tricks about it that
+must be tamed before a good politician may unleash its power.
+To give an example, I recently wished that my wife would
+stop bothering me about our judicious use of finances.
+My specific wording was, "Just stop talking, you old harpy!"
+Sadly, the finger's enchantment was active and heard my words.
+I was quite surprised and displeased to see her transform into
+a large bird, albeit mute. She now hovers about the property,
+and none of my servants dare kill her.
+<ce>
+  Therefore, I call upon you. I blame you for delivering this
+stupid finger to me and depriving me of my wife of the last
+three years. I demand you arrive at ___res_
+and slay this bird pretending to be my wife, as we would say.
+Should you fail to do so within =timer_ days,
+I assure you that every form of slander will be used
+to ruin your reputation. You will not want to suffer this
+at my hand.
+<ce> 
+                     Season's Greetings,
+                     Lord Bertram Spode
+
+Message:  1013
+<ce> You approach the property and find the harpy,
+<ce> or Lord Spode's wife, flying and squawking about.
+<ce> With an angry yell, she determines you a threat
+<ce> and moves to attack.
+
+Message:  1015
+%qdt:
+ Lord Bertram Spode has made poor decisions
+ with the "good luck" finger I delivered to
+ him on behalf of the Archaeologists,
+ and in his tantrum wants to blame me for
+ the consequences. He demands that I go
+ to ___res_ of ____res_ and
+ slay his wife, who is now a harpy.
+ If I fail to do this, he will spread rumors
+ to ruin my reputation.
+
+Message:  1016
+<ce>  Lord Spode demanded that you kill the harpy
+<ce>  on his property by now.
+
+QBN:
+Item _letter_ letter used 1012
+
+Place _res_ remote poorhome
+
+Foe _harpy_ is Harpy
+
+Clock _timer_ 00:00 0 flag 17 range 0 2
+Clock _delay_ 5.00:00 7.00:00
+
+--	Quest start-up:
+    start timer _delay_
+    have _letter_ set _received_
+    _letter_ used do _log_
+
+_delay_ task:
+    give pc _letter_ notify 1011
+
+_log_ task:
+    log 1015 step 0
+
+_received_ task:
+	start timer _timer_
+    pc at _res_ set _begin_
+
+_begin_ task:
+    start task _spawn_
+
+_spawn_ task:
+    say 1013
+    create foe _harpy_ every 0 minutes 1 times with 100% success
+
+_slain_ task:
+    killed _harpy_
+    give pc nothing
+    start quest JHAR021b
+    end quest
+
+_timer_ task:
+    say 1016
+    legal repute -20
+	end quest 

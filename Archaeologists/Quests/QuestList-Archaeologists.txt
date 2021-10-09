@@ -10,15 +10,15 @@
 schema: *name, group, membership, minReq, flag, notes
 
 ARCH001, GGroup0, M, 0, 0, test quest based on N0C00Y13
-JHAR001, GGroup0, M, 0, 0, get an adversarial mage's notes
+JHAR001, GGroup0, M, 0, 1, get an adversarial mage's notes
 JHAR002, GGroup0, M, 0, 0, rescue a lost explorer from a dungeon
 JHAR003, GGroup0, M, 3, 0, search for an ancestor's remains
-JHAR004, GGroup0, M, 1, 0, slay a mummy at a farm home
-JHAR005, GGroup0, M, 1, 0, get a trapped trinket from a dungeon
+JHAR004, GGroup0, M, 1, 1, slay a mummy at a farm home
+JHAR005, GGroup0, M, 1, 1, get a trapped trinket from a dungeon
 JHAR006, GGroup0, M, 0, 0, escort an old document to another town
 JHAR007, GGroup0, M, 0, 0, retrieve a normal trinket from a dungeon
 JHAR008, GGroup0, M, 0, 0, retrieve an object stolen by a guild member
-JHAR009, GGroup0, M, 6, 0, defeat a daedra haunting a trinket
+JHAR009, GGroup0, M, 6, 1, defeat a daedra haunting a trinket
 JHAR010, GGroup0, M, 15, 0, retrieve an object from a field agent
 JHAR011, GGroup0, M, 0, 0, translate a document in Giantish
 JHAR012, GGroup0, M, 0, X, translate a document in Nymph
@@ -30,3 +30,7 @@ JHAR017, GGroup0, M, 10, 0, take back stolen papers from the Mages Guild
 JHAR018, GGroup0, M, 25, 1, defame the Mages Guild by spoiling a summoning conspiracy
 JHAR019, GGroup0, M, 10, 1, pay for an expert's help to uncover an artifact
 JHAR020, GGroup0, M, 0, 1, deliver a map to a known guild member
+JHAR021, GGroup0, M, 20, 1, deliver a finger to Bertram Spode
+JHAR022, GGroup0, M, 4, 1, retrieve a cursed undead trinket for language training
+JHAR023, GGroup0, M, 3, 1, expose a spy in the guild
+JHAR024, GGroup0, M, 0, 0, gather books for the guild
