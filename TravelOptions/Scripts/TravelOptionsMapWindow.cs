@@ -4,6 +4,7 @@
 // Author:          Hazelnut
 
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using DaggerfallConnect;
 using DaggerfallConnect.Arena2;
@@ -13,7 +14,8 @@ using DaggerfallWorkshop.Game.UserInterfaceWindows;
 using DaggerfallWorkshop.Utility;
 using DaggerfallWorkshop.Utility.AssetInjection;
 using DaggerfallWorkshop.Game.Utility.ModSupport;
-using System.Collections.Generic;
+using DaggerfallWorkshop.Game;
+using DaggerfallWorkshop.Game.Guilds;
 
 namespace TravelOptions
 {
@@ -21,6 +23,8 @@ namespace TravelOptions
     {
         private const string MsgResume = "Resume your journey to {0}?";
         private const string MsgFollow = "Do you want to follow this road?";
+        private const string MsgTeleportCost = "Teleportation will cost you {0} gold, is that acceptable?";
+        private const int notEnoughGoldId = 454;
 
         // Path type and direction constants from BasicRoadsTexturing.
         const int path_roads = TravelOptionsMod.path_roads;
@@ -68,6 +72,8 @@ namespace TravelOptions
         protected bool portsFilter = false;
 
         protected bool onlyLargeDots = false;
+
+        protected bool teleportCharge = false;
 
         internal static byte[][] pathsData = new byte[4][];
         protected bool[] showPaths = { true, true, false, false };
@@ -212,6 +218,8 @@ namespace TravelOptions
         {
             base.OnPush();
 
+            teleportCharge = teleportationTravel && TravelOptionsMod.Instance.TeleportCost;
+
             // Open to region map if travel UI showing, else check if there's an active destination and ask to resume
             TravelOptionsMod travelModInstance = TravelOptionsMod.Instance;
             travelModInstance.DisableJunctionMap();
@@ -236,6 +244,51 @@ namespace TravelOptions
                 };
                 resumeMsgBox.Show();
             }
+        }
+
+        public override void Update()
+        {
+            base.Update();
+
+            // Had to move this to update and use a control flag since when popping a msg box inside OnPush when indoors the underlying UI is not rendered
+            if (teleportCharge)
+            {
+                ChargeForTeleport();
+            }
+        }
+
+        private void ChargeForTeleport()
+        {
+            MagesGuild magesGuild = (MagesGuild)GameManager.Instance.GuildManager.GetGuild(FactionFile.GuildGroups.MagesGuild);
+            int underWizard = 8 - magesGuild.Rank;
+            if (underWizard > 0)
+            {
+                int cost = underWizard * 200;
+                if (GameManager.Instance.PlayerEntity.GetGoldAmount() >= cost)
+                {
+                    string costMsg = string.Format(MsgTeleportCost, cost);
+                    DaggerfallMessageBox payMsgBox = new DaggerfallMessageBox(uiManager, DaggerfallMessageBox.CommonMessageBoxButtons.YesNo, costMsg, uiManager.TopWindow);
+                    payMsgBox.OnButtonClick += (_sender, button) =>
+                    {
+                        CloseWindow();
+                        if (button == DaggerfallMessageBox.MessageBoxButtons.Yes)
+                        {
+                            GameManager.Instance.PlayerEntity.DeductGoldAmount(cost);
+                        }
+                        else
+                        {
+                            CloseWindow();
+                        }
+                    };
+                    payMsgBox.Show();
+                }
+                else
+                {
+                    CloseWindow();
+                    DaggerfallUI.MessageBox(notEnoughGoldId);
+                }
+            }
+            teleportCharge = false;
         }
 
         // Updates location dots
