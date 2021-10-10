@@ -4,6 +4,7 @@
 // Author:          Hazelnut
 
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using DaggerfallConnect;
 using DaggerfallConnect.Arena2;
@@ -76,7 +77,11 @@ namespace TravelOptions
 
         internal static byte[][] pathsData = new byte[4][];
         protected bool[] showPaths = { true, true, false, false };
-
+        
+        const string HIDDEN_MAP_LOCATIONS_MODNAME = "Hidden Map Locations";
+        bool hiddenMapLocationsEnabled;
+        HashSet<ContentReader.MapSummary> discoveredMapSummaries;
+        HashSet<DFRegion.LocationTypes> revealedLocationTypes;
 
         public TravelOptionsMapWindow(IUserInterfaceManager uiManager)
             : base(uiManager)
@@ -88,6 +93,18 @@ namespace TravelOptions
                     (string message, object data) => { pathsData[path_roads] = (byte[])data; });
                 ModManager.Instance.SendModMessage(TravelOptionsMod.ROADS_MODNAME, "getPathData", path_tracks,
                     (string message, object data) => { pathsData[path_tracks] = (byte[])data; });
+            }
+            
+            Mod hiddenMapLocationsMod = ModManager.Instance.GetMod(HIDDEN_MAP_LOCATIONS_MODNAME);
+            hiddenMapLocationsEnabled = hiddenMapLocationsMod != null && hiddenMapLocationsMod.Enabled;
+
+            if (hiddenMapLocationsEnabled)
+            {
+                discoveredMapSummaries = new HashSet<ContentReader.MapSummary>();
+                revealedLocationTypes = new HashSet<DFRegion.LocationTypes>();
+
+                ModManager.Instance.SendModMessage(HIDDEN_MAP_LOCATIONS_MODNAME, "getRevealedLocationTypes", null,
+                    (string message, object data) => { revealedLocationTypes = (HashSet<DFRegion.LocationTypes>)data; });
             }
 
             onlyLargeDots = !TravelOptionsMod.Instance.VariableSizeDots;
@@ -289,6 +306,8 @@ namespace TravelOptions
 
         protected virtual void UpdateMapLocationDotsTextureWithPaths()
         {
+            GetDiscoveredLocationsFromHiddenMapMod();
+        
             // Get map and dimensions
             string mapName = selectedRegionMapNames[mapIndex];
             Vector2 origin = offsetLookup[mapName];
@@ -452,6 +471,8 @@ namespace TravelOptions
 
         public void DrawMapSection(int originX, int originY, int width, int height, ref Color32[] pixelBuffer, bool circular = false)
         {
+            GetDiscoveredLocationsFromHiddenMapMod();
+        
             Array.Clear(pixelBuffer, 0, pixelBuffer.Length);
 
             for (int y = 0; y < height; y++)
@@ -495,6 +516,11 @@ namespace TravelOptions
             // If ports filter is on, only return true if it's a port
             if (portsFilter && !HasPort(summary))
                 return false;
+                
+            if (hiddenMapLocationsEnabled)
+            {
+                return discoveredMapSummaries.Contains(summary) || revealedLocationTypes.Contains(summary.LocationType);
+            }
 
             return base.checkLocationDiscovered(summary);
         }
@@ -565,5 +591,14 @@ namespace TravelOptions
             144059,     // "Tulune", "The Elyzanna Assembly"
             343439,     // "Cybiades", "Ruins of Cosh Hall"
         };
+        
+        void GetDiscoveredLocationsFromHiddenMapMod()
+        {
+            if (hiddenMapLocationsEnabled)
+            {
+                ModManager.Instance.SendModMessage(HIDDEN_MAP_LOCATIONS_MODNAME, "getDiscoveredMapSummaries", null,
+                    (string _, object result) => { discoveredMapSummaries = (HashSet<ContentReader.MapSummary>)result; });
+            }
+        }
     }
 }
