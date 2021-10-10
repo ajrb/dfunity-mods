@@ -77,11 +77,12 @@ namespace TravelOptions
 
         internal static byte[][] pathsData = new byte[4][];
         protected bool[] showPaths = { true, true, false, false };
-        
-        const string HIDDEN_MAP_LOCATIONS_MODNAME = "Hidden Map Locations";
-        bool hiddenMapLocationsEnabled;
-        HashSet<ContentReader.MapSummary> discoveredMapSummaries;
-        HashSet<DFRegion.LocationTypes> revealedLocationTypes;
+
+        // Hidden map locations mod compatibility.
+        public const string HIDDEN_MAP_LOCATIONS_MODNAME = "Hidden Map Locations";
+        protected bool hiddenMapLocationsEnabled;
+        protected HashSet<ContentReader.MapSummary> discoveredMapSummaries;
+        protected HashSet<DFRegion.LocationTypes> revealedLocationTypes;
 
         public TravelOptionsMapWindow(IUserInterfaceManager uiManager)
             : base(uiManager)
@@ -294,6 +295,8 @@ namespace TravelOptions
         // Updates location dots
         protected override void UpdateMapLocationDotsTexture()
         {
+            GetDiscoveredLocationsFromHiddenMapMod();
+
             if (TravelOptionsMod.Instance.RoadsIntegration && selectedRegion != 61)
             {
                 UpdateMapLocationDotsTextureWithPaths();
@@ -306,8 +309,6 @@ namespace TravelOptions
 
         protected virtual void UpdateMapLocationDotsTextureWithPaths()
         {
-            GetDiscoveredLocationsFromHiddenMapMod();
-        
             // Get map and dimensions
             string mapName = selectedRegionMapNames[mapIndex];
             Vector2 origin = offsetLookup[mapName];
@@ -525,6 +526,15 @@ namespace TravelOptions
             return base.checkLocationDiscovered(summary);
         }
 
+        protected void GetDiscoveredLocationsFromHiddenMapMod()
+        {
+            if (hiddenMapLocationsEnabled)
+            {
+                ModManager.Instance.SendModMessage(HIDDEN_MAP_LOCATIONS_MODNAME, "getDiscoveredMapSummaries", null,
+                    (string _, object result) => { discoveredMapSummaries = (HashSet<ContentReader.MapSummary>)result; });
+            }
+        }
+
         public static bool HasPort(ContentReader.MapSummary mapSummary)
         {
             return Array.Exists(portLocationIds, n => n == mapSummary.ID);
@@ -592,13 +602,5 @@ namespace TravelOptions
             343439,     // "Cybiades", "Ruins of Cosh Hall"
         };
         
-        void GetDiscoveredLocationsFromHiddenMapMod()
-        {
-            if (hiddenMapLocationsEnabled)
-            {
-                ModManager.Instance.SendModMessage(HIDDEN_MAP_LOCATIONS_MODNAME, "getDiscoveredMapSummaries", null,
-                    (string _, object result) => { discoveredMapSummaries = (HashSet<ContentReader.MapSummary>)result; });
-            }
-        }
     }
 }
