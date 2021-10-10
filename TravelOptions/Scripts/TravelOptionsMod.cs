@@ -20,6 +20,7 @@ using DaggerfallWorkshop.Game.Entity;
 using DaggerfallWorkshop.Utility;
 using DaggerfallWorkshop.Game.Weather;
 using DaggerfallWorkshop.Game.UserInterface;
+using DaggerfallWorkshop.Game.Guilds;
 
 namespace TravelOptions
 {
@@ -97,6 +98,8 @@ namespace TravelOptions
         public float GetTravelSpeedMultiplier() { return DestinationCautious ? CautiousTravelMultiplier : RecklessTravelMultiplier; }
         public int CautiousHealthMinPc { get; private set; } = 5;
         public int CautiousFatigueMin { get; private set; } = 6;
+
+        public bool TeleportCost { get; private set; }
 
         static readonly int[] startAccelVals = { 1, 2, 3, 5, 10, 15, 20, 25, 30, 40, 50 };
         static readonly KeyCode[] followKeys = { KeyCode.None, KeyCode.F, KeyCode.G, KeyCode.K, KeyCode.O, KeyCode.X };
@@ -215,6 +218,14 @@ namespace TravelOptions
             PlayerGPS.OnEnterLocationRect += PlayerGPS_OnEnterLocationRect;
             PlayerGPS.OnMapPixelChanged += PlayerGPS_OnMapPixelChanged;
             StreamingWorld.OnUpdateLocationGameObject += StreamingWorld_OnUpdateLocationGameObject;
+
+            // Allow teleportation for anyone if enabled
+            if (settings.GetValue<bool>("Teleportation", "Enable"))
+            {
+                if (!GuildManager.RegisterCustomGuild(FactionFile.GuildGroups.MagesGuild, typeof(MagesGuildTO)))
+                    throw new Exception("GuildGroup MagesGuild is already overridden, unable to register MagesGuildTO guild class.");
+                TeleportCost = true;
+            }
 
             mod.MessageReceiver = MessageReceiver;
             mod.IsReady = true;

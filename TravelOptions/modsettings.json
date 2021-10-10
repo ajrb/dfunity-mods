@@ -302,6 +302,21 @@
                 }
             ],
             "$version": "v1"
+        },
+        {
+            "Name": "Teleportation",
+            "Description": "Enable mages guild teleportation service to be availible to all members, at a cost",
+            "IsAdvanced": false,
+            "Keys": [
+                {
+                    "Value": false,
+                    "Name": "Enable",
+                    "Description": "Enable Mages teleportation service for all members, for a cost before rank 8",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
+                }
+            ],
+            "$version": "v1"
         }
     ]
 }
