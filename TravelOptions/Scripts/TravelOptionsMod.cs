@@ -127,6 +127,7 @@ namespace TravelOptions
         int defaultStartingAccel;
         bool alwaysUseStartingAccel;
         int accelerationLimit;
+
         float baseFixedDeltaTime;
         int maxAvoidChance;
         bool ignoreEncounters;
@@ -163,24 +164,13 @@ namespace TravelOptions
             mod = initParams.Mod;
             var go = new GameObject(mod.Title);
             Instance = go.AddComponent<TravelOptionsMod>();
+
+            mod.LoadSettingsCallback = Instance.LoadSettings;
         }
 
-        void Awake()
+        // Load dynamic settings that can be changed at runtime.
+        void LoadSettings(ModSettings settings, ModSettingsChange change)
         {
-            Debug.Log("Begin mod init: TravelOptions");
-
-            Mod roadsMod = ModManager.Instance.GetMod(ROADS_MODNAME);
-            bool roadsModEnabled = roadsMod != null && roadsMod.Enabled;
-
-            ModSettings settings = mod.GetSettings();
-
-            RoadsIntegration = settings.GetValue<bool>("RoadsIntegration", "Enable") && roadsModEnabled;
-            if (RoadsIntegration) {
-                VariableSizeDots = settings.GetValue<bool>("RoadsIntegration", "VariableSizeDots");
-                followKeyCode = followKeys[settings.GetValue<int>("RoadsIntegration", "FollowPathsKey")];
-                roadsJunctionMap = settings.GetValue<bool>("RoadsJunctionMap", "Enable");
-            }
-
             enableWeather = settings.GetValue<bool>("GeneralOptions", "AllowWeather");
             enableSounds = settings.GetValue<bool>("GeneralOptions", "AllowAnnoyingSounds");
             enableRealGrass = settings.GetValue<bool>("GeneralOptions", "AllowRealGrass");
@@ -200,6 +190,40 @@ namespace TravelOptions
             defaultStartingAccel = startAccelVals[settings.GetValue<int>("TimeAcceleration", "DefaultStartingAcceleration")];
             alwaysUseStartingAccel = settings.GetValue<bool>("TimeAcceleration", "AlwaysUseStartingAcceleration");
             accelerationLimit = settings.GetValue<int>("TimeAcceleration", "AccelerationLimit");
+
+            if (RoadsIntegration)
+            {
+                followKeyCode = followKeys[settings.GetValue<int>("RoadsIntegration", "FollowPathsKey")];
+
+                if (roadsJunctionMap)
+                {
+                    if (junctionMapTexture != null)
+                        junctionMapTexture.filterMode = filterModes[settings.GetValue<int>("RoadsJunctionMap", "FilterMode")];
+
+                    junctionMapCircular = settings.GetValue<bool>("RoadsJunctionMap", "Circular");
+                    playerColor = settings.GetValue<Color32>("RoadsJunctionMap", "PlayerColor");
+                }
+            }
+        }
+
+        void Awake()
+        {
+            Debug.Log("Begin mod init: TravelOptions");
+
+            Mod roadsMod = ModManager.Instance.GetMod(ROADS_MODNAME);
+            bool roadsModEnabled = roadsMod != null && roadsMod.Enabled;
+
+            // Load non-dynamic settings.
+            ModSettings settings = mod.GetSettings();
+
+            RoadsIntegration = settings.GetValue<bool>("RoadsIntegration", "Enable") && roadsModEnabled;
+            if (RoadsIntegration) {
+                VariableSizeDots = settings.GetValue<bool>("RoadsIntegration", "VariableSizeDots");
+                roadsJunctionMap = settings.GetValue<bool>("RoadsJunctionMap", "Enable");
+            }
+
+            // Load initial dynamic settings.
+            LoadSettings(settings, new ModSettingsChange());
 
             UIWindowFactory.RegisterCustomUIWindow(UIWindowType.TravelMap, typeof(TravelOptionsMapWindow));
             UIWindowFactory.RegisterCustomUIWindow(UIWindowType.TravelPopUp, typeof(TravelOptionsPopUp));
@@ -237,6 +261,7 @@ namespace TravelOptions
 
         void Start()
         {
+            // Setup Panel and Texture for roads map
             if (roadsJunctionMap)
             {
                 ModSettings settings = mod.GetSettings();
