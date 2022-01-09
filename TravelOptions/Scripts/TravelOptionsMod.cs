@@ -251,7 +251,7 @@ namespace TravelOptions
                 TeleportCost = true;
             }
 
-            GameManager.Instance.EntityEffectBroker.RegisterEffectTemplate(new CastWhenHeldTO(), true);
+            //GameManager.Instance.EntityEffectBroker.RegisterEffectTemplate(new CastWhenHeldTO(), true);
 
             mod.MessageReceiver = MessageReceiver;
             mod.IsReady = true;
