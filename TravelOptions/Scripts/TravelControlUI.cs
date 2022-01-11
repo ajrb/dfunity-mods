@@ -46,7 +46,7 @@ namespace TravelOptions
         const string baseTextureName = "TOcontrolUI.png";
 
         Texture2D baseTexture;
-        Vector2 baseSize;
+        Vector2 baseSize = new Vector2(320, 27);
         int accelLimit;
         int halfAccelLimit;
         uint messageTimer = 0;
@@ -204,9 +204,9 @@ namespace TravelOptions
 
         void LoadTextures()
         {
-            if (TextureReplacement.TryImportImage(baseTextureName, true, out baseTexture))
+            if (!TextureReplacement.TryImportImage(baseTextureName, true, out baseTexture))
             {
-                baseSize = new Vector2(baseTexture.width, baseTexture.height);
+                Debug.LogError("TravelOptions: Unable to load the base UI image.");
             }
         }
 

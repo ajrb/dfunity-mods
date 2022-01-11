@@ -35,6 +35,10 @@ namespace TravelOptions
         public static Color32 roadColor = new Color32(60, 60, 60, 255);
         public static Color32 trackColor = new Color32(160, 118, 74, 255);
 
+        public Vector2 buttonSize = new Vector2(47, 11);
+        public Vector2 portsSize = new Vector2(45, 11);
+        public Vector2 streamsSize = new Vector2(57, 11);
+
         const string roadsOffName = "roadsOff.png";
         const string roadsOnName = "roadsOn.png";
         const string tracksOffName = "tracksOff.png";
@@ -125,7 +129,7 @@ namespace TravelOptions
 
                 portsFilterButton = new Button();
                 portsFilterButton.Position = portFilterPos;
-                portsFilterButton.Size = new Vector2(portsOffTexture.width, portsOffTexture.height);
+                portsFilterButton.Size = portsSize; //new Vector2(portsOffTexture.width, portsOffTexture.height);
                 portsFilterButton.BackgroundTexture = portsOffTexture;
                 portsFilterButton.OnMouseClick += PortsFilterButton_OnMouseClick;
                 NativePanel.Components.Add(portsFilterButton);
@@ -186,14 +190,14 @@ namespace TravelOptions
             roadsButton = new Button();
             roadsButton.Tag = path_roads;
             roadsButton.Position = roadsButtonPos;
-            roadsButton.Size = new Vector2(roadsOnTexture.width, roadsOnTexture.height);
+            roadsButton.Size = buttonSize;  //new Vector2(roadsOnTexture.width, roadsOnTexture.height);
             roadsButton.OnMouseClick += PathTypeButton_OnMouseClick;
             NativePanel.Components.Add(roadsButton);
 
             tracksButton = new Button();
             tracksButton.Tag = path_tracks;
             tracksButton.Position = tracksButtonPos;
-            tracksButton.Size = new Vector2(tracksOnTexture.width, tracksOnTexture.height);
+            tracksButton.Size = buttonSize; //new Vector2(tracksOnTexture.width, tracksOnTexture.height);
             tracksButton.OnMouseClick += PathTypeButton_OnMouseClick;
             NativePanel.Components.Add(tracksButton);
         }
