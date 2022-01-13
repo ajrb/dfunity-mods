@@ -92,6 +92,8 @@ namespace TravelOptions
         public bool ShipTravelDestinationPortsOnly { get; private set; }
         public bool RoadsIntegration { get; private set; }
         public bool VariableSizeDots { get; private set; }
+        public bool WaterwaysEnabled { get; private set; }
+        public bool StreamsToggle { get; private set; }
 
         public float RecklessTravelMultiplier { get; private set; } = 1f;
         public float CautiousTravelMultiplier { get; private set; } = 0.8f;
@@ -220,6 +222,8 @@ namespace TravelOptions
             if (RoadsIntegration) {
                 VariableSizeDots = settings.GetValue<bool>("RoadsIntegration", "VariableSizeDots");
                 roadsJunctionMap = settings.GetValue<bool>("RoadsJunctionMap", "Enable");
+                WaterwaysEnabled = settings.GetValue<bool>("RoadsIntegration", "EnableWaterways") && roadsModEnabled;
+                StreamsToggle = settings.GetValue<bool>("RoadsIntegration", "EnableStreamsToggle") && roadsModEnabled;
             }
 
             // Load initial dynamic settings.

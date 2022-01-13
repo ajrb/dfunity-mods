@@ -207,6 +207,20 @@
                     "Description": "Sets the key to initiate time accelerated travelling following paths if roads integration enabled",
                     "$version": "v1",
                     "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.MultipleChoiceKey"
+                },
+                {
+                    "Value": false,
+                    "Name": "EnableWaterways",
+                    "Description": "Enhances the travel map with rivers and streams with a toggle button",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
+                },
+                {
+                    "Value": false,
+                    "Name": "EnableStreamsToggle",
+                    "Description": "Adds a toggle button for streams separate from rivers",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
                 }
             ],
             "$version": "v1"
