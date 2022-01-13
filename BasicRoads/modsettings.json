@@ -12,19 +12,33 @@
                     "Description": "Enables light smoothing of road surfaces, disable for minor extra performance.",
                     "$version": "v1",
                     "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
+                },
+                {
+                    "Value": false,
+                    "Name": "RiversAndStreams",
+                    "Description": "Enables rendering of rivers and streams on terrain",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
                 }
             ],
             "$version": "v1"
         },
         {
             "Name": "Editing",
-            "Description": "Road path editing",
+            "Description": "Turn on path or water editing, water takes precedence if both enabled",
             "IsAdvanced": true,
             "Keys": [
                 {
                     "Value": false,
-                    "Name": "EditingEnabled",
+                    "Name": "PathEditingEnabled",
                     "Description": "Enables road path editing commands",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
+                },
+                {
+                    "Value": false,
+                    "Name": "WaterEditingEnabled",
+                    "Description": "Enables water path editing commands",
                     "$version": "v1",
                     "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
                 }

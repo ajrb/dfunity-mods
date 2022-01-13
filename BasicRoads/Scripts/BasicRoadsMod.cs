@@ -42,13 +42,17 @@ namespace BasicRoads
 
             ModSettings settings = mod.GetSettings();
             bool smoothRoads = settings.GetBool("Settings", "SmoothRoads");
-            bool editingEnabled = settings.GetBool("Editing", "EditingEnabled");
+            bool riversStreams = settings.GetBool("Settings", "RiversAndStreams");
+            bool pathEditingEnabled = settings.GetBool("Editing", "PathEditingEnabled");
+            bool waterEditingEnabled = settings.GetBool("Editing", "WaterEditingEnabled");
+            string editingEnabled = pathEditingEnabled ? "path" : (waterEditingEnabled ? "water" : null);
 
-            roadTexturing = new BasicRoadsTexturing(smoothRoads, editingEnabled, splatModEnabled);
+            roadTexturing = new BasicRoadsTexturing(smoothRoads, riversStreams, editingEnabled, splatModEnabled);
             DaggerfallUnity.Instance.TerrainTexturing = roadTexturing;
 
-            if (editingEnabled)
+            if (editingEnabled != null)
             {
+                BasicRoadsPathEditor.waterEditing = waterEditingEnabled;
                 BasicRoadsPathEditor editor = BasicRoadsPathEditor.Instance;
             }
 

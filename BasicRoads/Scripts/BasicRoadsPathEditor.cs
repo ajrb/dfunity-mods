@@ -29,10 +29,10 @@ namespace BasicRoads
     /// </summary>
     public class BasicRoadsPathEditor : DaggerfallTravelMapWindow
     {
+        public const bool allowDeletions = false;    // Allows edits of zero to be loaded over existing data if true.
+
         public const string RoadDataFilename = "roadData.txt";
         public const string TrackDataFilename = "trackData.txt";
-
-        public const bool allowDeletions = true;    // Allows edits of zero to be loaded over existing data if true.
 
         static Color32 roadColor = new Color32(60, 60, 60, 255);
         static Color32 trackColor = new Color32(160, 118, 74, 255);
@@ -49,11 +49,31 @@ namespace BasicRoads
         protected Vector2 roadsButtonPos = new Vector2(1, 0);
         protected Vector2 tracksButtonPos = new Vector2(48, 0);
 
+        public const string RiverDataFilename = "riverData.txt";
+        public const string StreamDataFilename = "streamData.txt";
+
+        static Color32 riverColor = new Color32(48, 79, 250, 255);
+        static Color32 streamColor = new Color32(48, 135, 250, 255);
+
+        const string riversOffName = "riversOff.png";
+        const string riversOnName = "riversOn.png";
+        const string streamsOffName = "streamsOff.png";
+        const string streamsOnName = "streamsOn.png";
+        Texture2D riversOffTexture;
+        Texture2D riversOnTexture;
+        Texture2D streamsOffTexture;
+        Texture2D streamsOnTexture;
+
+        protected Vector2 riversButtonPos = new Vector2(272, 0);
+        protected Vector2 streamsButtonPos = new Vector2(215, 0);
+
         protected Rect pathsOverlayPanelRect = new Rect(0, regionPanelOffset, 320 * 5, 160 * 5);
         protected Panel pathsOverlayPanel;
 
         protected Button roadsButton;
         protected Button tracksButton;
+        protected Button riversButton;
+        protected Button streamsButton;
 
         static BasicRoadsPathEditor instance;
         public static BasicRoadsPathEditor Instance {
@@ -63,10 +83,11 @@ namespace BasicRoads
                 return instance;
             }
         }
+        public static bool waterEditing = false;
 
         public static byte[][] pathsData = new byte[4][];
 
-        static BasicRoadsTexturing roadTexturing;
+        static BasicRoadsTexturing roadsTexturing;
 
         int mouseX = 0;
         int mouseY = 0;
@@ -87,12 +108,24 @@ namespace BasicRoads
                 Debug.LogError(string.Format("Error Registering Travelmap Console commands: {0}", ex.Message));
             }
 
-            roadTexturing = (BasicRoadsTexturing)DaggerfallUnity.Instance.TerrainTexturing;
-            pathsData[BasicRoadsTexturing.roads] = roadTexturing.GetPathData(BasicRoadsTexturing.roads);
-            pathsData[BasicRoadsTexturing.tracks] = roadTexturing.GetPathData(BasicRoadsTexturing.tracks);
+            roadsTexturing = (BasicRoadsTexturing)DaggerfallUnity.Instance.TerrainTexturing;
+            pathsData[BasicRoadsTexturing.roads] = roadsTexturing.GetPathData(BasicRoadsTexturing.roads);
+            pathsData[BasicRoadsTexturing.tracks] = roadsTexturing.GetPathData(BasicRoadsTexturing.tracks);
 
-            ReadEditedPathData(BasicRoadsTexturing.roads, RoadDataFilename);
-            ReadEditedPathData(BasicRoadsTexturing.tracks, TrackDataFilename);
+            if (waterEditing)
+            {
+                showPaths[BasicRoadsTexturing.rivers] = true;
+                showPaths[BasicRoadsTexturing.streams] = true;
+                pathsData[BasicRoadsTexturing.rivers] = roadsTexturing.GetPathData(BasicRoadsTexturing.rivers);
+                pathsData[BasicRoadsTexturing.streams] = roadsTexturing.GetPathData(BasicRoadsTexturing.streams);
+                ReadEditedPathData(BasicRoadsTexturing.rivers, RiverDataFilename);
+                ReadEditedPathData(BasicRoadsTexturing.streams, StreamDataFilename);
+            }
+            else
+            {
+                ReadEditedPathData(BasicRoadsTexturing.roads, RoadDataFilename);
+                ReadEditedPathData(BasicRoadsTexturing.tracks, TrackDataFilename);
+            }
         }
 
         public override void OnPush()
@@ -102,9 +135,16 @@ namespace BasicRoads
             outlineBackup = DaggerfallUnity.Settings.TravelMapLocationsOutline;
             DaggerfallUnity.Settings.TravelMapLocationsOutline = false;
 
-            ReadEditedPathData(BasicRoadsTexturing.roads, RoadDataFilename);
-            ReadEditedPathData(BasicRoadsTexturing.tracks, TrackDataFilename);
-
+            if (waterEditing)
+            {
+                ReadEditedPathData(BasicRoadsTexturing.rivers, RiverDataFilename);
+                ReadEditedPathData(BasicRoadsTexturing.streams, StreamDataFilename);
+            }
+            else
+            {
+                ReadEditedPathData(BasicRoadsTexturing.roads, RoadDataFilename);
+                ReadEditedPathData(BasicRoadsTexturing.tracks, TrackDataFilename);
+            }
             changed = false;
         }
 
@@ -121,6 +161,11 @@ namespace BasicRoads
 
             SetupPathButtons();
             UpdatePathButtons();
+            if (waterEditing)
+            {
+                SetupWaterButtons();
+                UpdateWaterButtons();
+            }
 
             locationDotsPixelBuffer = new Color32[(int)regionTextureOverlayPanelRect.width * (int)regionTextureOverlayPanelRect.height * 25];
             locationDotsTexture = new Texture2D((int)regionTextureOverlayPanelRect.width * 5, (int)regionTextureOverlayPanelRect.height * 5, TextureFormat.ARGB32, false);
@@ -155,6 +200,35 @@ namespace BasicRoads
             NativePanel.Components.Add(tracksButton);
         }
 
+        protected void SetupWaterButtons()
+        {
+            // Water buttons
+            if (!TextureReplacement.TryImportImage(riversOffName, true, out riversOffTexture))
+                return;
+            if (!TextureReplacement.TryImportImage(riversOnName, true, out riversOnTexture))
+                return;
+            if (!TextureReplacement.TryImportImage(streamsOffName, true, out streamsOffTexture))
+                return;
+            if (!TextureReplacement.TryImportImage(streamsOnName, true, out streamsOnTexture))
+                return;
+
+            riversButton = new Button();
+            riversButton.Tag = BasicRoadsTexturing.rivers;
+            riversButton.Position = riversButtonPos;
+            riversButton.Size = new Vector2(riversOnTexture.width, riversOnTexture.height);
+            riversButton.BackgroundColor = Color.white;
+            riversButton.OnMouseClick += PathTypeButton_OnMouseClick;
+            NativePanel.Components.Add(riversButton);
+
+            streamsButton = new Button();
+            streamsButton.Tag = BasicRoadsTexturing.streams;
+            streamsButton.Position = streamsButtonPos;
+            streamsButton.Size = new Vector2(streamsOnTexture.width, streamsOnTexture.height);
+            streamsButton.BackgroundColor = Color.white;
+            streamsButton.OnMouseClick += PathTypeButton_OnMouseClick;
+            NativePanel.Components.Add(streamsButton);
+        }
+
         protected virtual void PathTypeButton_OnMouseClick(BaseScreenComponent sender, Vector2 position)
         {
             int pathType = (int)sender.Tag;
@@ -162,9 +236,15 @@ namespace BasicRoads
             {
                 roadsButton.BackgroundColor = Color.white;
                 tracksButton.BackgroundColor = Color.white;
+                if (waterEditing) {
+                    riversButton.BackgroundColor = Color.white;
+                    streamsButton.BackgroundColor = Color.white;
+                }
                 if (showPaths[pathType])
                 {
-                    if (currPathType != pathType)
+                    if (currPathType != pathType &&
+                        ((!waterEditing && (pathType == BasicRoadsTexturing.roads || pathType == BasicRoadsTexturing.tracks)) ||
+                         (waterEditing && (pathType == BasicRoadsTexturing.rivers || pathType == BasicRoadsTexturing.streams))))
                     {
                         sender.BackgroundColor = Color.red;
                         currPathType = pathType;
@@ -180,6 +260,8 @@ namespace BasicRoads
             }
 
             UpdatePathButtons();
+            if (waterEditing)
+                UpdateWaterButtons();
             UpdateMapLocationDotsTexture();
         }
 
@@ -187,6 +269,12 @@ namespace BasicRoads
         {
             roadsButton.BackgroundColorTexture = showPaths[BasicRoadsTexturing.roads] ? roadsOnTexture : roadsOffTexture;
             tracksButton.BackgroundColorTexture = showPaths[BasicRoadsTexturing.tracks] ? tracksOnTexture : tracksOffTexture;
+        }
+
+        private void UpdateWaterButtons()
+        {
+            riversButton.BackgroundColorTexture = showPaths[BasicRoadsTexturing.rivers] ? riversOnTexture : riversOffTexture;
+            streamsButton.BackgroundColorTexture = showPaths[BasicRoadsTexturing.streams] ? streamsOnTexture : streamsOffTexture;
         }
 
         protected override void ExitButtonClickHandler(BaseScreenComponent sender, Vector2 position)
@@ -214,8 +302,16 @@ namespace BasicRoads
             sender.CloseWindow();
             if (messageBoxButton == DaggerfallMessageBox.MessageBoxButtons.Yes)
             {
-                WriteEditedPathData(BasicRoadsTexturing.roads, RoadDataFilename);
-                WriteEditedPathData(BasicRoadsTexturing.tracks, TrackDataFilename);
+                if (!waterEditing)
+                {
+                    WriteEditedPathData(BasicRoadsTexturing.roads, RoadDataFilename);
+                    WriteEditedPathData(BasicRoadsTexturing.tracks, TrackDataFilename);
+                }
+                else
+                {
+                    WriteEditedPathData(BasicRoadsTexturing.rivers, RiverDataFilename);
+                    WriteEditedPathData(BasicRoadsTexturing.streams, StreamDataFilename);
+                }
             }
             CloseTravelWindows();
         }
@@ -263,20 +359,35 @@ namespace BasicRoads
 
                 if (pathData[rIdx] == 0)
                 {
-                    bool rn = ConnectPath(pathData, rIdx, n, BasicRoadsTexturing.N, BasicRoadsTexturing.S);
-                    bool re = ConnectPath(pathData, rIdx, e, BasicRoadsTexturing.E, BasicRoadsTexturing.W);
-                    bool rs = ConnectPath(pathData, rIdx, s, BasicRoadsTexturing.S, BasicRoadsTexturing.N);
-                    bool rw = ConnectPath(pathData, rIdx, w, BasicRoadsTexturing.W, BasicRoadsTexturing.E);
+                    if (waterEditing)   // Prefer diagonal connections for water, excluding perpendicular connections
+                    {
+                        bool rne = ConnectPath(pathData, rIdx, ne, BasicRoadsTexturing.NE, BasicRoadsTexturing.SW, BasicRoadsTexturing.NW, BasicRoadsTexturing.SE);
+                        bool rse = ConnectPath(pathData, rIdx, se, BasicRoadsTexturing.SE, BasicRoadsTexturing.NW, BasicRoadsTexturing.NE, BasicRoadsTexturing.SW);
+                        bool rsw = ConnectPath(pathData, rIdx, sw, BasicRoadsTexturing.SW, BasicRoadsTexturing.NE, BasicRoadsTexturing.NW, BasicRoadsTexturing.SE);
+                        bool rnw = ConnectPath(pathData, rIdx, nw, BasicRoadsTexturing.NW, BasicRoadsTexturing.SE, BasicRoadsTexturing.NE, BasicRoadsTexturing.SW);
 
-                    if (!rn && !re) ConnectPath(pathData, rIdx, ne, BasicRoadsTexturing.NE, BasicRoadsTexturing.SW);
-                    if (!rs && !re) ConnectPath(pathData, rIdx, se, BasicRoadsTexturing.SE, BasicRoadsTexturing.NW);
-                    if (!rs && !rw) ConnectPath(pathData, rIdx, sw, BasicRoadsTexturing.SW, BasicRoadsTexturing.NE);
-                    if (!rn && !rw) ConnectPath(pathData, rIdx, nw, BasicRoadsTexturing.NW, BasicRoadsTexturing.SE);
+                        if (!rne && !rse) ConnectPath(pathData, rIdx, e, BasicRoadsTexturing.E, BasicRoadsTexturing.W);
+                        if (!rse && !rsw) ConnectPath(pathData, rIdx, s, BasicRoadsTexturing.S, BasicRoadsTexturing.N);
+                        if (!rsw && !rnw) ConnectPath(pathData, rIdx, w, BasicRoadsTexturing.W, BasicRoadsTexturing.E);
+                        if (!rnw && !rne) ConnectPath(pathData, rIdx, n, BasicRoadsTexturing.N, BasicRoadsTexturing.S);
+                    }
+                    else                // Prefer cardinal connections for paths
+                    {
+                        bool rn = ConnectPath(pathData, rIdx, n, BasicRoadsTexturing.N, BasicRoadsTexturing.S);
+                        bool re = ConnectPath(pathData, rIdx, e, BasicRoadsTexturing.E, BasicRoadsTexturing.W);
+                        bool rs = ConnectPath(pathData, rIdx, s, BasicRoadsTexturing.S, BasicRoadsTexturing.N);
+                        bool rw = ConnectPath(pathData, rIdx, w, BasicRoadsTexturing.W, BasicRoadsTexturing.E);
+
+                        if (!rn && !re) ConnectPath(pathData, rIdx, ne, BasicRoadsTexturing.NE, BasicRoadsTexturing.SW);
+                        if (!rs && !re) ConnectPath(pathData, rIdx, se, BasicRoadsTexturing.SE, BasicRoadsTexturing.NW);
+                        if (!rs && !rw) ConnectPath(pathData, rIdx, sw, BasicRoadsTexturing.SW, BasicRoadsTexturing.NE);
+                        if (!rn && !rw) ConnectPath(pathData, rIdx, nw, BasicRoadsTexturing.NW, BasicRoadsTexturing.SE);
+                    }
 
                     if (pathData[rIdx] == 0)
                         pathData[rIdx] = 0xFF;
 
-                    Debug.LogFormat("Marked road at x:{0} y:{1}  index:{2}  byte: {3}", mouseX, mouseY, rIdx, Convert.ToString(pathData[rIdx], 2));
+                    Debug.LogFormat("Marked path at x:{0} y:{1}  index:{2}  byte: {3}", mouseX, mouseY, rIdx, Convert.ToString(pathData[rIdx], 2));
                 }
                 else
                 {
@@ -306,12 +417,13 @@ namespace BasicRoads
             }
         }
 
-        private static bool ConnectPath(byte[] pathData, int rIdx, int dIdx, byte rDir, byte dDir)
+        private static bool ConnectPath(byte[] pathData, int rIdx, int dIdx, byte rDir, byte dDir, byte excl1 = 0, byte excl2 = 0)
         {
             if (dIdx >= 0 && dIdx < pathData.Length)
             {
                 bool road = pathData[dIdx] != 0;
-                if (road)
+                bool exclude = pathData[dIdx] != 0xFF && (pathData[dIdx] & excl1) != 0 && (pathData[dIdx] & excl2) != 0;
+                if (road && !exclude)
                 {
                     pathData[rIdx] |= rDir;
 
@@ -319,8 +431,9 @@ namespace BasicRoads
                         pathData[dIdx] = dDir;
                     else
                         pathData[dIdx] |= dDir;
+
+                    return true;
                 }
-                return road;
             }
             return false;
         }
@@ -376,10 +489,15 @@ namespace BasicRoads
                     }
 
                     int pIdx = originX + x + ((originY + y) * MapsFile.MaxMapPixelX);
+                    if (showPaths[BasicRoadsTexturing.streams])
+                        DrawPath(offset5, width5, pathsData[BasicRoadsTexturing.streams][pIdx], streamColor, ref locationDotsPixelBuffer);
                     if (showPaths[BasicRoadsTexturing.tracks])
                         DrawPath(offset5, width5, pathsData[BasicRoadsTexturing.tracks][pIdx], trackColor, ref locationDotsPixelBuffer);
+                    if (showPaths[BasicRoadsTexturing.rivers])
+                        DrawPath(offset5, width5, pathsData[BasicRoadsTexturing.rivers][pIdx], riverColor, ref locationDotsPixelBuffer);
                     if (showPaths[BasicRoadsTexturing.roads])
                         DrawPath(offset5, width5, pathsData[BasicRoadsTexturing.roads][pIdx], roadColor, ref locationDotsPixelBuffer);
+
                     //Debug.LogFormat("Found road at x:{0} y:{1}  index:{2}", originX + x, originY + y, rIdx);
                 }
             }
@@ -582,7 +700,7 @@ namespace BasicRoads
         {
             using (StreamWriter file = new StreamWriter(Path.Combine(WorldDataReplacement.WorldDataPath, filename)))
             {
-                byte[] existingData = roadTexturing.GetPathData(pathType);
+                byte[] existingData = roadsTexturing.GetPathData(pathType);
                 for (int i = 0; i < pathsData[pathType].Length; i++)
                 {
                     if (i != 0 && i % MapsFile.MaxMapPixelX == 0)
@@ -604,6 +722,8 @@ namespace BasicRoads
                     ConsoleCommandsDatabase.RegisterCommand(PathEditorCmd.name, PathEditorCmd.description, PathEditorCmd.usage, PathEditorCmd.Execute);
                     ConsoleCommandsDatabase.RegisterCommand(ExportRoadDataCmd.name, ExportRoadDataCmd.description, ExportRoadDataCmd.usage, ExportRoadDataCmd.Execute);
                     ConsoleCommandsDatabase.RegisterCommand(ExportTrackDataCmd.name, ExportTrackDataCmd.description, ExportTrackDataCmd.usage, ExportTrackDataCmd.Execute);
+                    ConsoleCommandsDatabase.RegisterCommand(ExportRiverDataCmd.name, ExportRiverDataCmd.description, ExportRiverDataCmd.usage, ExportRiverDataCmd.Execute);
+                    ConsoleCommandsDatabase.RegisterCommand(ExportStreamDataCmd.name, ExportStreamDataCmd.description, ExportStreamDataCmd.usage, ExportStreamDataCmd.Execute);
                     ConsoleCommandsDatabase.RegisterCommand(ExportPathsPngCmd.name, ExportPathsPngCmd.description, ExportPathsPngCmd.usage, ExportPathsPngCmd.Execute);
                 }
                 catch (Exception ex)
@@ -666,6 +786,31 @@ namespace BasicRoads
                 {
                     File.WriteAllBytes(Path.Combine(WorldDataReplacement.WorldDataPath, BasicRoadsTexturing.TrackDataFilename), pathsData[BasicRoadsTexturing.tracks]);
                     return "Exported edited dirt track path data to: " + Path.Combine(WorldDataReplacement.WorldDataPath, BasicRoadsTexturing.TrackDataFilename);
+                }
+            }
+
+            private static class ExportRiverDataCmd
+            {
+                public static readonly string name = "ExportRiverData";
+                public static readonly string description = "Exports edited river paths as a binary file";
+                public static readonly string usage = "exportriverdata";
+
+                public static string Execute(params string[] args)
+                {
+                    File.WriteAllBytes(Path.Combine(WorldDataReplacement.WorldDataPath, BasicRoadsTexturing.RiverDataFilename), pathsData[BasicRoadsTexturing.rivers]);
+                    return "Exported edited river path data to: " + Path.Combine(WorldDataReplacement.WorldDataPath, BasicRoadsTexturing.RiverDataFilename);
+                }
+            }
+            private static class ExportStreamDataCmd
+            {
+                public static readonly string name = "ExportStreamData";
+                public static readonly string description = "Exports edited stream paths as a binary file";
+                public static readonly string usage = "exportstreamdata";
+
+                public static string Execute(params string[] args)
+                {
+                    File.WriteAllBytes(Path.Combine(WorldDataReplacement.WorldDataPath, BasicRoadsTexturing.StreamDataFilename), pathsData[BasicRoadsTexturing.streams]);
+                    return "Exported edited stream path data to: " + Path.Combine(WorldDataReplacement.WorldDataPath, BasicRoadsTexturing.StreamDataFilename);
                 }
             }
 
