@@ -16,6 +16,12 @@ namespace TravelOptions
     /// </summary>
     public class CastWhenHeldTO : CastWhenHeld
     {
+        public override void SetProperties()
+        {
+            base.SetProperties();
+            properties.DisableReflectiveEnumeration = true;
+        }
+
         protected override void ApplyDurabilityLoss(DaggerfallUnityItem item, DaggerfallEntityBehaviour entity)
         {
             if (!GameManager.Instance.EntityEffectBroker.SyntheticTimeIncrease && !TravelOptionsMod.Instance.GetTravelControlUI().isShowing)
@@ -24,7 +30,7 @@ namespace TravelOptions
                 if (GameManager.Instance.EntityEffectBroker.MagicRoundsSinceStartup % degradeRate == 0)
                 {
                     item.LowerCondition(1, entity.Entity, entity.Entity.Items);
-                    //UnityEngine.Debug.LogFormat("CastWhenHeld degraded '{0}' by 1 durability point. {1}/{2} remaining.", item.LongName, item.currentCondition, item.maxCondition);
+                    //UnityEngine.Debug.LogFormat("CastWhenHeldTO: degraded '{0}' by 1 durability point. {1}/{2} remaining.", item.LongName, item.currentCondition, item.maxCondition);
                 }
             }
         }

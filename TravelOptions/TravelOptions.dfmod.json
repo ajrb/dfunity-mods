@@ -1,10 +1,10 @@
 {
     "ModTitle": "TravelOptions",
-    "ModVersion": "1.5.2",
+    "ModVersion": "1.6",
     "ModAuthor": "Hazelnut",
     "ContactInfo": "forums.dfworkshop.net",
     "DFUnity_Version": "0.13.4",
-    "ModDescription": "Travel options allowing time accelerated travel as well as standard fast travel",
+    "ModDescription": "Travel options allowing for time accelerated travel as well as standard fast travel",
     "GUID": "93f3ad1c-83cc-40ac-b762-96d2f47f2e05",
     "Files": [
         "Assets/Game/Mods/TravelOptions/modsettings.json",
@@ -18,6 +18,7 @@
         "Assets/Game/Mods/TravelOptions/Textures/TOportsOn.png",
         "Assets/Game/Mods/TravelOptions/modpresets.json",
         "Assets/Game/Mods/TravelOptions/TravelOptions.dfmod.json",
-        "Assets/Game/Mods/TravelOptions/Scripts/MagesGuildTO.cs"
+        "Assets/Game/Mods/TravelOptions/Scripts/MagesGuildTO.cs",
+        "Assets/Game/Mods/TravelOptions/Scripts/CastWhenHeldTO.cs"
     ]
 }
