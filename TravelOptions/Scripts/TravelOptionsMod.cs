@@ -846,8 +846,9 @@ namespace TravelOptions
 
         internal void DisableJunctionMap(bool force = false)
         {
-            if (force || (roadsJunctionMap && !persistentJunctionMap && junctionMapPanel != null))
-                junctionMapPanel.Enabled = false;
+            if (force || (roadsJunctionMap && !persistentJunctionMap))
+                if (junctionMapPanel != null)
+                    junctionMapPanel.Enabled = false;
         }
 
         #endregion
