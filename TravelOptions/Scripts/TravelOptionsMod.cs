@@ -51,6 +51,7 @@ namespace TravelOptions
         protected const string MsgNoPath = "There's no path here to follow in that direction.";
         protected const string MsgFollowRoad = "Following a road.";
         protected const string MsgFollowTrack = "Following a dirt track.";
+        protected const string MsgTargetCoords = "Map coordinates: {0}, {1}.";
 
         // Path type and direction constants copied from BasicRoadsTexturing
         public const int path_roads = 0;
@@ -94,6 +95,7 @@ namespace TravelOptions
         public bool VariableSizeDots { get; private set; }
         public bool WaterwaysEnabled { get; private set; }
         public bool StreamsToggle { get; private set; }
+        public bool TargetCoordsAllowed { get; private set; }
 
         public float RecklessTravelMultiplier { get; private set; } = 1f;
         public float CautiousTravelMultiplier { get; private set; } = 0.8f;
@@ -174,6 +176,7 @@ namespace TravelOptions
         // Load dynamic settings that can be changed at runtime.
         void LoadSettings(ModSettings settings, ModSettingsChange change)
         {
+            TargetCoordsAllowed = settings.GetValue<bool>("GeneralOptions", "AllowTargetingMapCoordinates");
             enableWeather = settings.GetValue<bool>("GeneralOptions", "AllowWeather");
             enableSounds = settings.GetValue<bool>("GeneralOptions", "AllowAnnoyingSounds");
             enableRealGrass = settings.GetValue<bool>("GeneralOptions", "AllowRealGrass");
@@ -238,14 +241,14 @@ namespace TravelOptions
             baseFixedDeltaTime = Time.fixedDeltaTime;
 
             // Allow teleportation for anyone if enabled
-            if (settings.GetValue<bool>("Teleportation", "Enable"))
+            if (settings.GetValue<bool>("Teleportation", "EnablePaidTeleportation"))
             {
                 if (!GuildManager.RegisterCustomGuild(FactionFile.GuildGroups.MagesGuild, typeof(MagesGuildTO)))
                     throw new Exception("GuildGroup MagesGuild is already overridden, unable to register MagesGuildTO guild class.");
                 TeleportCost = true;
             }
 
-            //GameManager.Instance.EntityEffectBroker.RegisterEffectTemplate(new CastWhenHeldTO(), true);
+            GameManager.Instance.EntityEffectBroker.RegisterEffectTemplate(new CastWhenHeldTO(), true);
 
             mod.MessageReceiver = MessageReceiver;
             mod.IsReady = true;
@@ -355,13 +358,14 @@ namespace TravelOptions
             }
         }
 
+        // Begin travel to a location
         public void BeginTravel(ContentReader.MapSummary destinationSummary, bool speedCautious = false)
         {
             DFLocation targetLocation;
             if (DaggerfallUnity.Instance.ContentReader.GetLocation(destinationSummary.RegionIndex, destinationSummary.MapIndex, out targetLocation))
             {
                 DestinationName = targetLocation.Name;
-                travelControlUI.SetDestination(targetLocation.Name);
+                travelControlUI.SetDestinationName(targetLocation.Name);
                 DestinationSummary = destinationSummary;
                 DestinationCautious = speedCautious;
                 if (alwaysUseStartingAccel)
@@ -371,9 +375,9 @@ namespace TravelOptions
                 beginTime = DaggerfallUnity.Instance.WorldTime.Now.ToClassicDaggerfallTime();
             }
             else throw new Exception("TravelOptions: destination not found!");
-
         }
 
+        // Begin travel to configured location, used to continue journeys
         public void BeginTravel()
         {
             if (!string.IsNullOrEmpty(DestinationName))
@@ -394,9 +398,35 @@ namespace TravelOptions
             }
         }
 
+        // Begin travel to map pixel coordinates
+        public void BeginTravelToCoords(DFPosition targetPixel, bool speedCautious = false)
+        {
+            string targetName = string.Format(MsgTargetCoords, targetPixel.X, targetPixel.Y);
+            travelControlUI.SetDestinationName(targetName);
+            DestinationCautious = speedCautious;
+            if (alwaysUseStartingAccel)
+                travelControlUI.TimeAcceleration = defaultStartingAccel;
+            travelControlUI.HalfLimit = false;
+
+            DFPosition targetMPworld = MapsFile.MapPixelToWorldCoord(targetPixel.X, targetPixel.Y);
+            Rect targetRect = new Rect(targetMPworld.X + MidLo, targetMPworld.Y + MidLo, PSize, PSize);
+            playerAutopilot = new PlayerAutoPilot(targetPixel, targetRect, road ? RecklessTravelMultiplier : CautiousTravelMultiplier);
+            playerAutopilot.OnArrival += () =>
+            {
+                travelControlUI.CloseWindow();
+                ClearTravelDestination();
+                DaggerfallUI.MessageBox(MsgArrived);
+            };
+
+            lastLocation = GameManager.Instance.PlayerGPS.CurrentLocation;
+            InitTravelUI();
+
+            Debug.Log("Begun accelerated travel to " + targetName);
+        }
+
         private void InitTravelUI(bool circumnavSpeedLimiter = false)
         {
-            DisableJunctionMap();
+            DisableJunctionMap(true);
 
             if (circumnavSpeedLimiter && travelControlUI.TimeAcceleration > MaxCircumnavigationAccel)
                 SetTimeScale(MaxCircumnavigationAccel);
@@ -524,7 +554,7 @@ namespace TravelOptions
             if (targetPixel != null)
             {
                 lastCrossed = 0;
-                travelControlUI.SetDestination(road ? MsgFollowRoad : MsgFollowTrack);
+                travelControlUI.SetDestinationName(road ? MsgFollowRoad : MsgFollowTrack);
                 DFPosition targetMPworld = MapsFile.MapPixelToWorldCoord(targetPixel.X, targetPixel.Y);
 
                 Rect targetRect = SetLocationRects(targetPixel, targetMPworld) ? locationBorderRect : new Rect(targetMPworld.X + MidLo, targetMPworld.Y + MidLo, PSize, PSize);
@@ -627,7 +657,7 @@ namespace TravelOptions
             else
                 return;
 
-            travelControlUI.SetDestination(string.Format(MsgCircumnavigate, GameManager.Instance.PlayerGPS.CurrentLocation.Name));
+            travelControlUI.SetDestinationName(string.Format(MsgCircumnavigate, GameManager.Instance.PlayerGPS.CurrentLocation.Name));
 
             DestinationCautious = false;
             if (alwaysUseStartingAccel)
@@ -814,9 +844,9 @@ namespace TravelOptions
             }
         }
 
-        internal void DisableJunctionMap()
+        internal void DisableJunctionMap(bool force = false)
         {
-            if (roadsJunctionMap && !persistentJunctionMap && junctionMapPanel != null)
+            if (force || (roadsJunctionMap && !persistentJunctionMap && junctionMapPanel != null))
                 junctionMapPanel.Enabled = false;
         }
 
@@ -861,6 +891,12 @@ namespace TravelOptions
 
             if (playerAutopilot != null)
             {
+                // Run updates for playerAutopilot and HUD, return after autopilot update if game is paused (otherwise travel map breaks - no clue why)
+                playerAutopilot.Update();
+                if (GameManager.IsGamePaused)
+                    return;
+                DaggerfallUI.Instance.DaggerfallHUD.HUDVitals.Update();
+
                 // Ensure only the travel UI is showing, stop travel if not, but allow registered window and travel map to not halt travel.
                 if (GameManager.Instance.IsPlayerOnHUD ||
                     (DaggerfallUI.UIManager.TopWindow != travelControlUI &&
@@ -872,13 +908,6 @@ namespace TravelOptions
                     uiCloseWhenTop = travelControlUI.isShowing;
                     return;
                 }
-
-                // Run updates for playerAutopilot and HUD, return after autopilot update if game is paused (otherwise travel map breaks - no clue why)
-                playerAutopilot.Update();
-                if (GameManager.IsGamePaused)
-                    return;
-                DaggerfallUI.Instance.DaggerfallHUD.HUDVitals.Update();
-
 
                 if (DestinationName == null && followKeyCode != KeyCode.None && !InputManager.Instance.IsPaused && InputManager.Instance.GetKeyDown(followKeyCode))
                 {

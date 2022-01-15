@@ -57,7 +57,7 @@ namespace TravelOptions
 
         public int TimeAcceleration { get; internal set; }
 
-        public void SetDestination(string destinationName)
+        public void SetDestinationName(string destinationName)
         {
             destinationLabel.Text = destinationName;
         }

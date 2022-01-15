@@ -54,7 +54,7 @@
         },
         {
             "Name": "StopAtInnsTravel",
-            "Description": "Configuration for the Stop At Inns Travel option. If enabled, this effectively disables normal fast traveling completely except when sailing.",
+            "Description": "Configuration for the Stop At Inns Travel option. If enabled, this effectively disables normal fast traveling completely, except when sailing.",
             "IsAdvanced": false,
             "Keys": [
                 {
@@ -91,9 +91,28 @@
         },
         {
             "Name": "GeneralOptions",
-            "Description": "Configuration for  general travel options to suit each player and system setup.",
+            "Description": "Configuration for general travel options to suit each player and system setup. For discovery and exploration also allow travel to any map coordinates and auto-pausing travel wwhen at or near locations.",
             "IsAdvanced": false,
             "Keys": [
+                {
+                    "Value": true,
+                    "Name": "AllowTargetingMapCoordinates",
+                    "Description": "Allows travel map to target any coordinates using time accelerated travel",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
+                },
+                {
+                    "Options": [
+                        "off",
+                        "nearby",
+                        "entered"
+                    ],
+                    "Value": 0,
+                    "Name": "LocationPause",
+                    "Description": "Auto pause when encountering a game location during real time accelerated travel",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.MultipleChoiceKey"
+                },
                 {
                     "Value": false,
                     "Name": "AllowWeather",
@@ -114,18 +133,6 @@
                     "Description": "Allows the Real Grass mod to run during time accelerated travel",
                     "$version": "v1",
                     "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
-                },
-                {
-                    "Options": [
-                        "off",
-                        "nearby",
-                        "entered"
-                    ],
-                    "Value": 0,
-                    "Name": "LocationPause",
-                    "Description": "Auto pause when encountering a game location during real time accelerated travel",
-                    "$version": "v1",
-                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.MultipleChoiceKey"
                 }
             ],
             "$version": "v1"
@@ -175,6 +182,21 @@
             "$version": "v1"
         },
         {
+            "Name": "Teleportation",
+            "Description": "Allows the mages guild teleportation service to be availible to all members regardless of rank, at a cost of course. Becomes free once reaching rank it was originally availible.",
+            "IsAdvanced": false,
+            "Keys": [
+                {
+                    "Value": false,
+                    "Name": "EnablePaidTeleportation",
+                    "Description": "Enable paid Mages teleportation service for all guild members, before rank 8",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
+                }
+            ],
+            "$version": "v1"
+        },
+        {
             "Name": "RoadsIntegration",
             "Description": "Configuration for integration of the BasicRoads mod, if it's installed",
             "IsAdvanced": false,
@@ -218,7 +240,7 @@
                 {
                     "Value": false,
                     "Name": "EnableStreamsToggle",
-                    "Description": "Adds a toggle button for streams separate from rivers",
+                    "Description": "Adds a streams toggle button separate from rivers button",
                     "$version": "v1",
                     "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
                 }
@@ -227,7 +249,7 @@
         },
         {
             "Name": "RoadsJunctionMap",
-            "Description": "Configure a mini-map that pops up at junctions when following roads",
+            "Description": "Configure a mini-map that pops up at junctions when following roads. Can also be made to be persistent while following paths.",
             "IsAdvanced": false,
             "Keys": [
                 {
@@ -247,7 +269,7 @@
                 {
                     "Min": 40,
                     "Max": 200,
-                    "Value": 100,
+                    "Value": 75,
                     "Name": "ScreenSize",
                     "Description": "The width and height the mini-map is rendered on the screen",
                     "$version": "v1",
@@ -256,7 +278,7 @@
                 {
                     "Min": 0,
                     "Max": 280,
-                    "Value": 107,
+                    "Value": 235,
                     "Name": "ScreenPositionX",
                     "Description": "The X coordinate the mini-map is rendered on the screen",
                     "$version": "v1",
@@ -320,21 +342,6 @@
                     "Description": "The opaque background color to use for the mini-map",
                     "$version": "v1",
                     "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ColorKey"
-                }
-            ],
-            "$version": "v1"
-        },
-        {
-            "Name": "Teleportation",
-            "Description": "Enable mages guild teleportation service to be availible to all members, at a cost",
-            "IsAdvanced": false,
-            "Keys": [
-                {
-                    "Value": false,
-                    "Name": "Enable",
-                    "Description": "Enable Mages teleportation service for all members, for a cost before rank 8",
-                    "$version": "v1",
-                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
                 }
             ],
             "$version": "v1"

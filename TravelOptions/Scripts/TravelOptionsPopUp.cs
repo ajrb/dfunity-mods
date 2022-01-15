@@ -8,6 +8,7 @@ using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.UserInterface;
 using DaggerfallWorkshop.Game.UserInterfaceWindows;
 using DaggerfallConnect;
+using DaggerfallConnect.Utility;
 
 namespace TravelOptions
 {
@@ -19,9 +20,14 @@ namespace TravelOptions
         private const string MsgNoDestPort = "You cannot travel by ship to there, as that location has no port.";
         private const string MsgNoSailing = "Your journey doesn't cross any ocean, so a ship is not needed.";
 
+        protected TravelOptionsMapWindow travelWindowTO;
+
+        public new DFPosition EndPos { get { return base.EndPos; } protected internal set { base.EndPos = value; } }
+
         public TravelOptionsPopUp(IUserInterfaceManager uiManager, IUserInterfaceWindow previousWindow = null, DaggerfallTravelMapWindow travelWindow = null)
             : base(uiManager, previousWindow, travelWindow)
         {
+            travelWindowTO = (TravelOptionsMapWindow)travelWindow;
         }
 
         protected override void Setup()
@@ -80,7 +86,7 @@ namespace TravelOptions
 
         protected override void UpdateLabels()
         {
-            if (IsPlayerControlledTravel())
+            if (IsPlayerControlledTravel() || !travelWindowTO.LocationSelected)
             {
                 TransportManager transportManager = GameManager.Instance.TransportManager;
                 bool horse = transportManager.TransportMode == TransportModes.Horse;
@@ -111,7 +117,15 @@ namespace TravelOptions
 
         protected override void CallFastTravelGoldCheck()
         {
-            if (IsPlayerControlledTravel())
+            if (!travelWindowTO.LocationSelected)
+            {
+                CloseWindow();
+                TravelWindow.CloseTravelWindows(true);
+
+                Debug.LogFormat("Start travel to MP coords: {0},{1}", EndPos.X, EndPos.Y);
+                TravelOptionsMod.Instance.BeginTravelToCoords(EndPos, SpeedCautious);
+            }
+            else if (IsPlayerControlledTravel())
             {
                 CloseWindow();
                 TravelWindow.CloseTravelWindows(true);

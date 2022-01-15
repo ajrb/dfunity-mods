@@ -16,6 +16,7 @@ using DaggerfallWorkshop.Utility.AssetInjection;
 using DaggerfallWorkshop.Game.Utility.ModSupport;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Guilds;
+using DaggerfallConnect.Utility;
 
 namespace TravelOptions
 {
@@ -98,6 +99,8 @@ namespace TravelOptions
 
         internal static byte[][] pathsData = new byte[4][];
         protected bool[] showPaths = { true, true, false, false };
+
+        internal bool LocationSelected { get { return locationSelected; } }
 
         // Hidden map locations mod compatibility.
         public const string HIDDEN_MAP_LOCATIONS_MODNAME = "Hidden Map Locations";
@@ -373,6 +376,57 @@ namespace TravelOptions
                 }
             }
             teleportCharge = false;
+        }
+
+        // Handle clicks on the main panel
+        protected override void ClickHandler(BaseScreenComponent sender, Vector2 position)
+        {
+            // If allowed handle clicks on map pixels without a location, allowing non-fast travel to any MP coords
+            if (TravelOptionsMod.Instance.TargetCoordsAllowed && RegionSelected && !locationSelected && !MouseOverOtherRegion)
+            {
+                position.y -= regionPanelOffset;
+
+                // Ensure clicks are inside region texture
+                if (position.x < 0 || position.x > regionTextureOverlayPanelRect.width || position.y < 0 || position.y > regionTextureOverlayPanelRect.height)
+                    return;
+
+                if (popUp == null)
+                {
+                    popUp = (DaggerfallTravelPopUp)UIWindowFactory.GetInstanceWithArgs(UIWindowType.TravelPopUp, new object[] { uiManager, uiManager.TopWindow, this });
+                }
+                ((TravelOptionsPopUp)popUp).EndPos = GetClickMPCoords();
+                uiManager.PushWindow(popUp);
+            }
+            else
+            {
+                base.ClickHandler(sender, position);
+            }
+        }
+
+        protected DFPosition GetClickMPCoords()
+        {
+            float scale = GetRegionMapScale(selectedRegion);
+            Vector2 coordinates = GetCoordinates();
+            int x = (int)(coordinates.x / scale);
+            int y = (int)(coordinates.y / scale);
+
+            if (selectedRegion == betonyIndex)      // Manually correct Betony offset
+            {
+                x += 60;
+                y += 212;
+            }
+
+            if (selectedRegion == 61)               // Fix for Cybiades zoom-in map. Map is more zoomed in than for other regions but the pixel coordinates are not scaled to match.
+            {
+                int xDiff = x - 440;
+                int yDiff = y - 340;
+                xDiff /= 4;
+                yDiff /= 4;
+                x = 440 + xDiff;
+                y = 340 + yDiff;
+            }
+
+            return new DFPosition(x, y);
         }
 
         // Updates location dots
