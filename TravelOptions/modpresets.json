@@ -10,7 +10,8 @@
                 "AllowAnnoyingSounds": "False",
                 "AllowRealGrass": "False",
                 "LocationPause": "0",
-                "PathsTravel": "True"
+                "PathsTravel": "True",
+                "AllowTargetingMapCoordinates": "True"
             },
             "CautiousTravel": {
                 "PlayerControlledCautiousTravel": "True",
@@ -35,7 +36,12 @@
             "RoadsIntegration": {
                 "Enable": "True",
                 "FollowPathsKey": "1",
-                "VariableSizeDots": "True"
+                "VariableSizeDots": "True",
+                "EnableWaterways": "False",
+                "EnableStreamsToggle": "False"
+            },
+            "Teleportation": {
+                "EnablePaidTeleportation": "False"
             }
         },
         "$version": "v1"
@@ -112,7 +118,8 @@
                 "Circular": "True",
                 "PlayerColor": "FF0000FF",
                 "Opaque": "False",
-                "BackgroundColor": "327F19FF"
+                "BackgroundColor": "327F19FF",
+                "PersistentMap": "False"
             }
         },
         "$version": "v1"
@@ -127,7 +134,8 @@
                 "Enable": "True",
                 "ScreenSize": "100",
                 "ScreenPositionX": "107",
-                "ScreenPositionY": "46"
+                "ScreenPositionY": "46",
+                "PersistentMap": "False"
             }
         },
         "$version": "v1"

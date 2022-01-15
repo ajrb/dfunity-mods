@@ -1,0 +1,82 @@
+Travel Options, by Hazelnut
+
+Description
+
+This mod provides options for travelling around the Iliac Bay, allowing for either fast travel or time accelerated real travel modes depending on player choice. The normal vanilla map and travel popup are used, with the various travel options (speed, transport, stopping at night) governing whether it will be normal Daggerfall fast travel or use time accelerated real travel depending on configuration.
+
+During time accelerated travelling, the HUD has a vanilla style UI control panel (similar in operation to Tedious Travel) allowing the player to see where they're headed, adjust the time acceleration multiple, open the map to check location (and possibly change destination), pause the journey to camp, or exit the journey completely. Enemy encounters will auto pause travel, and encountering locations can also be set to pause travel if desired.
+
+Selecting recklessly by foot/horse with camp out options will always initiate time accelerated travel mode, however the rest is configurable. The default settings are balanced so you have to sail from a port or stop at inns for the vanilla fast travel to be used, with all other options using the time accelerated real travel mode. However, if you use a minimal configuration (e.g. freedom preset) then travel is identical to vanilla unless the player specifically chooses to travel recklessly by foot/horse and camping out, in which case the time accelerated travel mode will be used. Cautious travel is slower as you move more carefully, but gives a chance of avoiding random encounters. The chance percentage is luck + stealth - 20 capped at 95% max. (configurable between 80 and 100%)
+
+This mod is integrated with the Basic Roads mod, so if that mod is installed and enabled in settings then the travel map is enhanced to show larger towns as bigger squares as well as showing roads and tracks. There are toggle buttons for both in the top left corner. This does require a higher resolution to display and so may not look great at resolutions below 1600x1000, but it will still work. Location outlines still work but look quite heavyweight. If a key is set, default 'F', then you can follow paths by standing on them and facing the direction you want to travel and pressing the key to initiate time accelerated travel. The same key stops travel, or the UI controls can be used instead. Travel will automatically stop when a location or junction with more than two paths. Locations can be circumnavigated by following the path around, which will automatically stop when another path is reached. (note that this works even for dirt tracks which don't visibly ring locations) The maximum time acceleration is limited to half the standard limit for following roads or tracks, so max of 50x if you set 100x in the settings. Also a speed of 15 is used for circumnavigation if you have it set higher, just because otherwise it can be very disorienting.
+
+A new feature in v1.4 is a junction mini-map overlay which pops up when path following stops at a junction. This is to allow quick easy selection of the next direction from a planned route and avoids the need to constantly open the travel map while travelling. It's fully customisable with four presets for centre, top centre, top left and top right.
+
+Credit to Jedidia for the autopilot class and some other logic I reused from Tedious Travel.
+
+
+Presets
+
+The mod ships with some presets which can be used to setup the gameplay with this mod. The 3 Travel presets only affect player controlled cautious and stop at inns travel, and also the ship travel settings.
+
+    DefaultSettings - This defaults all settings to original values.
+    BalancedTravel - Balanced integration of time acceleration into the base game of Daggerfall. (recommended)
+    FreedomTravel - Freely choose whether you use normal fast travel or time accelerated travel by selecting reckless, foot/horse, and camp out options. (minimal integration)
+    TediousTravel - Travel is more tedious, and close to the Tedious Travel mod but without the shipping logic from that mod. (only fast travel on ships to/from ports)
+
+
+Configuration
+(note settings marked with * won't take effect without restarting DFU)
+
+Cautious Travel:
+
+    Player Controlled - This enables the cautious speed option to initiate time accelerated travel, and provides additional safety for the cost of some travel speed. You have a chance to avoid random encounters and it pauses the journey if health or fatigue drop below configurable levels.
+    Speed Penalty - Speed penalty for travelling cautiously, as a percentage, default is 20% (i.e. 80% of full speed)
+    Max Chance To Avoid Encounter - Maximum chance to avoid an encounter when travelling cautiously, as a percentage, defaults to 95%.
+    Health Minimum Percentage - Level of health that will automatically pause the journey when travelling cautiously, as a percentage, defaults to 5%.
+    Fatigue Minimum Value - Level of fatigue that will automatically pause the journey when travelling cautiously, absolute value, defaults to 5.
+
+Ship Travel:
+
+    Only From Ports - This enforces that you can only select ship transportation from a location that has a port. A filter button for ports appears on the travel map if this is set so you can find places that have ports easily.
+    Only To Ports - This enforces that you can only select ship transportation if your destination is a location with a port. Only functions if the above setting is enabled.
+
+Stop At Inns Travel:
+
+    Player Controlled - This enables the stop for night at inns option to also initiate time accelerated travel, basically disabling vanilla fast travel completely unless sailing.
+
+General Options:
+
+    Allow Targeting Map Coordinates - Allows travel to target any map coordinates using time accelerated travel
+    Location Pause - Selects the mode for pausing upon encountering locations during time accelerated real travel. Three modes: off, nearby, and entered. Nearby pauses when player moves into a map pixel containing a location, and entered pauses only once the locations' rectangle is entered.
+    Allow Weather - Allows weather when using time accelerated real travel mode for performance and effect weirdness reasons.
+    Allow Sounds - Allows annoying sounds (horse neighing and footsteps) when using time accelerated real travel mode for the sake of players ears and sanity.
+    Allow Real Grass - Allows the real grass mod when using time accelerated real travel mode for performance.
+
+Time Acceleration:
+
+    Default Starting Acceleration - Set the time acceleration first used when initiating a journey.
+    Always Use Starting Acceleration - Always uses the default starting acceleration when initiating a journey, rather than the last journey's value.
+    Acceleration Limit - Sets the maximum time acceleration that can be used. Defaults to x40 as maximum but can be raised or lowered depending on computer and other mods being used. Set this apropriately so DFU can keep up with the speed of travel and generate the terrain in time. Warning: raising this can cause players to fall off the terrain and into the void. Set the limit accordingly for your system & setup.
+
+Teleportation:
+
+    Enable Paid Teleportation* - Allows the mages guild teleportation service to be availible to all members regardless of rank, at a cost of course. Becomes free once reaching rank it was originally availible.
+
+Roads Integration:
+
+    Enable* - Enables integration with Basic Roads mod, showing roads and tracks on the travel map, as well as larger locations with bigger dots.
+    Variable Size Dots* - All locations, except for cities & towns, are rendered as smaller dots.
+    Follow Paths Key - The key used to start/stop path following. Can be set to none, F, G, K, O,or X which should hopefully suit any key bind setup.
+
+Roads Junction Map:
+
+    Enable* - Enables a popup mini-map overlay for road junctions to assist in selecting the next direction to follow a road or track.
+    Persistent Map - Set this to have the junction mini-map always displayed when following paths.
+    Screen Size* - The size of the junction map on screen.
+    Screen Position X & Y* - The placement of the junction map on screen.
+    Filter Mode - The pixel filter mode used for rendering.
+    Circular - Renders the map in a circle rather than rectangle. (doesn't apply to the background color when opaque)
+    Player Color - The colour used for the player position and direction indicator line.
+    Opaque* - Render the mini-map with an opaque background color. (not useful for centre screen placement as you wont be able to see where you're looking)
+    Background Color* - The opaque background color to use for the mini-map.

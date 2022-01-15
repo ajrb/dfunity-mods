@@ -16,6 +16,7 @@ using DaggerfallWorkshop.Utility.AssetInjection;
 using DaggerfallWorkshop.Game.Utility.ModSupport;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Guilds;
+using DaggerfallConnect.Utility;
 
 namespace TravelOptions
 {
@@ -35,6 +36,10 @@ namespace TravelOptions
         public static Color32 roadColor = new Color32(60, 60, 60, 255);
         public static Color32 trackColor = new Color32(160, 118, 74, 255);
 
+        public Vector2 buttonSize = new Vector2(47, 11);
+        public Vector2 portsSize = new Vector2(45, 11);
+        public Vector2 streamsSize = new Vector2(57, 11);
+
         const string roadsOffName = "roadsOff.png";
         const string roadsOnName = "roadsOn.png";
         const string tracksOffName = "tracksOff.png";
@@ -47,11 +52,28 @@ namespace TravelOptions
         protected Vector2 roadsButtonPos = new Vector2(1, 0);
         protected Vector2 tracksButtonPos = new Vector2(48, 0);
 
+        static Color32 riverColor = new Color32(48, 79, 250, 255);
+        static Color32 streamColor = new Color32(48, 120, 230, 255);
+
+        const string riversOffName = "riversOff.png";
+        const string riversOnName = "riversOn.png";
+        const string streamsOffName = "streamsOff.png";
+        const string streamsOnName = "streamsOn.png";
+        Texture2D riversOffTexture;
+        Texture2D riversOnTexture;
+        Texture2D streamsOffTexture;
+        Texture2D streamsOnTexture;
+
+        protected Vector2 riversButtonPos = new Vector2(272, 0);
+        protected Vector2 streamsButtonPos = new Vector2(215, 0);
+
         protected Rect pathsOverlayPanelRect = new Rect(0, regionPanelOffset, 320 * 5, 160 * 5);
         protected Panel pathsOverlayPanel;
 
         protected Button roadsButton;
         protected Button tracksButton;
+        protected Button riversButton;
+        protected Button streamsButton;
 
         const string portsOffName = "TOportsOff.png";
         const string portsOnName = "TOportsOn.png";
@@ -78,6 +100,8 @@ namespace TravelOptions
         internal static byte[][] pathsData = new byte[4][];
         protected bool[] showPaths = { true, true, false, false };
 
+        internal bool LocationSelected { get { return locationSelected; } }
+
         // Hidden map locations mod compatibility.
         public const string HIDDEN_MAP_LOCATIONS_MODNAME = "Hidden Map Locations";
         protected bool hiddenMapLocationsEnabled;
@@ -95,7 +119,17 @@ namespace TravelOptions
                 ModManager.Instance.SendModMessage(TravelOptionsMod.ROADS_MODNAME, "getPathData", path_tracks,
                     (string message, object data) => { pathsData[path_tracks] = (byte[])data; });
             }
-            
+            if (TravelOptionsMod.Instance.WaterwaysEnabled)
+            {
+                // Try to get waterways data from BasicRoads mod
+                ModManager.Instance.SendModMessage(TravelOptionsMod.ROADS_MODNAME, "getPathData", path_rivers,
+                    (string message, object data) => { pathsData[path_rivers] = (byte[])data; });
+                ModManager.Instance.SendModMessage(TravelOptionsMod.ROADS_MODNAME, "getPathData", path_streams,
+                    (string message, object data) => { pathsData[path_streams] = (byte[])data; });
+                showPaths[path_rivers] = true;
+                showPaths[path_streams] = true;
+            }
+
             Mod hiddenMapLocationsMod = ModManager.Instance.GetMod(HIDDEN_MAP_LOCATIONS_MODNAME);
             hiddenMapLocationsEnabled = hiddenMapLocationsMod != null && hiddenMapLocationsMod.Enabled;
 
@@ -117,7 +151,7 @@ namespace TravelOptions
 
             if (TravelOptionsMod.Instance.ShipTravelPortsOnly)
             {
-                // Towns filter button
+                // Port towns filter button
                 if (!TextureReplacement.TryImportImage(portsOffName, true, out portsOffTexture))
                     return;
                 if (!TextureReplacement.TryImportImage(portsOnName, true, out portsOnTexture))
@@ -125,7 +159,7 @@ namespace TravelOptions
 
                 portsFilterButton = new Button();
                 portsFilterButton.Position = portFilterPos;
-                portsFilterButton.Size = new Vector2(portsOffTexture.width, portsOffTexture.height);
+                portsFilterButton.Size = portsSize; //new Vector2(portsOffTexture.width, portsOffTexture.height);
                 portsFilterButton.BackgroundTexture = portsOffTexture;
                 portsFilterButton.OnMouseClick += PortsFilterButton_OnMouseClick;
                 NativePanel.Components.Add(portsFilterButton);
@@ -135,6 +169,12 @@ namespace TravelOptions
             {
                 SetupPathButtons();
                 UpdatePathButtons();
+
+                if (TravelOptionsMod.Instance.WaterwaysEnabled)
+                {
+                    SetupWaterButtons();
+                    UpdateWaterButtons();
+                }
 
                 locationDotsPixelBuffer = new Color32[(int)regionTextureOverlayPanelRect.width * (int)regionTextureOverlayPanelRect.height * 25];
                 locationDotsTexture = new Texture2D((int)regionTextureOverlayPanelRect.width * 5, (int)regionTextureOverlayPanelRect.height * 5, TextureFormat.ARGB32, false);
@@ -186,26 +226,65 @@ namespace TravelOptions
             roadsButton = new Button();
             roadsButton.Tag = path_roads;
             roadsButton.Position = roadsButtonPos;
-            roadsButton.Size = new Vector2(roadsOnTexture.width, roadsOnTexture.height);
+            roadsButton.Size = buttonSize;  //new Vector2(roadsOnTexture.width, roadsOnTexture.height);
             roadsButton.OnMouseClick += PathTypeButton_OnMouseClick;
             NativePanel.Components.Add(roadsButton);
 
             tracksButton = new Button();
             tracksButton.Tag = path_tracks;
             tracksButton.Position = tracksButtonPos;
-            tracksButton.Size = new Vector2(tracksOnTexture.width, tracksOnTexture.height);
+            tracksButton.Size = buttonSize; //new Vector2(tracksOnTexture.width, tracksOnTexture.height);
             tracksButton.OnMouseClick += PathTypeButton_OnMouseClick;
             NativePanel.Components.Add(tracksButton);
         }
+
+        protected void SetupWaterButtons()
+        {
+            // Water buttons
+            if (!TextureReplacement.TryImportImage(riversOffName, true, out riversOffTexture))
+                return;
+            if (!TextureReplacement.TryImportImage(riversOnName, true, out riversOnTexture))
+                return;
+            if (!TextureReplacement.TryImportImage(streamsOffName, true, out streamsOffTexture))
+                return;
+            if (!TextureReplacement.TryImportImage(streamsOnName, true, out streamsOnTexture))
+                return;
+
+            riversButton = new Button();
+            riversButton.Tag = path_rivers;
+            riversButton.Position = riversButtonPos;
+            riversButton.Size = buttonSize;
+            riversButton.BackgroundColor = Color.white;
+            riversButton.OnMouseClick += PathTypeButton_OnMouseClick;
+            NativePanel.Components.Add(riversButton);
+
+            if (TravelOptionsMod.Instance.StreamsToggle)
+            {
+                streamsButton = new Button();
+                streamsButton.Tag = path_streams;
+                streamsButton.Position = streamsButtonPos;
+                streamsButton.Size = streamsSize;
+                streamsButton.BackgroundColor = Color.white;
+                streamsButton.OnMouseClick += PathTypeButton_OnMouseClick;
+                NativePanel.Components.Add(streamsButton);
+            }
+        }
+
 
         protected virtual void PathTypeButton_OnMouseClick(BaseScreenComponent sender, Vector2 position)
         {
             int pathType = (int)sender.Tag;
             if (pathType >= path_roads && pathType <= path_streams)
-            {
                 showPaths[pathType] = !showPaths[pathType];
-            }
+
+            if (pathType == path_rivers && !TravelOptionsMod.Instance.StreamsToggle)
+                showPaths[path_streams] = showPaths[path_rivers];   // Streams follow rivers unless toggle enabled
+
             UpdatePathButtons();
+
+            if (TravelOptionsMod.Instance.WaterwaysEnabled)
+                UpdateWaterButtons();
+
             UpdateMapLocationDotsTexture();
         }
 
@@ -213,6 +292,13 @@ namespace TravelOptions
         {
             roadsButton.BackgroundTexture = showPaths[path_roads] ? roadsOnTexture : roadsOffTexture;
             tracksButton.BackgroundTexture = showPaths[path_tracks] ? tracksOnTexture : tracksOffTexture;
+        }
+
+        private void UpdateWaterButtons()
+        {
+            riversButton.BackgroundColorTexture = showPaths[path_rivers] ? riversOnTexture : riversOffTexture;
+            if (TravelOptionsMod.Instance.StreamsToggle)
+                streamsButton.BackgroundColorTexture = showPaths[path_streams] ? streamsOnTexture : streamsOffTexture;
         }
 
         public override void OnPush()
@@ -292,6 +378,57 @@ namespace TravelOptions
             teleportCharge = false;
         }
 
+        // Handle clicks on the main panel
+        protected override void ClickHandler(BaseScreenComponent sender, Vector2 position)
+        {
+            // If allowed handle clicks on map pixels without a location, allowing non-fast travel to any MP coords
+            if (TravelOptionsMod.Instance.TargetCoordsAllowed && RegionSelected && !locationSelected && !MouseOverOtherRegion)
+            {
+                position.y -= regionPanelOffset;
+
+                // Ensure clicks are inside region texture
+                if (position.x < 0 || position.x > regionTextureOverlayPanelRect.width || position.y < 0 || position.y > regionTextureOverlayPanelRect.height)
+                    return;
+
+                if (popUp == null)
+                {
+                    popUp = (DaggerfallTravelPopUp)UIWindowFactory.GetInstanceWithArgs(UIWindowType.TravelPopUp, new object[] { uiManager, uiManager.TopWindow, this });
+                }
+                ((TravelOptionsPopUp)popUp).EndPos = GetClickMPCoords();
+                uiManager.PushWindow(popUp);
+            }
+            else
+            {
+                base.ClickHandler(sender, position);
+            }
+        }
+
+        protected DFPosition GetClickMPCoords()
+        {
+            float scale = GetRegionMapScale(selectedRegion);
+            Vector2 coordinates = GetCoordinates();
+            int x = (int)(coordinates.x / scale);
+            int y = (int)(coordinates.y / scale);
+
+            if (selectedRegion == betonyIndex)      // Manually correct Betony offset
+            {
+                x += 60;
+                y += 212;
+            }
+
+            if (selectedRegion == 61)               // Fix for Cybiades zoom-in map. Map is more zoomed in than for other regions but the pixel coordinates are not scaled to match.
+            {
+                int xDiff = x - 440;
+                int yDiff = y - 340;
+                xDiff /= 4;
+                yDiff /= 4;
+                x = 440 + xDiff;
+                y = 340 + yDiff;
+            }
+
+            return new DFPosition(x, y);
+        }
+
         // Updates location dots
         protected override void UpdateMapLocationDotsTexture()
         {
@@ -334,11 +471,16 @@ namespace TravelOptions
                     int offset5 = (int)((((height - y - 1) * 5 * width5) + (x * 5)) * scale);
 
                     int pIdx = originX + x + ((originY + y) * MapsFile.MaxMapPixelX);
+
+                    if (showPaths[path_streams])
+                        DrawPath(offset5, width5, pathsData[path_streams][pIdx], streamColor, ref locationDotsPixelBuffer);
                     if (showPaths[path_tracks])
                         DrawPath(offset5, width5, pathsData[path_tracks][pIdx], trackColor, ref locationDotsPixelBuffer);
+                    if (showPaths[path_rivers])
+                        DrawPath(offset5, width5, pathsData[path_rivers][pIdx], riverColor, ref locationDotsPixelBuffer);
                     if (showPaths[path_roads])
                         DrawPath(offset5, width5, pathsData[path_roads][pIdx], roadColor, ref locationDotsPixelBuffer);
-                    //Debug.LogFormat("Found road at x:{0} y:{1}  index:{2}", originX + x, originY + y, rIdx);
+                    //Debug.LogFormat("Found path at x:{0} y:{1}  index:{2}", originX + x, originY + y, rIdx);
 
                     ContentReader.MapSummary summary;
                     if (DaggerfallUnity.ContentReader.HasLocation(originX + x, originY + y, out summary))

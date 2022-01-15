@@ -104,16 +104,20 @@ namespace BasicRoads
         static byte[][] pathsData = new byte[4][];
 
         readonly bool smoothPaths;
-        readonly bool editorEnabled;
+        readonly bool renderWater;
+        readonly string editing;
 
-        public BasicRoadsTexturing(bool smooth, bool editor, bool splatModEnabled)
+        public BasicRoadsTexturing(bool smooth, bool riversStreams, string editingEnabled, bool splatModEnabled)
         {
             // Read in path data.
             pathsData[roads] = ReadPathData(RoadDataFilename);
             pathsData[tracks] = ReadPathData(TrackDataFilename);
+            pathsData[rivers] = ReadPathData(RiverDataFilename);
+            pathsData[streams] = ReadPathData(StreamDataFilename);
 
             smoothPaths = smooth;
-            editorEnabled = editor;
+            renderWater = riversStreams;
+            editing = editingEnabled;
 
             if (splatModEnabled)
                 trackTiles = trackTilesSplat;
@@ -202,16 +206,29 @@ namespace BasicRoads
         {
             // Assign tile data to terrain, painting paths in the process
             int pathsIndex = mapData.mapPixelX + (mapData.mapPixelY * MapsFile.MaxMapPixelX);
+
             byte roadDataPt = pathsData[roads][pathsIndex];
             byte roadCorners = (byte)(InRange(pathsIndex) ? (pathsData[roads][pathsIndex + 1] & 0x5) | (pathsData[roads][pathsIndex - 1] & 0x50) : 0);
             byte trackDataPt = pathsData[tracks][pathsIndex];
             byte trackCorners = (byte)(InRange(pathsIndex) ? (pathsData[tracks][pathsIndex + 1] & 0x5) | (pathsData[tracks][pathsIndex - 1] & 0x50) : 0);
-            if (editorEnabled)
+            if (editing == "path")
             {
                 roadDataPt = BasicRoadsPathEditor.pathsData[roads][pathsIndex];
                 roadCorners = (byte)(InRange(pathsIndex) ? (BasicRoadsPathEditor.pathsData[roads][pathsIndex + 1] & 0x5) | (BasicRoadsPathEditor.pathsData[roads][pathsIndex - 1] & 0x50) : 0);
                 trackDataPt = BasicRoadsPathEditor.pathsData[tracks][pathsIndex];
                 trackCorners = (byte)(InRange(pathsIndex) ? (BasicRoadsPathEditor.pathsData[tracks][pathsIndex + 1] & 0x5) | (BasicRoadsPathEditor.pathsData[tracks][pathsIndex - 1] & 0x50) : 0);
+            }
+
+            byte riverDataPt = pathsData[rivers][pathsIndex];
+            byte riverCorners = (byte)(InRange(pathsIndex) ? (pathsData[rivers][pathsIndex + 1] & 0x5) | (pathsData[rivers][pathsIndex - 1] & 0x50) : 0);
+            byte streamDataPt = pathsData[streams][pathsIndex];
+            byte streamCorners = (byte)(InRange(pathsIndex) ? (pathsData[streams][pathsIndex + 1] & 0x5) | (pathsData[streams][pathsIndex - 1] & 0x50) : 0);
+            if (editing == "water")
+            {
+                riverDataPt = BasicRoadsPathEditor.pathsData[rivers][pathsIndex];
+                riverCorners = (byte)(InRange(pathsIndex) ? (BasicRoadsPathEditor.pathsData[rivers][pathsIndex + 1] & 0x5) | (BasicRoadsPathEditor.pathsData[rivers][pathsIndex - 1] & 0x50) : 0);
+                streamDataPt = BasicRoadsPathEditor.pathsData[streams][pathsIndex];
+                streamCorners = (byte)(InRange(pathsIndex) ? (BasicRoadsPathEditor.pathsData[streams][pathsIndex + 1] & 0x5) | (BasicRoadsPathEditor.pathsData[streams][pathsIndex - 1] & 0x50) : 0);
             }
 
             PaintRoadsJob paintRoadsJob = new PaintRoadsJob
@@ -227,6 +244,11 @@ namespace BasicRoads
                 roadCorners = roadCorners,
                 trackDataPt = trackDataPt,
                 trackCorners = trackCorners,
+                renderWater = renderWater,
+                riverDataPt = riverDataPt,
+                riverCorners = riverCorners,
+                streamDataPt = streamDataPt,
+                streamCorners = streamCorners,
             };
             JobHandle paintRoadsHandle = paintRoadsJob.Schedule(assignTilesDim * assignTilesDim, 64, dependencies);
 
@@ -265,6 +287,11 @@ namespace BasicRoads
             public byte roadCorners;
             public byte trackDataPt;
             public byte trackCorners;
+            public bool renderWater;
+            public byte riverDataPt;
+            public byte riverCorners;
+            public byte streamDataPt;
+            public byte streamCorners;
 
             public void Execute(int index)
             {
@@ -277,6 +304,8 @@ namespace BasicRoads
 
                 // Paint roads, rivers, dirt tracks, then streams
                 if (PaintPath(x, y, index, roadTiles, roadDataPt, roadCorners) ||
+                    (renderWater && PaintPathWithSubPathJoins(x, y, index, riverTiles, riverDataPt, riverCorners, streamDataPt)) ||
+                    (renderWater && PaintPath(x, y, index, streamTiles, streamDataPt, streamCorners)) ||
                     PaintPath(x, y, index, trackTiles, trackDataPt, trackCorners))
                     return;
             }
@@ -288,7 +317,7 @@ namespace BasicRoads
                     byte tile = tileData[JobA.Idx(x, y, tdDim)];
                     if (tile > stone)
                         tile = grass;
-                    if (pathTile[tile] != no_change)
+                    if (pathTile[tile] != no_change)// && pathTile[tile] != tile)
                     {
                         tilemapData[index] = pathTile[tile];
                         RotateFlipTile(index, rotate, flip);
@@ -298,6 +327,14 @@ namespace BasicRoads
                     }
                 }
                 return false;
+            }
+
+            private void SetPathTile(int index, byte pathTile, bool rotate, bool flip)
+            {
+                tilemapData[index] = pathTile;
+                RotateFlipTile(index, rotate, flip);
+                if (tilemapData[index] == 0)
+                    tilemapData[index] = water_temp;
             }
 
             private void RotateFlipTile(int index, bool rotate, bool flip)
@@ -393,7 +430,6 @@ namespace BasicRoads
                             PaintPathTile(x, y, index, pathTiles[ICorner], true, false);
                         if ((pathDataPt & S) != 0 && (pathDataPt & E) != 0 && x == midHi + offset && y == midLo - offset)
                             PaintPathTile(x, y, index, pathTiles[ICorner], false, true);
-
                     }
 
                     // Paint roads around locations
@@ -427,7 +463,215 @@ namespace BasicRoads
 
                 return hasPath;
             }
+
+            // Special handling for sub path joins if required (rivers only presently)
+            private bool PaintPathWithSubPathJoins(int x, int y, int index, byte[][] pathTiles, byte pathDataPt, byte pathCorners, byte subPathDataPt)
+            {
+                bool hasPath = PaintPath(x, y, index, pathTiles, pathDataPt, pathCorners);
+
+                // Paint map pixel corner joins
+                if (pathCorners != 0)
+                {
+                    if (((pathCorners & NW) != 0 && (subPathDataPt & NE) != 0 && x == tDim - 1 && y == tDim - 1) ||
+                        ((pathCorners & SW) != 0 && (subPathDataPt & SE) != 0 && x == tDim - 1 && y == 0) ||
+                        ((pathCorners & SE) != 0 && (subPathDataPt & SW) != 0 && x == 0 && y == 0) ||
+                        ((pathCorners & NE) != 0 && (subPathDataPt & NW) != 0 && x == 0 && y == tDim - 1))
+                    {
+                        SetPathTile(index, water, false, false);
+                    }
+                }
+                // Paint map pixel centre joins
+                if (subPathDataPt != 0 && pathTiles[ICorner] != null)
+                {
+                    int offset = pathTiles[CardOut] == null ? 0 : 1;
+                    // N-S path
+                    if ((pathDataPt & N) != 0 && (subPathDataPt & W) != 0 && x == midLo - offset && y == midHi && (pathDataPt & W) == 0)
+                        PaintPathTile(x, y, index, pathTiles[ICorner], false, false);
+                    if ((pathDataPt & N) != 0 && (subPathDataPt & E) != 0 && x == midHi + offset && y == midHi && (pathDataPt & E) == 0)
+                        PaintPathTile(x, y, index, pathTiles[ICorner], true, true);
+                    if ((pathDataPt & S) != 0 && (subPathDataPt & W) != 0 && x == midLo - offset && y == midLo && (pathDataPt & W) == 0)
+                        PaintPathTile(x, y, index, pathTiles[ICorner], true, false);
+                    if ((pathDataPt & S) != 0 && (subPathDataPt & E) != 0 && x == midHi + offset && y == midLo && (pathDataPt & E) == 0)
+                        PaintPathTile(x, y, index, pathTiles[ICorner], false, true);
+
+                    if ((pathDataPt & N) != 0 && (subPathDataPt & NW) != 0 && x == midLo - offset && y == midHi + 1 && (pathDataPt & W) == 0)
+                        PaintPathTile(x, y, index, pathTiles[ICorner], true, false);
+                    if ((pathDataPt & N) != 0 && (subPathDataPt & NW) != 0 && x == midLo - offset && y == midHi + 2)
+                        PaintPathTile(x, y, index, pathTiles[ICorner], false, false);
+                    if ((pathDataPt & N) != 0 && (subPathDataPt & NE) != 0 && x == midHi + offset && y == midHi + 1 && (pathDataPt & E) == 0)
+                        PaintPathTile(x, y, index, pathTiles[ICorner], false, true);
+                    if ((pathDataPt & N) != 0 && (subPathDataPt & NE) != 0 && x == midHi + offset && y == midHi + 2)
+                        PaintPathTile(x, y, index, pathTiles[ICorner], true, true);
+
+                    if ((pathDataPt & S) != 0 && (subPathDataPt & SW) != 0 && x == midLo - offset && y == midLo - 1 && (pathDataPt & W) == 0)
+                        PaintPathTile(x, y, index, pathTiles[ICorner], false, false);
+                    if ((pathDataPt & S) != 0 && (subPathDataPt & SW) != 0 && x == midLo - offset && y == midLo - 2)
+                        PaintPathTile(x, y, index, pathTiles[ICorner], true, false);
+                    if ((pathDataPt & S) != 0 && (subPathDataPt & SE) != 0 && x == midHi + offset && y == midLo - 1 && (pathDataPt & E) == 0)
+                        PaintPathTile(x, y, index, pathTiles[ICorner], true, true);
+                    if ((pathDataPt & S) != 0 && (subPathDataPt & SE) != 0 && x == midHi + offset && y == midLo - 2)
+                        PaintPathTile(x, y, index, pathTiles[ICorner], false, true);
+
+                    // E-W path
+                    if ((pathDataPt & W) != 0 && (subPathDataPt & N) != 0 && x == midLo && y == midHi + offset && (pathDataPt & N) == 0)
+                        PaintPathTile(x, y, index, pathTiles[ICorner], false, false);
+                    if ((pathDataPt & E) != 0 && (subPathDataPt & N) != 0 && x == midHi && y == midHi + offset && (pathDataPt & N) == 0)
+                        PaintPathTile(x, y, index, pathTiles[ICorner], true, true);
+                    if ((pathDataPt & W) != 0 && (subPathDataPt & S) != 0 && x == midLo && y == midLo - offset && (pathDataPt & S) == 0)
+                        PaintPathTile(x, y, index, pathTiles[ICorner], true, false);
+                    if ((pathDataPt & E) != 0 && (subPathDataPt & S) != 0 && x == midHi && y == midLo - offset && (pathDataPt & S) == 0)
+                        PaintPathTile(x, y, index, pathTiles[ICorner], false, true);
+
+                    if ((pathDataPt & E) != 0 && (subPathDataPt & NE) != 0 && x == midHi + 1 && y == midHi + offset && (pathDataPt & N) == 0)
+                        PaintPathTile(x, y, index, pathTiles[ICorner], false, false);
+                    if ((pathDataPt & E) != 0 && (subPathDataPt & NE) != 0 && x == midHi + 2 && y == midHi + offset)
+                        PaintPathTile(x, y, index, pathTiles[ICorner], true, true);
+                    if ((pathDataPt & E) != 0 && (subPathDataPt & SE) != 0 && x == midHi + 1 && y == midLo - offset && (pathDataPt & S) == 0)
+                        PaintPathTile(x, y, index, pathTiles[ICorner], true, false);
+                    if ((pathDataPt & E) != 0 && (subPathDataPt & SE) != 0 && x == midHi + 2 && y == midLo - offset)
+                        PaintPathTile(x, y, index, pathTiles[ICorner], false, true);
+
+                    if ((pathDataPt & W) != 0 && (subPathDataPt & NW) != 0 && x == midLo - 1 && y == midHi + offset && (pathDataPt & N) == 0)
+                        PaintPathTile(x, y, index, pathTiles[ICorner], true, true);
+                    if ((pathDataPt & W) != 0 && (subPathDataPt & NW) != 0 && x == midLo - 2 && y == midHi + offset)
+                        PaintPathTile(x, y, index, pathTiles[ICorner], false, false);
+                    if ((pathDataPt & W) != 0 && (subPathDataPt & SW) != 0 && x == midLo - 1 && y == midLo - offset && (pathDataPt & S) == 0)
+                        PaintPathTile(x, y, index, pathTiles[ICorner], false, true);
+                    if ((pathDataPt & W) != 0 && (subPathDataPt & SW) != 0 && x == midLo - 2 && y == midLo - offset)
+                        PaintPathTile(x, y, index, pathTiles[ICorner], true, false);
+
+                    if (pathTiles[CardOut] != null)
+                    {
+                        // NE-SW path
+                        if ((pathDataPt & NE) != 0 && (subPathDataPt & SE) != 0 && x == midHi && y == midLo && (pathDataPt & SE) == 0)
+                            SetPathTile(index, water, false, false);
+                        if ((pathDataPt & NE) != 0 && (subPathDataPt & SE) != 0 && x == midHi + offset && y == midLo && (pathDataPt & SE) == 0)
+                            if ((pathDataPt & E) == 0 && (subPathDataPt & E) != 0)
+                                PaintPathTile(x, y, index, pathTiles[ICorner], false, true);
+                            else
+                                PaintPathTile(x, y, index, pathTiles[CardOut], false, true);
+                        else if ((pathDataPt & NE) != 0 && (subPathDataPt & E) != 0 && x == midHi + 1 && y == midLo)
+                            PaintPathTile(x, y, index, pathTiles[CardOut], true, false);
+
+                        if ((pathDataPt & NE) != 0 && (subPathDataPt & E) != 0 && x == midHi + 1 && y == midHi)
+                            SetPathTile(index, water, false, false);
+                        if ((pathDataPt & NE) != 0 && (subPathDataPt & E) != 0 && x == midHi + 2 && y == midHi)
+                            PaintPathTile(x, y, index, pathTiles[ICorner], true, true);
+
+                        if ((pathDataPt & SW) != 0 && (subPathDataPt & SE) != 0 && x == midHi && y == midLo && (pathDataPt & SE) == 0)
+                            SetPathTile(index, water, false, false);
+                        if ((pathDataPt & SW) != 0 && (subPathDataPt & SE) != 0 && x == midHi && y == midLo - offset && (pathDataPt & SE) == 0)
+                            if ((pathDataPt & S) == 0 && (subPathDataPt & S) != 0)
+                                PaintPathTile(x, y, index, pathTiles[ICorner], false, true);
+                            else
+                                PaintPathTile(x, y, index, pathTiles[CardOut], true, false);
+                        else if ((pathDataPt & SW) != 0 && (subPathDataPt & S) != 0 && x == midHi && y == midLo - 1)
+                            PaintPathTile(x, y, index, pathTiles[CardOut], false, true);
+
+                        if ((pathDataPt & SW) != 0 && (subPathDataPt & S) != 0 && x == midLo && y == midLo - 1)
+                            SetPathTile(index, water, false, false);
+                        if ((pathDataPt & SW) != 0 && (subPathDataPt & S) != 0 && x == midLo && y == midLo - 2)
+                            PaintPathTile(x, y, index, pathTiles[ICorner], true, false);
+
+
+                        if ((pathDataPt & NE) != 0 && (subPathDataPt & NW) != 0 && x == midLo && y == midHi && (pathDataPt & NW) == 0)
+                            SetPathTile(index, water, false, false);
+                        if ((pathDataPt & NE) != 0 && (subPathDataPt & NW) != 0 && x == midLo && y == midHi + offset && (pathDataPt & NW) == 0)
+                            if ((pathDataPt & N) == 0 && (subPathDataPt & N) != 0)
+                                PaintPathTile(x, y, index, pathTiles[ICorner], false, false);
+                            else
+                                PaintPathTile(x, y, index, pathTiles[CardOut], true, true);
+                        else if ((pathDataPt & NE) != 0 && (subPathDataPt & N) != 0 && x == midLo && y == midHi + 1)
+                            PaintPathTile(x, y, index, pathTiles[CardOut], false, false);
+
+                        if ((pathDataPt & NE) != 0 && (subPathDataPt & N) != 0 && x == midHi && y == midHi + 1)
+                            SetPathTile(index, water, false, false);
+                        if ((pathDataPt & NE) != 0 && (subPathDataPt & N) != 0 && x == midHi && y == midHi + 2)
+                            PaintPathTile(x, y, index, pathTiles[ICorner], true, true);
+
+                        if ((pathDataPt & SW) != 0 && (subPathDataPt & NW) != 0 && x == midLo && y == midHi && (pathDataPt & SE) == 0)
+                            SetPathTile(index, water, false, false);
+                        if ((pathDataPt & SW) != 0 && (subPathDataPt & NW) != 0 && x == midLo - offset && y == midHi && (pathDataPt & SE) == 0)
+                            if ((pathDataPt & W) == 0 && (subPathDataPt & W) != 0)
+                                PaintPathTile(x, y, index, pathTiles[ICorner], false, false);
+                            else
+                                PaintPathTile(x, y, index, pathTiles[CardOut], false, false);
+                        else if ((pathDataPt & SW) != 0 && (subPathDataPt & W) != 0 && x == midLo - 1 && y == midHi)
+                            PaintPathTile(x, y, index, pathTiles[CardOut], true, true);
+
+                        if ((pathDataPt & SW) != 0 && (subPathDataPt & W) != 0 && x == midLo - 1 && y == midLo)
+                            SetPathTile(index, water, false, false);
+                        if ((pathDataPt & SW) != 0 && (subPathDataPt & W) != 0 && x == midLo - 2 && y == midLo)
+                            PaintPathTile(x, y, index, pathTiles[ICorner], true, false);
+
+
+                        // NW-SE path
+                        if ((pathDataPt & NW) != 0 && (subPathDataPt & SW) != 0 && x == midLo && y == midLo && (pathDataPt & SW) == 0)
+                            SetPathTile(index, water, false, false);
+                        if ((pathDataPt & NW) != 0 && (subPathDataPt & SW) != 0 && x == midLo - offset && y == midLo && (pathDataPt & SW) == 0)
+                            if ((pathDataPt & E) == 0 && (subPathDataPt & W) != 0)
+                                PaintPathTile(x, y, index, pathTiles[ICorner], true, false);
+                            else
+                                PaintPathTile(x, y, index, pathTiles[CardOut], false, false);
+                        else if ((pathDataPt & NW) != 0 && (subPathDataPt & W) != 0 && x == midLo - 1 && y == midLo)
+                            PaintPathTile(x, y, index, pathTiles[CardOut], true, false);
+
+                        if ((pathDataPt & NW) != 0 && (subPathDataPt & W) != 0 && x == midLo - 1 && y == midHi)
+                            SetPathTile(index, water, false, false);
+                        if ((pathDataPt & NW) != 0 && (subPathDataPt & W) != 0 && x == midLo - 2 && y == midHi)
+                            PaintPathTile(x, y, index, pathTiles[ICorner], false, false);
+
+                        if ((pathDataPt & SE) != 0 && (subPathDataPt & SW) != 0 && x == midLo && y == midLo && (pathDataPt & SW) == 0)
+                            SetPathTile(index, water, false, false);
+                        if ((pathDataPt & SE) != 0 && (subPathDataPt & SW) != 0 && x == midLo && y == midLo - offset && (pathDataPt & SW) == 0)
+                            if ((pathDataPt & S) == 0 && (subPathDataPt & S) != 0)
+                                PaintPathTile(x, y, index, pathTiles[ICorner], true, false);
+                            else
+                                PaintPathTile(x, y, index, pathTiles[CardOut], true, false);
+                        else if ((pathDataPt & SE) != 0 && (subPathDataPt & S) != 0 && x == midLo && y == midLo - 1)
+                            PaintPathTile(x, y, index, pathTiles[CardOut], false, false);
+
+                        if ((pathDataPt & SE) != 0 && (subPathDataPt & S) != 0 && x == midHi && y == midLo - 1)
+                            SetPathTile(index, water, false, false);
+                        if ((pathDataPt & SE) != 0 && (subPathDataPt & S) != 0 && x == midHi && y == midLo - 2)
+                            PaintPathTile(x, y, index, pathTiles[ICorner], false, true);
+
+
+                        if ((pathDataPt & NW) != 0 && (subPathDataPt & NE) != 0 && x == midHi && y == midHi && (pathDataPt & NE) == 0)
+                            SetPathTile(index, water, false, false);
+                        if ((pathDataPt & NW) != 0 && (subPathDataPt & NE) != 0 && x == midHi && y == midHi + offset && (pathDataPt & NE) == 0)
+                            if ((pathDataPt & N) == 0 && (subPathDataPt & N) != 0)
+                                PaintPathTile(x, y, index, pathTiles[ICorner], true, true);
+                            else
+                                PaintPathTile(x, y, index, pathTiles[CardOut], true, true);
+                        else if ((pathDataPt & NW) != 0 && (subPathDataPt & N) != 0 && x == midHi && y == midHi + 1)
+                            PaintPathTile(x, y, index, pathTiles[CardOut], false, true);
+
+                        if ((pathDataPt & NW) != 0 && (subPathDataPt & N) != 0 && x == midLo && y == midHi + 1)
+                            SetPathTile(index, water, false, false);
+                        if ((pathDataPt & NW) != 0 && (subPathDataPt & N) != 0 && x == midLo && y == midHi + 2)
+                            PaintPathTile(x, y, index, pathTiles[ICorner], false, false);
+
+                        if ((pathDataPt & SE) != 0 && (subPathDataPt & NE) != 0 && x == midHi && y == midHi && (pathDataPt & NE) == 0)
+                            SetPathTile(index, water, false, false);
+                        if ((pathDataPt & SE) != 0 && (subPathDataPt & NE) != 0 && x == midHi + offset && y == midHi && (pathDataPt & NE) == 0)
+                            if ((pathDataPt & E) == 0 && (subPathDataPt & E) != 0)
+                                PaintPathTile(x, y, index, pathTiles[ICorner], true, true);
+                            else
+                                PaintPathTile(x, y, index, pathTiles[CardOut], false, true);
+                        else if ((pathDataPt & SE) != 0 && (subPathDataPt & E) != 0 && x == midHi + 1 && y == midHi)
+                            PaintPathTile(x, y, index, pathTiles[CardOut], true, true);
+
+                        if ((pathDataPt & SE) != 0 && (subPathDataPt & E) != 0 && x == midHi + 1 && y == midLo)
+                            SetPathTile(index, water, false, false);
+                        if ((pathDataPt & SE) != 0 && (subPathDataPt & E) != 0 && x == midHi + 2 && y == midLo)
+                            PaintPathTile(x, y, index, pathTiles[ICorner], false, true);
+                    }
+                }
+                return hasPath;
+            }
         }
+
 
         // Smoothes terrain for roads and rivers by averaging corner heights of matching tiles
         struct SmoothRoadsTerrainJob : IJob

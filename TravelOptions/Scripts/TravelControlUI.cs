@@ -46,16 +46,18 @@ namespace TravelOptions
         const string baseTextureName = "TOcontrolUI.png";
 
         Texture2D baseTexture;
-        Vector2 baseSize;
+        Vector2 baseSize = new Vector2(320, 27);
         int accelLimit;
         int halfAccelLimit;
         uint messageTimer = 0;
+
+        Panel junctionMapPanel;
 
         public bool isShowing = false;
 
         public int TimeAcceleration { get; internal set; }
 
-        public void SetDestination(string destinationName)
+        public void SetDestinationName(string destinationName)
         {
             destinationLabel.Text = destinationName;
         }
@@ -71,12 +73,13 @@ namespace TravelOptions
 
         #region Constructors
 
-        public TravelControlUI(IUserInterfaceManager uiManager, int defaultStartingAccel = 10, int accelerationLimit = 100)
+        public TravelControlUI(IUserInterfaceManager uiManager, int defaultStartingAccel = 10, int accelerationLimit = 100, Panel junctionMapPanel = null)
             : base(uiManager)
         {
             TimeAcceleration = defaultStartingAccel;
             accelLimit = (accelerationLimit / 5) * 5;
             halfAccelLimit = (accelerationLimit / 10) * 5;
+            this.junctionMapPanel = junctionMapPanel;
 
             // Clear background
             ParentPanel.BackgroundColor = Color.clear;
@@ -170,6 +173,10 @@ namespace TravelOptions
         public override void Draw()
         {
             base.Draw();
+
+            if (junctionMapPanel != null)
+                junctionMapPanel.Draw();
+
             DaggerfallUI.Instance.DaggerfallHUD.HUDVitals.Draw();
             DaggerfallUI.Instance.DaggerfallHUD.HUDCompass.Draw();
             //DaggerfallUI.Instance.DaggerfallHUD.ShowMidScreenText = true;
@@ -204,9 +211,9 @@ namespace TravelOptions
 
         void LoadTextures()
         {
-            if (TextureReplacement.TryImportImage(baseTextureName, true, out baseTexture))
+            if (!TextureReplacement.TryImportImage(baseTextureName, true, out baseTexture))
             {
-                baseSize = new Vector2(baseTexture.width, baseTexture.height);
+                Debug.LogError("TravelOptions: Unable to load the base UI image.");
             }
         }
 
