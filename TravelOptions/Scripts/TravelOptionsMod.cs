@@ -144,6 +144,7 @@ namespace TravelOptions
 
         // Junction map variables
         bool roadsJunctionMap = false;
+        bool persistentJunctionMap = false;
         bool junctionMapCircular = true;
         const int junctionMapWidth = 20;
         const int junctionMapHeight = 20;
@@ -199,6 +200,8 @@ namespace TravelOptions
 
                 if (roadsJunctionMap)
                 {
+                    persistentJunctionMap = settings.GetValue<bool>("RoadsJunctionMap", "PersistentMap");
+
                     if (junctionMapTexture != null)
                         junctionMapTexture.filterMode = filterModes[settings.GetValue<int>("RoadsJunctionMap", "FilterMode")];
 
@@ -233,19 +236,6 @@ namespace TravelOptions
             UIWindowFactory.RegisterCustomUIWindow(UIWindowType.TravelPopUp, typeof(TravelOptionsPopUp));
 
             baseFixedDeltaTime = Time.fixedDeltaTime;
-
-            travelControlUI = new TravelControlUI(DaggerfallUI.UIManager, defaultStartingAccel, accelerationLimit);
-            travelControlUI.OnCancel += (sender) => { ClearTravelDestination(); };
-            travelControlUI.OnClose += () => { InterruptTravel(); };
-            travelControlUI.OnTimeAccelerationChanged += (timeAcceleration) => { SetTimeScale(timeAcceleration); };
-
-            // Clear destination on new game or load game.
-            SaveLoadManager.OnLoad += (saveData) => { ClearTravelDestination(); };
-            StartGameBehaviour.OnNewGame += () => { ClearTravelDestination(); };
-            GameManager.OnEncounter += GameManager_OnEncounter;
-            PlayerGPS.OnEnterLocationRect += PlayerGPS_OnEnterLocationRect;
-            PlayerGPS.OnMapPixelChanged += PlayerGPS_OnMapPixelChanged;
-            StreamingWorld.OnUpdateLocationGameObject += StreamingWorld_OnUpdateLocationGameObject;
 
             // Allow teleportation for anyone if enabled
             if (settings.GetValue<bool>("Teleportation", "Enable"))
@@ -287,6 +277,20 @@ namespace TravelOptions
                 if (settings.GetValue<bool>("RoadsJunctionMap", "Opaque"))
                     junctionMapPanel.BackgroundColor = settings.GetValue<Color32>("RoadsJunctionMap", "BackgroundColor");
             }
+
+            // Setup travel control UI
+            travelControlUI = new TravelControlUI(DaggerfallUI.UIManager, defaultStartingAccel, accelerationLimit, junctionMapPanel);
+            travelControlUI.OnCancel += (sender) => { ClearTravelDestination(); };
+            travelControlUI.OnClose += () => { InterruptTravel(); };
+            travelControlUI.OnTimeAccelerationChanged += (timeAcceleration) => { SetTimeScale(timeAcceleration); };
+
+            // Clear destination on new game or load game.
+            SaveLoadManager.OnLoad += (saveData) => { ClearTravelDestination(); };
+            StartGameBehaviour.OnNewGame += () => { ClearTravelDestination(); };
+            GameManager.OnEncounter += GameManager_OnEncounter;
+            PlayerGPS.OnEnterLocationRect += PlayerGPS_OnEnterLocationRect;
+            PlayerGPS.OnMapPixelChanged += PlayerGPS_OnMapPixelChanged;
+            StreamingWorld.OnUpdateLocationGameObject += StreamingWorld_OnUpdateLocationGameObject;
         }
 
         private void SetTimeScale(int timeScale)
@@ -540,6 +544,12 @@ namespace TravelOptions
                     playerAutopilot.InitTargetRect(targetPixel, targetRect, road ? RecklessTravelMultiplier : CautiousTravelMultiplier);
                 }
                 InitTravelUI();
+
+                if (roadsJunctionMap && persistentJunctionMap)
+                {
+                    DrawJunctionMap(GameManager.Instance.PlayerGPS.CurrentMapPixel);
+                    junctionMapPanel.Enabled = true;
+                }
             }
         }
 
@@ -571,7 +581,7 @@ namespace TravelOptions
                 else
                 {
                     DaggerfallUI.AddHUDText("You've arrived at a junction.");
-                    if (true)
+                    if (roadsJunctionMap)
                     {
                         Debug.Log("Displaying junction map on HUD.");
                         DrawJunctionMap(currMapPixel);
@@ -628,6 +638,12 @@ namespace TravelOptions
             playerAutopilot.OnArrival += () => { CircumnavigateLocation(); };
 
             InitTravelUI(true);
+
+            if (roadsJunctionMap && persistentJunctionMap)
+            {
+                DrawJunctionMap(currMapPixel, GetDirection(GetNormalisedPlayerYaw()));
+                junctionMapPanel.Enabled = true;
+            }
         }
 
         void SetupLocBorderCornerRects()
@@ -788,9 +804,19 @@ namespace TravelOptions
             }
         }
 
+        private void UpdateJunctionMap(DFPosition currMapPixel)
+        {
+            byte playerDirection = GetDirection(GetNormalisedPlayerYaw());
+            if (lastPlayerFacing != playerDirection)
+            {
+                DrawJunctionMap(currMapPixel, playerDirection);
+                lastPlayerFacing = playerDirection;
+            }
+        }
+
         internal void DisableJunctionMap()
         {
-            if (roadsJunctionMap && junctionMapPanel != null)
+            if (roadsJunctionMap && !persistentJunctionMap && junctionMapPanel != null)
                 junctionMapPanel.Enabled = false;
         }
 
@@ -815,8 +841,13 @@ namespace TravelOptions
             // Remove event for entering location rects
             if (locationPause == LocPauseEnter)
                 PlayerGPS.OnEnterLocationRect -= PlayerGPS_OnEnterLocationRect;
-        }
 
+            if (roadsJunctionMap && persistentJunctionMap && junctionMapPanel.Enabled)
+            {
+                // Update junction map if persistent and travelling
+                DrawJunctionMap(GameManager.Instance.PlayerGPS.CurrentMapPixel);
+            }
+        }
 
         void Update()
         {
@@ -824,33 +855,9 @@ namespace TravelOptions
             {
                 uiCloseWhenTop = false;
                 travelControlUI.CloseWindow();
+                return;
             }
-
-            if (roadsJunctionMap && junctionMapPanel.Enabled)
-            {
-                // Disable junction map if enemies are near or player moved off path
-                if (GameManager.Instance.AreEnemiesNearby())
-                    junctionMapPanel.Enabled = false;
-                else
-                {
-                    // Has player has moved off the junction
-                    PlayerGPS playerGPS = GameManager.Instance.PlayerGPS;
-                    DFPosition currMapPixel = playerGPS.CurrentMapPixel;
-                    byte pathsDataPt = GetPathsDataPoint(currMapPixel);
-                    byte onPath = IsPlayerOnPath(playerGPS, pathsDataPt);
-                    if (onPath == 0)
-                        junctionMapPanel.Enabled = false;
-                    else
-                    {   // Update junction map if needed
-                        byte playerDirection = GetDirection(GetNormalisedPlayerYaw());
-                        if (lastPlayerFacing != playerDirection)
-                        {
-                            DrawJunctionMap(currMapPixel, playerDirection);
-                            lastPlayerFacing = playerDirection;
-                        }
-                    }
-                }
-            }
+            PlayerGPS playerGPS = GameManager.Instance.PlayerGPS;
 
             if (playerAutopilot != null)
             {
@@ -866,9 +873,12 @@ namespace TravelOptions
                     return;
                 }
 
-                // Run updates for playerAutopilot and HUD
+                // Run updates for playerAutopilot and HUD, return after autopilot update if game is paused (otherwise travel map breaks - no clue why)
                 playerAutopilot.Update();
+                if (GameManager.IsGamePaused)
+                    return;
                 DaggerfallUI.Instance.DaggerfallHUD.HUDVitals.Update();
+
 
                 if (DestinationName == null && followKeyCode != KeyCode.None && !InputManager.Instance.IsPaused && InputManager.Instance.GetKeyDown(followKeyCode))
                 {
@@ -877,7 +887,6 @@ namespace TravelOptions
                 }
 
                 // If circumnavigating a location, check for path crossings
-                PlayerGPS playerGPS = GameManager.Instance.PlayerGPS;
                 if (circumnavigatePathsDataPt != 0)
                 {
                     byte crossed = IsPlayerOnPath(playerGPS, circumnavigatePathsDataPt);
@@ -963,6 +972,30 @@ namespace TravelOptions
                 else
                     FollowPath();
             }
+
+            if (roadsJunctionMap && junctionMapPanel.Enabled)
+            {
+                // Disable junction map if enemies are near or player moved off path
+                if (GameManager.Instance.AreEnemiesNearby())
+                {
+                    junctionMapPanel.Enabled = false;
+                }
+                else if (!travelControlUI.isShowing)
+                {
+                    // Disable junction map if player has moved off the path, or update it
+                    DFPosition currMapPixel = playerGPS.CurrentMapPixel;
+                    byte pathsDataPt = GetPathsDataPoint(currMapPixel);
+                    if (IsPlayerOnPath(playerGPS, pathsDataPt) == 0)
+                        junctionMapPanel.Enabled = false;
+                    else
+                        UpdateJunctionMap(currMapPixel);
+                }
+                else if (persistentJunctionMap)
+                {
+                    // Update junction map if persistent and travelling
+                    UpdateJunctionMap(playerGPS.CurrentMapPixel);
+                }
+            }
         }
 
         string LocationTypeString()
@@ -996,6 +1029,7 @@ namespace TravelOptions
                 Debug.LogWarning("Avoided enemies enountered during travel, chance: " + successChance);
                 ignoreEncounters = true;
                 ignoreEncountersTime = (uint)Time.unscaledTime + 15;
+                lastPlayerFacing = 0;   // Ensure persistent map is re-enabled immediately
                 if (DestinationName != null)
                     BeginTravel();
                 else

@@ -51,6 +51,8 @@ namespace TravelOptions
         int halfAccelLimit;
         uint messageTimer = 0;
 
+        Panel junctionMapPanel;
+
         public bool isShowing = false;
 
         public int TimeAcceleration { get; internal set; }
@@ -71,12 +73,13 @@ namespace TravelOptions
 
         #region Constructors
 
-        public TravelControlUI(IUserInterfaceManager uiManager, int defaultStartingAccel = 10, int accelerationLimit = 100)
+        public TravelControlUI(IUserInterfaceManager uiManager, int defaultStartingAccel = 10, int accelerationLimit = 100, Panel junctionMapPanel = null)
             : base(uiManager)
         {
             TimeAcceleration = defaultStartingAccel;
             accelLimit = (accelerationLimit / 5) * 5;
             halfAccelLimit = (accelerationLimit / 10) * 5;
+            this.junctionMapPanel = junctionMapPanel;
 
             // Clear background
             ParentPanel.BackgroundColor = Color.clear;
@@ -170,6 +173,10 @@ namespace TravelOptions
         public override void Draw()
         {
             base.Draw();
+
+            if (junctionMapPanel != null)
+                junctionMapPanel.Draw();
+
             DaggerfallUI.Instance.DaggerfallHUD.HUDVitals.Draw();
             DaggerfallUI.Instance.DaggerfallHUD.HUDCompass.Draw();
             //DaggerfallUI.Instance.DaggerfallHUD.ShowMidScreenText = true;

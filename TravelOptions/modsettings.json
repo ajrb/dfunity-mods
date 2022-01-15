@@ -238,6 +238,13 @@
                     "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
                 },
                 {
+                    "Value": false,
+                    "Name": "PersistentMap",
+                    "Description": "Set this to have the junction mini-map always displayed when following paths",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
+                },
+                {
                     "Min": 40,
                     "Max": 200,
                     "Value": 100,
