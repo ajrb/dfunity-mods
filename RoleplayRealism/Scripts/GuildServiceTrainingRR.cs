@@ -95,10 +95,10 @@ namespace RoleplayRealism
                 intensiveCost = (trainingCost + (playerEntity.Level * 8) + 72) * 5;
                 TextFile.Token[] trainingTokens =
                 {
-                    TextFile.CreateTextToken("Training your " + skillToTrain + " skill will cost %a for a single session."), newLine, newLine,
+                    TextFile.CreateTextToken("Training your " + skillToTrain + " skill will cost %a gold for a single session."), newLine, newLine,
                     TextFile.CreateTextToken("You can also pay extra to train intensively for five days if you wish,"), newLine,
                     TextFile.CreateTextToken("with a training session each day, this will cost " + intensiveCost + " gold in total."), newLine, newLine,
-                    TextFile.CreateTextToken("So would you like to train your " + skillToTrain + " skill with me?"), newLine,
+                    TextFile.CreateTextToken("So, would you like to train your " + skillToTrain + " skill with me?"), newLine,
                 };
 
                 DaggerfallMessageBox messageBox = new DaggerfallMessageBox(uiManager, uiManager.TopWindow);
@@ -156,16 +156,19 @@ namespace RoleplayRealism
         protected void TrainSkillIntense(DFCareer.Skills skillToTrain)
         {
             DaggerfallDateTime now = DaggerfallUnity.Instance.WorldTime.Now;
-            now.RaiseTime(DaggerfallDateTime.SecondsPerDay * 5);
-            playerEntity.TimeOfLastSkillTraining = now.ToClassicDaggerfallTime();
-            playerEntity.DecreaseFatigue(PlayerEntity.DefaultFatigueLoss * 180);
+            now.RaiseTime(DaggerfallDateTime.SecondsPerDay * 4);
             playerEntity.Skills.SetPermanentSkillValue(skillToTrain, (short)(playerEntity.Skills.GetPermanentSkillValue(skillToTrain) + 4));
-            int skillAdvancementMultiplier = DaggerfallSkills.GetAdvancementMultiplier(skillToTrain);
-            short tallyAmount = (short)(UnityEngine.Random.Range(10, 20 + 1) * skillAdvancementMultiplier);
-            playerEntity.TallySkill(skillToTrain, tallyAmount);
-            DaggerfallUI.MessageBox(TrainSkillId);
-        }
 
+            TrainSkill(skillToTrain);
+
+            TextFile.Token[] intenseTokens =
+            {
+                TextFile.CreateTextToken("You have spent the last 4 days intensively training your "), newLine,
+                TextFile.CreateTextToken(skillToTrain + " skill, and have improved it significantly."), newLine, newLine,
+                TextFile.CreateTextToken("Now it's time to begin your fifth and final session...")
+            };
+            DaggerfallUI.MessageBox(intenseTokens);
+        }
 
 
         #region Macro handling
