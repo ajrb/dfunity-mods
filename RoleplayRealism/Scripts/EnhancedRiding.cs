@@ -177,7 +177,7 @@ namespace DaggerfallWorkshop.Game
                 {
                     // Play heavy hit sound.
                     EnemySounds enemySounds = hitGO.GetComponent<EnemySounds>();
-                    DaggerfallMobileUnit entityMobileUnit = hitGO.GetComponentInChildren<DaggerfallMobileUnit>();
+                    MobileUnit entityMobileUnit = hitGO.GetComponentInChildren<MobileUnit>();
                     Genders gender;
                     if (entityMobileUnit.Summary.Enemy.Gender == MobileGender.Male || hitEnemyEntity.MobileEnemy.ID == (int)MobileTypes.Knight_CityWatch)
                         gender = Genders.Male;

@@ -677,14 +677,29 @@ namespace TravelOptions
             }
         }
 
+        public static int MaskMapId(int mapId)
+        {
+            return mapId & 0x000FFFFF;
+        }
+
         public static bool HasPort(ContentReader.MapSummary mapSummary)
         {
-            return Array.Exists(portLocationIds, n => n == mapSummary.ID);
+            return HasPort(mapSummary.ID);
+        }
+
+        public static bool HasPort(int mapId)
+        {
+            return Array.Exists(portLocationIds, n => n == MaskMapId(mapId));
         }
 
         public static bool HasPortExtra(DFRegion.RegionMapTable mapTable)
         {
-            return Array.Exists(portLocationExtraIds, n => n == (mapTable.MapId & 0xFFFFF));
+            return HasPortExtra(mapTable.MapId);
+        }
+
+        public static bool HasPortExtra(int mapId)
+        {
+            return Array.Exists(portLocationExtraIds, n => n == MaskMapId(mapId));
         }
 
         public static readonly int[] portLocationExtraIds = {

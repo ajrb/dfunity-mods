@@ -33,6 +33,7 @@ namespace TravelOptions
         public const string IS_PATH_FOLLOWING = "isPathFollowing";
         public const string IS_FOLLOWING_ROAD = "isFollowingRoad";
         public const string SHOW_MESSAGE = "showMessage";
+        public const string HAS_PORT = "hasPort";
 
         public const string ROADS_MODNAME = "BasicRoads";
 
@@ -52,6 +53,7 @@ namespace TravelOptions
         protected const string MsgFollowRoad = "Following a road.";
         protected const string MsgFollowTrack = "Following a dirt track.";
         protected const string MsgTargetCoords = "Map coordinates: {0}, {1}.";
+        protected const string MsgNewRegion = "You have entered the region of {0}.";
 
         // Path type and direction constants copied from BasicRoadsTexturing
         public const int path_roads = 0;
@@ -293,6 +295,7 @@ namespace TravelOptions
             GameManager.OnEncounter += GameManager_OnEncounter;
             PlayerGPS.OnEnterLocationRect += PlayerGPS_OnEnterLocationRect;
             PlayerGPS.OnMapPixelChanged += PlayerGPS_OnMapPixelChanged;
+            PlayerGPS.OnRegionIndexChanged += PlayerGPS_OnRegionIndexChanged;
             StreamingWorld.OnUpdateLocationGameObject += StreamingWorld_OnUpdateLocationGameObject;
         }
 
@@ -338,6 +341,13 @@ namespace TravelOptions
         {
             DisableJunctionMap();
             InitLocationRects(mapPixel);
+        }
+
+        // Check for entering a different region.
+        private void PlayerGPS_OnRegionIndexChanged(int regionIndex)
+        {
+            if (travelControlUI != null && travelControlUI.isShowing)
+                travelControlUI.ShowMessage(string.Format(MsgNewRegion, GameManager.Instance.PlayerGPS.CurrentRegionName));
         }
 
         private void StreamingWorld_OnUpdateLocationGameObject(GameObject locationObject, bool allowYield)
@@ -1166,6 +1176,11 @@ namespace TravelOptions
                     string msg = data as string;
                     if (!string.IsNullOrEmpty(msg))
                         travelControlUI.ShowMessage(msg);
+                    break;
+
+                case HAS_PORT:
+                    int mapId = (int)data;
+                    callBack?.Invoke(HAS_PORT, TravelOptionsMapWindow.HasPort(mapId));
                     break;
 
                 default:

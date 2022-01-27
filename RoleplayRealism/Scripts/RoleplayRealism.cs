@@ -32,6 +32,8 @@ namespace RoleplayRealism
         public static float EncEffectScaleFactor = 2f;
         const int G = 85;   // Mob Array Gap from 42 .. 128 = 85
 
+        public const string ROLEPLAYREALISMITEMS_MODNAME = "RoleplayRealism-Items";
+        public const string TRAVELOPTIONS_MODNAME = "TravelOptions";
         public const string VILLAGERVARIETY_MODNAME = "VillagerVariety";
 
         protected static string[] placesTable =
@@ -51,6 +53,7 @@ namespace RoleplayRealism
 
         static Mod mod;
         static int loanMaxPerLevel;
+        static bool travelOptionsEnabled;
         static Mod villagerVarietyMod;
         static int villagerVarietyNumVariants = 0;
 
@@ -98,8 +101,11 @@ namespace RoleplayRealism
         {
             Debug.Log("Begin mod init: RoleplayRealism");
 
-            Mod rrItemsMod = ModManager.Instance.GetMod("RoleplayRealism-Items");
+            Mod rrItemsMod = ModManager.Instance.GetMod(ROLEPLAYREALISMITEMS_MODNAME);
             ModSettings rrItemsSettings = rrItemsMod != null ? rrItemsMod.GetSettings() : null;
+
+            Mod travelOptionsMod = ModManager.Instance.GetMod(TRAVELOPTIONS_MODNAME);
+            travelOptionsEnabled = travelOptionsMod != null && travelOptionsMod.Enabled;
 
             villagerVarietyMod = ModManager.Instance.GetMod(VILLAGERVARIETY_MODNAME);
             if (villagerVarietyMod != null && !villagerVarietyMod.Enabled)
@@ -541,9 +547,18 @@ namespace RoleplayRealism
             DFLocation location = GameManager.Instance.PlayerGPS.CurrentLocation;
             if (location.Loaded == true)
             {
-                return location.Exterior.ExteriorData.PortTownAndUnknown != 0 && DaggerfallBankManager.OwnsShip;
+                if (travelOptionsEnabled)
+                {
+                    bool hasPort = false;
+                    ModManager.Instance.SendModMessage(TRAVELOPTIONS_MODNAME, "hasPort", location.MapTableData.MapId,
+                        (string message, object data) => { hasPort = (bool)data; });
+                    return hasPort;
+                }
+                else
+                {
+                    return location.Exterior.ExteriorData.PortTownAndUnknown != 0 && DaggerfallBankManager.OwnsShip;
+                }
             }
-
             return false;
         }
 
@@ -681,8 +696,8 @@ namespace RoleplayRealism
             DFLocation.BuildingData buildingData = playerEnterExit.Interior.BuildingData;
             if (buildingData.BuildingType == DFLocation.BuildingTypes.Tavern || RMBLayout.IsShop(buildingData.BuildingType))
             {
-                DaggerfallBillboard[] dfBillboards = playerEnterExit.Interior.GetComponentsInChildren<DaggerfallBillboard>();
-                foreach (DaggerfallBillboard billboard in dfBillboards)
+                Billboard[] dfBillboards = playerEnterExit.Interior.GetComponentsInChildren<Billboard>();
+                foreach (Billboard billboard in dfBillboards)
                 {
                     int record = -1;
                     if (billboard.Summary.Archive == 182 && billboard.Summary.Record == 0)
@@ -793,8 +808,8 @@ namespace RoleplayRealism
             {
                 Races race = GetClimateRace();
                 int gender = -1;
-                DaggerfallBillboard[] dfBillboards = playerEnterExit.Interior.GetComponentsInChildren<DaggerfallBillboard>();
-                foreach (DaggerfallBillboard billboard in dfBillboards)
+                Billboard[] dfBillboards = playerEnterExit.Interior.GetComponentsInChildren<Billboard>();
+                foreach (Billboard billboard in dfBillboards)
                 {
                     if (billboard.Summary.Archive == 182)
                         gender = GetGender182(billboard.Summary.Record);
