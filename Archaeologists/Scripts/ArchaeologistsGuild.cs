@@ -296,6 +296,9 @@ namespace DaggerfallWorkshop.Game.Guilds
                     "",
                     "      You currently have " + holyCount + " holy relics in your posession, so you can",
                     "     purchase up to that many discounted locators at this time.",
+                    "",
+                    "   I also have a Scarab of Quiet Undead for sale that will help if you",
+                    "  find you're having trouble with undead monstrosities in the field.",
                 };
                 if (holyCount == 0)
                 {
@@ -317,6 +320,22 @@ namespace DaggerfallWorkshop.Game.Guilds
             else
                 for (int i = 0; i < 16; i++)
                     locators.AddItem(new LocatorItem(value), ItemCollection.AddPosition.DontCare, true);
+
+            DaggerfallUnityItem item = ItemBuilder.CreateItem(ItemGroups.ReligiousItems, (int)ReligiousItems.Scarab);
+            item.legacyMagic = new DaggerfallEnchantment[]
+            {
+                new DaggerfallEnchantment()
+                {
+                    type = EnchantmentTypes.CastWhenUsed,
+                    param = 98
+                }
+            };
+            item.shortName = "%it of Quiet Undead";
+            item.value = 4000;
+            item.currentCondition = item.maxCondition = 200;
+            item.IdentifyItem();
+            locators.AddItem(item);
+
             return locators;
         }
 
