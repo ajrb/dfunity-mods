@@ -71,12 +71,12 @@ namespace TravelOptions
         public bool IsNotAtPort()
         {
             DFLocation location = GameManager.Instance.PlayerGPS.CurrentLocation;
-            return location.Loaded == false || (location.Exterior.ExteriorData.PortTownAndUnknown == 0 && !TravelOptionsMapWindow.HasPortExtra(location.MapTableData));
+            return location.Loaded == false || !TravelOptionsMapWindow.HasPort(location.MapTableData);
         }
 
         public bool HasNoOceanTravel()
         {
-            return travelTimeCalculator.OceanPixels == 0 && !GameManager.Instance.TransportManager.IsOnShip();
+            return travelTimeCalculator.OceanPixels == 0 && !GameManager.Instance.TransportManager.IsOnShip() && !TravelOptionsMapWindow.HasPort(TravelWindow.LocationSummary);
         }
 
         public bool IsDestNotValidPort()
@@ -145,14 +145,14 @@ namespace TravelOptions
                 DaggerfallUI.MessageBox(MsgNoPort);
                 return false;
             }
-            else if (HasNoOceanTravel())
-            {
-                DaggerfallUI.MessageBox(MsgNoSailing);
-                return false;
-            }
             else if (IsDestNotValidPort())
             {
                 DaggerfallUI.MessageBox(MsgNoDestPort);
+                return false;
+            }
+            else if (HasNoOceanTravel())
+            {
+                DaggerfallUI.MessageBox(MsgNoSailing);
                 return false;
             }
             return true;

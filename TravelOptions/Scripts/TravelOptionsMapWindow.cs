@@ -687,14 +687,14 @@ namespace TravelOptions
             return HasPort(mapSummary.ID);
         }
 
+        public static bool HasPort(DFRegion.RegionMapTable mapTable)
+        {
+            return HasPort(mapTable.MapId);
+        }
+
         public static bool HasPort(int mapId)
         {
             return Array.Exists(portLocationIds, n => n == MaskMapId(mapId));
-        }
-
-        public static bool HasPortExtra(DFRegion.RegionMapTable mapTable)
-        {
-            return HasPortExtra(mapTable.MapId);
         }
 
         public static bool HasPortExtra(int mapId)
