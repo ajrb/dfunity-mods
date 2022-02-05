@@ -742,35 +742,27 @@ namespace TravelOptions
             343439,     // "Cybiades", "Ruins of Cosh Hall"
             243846,     // Wayrest	Penwall Derry
             273975,     // Wayrest	Tunmont
-            244859,     // Wayrest	Wayrest
-            244859,     // Wayrest	Wayrest
             255884,     // Wayrest	Eastwold
             256887,     // Wayrest	Chardale
             262931,     // Wayrest	Longmore Field
             106061,     // Tulune	Midmont
             164072,     // Tulune  Lambrugh
+            157092,     // Tulune	Gallocart
             296558,     // Tigonus Antelibuton
             297552,     // Tigonus Wadijerareg
             308527,     // Tigonus Kalureg
             376329,     // Sentinel	Pibuda
-            359347,     // Sentinel	Zenuhno
             359347,     // Sentinel	Zenuhno
             357347,     // Sentinel	Mji-Ij
             358355,     // Sentinel	Antelajda
             350370,     // Sentinel	Naresa
             347375,     // Sentinel	Jalonia
             343397,     // Sentinel Sentinel
-            342399,     // Sentinel The Fortress of Fhojum
             373407,     // Sentinel	Cudakasa
             373415,     // Sentinel	Bubumbaret
-            372439,     // Sentinel	Old Mhirpti's Hovel
             327404,     // Sentinel	Bubissidata
             283779,     // Satakalaam	Tulajidax
             406266,     // Pothago	Berbajan
-            223207,     // Daggerfall	Westhead Moor
-            157092,     // Tulune	Gallocart
-            199102,     // Daggerfall	Whitecroft
-            201118,     // Daggerfall	Holwych
             42127,      // Northmoor	Gothcroft
             5229,       // Northmoor	Knightshope
             8219,       // Northmoor	Stokwall
@@ -788,11 +780,11 @@ namespace TravelOptions
             281702,     // Lainlyn	Pythohajer
             73079,      // Glenumbra Moors	Tambridge
             77077,      // Glenumbra Moors	Deerpath
+            223207,     // Daggerfall	Westhead Moor
+            199102,     // Daggerfall	Whitecroft
+            201118,     // Daggerfall	Holwych
             213285,     // Daggerfall	Ripmore
             214207,     // Daggerfall	Copperfield Manor
-            213210,     // Daggerfall	The Old Masterham Place
-            213210,     // Daggerfall	The Old Masterham Place
-            220170,     // Daggerfall	The Dancing Wolf Pub
             221160,     // Daggerfall	Fontborne
             225169,     // Daggerfall	Longwich End
             224178,     // Daggerfall	Wilderham
