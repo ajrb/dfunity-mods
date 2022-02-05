@@ -697,23 +697,6 @@ namespace TravelOptions
             return Array.Exists(portLocationIds, n => n == MaskMapId(mapId));
         }
 
-        public static bool HasPortExtra(int mapId)
-        {
-            return Array.Exists(portLocationExtraIds, n => n == MaskMapId(mapId));
-        }
-
-        public static readonly int[] portLocationExtraIds = {
-            // Extras allowing travel to :
-            2002,       // Small Ship
-            5005,       // Large Ship
-            205676,     // "Isle of Balfiera", "Blackhead"
-            278901,     // "Mournoth", "Zagoparia"
-            263119,     // "Betony", "Whitefort"
-            148062,     // "Tulune", "The Citadel of Hearthham"
-            144059,     // "Tulune", "The Elyzanna Assembly"
-            343439,     // "Cybiades", "Ruins of Cosh Hall"
-        };
-
         public static readonly int[] portLocationIds = {
             443401, 280614, 285597, 485856, 86496, 137544, 139547, 143535, 143542, 149513,
             150625, 158629, 162631, 162646, 164648, 166644, 168652, 169640, 170654, 178663,
@@ -757,6 +740,81 @@ namespace TravelOptions
             148062,     // "Tulune", "The Citadel of Hearthham"
             144059,     // "Tulune", "The Elyzanna Assembly"
             343439,     // "Cybiades", "Ruins of Cosh Hall"
+            243846,     // Wayrest	Penwall Derry
+            273975,     // Wayrest	Tunmont
+            244859,     // Wayrest	Wayrest
+            244859,     // Wayrest	Wayrest
+            255884,     // Wayrest	Eastwold
+            256887,     // Wayrest	Chardale
+            262931,     // Wayrest	Longmore Field
+            106061,     // Tulune	Midmont
+            164072,     // Tulune  Lambrugh
+            296558,     // Tigonus Antelibuton
+            297552,     // Tigonus Wadijerareg
+            308527,     // Tigonus Kalureg
+            376329,     // Sentinel	Pibuda
+            359347,     // Sentinel	Zenuhno
+            359347,     // Sentinel	Zenuhno
+            357347,     // Sentinel	Mji-Ij
+            358355,     // Sentinel	Antelajda
+            350370,     // Sentinel	Naresa
+            347375,     // Sentinel	Jalonia
+            343397,     // Sentinel Sentinel
+            342399,     // Sentinel The Fortress of Fhojum
+            373407,     // Sentinel	Cudakasa
+            373415,     // Sentinel	Bubumbaret
+            372439,     // Sentinel	Old Mhirpti's Hovel
+            327404,     // Sentinel	Bubissidata
+            283779,     // Satakalaam	Tulajidax
+            406266,     // Pothago	Berbajan
+            223207,     // Daggerfall	Westhead Moor
+            157092,     // Tulune	Gallocart
+            199102,     // Daggerfall	Whitecroft
+            201118,     // Daggerfall	Holwych
+            42127,      // Northmoor	Gothcroft
+            5229,       // Northmoor	Knightshope
+            8219,       // Northmoor	Stokwall
+            34162,      // Northmoor	Vanpath
+            38152,      // Northmoor	Pencart
+            45124,      // Northmoor	Burgcart Heath
+            403279,     // Myrkwasa	Elissinia
+            285898,     // Mournoth	Wadijilanis
+            278962,     // Mournoth	Meseraara
+            216791,     // Menevia	Chesterbrugh
+            279754,     // Lainlyn	Kalunnunu
+            281658,     // Lainlyn	Syrotubu
+            286674,     // Lainlyn	Papiladisu
+            281699,     // Lainlyn	Syrallao
+            281702,     // Lainlyn	Pythohajer
+            73079,      // Glenumbra Moors	Tambridge
+            77077,      // Glenumbra Moors	Deerpath
+            213285,     // Daggerfall	Ripmore
+            214207,     // Daggerfall	Copperfield Manor
+            213210,     // Daggerfall	The Old Masterham Place
+            213210,     // Daggerfall	The Old Masterham Place
+            220170,     // Daggerfall	The Dancing Wolf Pub
+            221160,     // Daggerfall	Fontborne
+            225169,     // Daggerfall	Longwich End
+            224178,     // Daggerfall	Wilderham
+            217198,     // Daggerfall	Midbrugh
+            214294,     // Daggerfall	Vanvale
+            214297,     // Daggerfall	Blackcart Hollow
+            239144,     // Daggerfall	Aldpath Hall
+            236143,     // Daggerfall	Grimton
+            139588,     // Bhoriane	Wartale
+            113637,     // Bhoriane	Fontbridge
+            112652,     // Bhoriane	Stokbrone
+            255114,     // Betony	Kirkbeth Hamlet
+            364449,     // Ayasofya Umbopala
+            183401,     // Anticlere	Aldwall Rock
+            175401,     // Anticlere	Crossleigh
+            187406,     // Anticlere	Cathwold Heath
+            195353,     // Anticlere	Vanwood Hollow
+            193358,     // Anticlere	Ipspath
+            197366,     // Anticlere	Wilderbury Rock
+            133718,     // Alcaire	Cathborne
+            140760,     // Alcaire	Wargate
+            455174,     // Abibon-Gora	Papyrydai
         };
         
     }
