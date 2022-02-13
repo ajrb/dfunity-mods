@@ -331,8 +331,8 @@ namespace DaggerfallWorkshop.Game.Guilds
                 }
             };
             item.shortName = "%it of Quiet Undead";
-            item.value = 4000;
-            item.currentCondition = item.maxCondition = 200;
+            item.value = 2600;
+            item.currentCondition = item.maxCondition = 180;
             item.IdentifyItem();
             locators.AddItem(item);
 
