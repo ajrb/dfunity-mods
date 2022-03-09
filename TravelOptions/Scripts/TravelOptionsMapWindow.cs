@@ -97,6 +97,8 @@ namespace TravelOptions
 
         protected bool teleportCharge = false;
 
+        protected int markedLocationId = -1;
+
         internal static byte[][] pathsData = new byte[4][];
         protected bool[] showPaths = { true, true, false, false };
 
@@ -148,6 +150,8 @@ namespace TravelOptions
         protected override void Setup()
         {
             base.Setup();
+
+            NativePanel.OnMiddleMouseClick += MarkLocationHandler;
 
             if (TravelOptionsMod.Instance.ShipTravelPortsOnly)
             {
@@ -403,6 +407,27 @@ namespace TravelOptions
             }
         }
 
+        protected void MarkLocationHandler(BaseScreenComponent sender, Vector2 position)
+        {
+            // If allowed handle clicks on map pixels without a location, allowing non-fast travel to any MP coords
+            if (RegionSelected && locationSelected && !MouseOverOtherRegion)
+            {
+                position.y -= regionPanelOffset;
+
+                // Ensure clicks are inside region texture
+                if (position.x < 0 || position.x > regionTextureOverlayPanelRect.width || position.y < 0 || position.y > regionTextureOverlayPanelRect.height)
+                    return;
+
+                if (markedLocationId == locationSummary.ID)
+                    markedLocationId = -1;
+                else
+                    markedLocationId = locationSummary.ID;
+
+                Debug.Log(markedLocationId);
+                UpdateMapLocationDotsTexture();
+            }
+        }
+
         protected DFPosition GetClickMPCoords()
         {
             float scale = GetRegionMapScale(selectedRegion);
@@ -492,7 +517,7 @@ namespace TravelOptions
                             {
                                 if (DaggerfallUnity.Settings.TravelMapLocationsOutline)
                                     locationDotsOutlinePixelBuffer[offset] = dotOutlineColor;
-                                DrawLocation(offset5, width5, locationPixelColors[index], IsLocationLarge(summary.LocationType), ref locationDotsPixelBuffer);
+                                DrawLocation(offset5, width5, locationPixelColors[index], IsLocationLarge(summary.LocationType), ref locationDotsPixelBuffer, summary.ID == markedLocationId);
                             }
                         }
                     }
@@ -515,7 +540,7 @@ namespace TravelOptions
             regionLocationDotsOverlayPanel.BackgroundTexture = locationDotsTexture;
         }
 
-        void DrawLocation(int offset, int width, Color32 color, bool large, ref Color32[] pixelBuffer)
+        void DrawLocation(int offset, int width, Color32 color, bool large, ref Color32[] pixelBuffer, bool highlight = false)
         {
             int st = large ? 0 : 1;
             int en = large ? 5 : 4;
@@ -524,6 +549,23 @@ namespace TravelOptions
                 for (int x = st; x < en; x++)
                 {
                     pixelBuffer[offset + (y * width) + x] = color;
+                }
+            }
+            if (highlight)
+            {
+                for (int y = -2; y < 8; y = y + 8)
+                {
+                    for (int x = -2; x < 7; x++)
+                    {
+                        pixelBuffer[offset + (y * width) + x] = Color.yellow;
+                    }
+                }
+                for (int x = -2; x < 8; x = x + 8)
+                {
+                    for (int y = -2; y < 7; y++)
+                    {
+                        pixelBuffer[offset + (y * width) + x] = Color.yellow;
+                    }
                 }
             }
         }
@@ -646,7 +688,7 @@ namespace TravelOptions
                             int index = GetPixelColorIndex(summary.LocationType);
                             if (index != -1)
                             {
-                                DrawLocation(offset5, width5, locationPixelColors[index], IsLocationLarge(summary.LocationType), ref pixelBuffer);
+                                DrawLocation(offset5, width5, locationPixelColors[index], IsLocationLarge(summary.LocationType), ref pixelBuffer, summary.ID == markedLocationId);
                             }
                         }
                     }
