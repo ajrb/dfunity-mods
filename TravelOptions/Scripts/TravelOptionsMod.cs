@@ -97,6 +97,7 @@ namespace TravelOptions
         public bool VariableSizeDots { get; private set; }
         public bool WaterwaysEnabled { get; private set; }
         public bool StreamsToggle { get; private set; }
+        public Color32 MarkLocationColor { get; private set; }
         public bool TargetCoordsAllowed { get; private set; }
 
         public float RecklessTravelMultiplier { get; private set; } = 1f;
@@ -202,6 +203,7 @@ namespace TravelOptions
             if (RoadsIntegration)
             {
                 followKeyCode = followKeys[settings.GetValue<int>("RoadsIntegration", "FollowPathsKey")];
+                MarkLocationColor = settings.GetValue<Color32>("RoadsIntegration", "MarkLocationColor");
 
                 if (roadsJunctionMap)
                 {

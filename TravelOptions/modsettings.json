@@ -172,7 +172,7 @@
                 {
                     "Min": 10,
                     "Max": 100,
-                    "Value": 40,
+                    "Value": 60,
                     "Name": "AccelerationLimit",
                     "Description": "The maximum limit allowed for time acceleration, road following is limited to half this amount",
                     "$version": "v1",
@@ -243,6 +243,18 @@
                     "Description": "Adds a streams toggle button separate from rivers button",
                     "$version": "v1",
                     "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
+                },
+                {
+                    "Value": {
+                        "r": 255,
+                        "g": 235,
+                        "b": 5,
+                        "a": 255
+                    },
+                    "Name": "MarkLocationColor",
+                    "Description": "The colour used to highlight locations using middle mouse button on travel map",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ColorKey"
                 }
             ],
             "$version": "v1"

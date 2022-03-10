@@ -423,7 +423,6 @@ namespace TravelOptions
                 else
                     markedLocationId = locationSummary.ID;
 
-                Debug.Log(markedLocationId);
                 UpdateMapLocationDotsTexture();
             }
         }
@@ -557,14 +556,14 @@ namespace TravelOptions
                 {
                     for (int x = -2; x < 7; x++)
                     {
-                        pixelBuffer[offset + (y * width) + x] = Color.yellow;
+                        pixelBuffer[offset + (y * width) + x] = TravelOptionsMod.Instance.MarkLocationColor;
                     }
                 }
                 for (int x = -2; x < 8; x = x + 8)
                 {
                     for (int y = -2; y < 7; y++)
                     {
-                        pixelBuffer[offset + (y * width) + x] = Color.yellow;
+                        pixelBuffer[offset + (y * width) + x] = TravelOptionsMod.Instance.MarkLocationColor;
                     }
                 }
             }

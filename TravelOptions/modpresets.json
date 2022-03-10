@@ -31,14 +31,15 @@
             "TimeAcceleration": {
                 "DefaultStartingAcceleration": "4",
                 "AlwaysUseStartingAcceleration": "False",
-                "AccelerationLimit": "40"
+                "AccelerationLimit": "60"
             },
             "RoadsIntegration": {
                 "Enable": "True",
                 "FollowPathsKey": "1",
                 "VariableSizeDots": "True",
                 "EnableWaterways": "False",
-                "EnableStreamsToggle": "False"
+                "EnableStreamsToggle": "False",
+                "MarkLocationColor": "FFEB05FF"
             },
             "Teleportation": {
                 "EnablePaidTeleportation": "False"
