@@ -17,12 +17,15 @@ using DaggerfallWorkshop.Game.MagicAndEffects.MagicEffects;
 using DaggerfallWorkshop.Game.Questing;
 using DaggerfallWorkshop.Game.Utility.ModSupport;
 using DaggerfallWorkshop;
+using DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings;
 
 namespace Archaeologists
 {
     public class ArchaeologistsMod : MonoBehaviour
     {
         static Mod mod;
+
+        public static bool RestrictGuildRankMagesGuild { get; private set; }
 
         [Invoke(StateManager.StateTypes.Start, 0)]
         public static void Init(InitParams initParams)
@@ -41,6 +44,10 @@ namespace Archaeologists
         public static void InitMod()
         {
             Debug.Log("Begin mod init: Archaeologists");
+
+            ModSettings settings = mod.GetSettings();
+            RestrictGuildRankMagesGuild = settings.GetBool("General", "RestrictGuildRankMagesGuild");
+            bool overridePacification = settings.GetBool("General", "OverridePacification");
 
             // Register the new faction id's
             if (RegisterFactionIds())
@@ -80,8 +87,9 @@ namespace Archaeologists
             else
                 throw new Exception("Faction id's are already in use, unable to register factions for Archaeologists Guild.");
 
-            // Override default formula
-            FormulaHelper.RegisterOverride(mod, "CalculateEnemyPacification", (Func<PlayerEntity, DFCareer.Skills, bool>)CalculateEnemyPacification);
+            // Override default formula if enabled in settings
+            if (overridePacification)
+                FormulaHelper.RegisterOverride(mod, "CalculateEnemyPacification", (Func<PlayerEntity, DFCareer.Skills, bool>)CalculateEnemyPacification);
 
             // Add locator device object to scene and attach script
             GameObject go = new GameObject("LocatorDevice");

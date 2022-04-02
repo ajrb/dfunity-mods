@@ -181,8 +181,8 @@ namespace DaggerfallWorkshop.Game.Guilds
         {
             int newRank = base.CalculateNewRank(playerEntity);
             int magesRank = GameManager.Instance.GuildManager.GetGuild(FactionFile.GuildGroups.MagesGuild).Rank;
-            if (magesRank > 5)
-                newRank = Mathf.Min(5, rank);   // Cap rank at 5 when above rank 5 in mages guild.
+            if (ArchaeologistsMod.RestrictGuildRankMagesGuild && magesRank > 5)
+                newRank = Mathf.Min(5, newRank);   // Cap rank at 5 when above rank 5 in mages guild.
             int peINT = playerEntity.Stats.GetPermanentStatValue(DFCareer.Stats.Intelligence);
             while (peINT < intReqs[newRank])
                 newRank--;

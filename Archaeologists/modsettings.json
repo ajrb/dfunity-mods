@@ -1,0 +1,27 @@
+{
+    "Version": "",
+    "Sections": [
+        {
+            "Name": "General",
+            "Description": "Settings for the guild mod behaviour",
+            "IsAdvanced": false,
+            "Keys": [
+                {
+                    "Value": true,
+                    "Name": "RestrictGuildRankMagesGuild",
+                    "Description": "Restrict guild rank to 5 if above rank 5 in Mages Guild",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
+                },
+                {
+                    "Value": true,
+                    "Name": "OverridePacification",
+                    "Description": "Override standard Daggerfall pacification formula",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
+                }
+            ],
+            "$version": "v1"
+        }
+    ]
+}
