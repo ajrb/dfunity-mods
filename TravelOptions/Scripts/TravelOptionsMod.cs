@@ -224,6 +224,10 @@ namespace TravelOptions
 
             Mod roadsMod = ModManager.Instance.GetMod(ROADS_MODNAME);
             bool roadsModEnabled = roadsMod != null && roadsMod.Enabled;
+            bool riversStreams = false;
+            try {
+                riversStreams = roadsMod.GetSettings().GetBool("Settings", "RiversAndStreams");
+            } catch (Exception) { }
 
             // Load non-dynamic settings.
             ModSettings settings = mod.GetSettings();
@@ -232,8 +236,8 @@ namespace TravelOptions
             if (RoadsIntegration) {
                 VariableSizeDots = settings.GetValue<bool>("RoadsIntegration", "VariableSizeDots");
                 roadsJunctionMap = settings.GetValue<bool>("RoadsJunctionMap", "Enable");
-                WaterwaysEnabled = settings.GetValue<bool>("RoadsIntegration", "EnableWaterways") && roadsModEnabled;
-                StreamsToggle = settings.GetValue<bool>("RoadsIntegration", "EnableStreamsToggle") && roadsModEnabled;
+                WaterwaysEnabled = settings.GetValue<bool>("RoadsIntegration", "EnableWaterways") && roadsModEnabled && riversStreams;
+                StreamsToggle = settings.GetValue<bool>("RoadsIntegration", "EnableStreamsToggle") && roadsModEnabled && riversStreams;
             }
 
             // Load initial dynamic settings.
