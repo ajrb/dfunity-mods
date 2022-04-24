@@ -9,6 +9,12 @@ using DaggerfallWorkshop.Game.UserInterface;
 using DaggerfallWorkshop.Game.UserInterfaceWindows;
 using DaggerfallConnect;
 using DaggerfallConnect.Utility;
+using DaggerfallWorkshop.Game.Utility.ModSupport;
+using DaggerfallWorkshop.Utility;
+using System.Collections.Generic;
+using static DaggerfallWorkshop.Utility.ContentReader;
+using DaggerfallConnect.Arena2;
+using System;
 
 namespace TravelOptions
 {
@@ -22,12 +28,18 @@ namespace TravelOptions
 
         protected TravelOptionsMapWindow travelWindowTO;
 
+        public const string HIDDEN_MAP_LOCATIONS_MODNAME = "Hidden Map Locations";
+        protected bool hiddenMapLocationsEnabled;
+
         public new DFPosition EndPos { get { return base.EndPos; } protected internal set { base.EndPos = value; } }
 
         public TravelOptionsPopUp(IUserInterfaceManager uiManager, IUserInterfaceWindow previousWindow = null, DaggerfallTravelMapWindow travelWindow = null)
             : base(uiManager, previousWindow, travelWindow)
         {
             travelWindowTO = (TravelOptionsMapWindow)travelWindow;
+
+            Mod hiddenMapLocationsMod = ModManager.Instance.GetMod(HIDDEN_MAP_LOCATIONS_MODNAME);
+            hiddenMapLocationsEnabled = hiddenMapLocationsMod != null && hiddenMapLocationsMod.Enabled;
         }
 
         protected override void Setup()
@@ -193,5 +205,26 @@ namespace TravelOptions
             base.ToggleSleepModeButtonOnScrollHandler(sender);
         }
 
+        public override void BeginButtonOnClickHandler(BaseScreenComponent sender, Vector2 position)
+        {
+            if (hiddenMapLocationsEnabled && !IsPlayerControlledTravel())
+            {
+                bool hasVisitedLocation = false;
+
+                Tuple<int, int, bool> args = new Tuple<int, int, bool>(EndPos.X, EndPos.Y, TravelShip);
+                ModManager.Instance.SendModMessage(HIDDEN_MAP_LOCATIONS_MODNAME, "hasVisitedLocation", args, (string _, object result) =>
+                {
+                    hasVisitedLocation = (bool)result;
+                });
+
+                if (!hasVisitedLocation)
+                {
+                    DaggerfallUI.MessageBox("You have not visited this location yet");
+                    return;
+                }
+            }
+
+            base.BeginButtonOnClickHandler(sender, position);
+        }
     }
 }
