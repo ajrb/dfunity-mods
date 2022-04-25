@@ -109,6 +109,7 @@ namespace TravelOptions
         protected bool hiddenMapLocationsEnabled;
         protected HashSet<ContentReader.MapSummary> discoveredMapSummaries;
         protected HashSet<DFRegion.LocationTypes> revealedLocationTypes;
+        protected bool hiddenMapLocationsRevealPorts;
 
         public TravelOptionsMapWindow(IUserInterfaceManager uiManager)
             : base(uiManager)
@@ -134,9 +135,14 @@ namespace TravelOptions
 
             Mod hiddenMapLocationsMod = ModManager.Instance.GetMod(HIDDEN_MAP_LOCATIONS_MODNAME);
             hiddenMapLocationsEnabled = hiddenMapLocationsMod != null && hiddenMapLocationsMod.Enabled;
-
             if (hiddenMapLocationsEnabled)
             {
+                var hiddenMapLocationsSettings = hiddenMapLocationsMod.GetSettings();
+                if (hiddenMapLocationsSettings != null)
+                {
+                    hiddenMapLocationsRevealPorts = hiddenMapLocationsSettings.GetBool("LocationTypesToReveal", "Ports");
+                }
+
                 discoveredMapSummaries = new HashSet<ContentReader.MapSummary>();
                 revealedLocationTypes = new HashSet<DFRegion.LocationTypes>();
 
@@ -703,6 +709,11 @@ namespace TravelOptions
                 
             if (hiddenMapLocationsEnabled)
             {
+                if (hiddenMapLocationsRevealPorts && HasPort(summary))
+                {
+                    return true;
+                }
+
                 return discoveredMapSummaries.Contains(summary) || revealedLocationTypes.Contains(summary.LocationType);
             }
 
