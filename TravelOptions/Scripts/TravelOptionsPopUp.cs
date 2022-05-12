@@ -9,6 +9,8 @@ using DaggerfallWorkshop.Game.UserInterface;
 using DaggerfallWorkshop.Game.UserInterfaceWindows;
 using DaggerfallConnect;
 using DaggerfallConnect.Utility;
+using System;
+using DaggerfallWorkshop.Game.Utility.ModSupport;
 
 namespace TravelOptions
 {
@@ -19,6 +21,7 @@ namespace TravelOptions
         private const string MsgNoPort = "You cannot travel by ship from here, since there's no port.";
         private const string MsgNoDestPort = "You cannot travel by ship to there, as that location has no port.";
         private const string MsgNoSailing = "Your journey doesn't cross any ocean, so a ship is not needed.";
+        private const string MsgNotVisited = "You have not visited this location yet, so can't fast travel there.";
 
         protected TravelOptionsMapWindow travelWindowTO;
 
@@ -117,6 +120,21 @@ namespace TravelOptions
 
         protected override void CallFastTravelGoldCheck()
         {
+            // Hidden Map Locations: Check if player has visited before allowing fast travel.
+            if (TravelOptionsMod.Instance.HiddenMapLocationsEnabled && !IsPlayerControlledTravel())
+            {
+                bool hasVisitedLocation = false;
+                ModManager.Instance.SendModMessage(TravelOptionsMod.HIDDEN_MAP_LOCATIONS_MODNAME, "hasVisitedLocation",
+                    new Tuple<int, int, bool>(EndPos.X, EndPos.Y, TravelShip),
+                    (string _, object result) => {  hasVisitedLocation = (bool)result; });
+
+                if (!hasVisitedLocation)
+                {
+                    DaggerfallUI.MessageBox(MsgNotVisited);
+                    return;
+                }
+            }
+
             if (!travelWindowTO.LocationSelected)
             {
                 CloseWindow();
