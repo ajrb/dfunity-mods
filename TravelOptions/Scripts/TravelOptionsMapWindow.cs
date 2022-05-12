@@ -695,10 +695,14 @@ namespace TravelOptions
             // If ports filter is on, only return true if it's a port
             if (portsFilter && !HasPort(summary))
                 return false;
-                
+
+            // Hidden Map Locations: Reveal ports if setting enabled.
             if (TravelOptionsMod.Instance.HiddenMapLocationsEnabled)
             {
-                return discoveredMapSummaries.Contains(summary) || revealedLocationTypes.Contains(summary.LocationType);
+                if (TravelOptionsMod.Instance.HiddenMapLocationsRevealPorts && HasPort(summary))
+                    return true;
+                else
+                    return discoveredMapSummaries.Contains(summary) || revealedLocationTypes.Contains(summary.LocationType);
             }
 
             return base.checkLocationDiscovered(summary);

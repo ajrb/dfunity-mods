@@ -87,6 +87,7 @@ namespace TravelOptions
         public static TravelOptionsMod Instance { get; private set; }
 
         public bool HiddenMapLocationsEnabled { get; private set; }
+        public bool HiddenMapLocationsRevealPorts { get; private set; }
 
         public string DestinationName { get; private set; }
         public bool DestinationCautious { get; private set; }
@@ -228,6 +229,14 @@ namespace TravelOptions
             // Hidden Map Locations mod integration setup
             Mod hiddenMapLocationsMod = ModManager.Instance.GetMod(HIDDEN_MAP_LOCATIONS_MODNAME);
             HiddenMapLocationsEnabled = hiddenMapLocationsMod != null && hiddenMapLocationsMod.Enabled;
+            if (HiddenMapLocationsEnabled)
+            {
+                ModSettings hiddenMapLocationsSettings = hiddenMapLocationsMod.GetSettings();
+                if (hiddenMapLocationsSettings != null)
+                {
+                    HiddenMapLocationsRevealPorts = hiddenMapLocationsSettings.GetBool("LocationTypesToReveal", "Ports");
+                }
+            }
 
             // Basic Roads mod integration setup
             Mod roadsMod = ModManager.Instance.GetMod(ROADS_MODNAME);
