@@ -36,6 +36,7 @@ namespace TravelOptions
         public const string HAS_PORT = "hasPort";
 
         public const string ROADS_MODNAME = "BasicRoads";
+        public const string HIDDEN_MAP_LOCATIONS_MODNAME = "Hidden Map Locations";
 
         public const int MaxCircumnavigationAccel = 15;
 
@@ -84,6 +85,8 @@ namespace TravelOptions
         const int LocPauseEnter = 2;
 
         public static TravelOptionsMod Instance { get; private set; }
+
+        public bool HiddenMapLocationsEnabled { get; private set; }
 
         public string DestinationName { get; private set; }
         public bool DestinationCautious { get; private set; }
@@ -222,6 +225,11 @@ namespace TravelOptions
         {
             Debug.Log("Begin mod init: TravelOptions");
 
+            // Hidden Map Locations mod integration setup
+            Mod hiddenMapLocationsMod = ModManager.Instance.GetMod(HIDDEN_MAP_LOCATIONS_MODNAME);
+            HiddenMapLocationsEnabled = hiddenMapLocationsMod != null && hiddenMapLocationsMod.Enabled;
+
+            // Basic Roads mod integration setup
             Mod roadsMod = ModManager.Instance.GetMod(ROADS_MODNAME);
             bool roadsModEnabled = roadsMod != null && roadsMod.Enabled;
             bool riversStreams = false;

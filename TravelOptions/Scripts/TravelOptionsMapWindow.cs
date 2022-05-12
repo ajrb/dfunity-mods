@@ -104,9 +104,7 @@ namespace TravelOptions
 
         internal bool LocationSelected { get { return locationSelected; } }
 
-        // Hidden map locations mod compatibility.
-        public const string HIDDEN_MAP_LOCATIONS_MODNAME = "Hidden Map Locations";
-        protected bool hiddenMapLocationsEnabled;
+        // Hidden Map Locations mod data structures.
         protected HashSet<ContentReader.MapSummary> discoveredMapSummaries;
         protected HashSet<DFRegion.LocationTypes> revealedLocationTypes;
 
@@ -132,15 +130,12 @@ namespace TravelOptions
                 showPaths[path_streams] = true;
             }
 
-            Mod hiddenMapLocationsMod = ModManager.Instance.GetMod(HIDDEN_MAP_LOCATIONS_MODNAME);
-            hiddenMapLocationsEnabled = hiddenMapLocationsMod != null && hiddenMapLocationsMod.Enabled;
-
-            if (hiddenMapLocationsEnabled)
+            if (TravelOptionsMod.Instance.HiddenMapLocationsEnabled)
             {
                 discoveredMapSummaries = new HashSet<ContentReader.MapSummary>();
                 revealedLocationTypes = new HashSet<DFRegion.LocationTypes>();
 
-                ModManager.Instance.SendModMessage(HIDDEN_MAP_LOCATIONS_MODNAME, "getRevealedLocationTypes", null,
+                ModManager.Instance.SendModMessage(TravelOptionsMod.HIDDEN_MAP_LOCATIONS_MODNAME, "getRevealedLocationTypes", null,
                     (string message, object data) => { revealedLocationTypes = (HashSet<DFRegion.LocationTypes>)data; });
             }
 
@@ -701,7 +696,7 @@ namespace TravelOptions
             if (portsFilter && !HasPort(summary))
                 return false;
                 
-            if (hiddenMapLocationsEnabled)
+            if (TravelOptionsMod.Instance.HiddenMapLocationsEnabled)
             {
                 return discoveredMapSummaries.Contains(summary) || revealedLocationTypes.Contains(summary.LocationType);
             }
@@ -711,9 +706,9 @@ namespace TravelOptions
 
         protected void GetDiscoveredLocationsFromHiddenMapMod()
         {
-            if (hiddenMapLocationsEnabled)
+            if (TravelOptionsMod.Instance.HiddenMapLocationsEnabled)
             {
-                ModManager.Instance.SendModMessage(HIDDEN_MAP_LOCATIONS_MODNAME, "getDiscoveredMapSummaries", null,
+                ModManager.Instance.SendModMessage(TravelOptionsMod.HIDDEN_MAP_LOCATIONS_MODNAME, "getDiscoveredMapSummaries", null,
                     (string _, object result) => { discoveredMapSummaries = (HashSet<ContentReader.MapSummary>)result; });
             }
         }
