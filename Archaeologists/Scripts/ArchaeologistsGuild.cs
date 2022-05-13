@@ -232,7 +232,7 @@ namespace DaggerfallWorkshop.Game.Guilds
 
         public override bool CanAccessLibrary()
         {
-            return (rank >= 2);
+            return (rank >= 1);
         }
 
         public override bool CanAccessService(GuildServices service)
