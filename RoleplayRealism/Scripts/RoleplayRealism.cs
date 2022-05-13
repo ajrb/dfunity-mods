@@ -34,7 +34,7 @@ namespace RoleplayRealism
 
         public const string ROLEPLAYREALISMITEMS_MODNAME = "RoleplayRealism-Items";
         public const string TRAVELOPTIONS_MODNAME = "TravelOptions";
-        public const string VILLAGERVARIETY_MODNAME = "VillagerVariety";
+        public const string VILLAGERVARIETY_MODNAME = "Vanilla Enhanced - Villagers";
 
         protected static string[] placesTable =
         {
