@@ -1,0 +1,184 @@
+Quest: JHAR025
+DisplayName: Document Removal
+-- Message panels
+QRC:
+
+QuestorOffer:  [1000]
+<ce>  We have a fairly well-paying job here, but it
+<ce>  demands skill at secrecy. If you're good at sneaking around,
+<ce>  we need you to get to a palace to retrieve a document.
+
+RefuseQuest:  [1001]
+<ce>   I'm sure you could learn about subterfuge from some good books.
+
+AcceptQuest:  [1002]
+<ce>   The document is being held in the _pal_ of ___pal_.
+<ce>   It's a legal document based on specious claims,
+<ce>   talking about supposed adversarial actions
+<ce>   we've taken against the people of %crn.
+<ce>   Total rubbish, but it's headed to the %rt
+<ce>   within the next =traveltime_ days.
+<ce>   Get it in your hands before then, and
+<ce>   bring it to me for a reward of =reward_ gold pieces.
+
+QuestFail:   [1003]
+<ce>  You needed to take the false document in
+<ce>  ___pal_ for the Archaeologists by now.
+
+QuestComplete:  [1004]
+<ce>  Fine work, %pct. I'm glad you weren't
+<ce>  bested by the fiends who set this up.
+<ce>  We fight tooth and nail for our position
+<ce>  in %crn, and you're doing our name well.
+<ce>  Here, take the gold.
+
+QuestLogEntry:  [1010]
+%qdt:
+ _questgiver_ of the
+ Archaeologists has sent me to
+ ___pal_ to get a scandalous document
+ from the _pal_.
+ I must take it within =traveltime_ days,
+ and then return to ___questgiver_
+ for a reward of =reward_ gold pieces.
+
+Message:  1011
+<ce>  This conspicuous document is titled,
+<ce>  "Archaeologists: Rogues and Vagabonds All!"
+<ce>  You need search no further.
+<ce>  You stuff it into your pack.
+
+Message:  1012
+<ce>  It appears your getaway will not be as clean as expected.
+<ce>  The town guards have already been alerted to your trespassing.
+
+Message:  1013
+<ce>  (SKILL CHECK PASSED: STEALTH)
+<ce>  
+<ce>  No one seems to notice your entry to the palace.
+<ce>  However, you'll need to work quickly.
+<ce>  There's no telling when someone might
+<ce>  find you in your search for the document.
+
+Message:  1014
+<ce>  (SKILL CHECK FAILED: STEALTH)
+<ce>  
+<ce>  You enter the palace, and are noticed immediately
+<ce>  by a servant. She cries out,
+<ce>  "This one's with the Archaeologists! I know it!
+<ce>  Someone help!"
+<ce>  She rings a loud bell, and the sound of
+<ce>  teleportation soon follows as she flees.
+<--->
+<ce>  (SKILL CHECK FAILED: STEALTH)
+<ce>  
+<ce>  You enter the palace, and are noticed immediately
+<ce>  by a servant. He cries out,
+<ce>  "This one's with the Archaeologists! I know it!
+<ce>  Someone help!"
+<ce>  He rings a loud bell, and the sound of
+<ce>  teleportation soon follows as he flees.
+
+
+Message:  1015
+<ce>  (SKILL CHECK FAILED: STEALTH)
+<ce>  
+<ce>  You've spent too long in the palace,
+<ce>  making the servants grow suspicious of you.
+<ce>  Someone rings a loud bell, and the sound of
+<ce>  teleportation soon follows.
+
+Message:  1016
+<ce>  This document contains several nonsensical,
+<ce>  incoherent accusations against the Archaeologist's Guild.
+<ce>  You feel stupider with each word you read, and
+<ce>  are obliged to put it away for your own safety.
+
+QBN:
+Item _mitem_ letter used 1016
+Item _reward_ gold range 700 to 899
+
+Person _questgiver_ group Questor female
+
+Place _pal_ remote palace
+
+Clock _traveltime_ 00:00 0 flag 17 range 0 2
+Clock _failsafe_ 90.00:00
+Clock _stealthtimer_ 0:03 0:05
+
+Foe _e1_ is Mage
+Foe _e2_ is Sabretooth_tiger
+Foe _e3_ is Spriggan
+
+--	Quest start-up:
+	place item _mitem_ at _pal_ 
+	start timer _traveltime_ 
+	log 1010 step 0
+    pc at _pal_ do _inside_
+
+_traveltime_ task:
+    say 1003
+	end quest
+
+variable _inside_
+
+_skill1_ task:
+    when skill Stealth is at least 20
+
+_skill2_ task:
+    when skill Stealth is at least 40
+
+_spawn_ task:
+    when _inside_ and not _skill1_
+    say 1014
+    start task _spawnenemies_
+
+_spawnenemies_ task:
+    create foe _e1_ every 0 minutes 1 times with 100% success
+    create foe _e2_ every 0 minutes 1 times with 100% success
+    create foe _e3_ every 0 minutes 1 times with 100% success
+    change foe _e1_ infighting true
+    change foe _e2_ infighting true
+    change foe _e3_ infighting true
+    change foe _e1_ team 0
+    change foe _e2_ team 0
+    change foe _e3_ team 0
+
+_firststealth_ task:
+    when _inside_ and _skill1_
+    say 1013
+    start timer _stealthtimer_
+
+_turnoff_ task:
+    when not _inside_
+    stop timer _stealthtimer_
+
+_secondstealth_ task:
+    when _inside_ and _stealthtimer_
+
+variable _stealthtimer_
+
+_secondfail_ task:
+    when _secondstealth_ and not _skill2_
+    say 1015
+    start task _spawnenemies_
+
+_pursuit_ task:
+    when _spawnenemies_ and not _inside_
+    say 1012
+    setplayercrime Trespassing
+    spawncityguards immediate
+
+_grab_ task:
+    clicked item _mitem_
+    say 1011
+    stop timer _traveltime_
+    start timer _failsafe_
+
+_reward_ task:
+	toting _mitem_ and _questgiver_ clicked
+	give pc _reward_
+    end quest
+
+_failsafe_ task:
+    end quest
