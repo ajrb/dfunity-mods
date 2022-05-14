@@ -34,3 +34,4 @@ JHAR021, GGroup0, M, 20, 1, deliver a finger to Bertram Spode
 JHAR022, GGroup0, M, 4, 1, retrieve a cursed undead trinket for language training
 JHAR023, GGroup0, M, 3, 1, expose a spy in the guild
 JHAR024, GGroup0, M, 0, 0, gather books for the guild
+JHAR025, GGroup0, M, 1, 1, steal a scandalous letter from a palace
