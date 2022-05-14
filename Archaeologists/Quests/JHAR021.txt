@@ -24,7 +24,8 @@ AcceptQuest:  [1002]
 <ce>  fascination with it, and we don't know why.
 <ce>  Sufficient to say, his donation will keep
 <ce>  us in %crn for the next few years, so
-<ce>  he deserves it. Find him at _farmhome_.
+<ce>  he deserves it. Find him at ___farmhome_.
+<ce>  He's staying in the palace for now.
 <ce>  If he doesn't have it within =timer_ days
 <ce>  your standing with us will fall drastically.
 <ce>  Ever onward, %pcf.
@@ -47,8 +48,8 @@ QuestLogEntry:   [1010]
  __qgiver_ of ___qgiver_
  need me to deliver a decrepit
  finger to Lord Bertram Spode,
- who is staying at ___farmhome_
- of ____farmhome_. He expects it
+ who is staying at _farmhome_
+ of ___farmhome_. He expects it
  to be delivered within =timer_ days.
 
 QBN:
@@ -58,7 +59,7 @@ Item _map_ finger
 Person _qgiver_ group Questor
 Person _member_ named Lord_Bertram_Spode
 
-Place _farmhome_ remote farmhome
+Place _farmhome_ remote palace
 
 Clock _timer_ 00:00 0 flag 17 range 0 2
 
