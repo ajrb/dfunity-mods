@@ -1,6 +1,6 @@
 {
     "ModTitle": "Archaeologists",
-    "ModVersion": "2.2.2",
+    "ModVersion": "2.3",
     "ModAuthor": "Hazelnut",
     "ContactInfo": "forums.dfworkshop.net",
     "DFUnity_Version": "0.11.5",
@@ -63,7 +63,8 @@
         "Assets/Game/Mods/Archaeologists/Quests/JHAR021c.txt",
         "Assets/Game/Mods/Archaeologists/Quests/JHAR022.txt",
         "Assets/Game/Mods/Archaeologists/Quests/JHAR024.txt",
-        "Assets/Game/Mods/Archaeologists/modsettings.json"
+        "Assets/Game/Mods/Archaeologists/modsettings.json",
+        "Assets/Game/Mods/Archaeologists/Quests/JHAR025.txt"
     ],
     "Contributes": {
         "BooksMapping": [
