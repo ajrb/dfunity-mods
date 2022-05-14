@@ -35,3 +35,4 @@
 34  Sneak
 35  Rest
 36  Pack
+37  Cook
