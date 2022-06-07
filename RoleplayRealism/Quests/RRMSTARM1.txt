@@ -218,9 +218,10 @@ Message: 1027
   farm and the warriors headed off that way.
 <ce>
 2: A well dressed, but rude '_captain_' insisted on 
-  buying all the wine from the Hawking Orchard cheaply. He 
+  buying all the wine from the Hawkwing Orchard cheaply. He 
   was backed up by several rough looking men in fine armor. 
   They appeared to take the wine barrels towards the south.
+  (don't mix this up with Hawking Orchard a ways to the west)
 <ce>
 3: A funeral procession headed for the Masterhart Graveyard
   was forced off the road by a unit of well-armed men 
