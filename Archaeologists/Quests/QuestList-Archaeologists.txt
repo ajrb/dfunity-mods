@@ -9,6 +9,8 @@
 
 schema: *name, group, membership, minReq, flag, notes
 
+JHARN01, GGroup0, N, 0, 0, non-member quest to pay 2000 gold
+JHARN02, GGroup0, N, 0, 0, non-member quest to deliver a coded message
 ARCH001, GGroup0, M, 0, 0, test quest based on N0C00Y13
 JHAR001, GGroup0, M, 0, 1, get an adversarial mage's notes
 JHAR002, GGroup0, M, 0, 0, rescue a lost explorer from a dungeon

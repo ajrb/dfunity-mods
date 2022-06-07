@@ -1,0 +1,96 @@
+Quest: JHARN01
+DisplayName: Donation to the Sciences
+-- Message panels
+QRC:
+
+QuestorOffer:  [1000]
+<ce>  We don't really have time for outsiders here.
+<ce>  Much of our work is confidential and requires
+<ce>  discretion, which we cannot know you have.
+<ce>  If you wish to gain favor with our guild,
+<ce>  what would you say to a small donation
+<ce>  to the cause? Say, to the tune of 2,000 gold pieces?
+
+RefuseQuest:  [1001]
+<ce>   If you'll be going, I need to attend to other members' needs.
+
+AcceptQuest:  [1002]
+<ce>   Ah, a worthy decision. Those who donate to the
+<ce>  Archaeologists are always kept in fond memory.
+
+QuestFail:   [1003]
+<ce>  You were expected to donate 2,000 gold pieces
+<ce>  to the Archaeologists of ___qgiver_ by now.
+
+QuestComplete:  [1004]
+<ce>  (You deliver 2,000 gold coins to _qgiver_.
+<ce>  After counting them out, %g1 smiles.)
+<ce> 
+<ce>  "Excellent, my friend. I'll be informing
+<ce>  our local members of this donation.
+<ce>  Your generosity will not be forgotten, not at all."
+
+QuestLogEntry:  [1010]
+%qdt:
+ I tried to donate 2,000 gold pieces to
+ the Archaeologist Guild of ___qgiver_,
+ but did not have enough on hand.
+ I can do so within 24 hours to
+ curry some favor with them.
+
+Message:  1011
+<ce>  (You search for 2,000 gold coins, but
+<ce>  do not have them. _qgiver_ is not amused.)
+<ce>  
+<ce>  "No letters of credit, no vague promises.
+<ce>  Cold, hard money is what we need.
+<ce>  If you can bring it here within 24 hours,
+<ce>  I'll make certain mention of you to
+<ce>  the Master of this hall."
+
+Message:  1012
+<ce>  (You search for 2,000 gold coins, but
+<ce>  do not have them. _qgiver_ is not amused.)
+<ce>  
+<ce>  "No letters of credit, no vague promises.
+<ce>  Cold, hard money is what we need.
+<ce>  If you can bring it here within 24 hours
+<ce>  of when you originally made the offer,
+<ce>  I'll make certain mention of you to
+<ce>  the Master of this hall."
+
+-- this duplicate text is necessary
+
+QBN:
+
+Person _qgiver_ group Questor female
+
+Clock _failsafe_ 1.00:00
+
+--	Quest start-up:
+    start task _pay_
+
+_pay_ task:
+    pay 2000 money do _victory_ otherwise do _notenough_
+
+_victory_ task:
+    give pc nothing
+    end quest
+
+_notenough_ task:
+    clear _pay_
+    say 1011
+    log 1010 step 0
+    start timer _failsafe_
+
+_failsafe_ task:
+    say 1003
+    end quest
+
+_click_ task:
+    clicked _qgiver_ and at least 2000 gold otherwise do _notenough2_
+    start task _victory_
+
+_notenough2_ task:
+    say 1012
+    clear _click_ _notenough2_
