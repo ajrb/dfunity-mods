@@ -87,6 +87,7 @@ namespace RoleplayRealism
             {
                 DaggerfallUnity.Instance.ItemHelper.RegisterItemUseHandler((int)UselessItems2.Bandage, UseBandage);
                 FormulaHelper.RegisterOverride(mod, "IsItemStackable", (Func<DaggerfallUnityItem, bool>)IsItemStackable);
+                PlayerActivate.OnLootSpawned += StackableBandages_OnLootSpawned;
             }
 
             if (conditionBasedPrices)
@@ -157,6 +158,19 @@ namespace RoleplayRealism
         public static bool IsItemStackable(DaggerfallUnityItem item)
         {
             return item.IsOfTemplate(ItemGroups.UselessItems2, (int)UselessItems2.Bandage);
+        }
+
+        public static void StackableBandages_OnLootSpawned(object sender, ContainerLootSpawnedEventArgs e)
+        {
+            DaggerfallInterior interior = GameManager.Instance.PlayerEnterExit.Interior;
+            if (interior != null && e.ContainerType == LootContainerTypes.ShopShelves)
+            {
+                DaggerfallUnityItem item = e.Loot.GetItem(ItemGroups.UselessItems2, (int)UselessItems2.Bandage, false, false, false);
+                if (item != null)
+                {
+                    item.stackCount = Mathf.Clamp(UnityEngine.Random.Range(1, interior.BuildingData.Quality / 2), 1, 8);
+                }
+            }
         }
 
         static bool UseBandage(DaggerfallUnityItem item, ItemCollection collection)
