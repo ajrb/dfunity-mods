@@ -1,0 +1,81 @@
+Quest: JHAR007
+DisplayName: Busywork
+-- Message panels
+QRC:
+
+QuestorOffer:  [1000]
+<ce>	The lion's share of our work goes to our own members.
+<ce>    We have very high standards of trust and confidence,
+<ce>    and you do not meet them.
+<ce>
+<ce>    You're lucky that we have a coded message here
+<ce>    and no courier to deliver it. I think it's
+<ce>    safe enough to trust someone like you.
+<ce>    Deliver it, and you'll earn our esteem.
+
+RefuseQuest:  [1001]
+<ce>	What are you then? A beggar? Shoo.
+
+AcceptQuest:  [1002]
+<ce>	Good. I have things to do, so get going.
+<ce>	This message is coded and will not be cracked
+<ce>	by someone of your nature. It needs to get
+<ce>	to one of our Professors, _person_
+<ce>	who's staying in _tav_ of ___tav_.
+<ce>	Have this done within =timer_ days,
+<ce>	and not one later.
+
+QuestFail:   [1003]
+<ce>  The letter you carry needed to reach
+<ce>  Professor _person_ of the Archaeologists by now.
+<ce>  You discard it instead.
+
+QuestComplete:  [1004]
+<ce>	Who are you? Archaeologists? You're not...
+<ce>	Oh. I guess our standards are dropping	of late.
+<ce> Well, everyone has to start somewhere.
+<ce>	I thank you for this letter. Do not inquire about
+<ce>	its contents. Safe travels to you.
+
+QuestorPostsuccess:  [1008]
+Well, you're humble enough to deliver a letter.
+
+QuestLogEntry:  [1010]
+%qdt:
+ _qgiver_ of the Archaeologists
+ has sent me to deliver a
+ coded message to _person_,
+ a Professor who stays at
+ _tav_ in ___tav_.
+ It must arrive within =timer_ days.
+
+Message:  1011
+<ce>  This half-sheet of paper is covered in symbols.
+<ce>  You wonder what kind of cipher it would take
+<ce>  to read it.
+
+QBN:
+
+Person _person_ faction Dancers
+Person _qgiver_ group Questor
+
+Place _tav_ remote tavern
+
+Item _letter_ letter used 1011
+
+Clock _timer_ 00:00 0 flag 17 range 0 2
+
+--	Quest start-up:
+    place npc _person_ at _tav_
+    get item _letter_
+	log 1010 step 0
+    start timer _timer_
+
+_timer_ task:
+	say 1003
+	end quest 
+
+_end_ task:
+	toting _letter_ and _person_ clicked
+	give pc nothing 
+	end quest 
