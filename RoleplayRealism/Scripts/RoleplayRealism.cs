@@ -24,6 +24,7 @@ using DaggerfallWorkshop.Game.Utility.ModSupport;
 using DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings;
 using DaggerfallWorkshop.Utility;
 using DaggerfallWorkshop.Utility.AssetInjection;
+using DaggerfallConnect.Utility;
 
 namespace RoleplayRealism
 {
@@ -50,6 +51,9 @@ namespace RoleplayRealism
         };
         static readonly int[] loanVals = { 2000, 4000, 6000, 8000, 10000, 20000, 30000, 40000, 50000 };
 
+        public const string FORT_VERYNEAR1 = "You see many heavy bootprints in the mud and even spot a discarded shield.";
+        public const string FORT_VERYNEAR2 = "These are definite tracks from of a band of warriors somewhere nearby.";
+        public const string FORT_NEAR = "You spot signs of recent activity in the area that seem to lead to the {0}.";
 
         static Mod mod;
         static int loanMaxPerLevel;
@@ -235,6 +239,7 @@ namespace RoleplayRealism
             // Register the custom armor service and location detection
             Services.RegisterMerchantService(1022, CustomArmorService, "Custom Armor");
             PlayerGPS.OnEnterLocationRect += PlayerGPS_OnEnterLocationRect;
+            PlayerGPS.OnMapPixelChanged += PlayerGPS_OnMapPixelChanged;
 
             Debug.Log("Finished mod init: RoleplayRealism");
         }
@@ -245,6 +250,36 @@ namespace RoleplayRealism
             {
                 // Entered the location of the master armorer, so discover his shop with a custom name
                 GameManager.Instance.PlayerGPS.DiscoverBuilding(GetMasterArmBuildingKey(location.RegionIndex), "Dharjen Custom Armor");
+            }
+        }
+
+        private static void PlayerGPS_OnMapPixelChanged(DFPosition mapPixel)
+        {
+            // Check if near Northrock Fort
+            if (mapPixel.X >= 937 && mapPixel.X <= 939 && mapPixel.Y >= 50 && mapPixel.Y <= 52)
+            {
+                // In Fort MP 2 messages, in adjacent MP message with track direction
+                if (mapPixel.X == 938 && mapPixel.Y == 51)
+                {
+                    DaggerfallUI.AddHUDText(FORT_VERYNEAR1, 5);
+                    DaggerfallUI.AddHUDText(FORT_VERYNEAR2, 5);
+                }
+                else if (mapPixel.X == 938 && mapPixel.Y == 50)
+                    DaggerfallUI.AddHUDText(String.Format(FORT_NEAR, "south"), 5);
+                else if (mapPixel.X == 939 && mapPixel.Y == 50)
+                    DaggerfallUI.AddHUDText(String.Format(FORT_NEAR, "south west"), 5);
+                else if (mapPixel.X == 939 && mapPixel.Y == 51)
+                    DaggerfallUI.AddHUDText(String.Format(FORT_NEAR, "west"), 5);
+                else if (mapPixel.X == 939 && mapPixel.Y == 52)
+                    DaggerfallUI.AddHUDText(String.Format(FORT_NEAR, "north west"), 5);
+                else if (mapPixel.X == 938 && mapPixel.Y == 52)
+                    DaggerfallUI.AddHUDText(String.Format(FORT_NEAR, "north"), 5);
+                else if (mapPixel.X == 937 && mapPixel.Y == 52)
+                    DaggerfallUI.AddHUDText(String.Format(FORT_NEAR, "north east"), 5);
+                else if (mapPixel.X == 937 && mapPixel.Y == 51)
+                    DaggerfallUI.AddHUDText(String.Format(FORT_NEAR, "east"), 5);
+                else if (mapPixel.X == 937 && mapPixel.Y == 50)
+                    DaggerfallUI.AddHUDText(String.Format(FORT_NEAR, "south east"), 5);
             }
         }
 
