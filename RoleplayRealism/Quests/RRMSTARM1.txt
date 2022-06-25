@@ -138,7 +138,7 @@ on %qdt:
  of these well-armored warriors the locals are talking
  about.
     My contact will send me a letter once the trackers
- return, which should be in around 5 days time.
+ return, which should be after three or so days.
 
 Message: 1019
 on %qdt:
@@ -499,8 +499,8 @@ Message: 1064
 <ce>
 <ce>I'll contact the trackers and have them start their search 
 <ce>immediately. They said that with the vague directions and 
-<ce>such a large and inhospitable area to cover, it would likely
-<ce>take about a week to cover the area. Once I hear from 
+<ce>such a large and inhospitable area to cover, it will likely
+<ce>take three or four days to cover the area. Once I hear from 
 <ce>them, I shall send you a letter with their findings.
 
 Message:  1065
@@ -787,7 +787,7 @@ Item _letter1_ letter used 1066
 Item _reports_ letter used 1027
 Item _dbContract_ letter used 1090
 
-Clock _trackers_ 05.03:00
+Clock _trackers_ 03.03:00
 Clock _dbDeal_ 06.05:00
 Clock _killAll_ 02.00:00
 
@@ -1112,6 +1112,7 @@ _lordForce_ task:
     say 1036
     clear _clickedLord_ _clickedArmorer_ _clickedCaptain_
     setvar _permit_
+    take _dbContract_ from pc
 
 _lordPay_ task:
     when _clickedLord_ and _denied_ and not _haveContract_ and not _permit_
