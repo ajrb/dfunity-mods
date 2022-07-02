@@ -66,6 +66,19 @@ namespace TravelOptions
             }
         }
 
+        public override void Update()
+        {
+            base.Update();
+
+            if (travelWindowTO.LocationSelected)
+            {
+                if (travelWindowTO.infoBox == null && Input.GetKey(KeyCode.I))
+                {
+                    travelWindowTO.DisplayLocationInfo();
+                }
+            }
+        }
+
         public bool IsPlayerControlledTravel()
         {
             return (TravelOptionsMod.Instance.CautiousTravel || !SpeedCautious) && (TravelOptionsMod.Instance.StopAtInnsTravel || !SleepModeInn) && !TravelShip;

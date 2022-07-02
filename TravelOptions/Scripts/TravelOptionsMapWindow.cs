@@ -104,6 +104,8 @@ namespace TravelOptions
 
         internal bool LocationSelected { get { return locationSelected; } }
 
+        internal DaggerfallMessageBox infoBox;
+
         // Hidden Map Locations mod data structures.
         protected HashSet<ContentReader.MapSummary> discoveredMapSummaries;
         protected HashSet<DFRegion.LocationTypes> revealedLocationTypes;
@@ -341,6 +343,111 @@ namespace TravelOptions
             {
                 ChargeForTeleport();
             }
+
+            if (LocationSelected)
+            {
+                if (infoBox == null && Input.GetKey(KeyCode.I))
+                {
+                    DisplayLocationInfo();
+                }
+            }
+        }
+
+        protected static TextFile.Token newLine = TextFile.CreateFormatToken(TextFile.Formatting.JustifyCenter);
+
+        internal void DisplayLocationInfo()
+        {
+            if (LocationSummary.LocationType == DFRegion.LocationTypes.Coven ||
+                LocationSummary.LocationType == DFRegion.LocationTypes.DungeonKeep ||
+                LocationSummary.LocationType == DFRegion.LocationTypes.DungeonLabyrinth ||
+                LocationSummary.LocationType == DFRegion.LocationTypes.DungeonRuin ||
+                LocationSummary.LocationType == DFRegion.LocationTypes.Graveyard ||
+                LocationSummary.LocationType == DFRegion.LocationTypes.None)
+                return;
+
+            Dictionary<int, PlayerGPS.DiscoveredLocation> discoveryData = GameManager.Instance.PlayerGPS.GetDiscoverySaveData();
+            if (discoveryData.ContainsKey(LocationSummary.ID))
+            {
+                PlayerGPS.DiscoveredLocation discoveredLocation = discoveryData[locationSummary.ID];
+                Dictionary<int, PlayerGPS.DiscoveredBuilding> locBuildings = discoveredLocation.discoveredBuildings;
+                if (locBuildings != null && locBuildings.Count > 0)
+                {
+                    IDictionary<DFLocation.BuildingTypes, int> buildingTypeCounts = new SortedDictionary<DFLocation.BuildingTypes, int>();
+                    List<string> guildNames = new List<string>();
+                    foreach (PlayerGPS.DiscoveredBuilding building in locBuildings.Values)
+                    {
+                        if (RMBLayout.IsNamedBuilding(building.buildingType))
+                        {
+                            string guildName = building.displayName.StartsWith("The ") ? building.displayName.Substring(4) : building.displayName;
+                            if (building.buildingType == DFLocation.BuildingTypes.GuildHall && !guildNames.Contains(guildName))
+                                guildNames.Add(guildName);
+
+                            if (building.buildingType != DFLocation.BuildingTypes.GuildHall)
+                                if (buildingTypeCounts.ContainsKey(building.buildingType))
+                                    buildingTypeCounts[building.buildingType]++;
+                                else
+                                    buildingTypeCounts.Add(building.buildingType, 1);
+                        }
+                    }
+                    List<TextFile.Token> tokens = new List<TextFile.Token>();
+                    tokens.Add(new TextFile.Token()
+                    {
+                        text = GetLocationNameInCurrentRegion(locationSummary.MapIndex, true),
+                        formatting = TextFile.Formatting.TextHighlight
+                    });
+                    tokens.Add(newLine);
+                    tokens.Add(newLine);
+
+                    guildNames.Sort();
+                    string guilds = "";
+                    foreach (string guildName in guildNames)
+                    {
+                        if (!string.IsNullOrWhiteSpace(guilds))
+                            guilds += ", ";
+                        guilds += guildName;
+                    }
+                    TextFile.Token tab1 = TextFile.TabToken;
+                    tab1.x = 45;
+                    TextFile.Token tab2 = TextFile.TabToken;
+                    tab2.x = 100;
+                    TextFile.Token tab3 = TextFile.TabToken;
+                    tab3.x = 145;
+                    if (!string.IsNullOrWhiteSpace(guilds))
+                    {
+                        tokens.Add(TextFile.CreateTextToken("Guild Halls:    " + guilds));
+                    }
+                    tokens.Add(newLine);
+                    tokens.Add(TextFile.NewLineToken);
+
+                    bool secondColumn = false;
+                    foreach (DFLocation.BuildingTypes buildingType in buildingTypeCounts.Keys)
+                    {
+                        tokens.Add(TextFile.CreateTextToken(buildingType.ToString()));
+                        tokens.Add(!secondColumn ? tab1 : tab3);
+                        tokens.Add(TextFile.CreateTextToken(buildingTypeCounts[buildingType].ToString()));
+                        if (!secondColumn)
+                            tokens.Add(tab2);
+                        else
+                            tokens.Add(TextFile.NewLineToken);
+                        secondColumn = !secondColumn;
+                    }
+
+                    infoBox = new DaggerfallMessageBox(uiManager, this);
+                    infoBox.ClickAnywhereToClose = true;
+                    infoBox.SetHighlightColor(Color.white);
+                    infoBox.SetTextTokens(tokens.ToArray());
+                    infoBox.OnClose += InfoBox_Close;
+                    infoBox.Show();
+
+                    return;
+                }
+            }
+            DaggerfallUI.MessageBox("You have no knowledge of " + GetLocationNameInCurrentRegion(locationSummary.MapIndex, true) + ".");
+        }
+
+        protected void InfoBox_Close()
+        {
+            infoBox = null;
         }
 
         private void ChargeForTeleport()
@@ -676,7 +783,7 @@ namespace TravelOptions
                     int offset5 = ((height - y - 1) * 5 * width5) + (x * 5);
 
                     int pIdx = mpX + (mpY * MapsFile.MaxMapPixelX);
-                    Debug.LogFormat("Checking paths at x:{0} y:{1}  index:{2}", mpX, mpY, pIdx);
+                    //Debug.LogFormat("Checking paths at x:{0} y:{1}  index:{2}", mpX, mpY, pIdx);
                     if (showPaths[path_tracks])
                         DrawPath(offset5, width5, pathsData[path_tracks][pIdx], trackColor, ref pixelBuffer);
                     if (showPaths[path_roads])
