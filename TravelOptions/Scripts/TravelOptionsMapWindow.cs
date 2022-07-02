@@ -656,8 +656,16 @@ namespace TravelOptions
 
             for (int y = 0; y < height; y++)
             {
+                int mpY = originY + y;
+                if (mpY < 0 || mpY >= MapsFile.MaxMapPixelY)
+                    continue;
+
                 for (int x = 0; x < width; x++)
                 {
+                    int mpX = originX + x;
+                    if (mpX < 0 || mpX >= MapsFile.MaxMapPixelX)
+                        continue;
+
                     if (circular && height == width && Mathf.Sqrt(Mathf.Pow(Mathf.Abs(x - (width / 2) + 0.5f), 2) + Mathf.Pow(Mathf.Abs(y - (height / 2) + 0.5f), 2)) >= (height + 1.5) / 2) 
                         continue;
 
@@ -667,15 +675,15 @@ namespace TravelOptions
                     int width5 = width * 5;
                     int offset5 = ((height - y - 1) * 5 * width5) + (x * 5);
 
-                    int pIdx = originX + x + ((originY + y) * MapsFile.MaxMapPixelX);
+                    int pIdx = mpX + (mpY * MapsFile.MaxMapPixelX);
+                    Debug.LogFormat("Checking paths at x:{0} y:{1}  index:{2}", mpX, mpY, pIdx);
                     if (showPaths[path_tracks])
                         DrawPath(offset5, width5, pathsData[path_tracks][pIdx], trackColor, ref pixelBuffer);
                     if (showPaths[path_roads])
                         DrawPath(offset5, width5, pathsData[path_roads][pIdx], roadColor, ref pixelBuffer);
-                    //Debug.LogFormat("Found road at x:{0} y:{1}  index:{2}", originX + x, originY + y, rIdx);
 
                     ContentReader.MapSummary summary;
-                    if (DaggerfallUnity.Instance.ContentReader.HasLocation(originX + x, originY + y, out summary))
+                    if (DaggerfallUnity.Instance.ContentReader.HasLocation(mpX, mpY, out summary))
                     {
                         if (checkLocationDiscovered(summary))
                         {
