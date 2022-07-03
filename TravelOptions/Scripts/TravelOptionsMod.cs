@@ -206,7 +206,12 @@ namespace TravelOptions
 
             if (RoadsIntegration)
             {
-                followKeyCode = followKeys[settings.GetValue<int>("RoadsIntegration", "FollowPathsKey")];
+                int followKeyIdx = settings.GetValue<int>("RoadsIntegration", "FollowPathsKey");
+                if (followKeyIdx < followKeys.Length)
+                    followKeyCode = followKeys[followKeyIdx];
+                else
+                    followKeyCode = GetFollowKeyFromText(settings.GetValue<string>("RoadsIntegration", "FollowPathsCustomKeyBind"));
+
                 MarkLocationColor = settings.GetValue<Color32>("RoadsIntegration", "MarkLocationColor");
 
                 if (roadsJunctionMap)
@@ -220,6 +225,15 @@ namespace TravelOptions
                     playerColor = settings.GetValue<Color32>("RoadsJunctionMap", "PlayerColor");
                 }
             }
+        }
+
+        private KeyCode GetFollowKeyFromText(string text)
+        {
+            KeyCode result;
+            if (KeyCode.TryParse(text, out result))
+                return result;
+            else
+                return KeyCode.F;
         }
 
         void Awake()
@@ -930,7 +944,7 @@ namespace TravelOptions
                 followKeyCode.ToString() + " - Follow road or track",
                 "M - Open travel map while travelling (or click map button)",
                 "C - Pause travel for camp (or click camp button)",
-                DaggerfallShortcut.GetBinding(DaggerfallShortcut.Buttons.TravelExit).ToString() + " - Exit travel",
+                DaggerfallShortcut.GetBinding(DaggerfallShortcut.Buttons.TravelExit).ToString() + " - Exit travel (or click exit button)",
                 InputManager.Instance.GetBinding(InputManager.Actions.TravelMap).ToString() + " - Open travel map when stopped to resume journey, or choose a new destination"
             });
         }

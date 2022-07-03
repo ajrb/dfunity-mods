@@ -222,13 +222,21 @@
                         "G",
                         "K",
                         "O",
-                        "X"
+                        "X",
+                        "Custom Key Bind"
                     ],
                     "Value": 1,
                     "Name": "FollowPathsKey",
                     "Description": "Sets the key to initiate time accelerated travelling following paths if roads integration enabled",
                     "$version": "v1",
                     "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.MultipleChoiceKey"
+                },
+                {
+                    "Value": "",
+                    "Name": "FollowPathsCustomKeyBind",
+                    "Description": "Custom key bind for following paths used if CustomBind set above",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.TextKey"
                 },
                 {
                     "Value": false,
@@ -257,6 +265,13 @@
                     "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ColorKey"
                 }
             ],
+            "$version": "v1"
+        },
+        {
+            "Name": "_",
+            "Description": null,
+            "IsAdvanced": false,
+            "Keys": [],
             "$version": "v1"
         },
         {
