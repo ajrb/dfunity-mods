@@ -4,6 +4,8 @@ Description
 
 This mod provides options for travelling around the Iliac Bay, allowing for either fast travel or time accelerated real travel modes depending on player choice. The normal vanilla map and travel popup are used, with the various travel options (speed, transport, stopping at night) governing whether it will be normal Daggerfall fast travel or use time accelerated real travel depending on configuration.
 
+Press 'H' for help with key binds and actions when either in travel map or accelerated travel UI. The key for path following can be set to a small list of defaults or you can specify a custom key bind. Refer to this document for valid key codes: https://docs.unity3d.com/ScriptReference/KeyCode.html. Make sure you use the same capitalization. If your key code fails to parse then it will default to F.
+
 During time accelerated travelling, the HUD has a vanilla style UI control panel (similar in operation to Tedious Travel) allowing the player to see where they're headed, adjust the time acceleration multiple, open the map to check location (and possibly change destination), pause the journey to camp, or exit the journey completely. Enemy encounters will auto pause travel, and encountering locations can also be set to pause travel if desired.
 
 Selecting recklessly by foot/horse with camp out options will always initiate time accelerated travel mode, however the rest is configurable. The default settings are balanced so you have to sail from a port or stop at inns for the vanilla fast travel to be used, with all other options using the time accelerated real travel mode. However, if you use a minimal configuration (e.g. freedom preset) then travel is identical to vanilla unless the player specifically chooses to travel recklessly by foot/horse and camping out, in which case the time accelerated travel mode will be used. Cautious travel is slower as you move more carefully, but gives a chance of avoiding random encounters. The chance percentage is luck + stealth - 20 capped at 95% max. (configurable between 80 and 100%)
@@ -68,6 +70,7 @@ Roads Integration:
     Enable* - Enables integration with Basic Roads mod, showing roads and tracks on the travel map, as well as larger locations with bigger dots.
     Variable Size Dots* - All locations, except for cities & towns, are rendered as smaller dots.
     Follow Paths Key - The key used to start/stop path following. Can be set to none, F, G, K, O,or X which should hopefully suit any key bind setup.
+    Follow Paths Custom Key Bind - Custom key bind for following paths used if CustomBind set above
 
 Roads Junction Map:
 
