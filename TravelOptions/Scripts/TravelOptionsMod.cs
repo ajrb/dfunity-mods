@@ -913,6 +913,28 @@ namespace TravelOptions
             }
         }
 
+        public void DisplayHelpInfo()
+        {
+            DaggerfallUI.MessageBox(new string[] {
+                "Travel Options Help",
+                "",
+                "Travel Map",
+                "",
+                "LeftClick - Select travel destination (region, location, map pixel)",
+                "RightClick - Zoom in or out",
+                "MiddleClick - Mark a location (for example as a desitination for road following)",
+                "I - Location information known to character (press while hovering or after selecting)",
+                "",
+                "Accelerated Travel",
+                "",
+                followKeyCode.ToString() + " - Follow road or track",
+                "M - Open travel map while travelling (or click map button)",
+                "C - Pause travel for camp (or click camp button)",
+                DaggerfallShortcut.GetBinding(DaggerfallShortcut.Buttons.TravelExit).ToString() + " - Exit travel",
+                InputManager.Instance.GetBinding(InputManager.Actions.TravelMap).ToString() + " - Open travel map when stopped to resume journey, or choose a new destination"
+            });
+        }
+
         void Update()
         {
             if (uiCloseWhenTop && DaggerfallUI.UIManager.TopWindow == travelControlUI)
@@ -922,6 +944,11 @@ namespace TravelOptions
                 return;
             }
             PlayerGPS playerGPS = GameManager.Instance.PlayerGPS;
+
+            if (DaggerfallUI.UIManager.TopWindow == travelControlUI && Input.GetKey(KeyCode.H))
+            {
+                DisplayHelpInfo();
+            }
 
             if (playerAutopilot != null)
             {

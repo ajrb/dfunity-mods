@@ -349,7 +349,12 @@ namespace TravelOptions
                 if (infoBox == null && Input.GetKey(KeyCode.I))
                 {
                     DisplayLocationInfo();
+                    return;
                 }
+            }
+            if (infoBox == null && Input.GetKey(KeyCode.H))
+            {
+                TravelOptionsMod.Instance.DisplayHelpInfo();
             }
         }
 

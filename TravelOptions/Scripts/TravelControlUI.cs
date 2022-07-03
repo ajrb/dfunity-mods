@@ -128,16 +128,24 @@ namespace TravelOptions
             };
             mapButton.ToolTip = defaultToolTip;
             mapButton.ToolTipText = TipMap;
+            mapButton.Hotkey = new HotkeySequence(KeyCode.M, HotkeySequence.KeyModifiers.None);
+            mapButton.OnKeyboardEvent += (_, __) => {
+                DaggerfallUI.PostMessage(DaggerfallUIMessages.dfuiOpenTravelMapWindow);
+            };
 
             // Camp (pause travel) button
             campButton = DaggerfallUI.AddButton(campButtonRect, mainPanel);
             campButton.OnMouseClick += (_, __) => { CloseWindow(); };
             campButton.ToolTip = defaultToolTip;
             campButton.ToolTipText = TipCamp;
+            campButton.Hotkey = new HotkeySequence(KeyCode.C, HotkeySequence.KeyModifiers.None);
+            campButton.OnKeyboardEvent += (_, __) => { CloseWindow(); };
 
             // Exit travel button
             exitButton = DaggerfallUI.AddButton(exitButtonRect, mainPanel);
             exitButton.OnMouseClick += (_, __) => { CancelWindow(); };
+            exitButton.Hotkey = DaggerfallShortcut.GetBinding(DaggerfallShortcut.Buttons.TravelExit);
+            exitButton.OnKeyboardEvent += (_, __) => { CancelWindow(); };
 
             NativePanel.Components.Add(mainPanel);
         }
