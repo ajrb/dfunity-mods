@@ -412,11 +412,11 @@ namespace TravelOptions
                         guilds += guildName;
                     }
                     TextFile.Token tab1 = TextFile.TabToken;
-                    tab1.x = 45;
+                    tab1.x = 60;
                     TextFile.Token tab2 = TextFile.TabToken;
-                    tab2.x = 100;
+                    tab2.x = 140;
                     TextFile.Token tab3 = TextFile.TabToken;
-                    tab3.x = 145;
+                    tab3.x = 200;
                     if (!string.IsNullOrWhiteSpace(guilds))
                     {
                         tokens.Add(TextFile.CreateTextToken("Guild Halls:    " + guilds));

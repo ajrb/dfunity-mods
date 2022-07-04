@@ -929,6 +929,7 @@ namespace TravelOptions
 
         public void DisplayHelpInfo()
         {
+            bool sdfFonts = DaggerfallUnity.Settings.SDFFontRendering;
             DaggerfallUI.MessageBox(new string[] {
                 "Travel Options Help",
                 "",
@@ -936,8 +937,8 @@ namespace TravelOptions
                 "",
                 "LeftClick - Select travel destination (region, location, map pixel)",
                 "RightClick - Zoom in or out",
-                "MiddleClick - Mark a location (for example as a desitination for road following)",
-                "I - Location information known to character (press while hovering or after selecting)",
+                "MiddleClick - Mark a location" + (sdfFonts ? "(for example as a destination for road following)" : ""),
+                "I - Location information known to character" + (sdfFonts ? "(press while hovering or after selecting)" : ""),
                 "",
                 "Accelerated Travel",
                 "",
@@ -945,7 +946,8 @@ namespace TravelOptions
                 "M - Open travel map while travelling (or click map button)",
                 "C - Pause travel for camp (or click camp button)",
                 DaggerfallShortcut.GetBinding(DaggerfallShortcut.Buttons.TravelExit).ToString() + " - Exit travel (or click exit button)",
-                InputManager.Instance.GetBinding(InputManager.Actions.TravelMap).ToString() + " - Open travel map when stopped to resume journey, or choose a new destination"
+                InputManager.Instance.GetBinding(InputManager.Actions.TravelMap).ToString() + " - Open travel map when stopped to resume journey," + (sdfFonts ? " or to choose a new destination" : ""),
+                sdfFonts ? "" : "    or to choose a new destination"
             });
         }
 
