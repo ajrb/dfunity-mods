@@ -41,7 +41,7 @@ QuestLogEntry:   [1010]
  needs me to find _exp_, a particular
  expert for one _tri_ that I carry.
  I am to pay %g3 for the help I need, then
- use _tri_ for its intended purpose and
+ use the _tri_ for its intended purpose and
  deliver the results to the Archaeologists.
  My work is due within =timer_ days.
 
