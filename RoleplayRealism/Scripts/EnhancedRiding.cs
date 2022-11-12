@@ -251,7 +251,7 @@ namespace DaggerfallWorkshop.Game
                                     Screen.height - ((ridingTexture.height + yAdj) * horseScaleY) - horseOffsetHeight,
                                     ridingTexture.width * horseScaleX,
                                     ridingTexture.height * horseScaleY);
-                    GUI.DrawTexture(pos, ridingTexture.texture);
+                    DaggerfallUI.DrawTexture(pos, ridingTexture.texture);
 
                     // Draw additional horse neck if required.
                     float drawBottom = pos.y + pos.height - horseScaleY;
@@ -263,7 +263,7 @@ namespace DaggerfallWorkshop.Game
                             // Duplicate a section of existing sprite.
                             float yAdjNeck = yAdj / 100;
                             Rect posNeck = new Rect(pos.x, drawBottom, (ridingTexture.width - 14) * horseScaleX, Screen.height - drawBottom + horseScaleY - horseOffsetHeight);
-                            GUI.DrawTextureWithTexCoords(posNeck, ridingTexture.texture, new Rect(extX, 0.2f - yAdjNeck, extW, yAdjNeck));
+                            DaggerfallUI.DrawTextureWithTexCoords(posNeck, ridingTexture.texture, new Rect(extX, 0.2f - yAdjNeck, extW, yAdjNeck));
                         }
                         else
                         {
@@ -271,7 +271,7 @@ namespace DaggerfallWorkshop.Game
                             float yAdjNeck = yAdj / 20.8f;
                             yAdjNeck = yAdjNeck > 0 ? yAdjNeck : 0.001f;
                             Rect posNeck = new Rect(pos.x, drawBottom, ridingTexture.width * horseScaleX, Screen.height - drawBottom + horseScaleY - horseOffsetHeight);
-                            GUI.DrawTextureWithTexCoords(posNeck, neckTextures[frameIdx].texture, new Rect(0, 1-yAdjNeck, 1, yAdjNeck));
+                            DaggerfallUI.DrawTextureWithTexCoords(posNeck, neckTextures[frameIdx].texture, new Rect(0, 1-yAdjNeck, 1, yAdjNeck));
                         }
                     }
                 }
