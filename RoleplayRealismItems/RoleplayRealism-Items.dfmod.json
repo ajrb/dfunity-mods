@@ -1,9 +1,9 @@
 {
     "ModTitle": "RoleplayRealism-Items",
-    "ModVersion": "1.1",
+    "ModVersion": "1.2",
     "ModAuthor": "Hazelnut & Ralzar",
     "ContactInfo": "forums.dfworkshop.net",
-    "DFUnity_Version": "0.13.5",
+    "DFUnity_Version": "0.14.5",
     "ModDescription": "Modular roleplay and realism: item, loot and gameplay modifications",
     "GUID": "68589945-3fbb-4d58-81a3-3066f3f08539",
     "Files": [

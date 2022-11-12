@@ -29,6 +29,13 @@
                 },
                 {
                     "Value": true,
+                    "Name": "storeQualityItemCondition",
+                    "Description": "Items in shops can be in a used condition dependent on the quality of the store",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
+                },
+                {
+                    "Value": true,
                     "Name": "realisticEnemyEquipment",
                     "Description": "Enemy equipment is realistic for their class and can be variable condition",
                     "$version": "v1",

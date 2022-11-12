@@ -53,6 +53,7 @@ namespace RoleplayRealism
             bool lootRebalance = settings.GetBool("Modules", "lootRebalance");
             bool bandaging = settings.GetBool("Modules", "bandaging");
             bool conditionBasedPrices = settings.GetBool("Modules", "conditionBasedPrices");
+            bool storeQualityItems = settings.GetBool("Modules", "storeQualityItemCondition");
             bool enemyEquipment = settings.GetBool("Modules", "realisticEnemyEquipment");
             bool skillStartEquip = settings.GetBool("Modules", "skillBasedStartingEquipment");
             bool skillStartSpells = settings.GetBool("Modules", "skillBasedStartingSpells");
@@ -61,12 +62,12 @@ namespace RoleplayRealism
             newArmor = settings.GetBool("Modules", "newArmor");
             bool alchemistPotions = settings.GetBool("Modules", "alchemistPotions");
 
-            InitMod(lootRebalance, bandaging, conditionBasedPrices, enemyEquipment, skillStartEquip, skillStartSpells, weaponBalance, newWeapons, newArmor, alchemistPotions);
+            InitMod(lootRebalance, bandaging, conditionBasedPrices, storeQualityItems, enemyEquipment, skillStartEquip, skillStartSpells, weaponBalance, newWeapons, newArmor, alchemistPotions);
 
             mod.IsReady = true;
         }
 
-        private static void InitMod(bool lootRebalance, bool bandaging, bool conditionBasedPrices, bool enemyEquipment, bool skillStartEquip, bool skillStartSpells, bool weaponBalance, bool newWeapons, bool newArmor, bool alchemistPotions)
+        private static void InitMod(bool lootRebalance, bool bandaging, bool conditionBasedPrices, bool storeQualityItems, bool enemyEquipment, bool skillStartEquip, bool skillStartSpells, bool weaponBalance, bool newWeapons, bool newArmor, bool alchemistPotions)
         {
             Debug.Log("Begin mod init: RoleplayRealismItems");
 
@@ -97,6 +98,11 @@ namespace RoleplayRealism
 
                 FormulaHelper.RegisterOverride(mod, "CalculateCost", (Func<int, int, int, int>)CalculateConditionCost);
                 FormulaHelper.RegisterOverride(mod, "CalculateItemRepairCost", (Func<int, int, int, int, IGuild, int>)CalculateItemRepairCost);
+
+                if (storeQualityItems)
+                {
+                    PlayerActivate.OnLootSpawned += StoreQualityItemCondition;     // Store items
+                }
             }
 
             if (enemyEquipment)
@@ -265,6 +271,38 @@ namespace RoleplayRealism
                 cost = guild.ReducedRepairCost(cost);
 
             return cost;
+        }
+
+        public static void StoreQualityItemCondition(object sender, ContainerLootSpawnedEventArgs e)
+        {
+            DaggerfallInterior interior = GameManager.Instance.PlayerEnterExit.Interior;
+            if (interior != null && e.ContainerType == LootContainerTypes.ShopShelves)
+            {
+                float low = 1f;
+                if (interior.BuildingData.Quality <= 3)
+                    low = 0.25f;        // 01 - 03, worn+
+                else if (interior.BuildingData.Quality <= 7)
+                    low = 0.40f;        // 04 - 07, used+
+                else if (interior.BuildingData.Quality <= 13)
+                    low = 0.60f;        // 08 - 13, slightly used+
+                else if (interior.BuildingData.Quality <= 17)
+                    low = 0.75f;        // 14 - 17, almost new+
+                else
+                    return;     // Quality 18+ only ever stock new items.
+
+                Debug.LogFormat("Altering item conditions for store quality: {0}", interior.BuildingData.Quality);
+                ItemCollection shelfItems = e.Loot;
+                for (int i = 0; i < shelfItems.Count; i++)
+                {
+                    DaggerfallUnityItem item = shelfItems.GetItem(i);
+                    if (item != null && (item.ItemGroup == ItemGroups.Armor || item.ItemGroup == ItemGroups.Weapons) && !item.IsArtifact)
+                    {
+                        // Apply a random condition between 25% and 100% based on store quality.
+                        float conditionMod = UnityEngine.Random.Range(low, 1f);
+                        item.currentCondition = (int)(item.maxCondition * conditionMod);
+                    }
+                }
+            }
         }
 
         public static int CalculateWeaponMinDamage(Weapons weapon)
