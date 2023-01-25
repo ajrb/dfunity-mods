@@ -174,7 +174,7 @@ namespace TravelOptions
                 messageTimer = 0;
             }
 
-            if (Input.GetKeyUp(exitKey))
+            if (InputManager.Instance.GetBackButtonUp())
                 CloseWindow();
         }
 
