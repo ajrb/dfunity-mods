@@ -967,6 +967,7 @@ namespace TravelOptions
             133718,     // Alcaire	Cathborne
             140760,     // Alcaire	Wargate
             455174,     // Abibon-Gora	Papyrydai
+            202333,  // Shalgora Aldbrugh
         };
         
     }
