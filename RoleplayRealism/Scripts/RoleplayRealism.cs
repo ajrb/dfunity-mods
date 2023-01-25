@@ -587,7 +587,7 @@ namespace RoleplayRealism
                     bool hasPort = false;
                     ModManager.Instance.SendModMessage(TRAVELOPTIONS_MODNAME, "hasPort", location.MapTableData.MapId,
                         (string message, object data) => { hasPort = (bool)data; });
-                    return hasPort;
+                    return hasPort && DaggerfallBankManager.OwnsShip;
                 }
                 else
                 {
