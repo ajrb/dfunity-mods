@@ -14,7 +14,7 @@ RefuseQuest:  [1001]
 <ce>  This would get your foot in the door, %pct.
 
 AcceptQuest:  [1002]
-<ce>  Fine enough. You'll need to deliver it to
+<ce>  Fine enough. You'll need to deliver it to one
 <ce>  =member_ who's staying in _tavern_,
 <ce>  found in ___tavern_.
 <ce>  He'll be heading out to some expedition

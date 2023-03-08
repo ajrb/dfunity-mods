@@ -17,11 +17,11 @@ AcceptQuest:  [1002]
 <ce>    What a relief. Our concern deals with a colleague
 <ce>  named _person_ who also resides here in town,
 <ce>  living in a house called _res_.
-<ce>  We find that many matters that he's explored
+<ce>  We find that many matters that %g1's explored
 <ce>  end up getting spearheaded by the Mages Guild,
 <ce>  or that the Thieves Guild gets a jump start on
 <ce>  our work. We suspect %g2 too much to ignore the matter.
-<ce>  Find proof of his doings, and we'll reward you accordingly.
+<ce>  Find proof of %g3 doings, and we'll reward you accordingly.
 <ce>  I don't want this to take longer than three days.
 
 Message:  1003

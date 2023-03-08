@@ -40,8 +40,8 @@ QuestLogEntry:   [1010]
  __qgiver_ of ___qgiver_
  needs me to find _exp_, a particular
  expert for one _tri_ that I carry.
- I am to pay %g3 for the help I need, then
- use the _tri_ for its intended purpose and
+ I am to pay %g3 400 gold pieces for the help I need,
+ then use the _tri_ for its intended purpose and
  deliver the results to the Archaeologists.
  My work is due within =timer_ days.
 
@@ -71,8 +71,8 @@ Message:  1020
 <ce> be 400 gold pieces, and I can tell you where this
 <ce> came from and what its purpose is. However, perhaps you'd
 <ce> give me a chance? I'd be more than happy to buy it from you
-<ce> for =bribe_ gold pieces. It's worth more than what you'll
-<ce> get from it, I'm sure, but one of my expertise could
+<ce> for =bribe_ gold pieces. That's more than what you'll
+<ce> get from it, I'm sure, but one with my expertise could
 <ce> stand to gain more still. What do you say?"
 <ce> 
 <ce> Do you sell the object (yes) or pay for %g3 help (no)?
