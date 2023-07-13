@@ -50,7 +50,6 @@ Message:  1030
 %qdt:
  _qgiver_, of the Archaeologists in
  ___qgiver_, has given me a _trink_
-
  which will eventually attract a murderous daedra.
  I must slay it and return the object to %g2.
 
