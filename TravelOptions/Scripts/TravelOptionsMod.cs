@@ -479,6 +479,10 @@ namespace TravelOptions
                 SetTimeScale(MaxCircumnavigationAccel);
             else
                 SetTimeScale(travelControlUI.TimeAcceleration);
+
+            if (!circumnavSpeedLimiter)     // Make player invunerable while travelling, except when curcumnavigating
+                GameManager.Instance.PlayerEntity.GodMode = true;
+
             DisableWeatherAndSound();
             diseaseCount = GameManager.Instance.PlayerEffectManager.DiseaseCount;
             if (!travelControlUI.isShowing)
@@ -908,6 +912,7 @@ namespace TravelOptions
             Debug.Log("Travel interrupted");
             SetTimeScale(1);
             circumnavigatePathsDataPt = 0;
+            GameManager.Instance.PlayerEntity.GodMode = false;
             GameManager.Instance.PlayerMouseLook.enableMouseLook = true;
             GameManager.Instance.PlayerMouseLook.lockCursor = true;
             GameManager.Instance.PlayerMouseLook.simpleCursorLock = false;
