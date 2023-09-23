@@ -271,12 +271,14 @@ namespace DaggerfallWorkshop.Game.Guilds
             // Get the guild instance.
             IGuild thisGuild = GameManager.Instance.GuildManager.GetGuild(FactionFile.GuildGroups.GGroup0);
 
-            // Check how many holy items the player has and offer that many discounted.
+            // Check how many (unenchanted) holy items the player has and offer that many discounted.
             PlayerEntity playerEntity = GameManager.Instance.PlayerEntity;
             List<DaggerfallUnityItem> tomes = playerEntity.Items.SearchItems(ItemGroups.ReligiousItems, (int)ReligiousItems.Holy_tome);
             tomes.AddRange(playerEntity.WagonItems.SearchItems(ItemGroups.ReligiousItems, (int)ReligiousItems.Holy_tome));
             List<DaggerfallUnityItem> daggers = playerEntity.Items.SearchItems(ItemGroups.ReligiousItems, (int)ReligiousItems.Holy_dagger);
             daggers.AddRange(playerEntity.WagonItems.SearchItems(ItemGroups.ReligiousItems, (int)ReligiousItems.Holy_dagger));
+            tomes.RemoveAll(i => i.IsEnchanted);
+            daggers.RemoveAll(i => i.IsEnchanted);
             int holyCount = tomes.Count + daggers.Count;
 
             // Show trade window and a popup message to inform player how many discounted locators they can purchase.
@@ -364,8 +366,11 @@ namespace DaggerfallWorkshop.Game.Guilds
             {
                 if (numItems <= 0)
                     return 0;
-                coll.RemoveItem(item);
-                numItems--;
+                if (!item.IsEnchanted)
+                {
+                    coll.RemoveItem(item);
+                    numItems--;
+                }
             }
             return numItems;
         }
