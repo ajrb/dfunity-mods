@@ -32,12 +32,14 @@ namespace TravelOptions
 
             int shipCost = totalCost - piecesCost;
 
-            piecesCost *= scaleInns;
-            piecesCost = FormulaHelper.CalculateTradePrice(piecesCost, 10, false);
-
-            shipCost *= scaleShips;
-            shipCost = FormulaHelper.CalculateTradePrice(shipCost, 10, false);
-
+            if (scaleInns > 1) {
+                piecesCost *= scaleInns;
+                piecesCost = FormulaHelper.CalculateTradePrice(piecesCost, 10, false);
+            }
+            if (scaleShips > 1) {
+                shipCost *= scaleShips;
+                shipCost = FormulaHelper.CalculateTradePrice(shipCost, 10, false);
+            }
             totalCost = piecesCost + shipCost;
 
             Debug.LogFormat("After: pieces={0}, total={1}", piecesCost, totalCost);
