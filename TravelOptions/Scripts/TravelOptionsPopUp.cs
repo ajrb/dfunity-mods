@@ -27,10 +27,13 @@ namespace TravelOptions
 
         public new DFPosition EndPos { get { return base.EndPos; } protected internal set { base.EndPos = value; } }
 
+        public void SetScaleFactors(int inns, int ships) { ((TravelTimeCalculatorTO)travelTimeCalculator).SetScaleFactors(inns, ships); }
+
         public TravelOptionsPopUp(IUserInterfaceManager uiManager, IUserInterfaceWindow previousWindow = null, DaggerfallTravelMapWindow travelWindow = null)
             : base(uiManager, previousWindow, travelWindow)
         {
             travelWindowTO = (TravelOptionsMapWindow)travelWindow;
+            travelTimeCalculator = new TravelTimeCalculatorTO();
         }
 
         protected override void Setup()

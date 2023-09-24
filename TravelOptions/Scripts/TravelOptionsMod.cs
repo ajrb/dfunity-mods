@@ -112,6 +112,9 @@ namespace TravelOptions
 
         public bool TeleportCost { get; private set; }
 
+        public int FastTravelCostScaleFactor { get; private set; } = 1;
+        public int ShipTravelCostScaleFactor { get; private set; } = 1;
+
         static readonly int[] startAccelVals = { 1, 2, 3, 5, 10, 15, 20, 25, 30, 40, 50 };
         static readonly KeyCode[] followKeys = { KeyCode.None, KeyCode.F, KeyCode.G, KeyCode.K, KeyCode.O, KeyCode.X };
 
@@ -225,6 +228,9 @@ namespace TravelOptions
                     playerColor = settings.GetValue<Color32>("RoadsJunctionMap", "PlayerColor");
                 }
             }
+
+            FastTravelCostScaleFactor = settings.GetValue<int>("FastTravelCostScaling", "FastTravelCostScaleFactor");
+            ShipTravelCostScaleFactor = settings.GetValue<int>("FastTravelCostScaling", "ShipTravelCostScaleFactor");
         }
 
         private KeyCode GetFollowKeyFromText(string text)

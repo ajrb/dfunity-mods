@@ -512,6 +512,9 @@ namespace TravelOptions
             {
                 base.ClickHandler(sender, position);
             }
+            // Set scale factors into popup, except when teleport travelling
+            if (!teleportationTravel)
+                ((TravelOptionsPopUp)popUp).SetScaleFactors(TravelOptionsMod.Instance.FastTravelCostScaleFactor, TravelOptionsMod.Instance.ShipTravelCostScaleFactor);
         }
 
         protected void MarkLocationHandler(BaseScreenComponent sender, Vector2 position)
