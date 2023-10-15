@@ -799,18 +799,18 @@
                     "XPos": 123,
                     "YPos": -2,
                     "ZPos": -258,
-                    "TextureArchive": 184,
-                    "TextureRecord": 28,
+                    "TextureArchive": 529,
+                    "TextureRecord": 0,
                     "FactionID": 1003,
                     "Flags": 32
                 },
                 {
                     "Position": 2,
                     "XPos": -23,
-                    "YPos": 0,
+                    "YPos": -1,
                     "ZPos": -28,
-                    "TextureArchive": 184,
-                    "TextureRecord": 0,
+                    "TextureArchive": 529,
+                    "TextureRecord": 1,
                     "FactionID": 1000,
                     "Flags": 0
                 },

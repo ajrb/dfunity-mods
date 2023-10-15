@@ -112,6 +112,8 @@ namespace Archaeologists
                 enemy1 = (int)FactionFile.FactionIDs.The_Mages_Guild,
                 face = -1,
                 race = -1,
+                flat1 = 0x5B03, // Face from 182-3
+                flat2 = 0x5C21, // Face from 184-33
                 sgroup = 2,
                 ggroup = 0,
                 children = new List<int>() { 1001, 1002, 1003 }
@@ -127,6 +129,7 @@ namespace Archaeologists
                 power = 30,
                 face = -1,
                 race = -1,
+                flat1 = 0x5C00, // Face from 184-0
                 sgroup = 2,
                 ggroup = 0,
                 children = null
@@ -142,6 +145,7 @@ namespace Archaeologists
                 power = 25,
                 face = -1,
                 race = -1,
+                flat1 = 0x5B16, // Face from 182-22
                 sgroup = 2,
                 ggroup = 0,
                 children = null
@@ -157,6 +161,7 @@ namespace Archaeologists
                 power = 25,
                 face = -1,
                 race = -1,
+                flat2 = 0x5C09, // Face from 184-9
                 sgroup = 2,
                 ggroup = 0,
                 children = null
@@ -172,6 +177,7 @@ namespace Archaeologists
                 power = 25,
                 face = -1,
                 race = -1,
+                flat2 = 0x5C0C, // Face from 184-12
                 sgroup = 2,
                 ggroup = 0,
                 children = null
@@ -202,6 +208,7 @@ namespace Archaeologists
                 power = 25,
                 face = -1,
                 race = -1,
+                flat2 = 0x5B09, // Face from 182-9
                 sgroup = 2,
                 ggroup = 0,
                 children = null

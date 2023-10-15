@@ -1,6 +1,6 @@
 {
     "ModTitle": "Archaeologists",
-    "ModVersion": "2.4.1",
+    "ModVersion": "2.5",
     "ModAuthor": "Hazelnut",
     "ContactInfo": "forums.dfworkshop.net",
     "DFUnity_Version": "0.16.0",
@@ -66,7 +66,21 @@
         "Assets/Game/Mods/Archaeologists/modsettings.json",
         "Assets/Game/Mods/Archaeologists/Quests/JHAR025.txt",
         "Assets/Game/Mods/Archaeologists/Quests/JHARN02.txt",
-        "Assets/Game/Mods/Archaeologists/Quests/JHARN01.txt"
+        "Assets/Game/Mods/Archaeologists/Quests/JHARN01.txt",
+        "Assets/Game/Mods/Archaeologists/Textures/529_0-0.png",
+        "Assets/Game/Mods/Archaeologists/Textures/529_0-0.xml",
+        "Assets/Game/Mods/Archaeologists/Textures/529_3-0.xml",
+        "Assets/Game/Mods/Archaeologists/Textures/529_2-0.png",
+        "Assets/Game/Mods/Archaeologists/Textures/529_1-0.png",
+        "Assets/Game/Mods/Archaeologists/Textures/529_3-0.png",
+        "Assets/Game/Mods/Archaeologists/Textures/529_2-0.xml",
+        "Assets/Game/Mods/Archaeologists/Textures/529_1-0.xml",
+        "Assets/Game/Mods/Archaeologists/Textures/529_6-0.png",
+        "Assets/Game/Mods/Archaeologists/Textures/529_4-0.png",
+        "Assets/Game/Mods/Archaeologists/Textures/529_5-0.xml",
+        "Assets/Game/Mods/Archaeologists/Textures/529_6-0.xml",
+        "Assets/Game/Mods/Archaeologists/Textures/529_4-0.xml",
+        "Assets/Game/Mods/Archaeologists/Textures/529_5-0.png"
     ],
     "Contributes": {
         "BooksMapping": [

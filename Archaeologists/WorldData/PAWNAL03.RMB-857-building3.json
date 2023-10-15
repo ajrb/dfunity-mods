@@ -892,10 +892,10 @@
                     "XPos": 10,
                     "YPos": 0,
                     "ZPos": 360,
-                    "TextureArchive": 184,
-                    "TextureRecord": 26,
+                    "TextureArchive": 529,
+                    "TextureRecord": 6,
                     "FactionID": 1002,
-                    "Flags": 32
+                    "Flags": 0
                 },
                 {
                     "Position": 10,

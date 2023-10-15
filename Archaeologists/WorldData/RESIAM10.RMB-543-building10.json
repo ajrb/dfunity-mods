@@ -813,8 +813,8 @@
                     "XPos": 120,
                     "YPos": 0,
                     "ZPos": -50,
-                    "TextureArchive": 184,
-                    "TextureRecord": 23,
+                    "TextureArchive": 529,
+                    "TextureRecord": 4,
                     "FactionID": 1000,
                     "Flags": 32
                 },
@@ -853,10 +853,10 @@
                     "XPos": -730,
                     "YPos": 0,
                     "ZPos": -185,
-                    "TextureArchive": 182,
-                    "TextureRecord": 19,
+                    "TextureArchive": 529,
+                    "TextureRecord": 5,
                     "FactionID": 1006,
-                    "Flags": 0
+                    "Flags": 32
                 },
                 {
                     "Position": 6,

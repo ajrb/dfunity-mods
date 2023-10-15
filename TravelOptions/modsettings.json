@@ -197,6 +197,13 @@
             "$version": "v1"
         },
         {
+            "Name": "__",
+            "Description": null,
+            "IsAdvanced": false,
+            "Keys": [],
+            "$version": "v1"
+        },
+        {
             "Name": "RoadsIntegration",
             "Description": "Configuration for integration of the BasicRoads mod, if it's installed",
             "IsAdvanced": false,
@@ -268,7 +275,7 @@
             "$version": "v1"
         },
         {
-            "Name": "__",
+            "Name": "-",
             "Description": null,
             "IsAdvanced": false,
             "Keys": [],
