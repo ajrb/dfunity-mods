@@ -18,7 +18,7 @@ namespace TravelOptions
 
         public void SetScaleFactors(int inns, int ships)
         {
-            Debug.LogFormat("setting scale factors inns={0}, ships={1}", inns, ships);
+            Debug.LogFormat("TO: Setting cost scale factors inns={0}, ships={1}", inns, ships);
             scaleInns = inns;
             scaleShips = ships;
         }
@@ -26,9 +26,6 @@ namespace TravelOptions
         public override void CalculateTripCost(int travelTimeInMinutes, bool sleepModeInn, bool hasShip, bool travelShip)
         {
             base.CalculateTripCost(travelTimeInMinutes, sleepModeInn, hasShip, travelShip);
-
-            Debug.LogFormat("scaleInns={0}, scaleShips={1}", scaleInns, scaleShips);
-            Debug.LogFormat("Before: pieces={0}, total={1}", piecesCost, totalCost);
 
             int shipCost = totalCost - piecesCost;
 
@@ -41,8 +38,6 @@ namespace TravelOptions
                 shipCost = FormulaHelper.CalculateTradePrice(shipCost, 10, false);
             }
             totalCost = piecesCost + shipCost;
-
-            Debug.LogFormat("After: pieces={0}, total={1}", piecesCost, totalCost);
         }
     }
 }

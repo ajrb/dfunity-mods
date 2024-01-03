@@ -169,8 +169,7 @@ namespace TravelOptions
         public void MouseLookAtDestination()
         {
             // set the player up so he's facing the destination.
-            mouseLook.Pitch = 0f;
-            mouseLook.Yaw = yawVector.y;
+            mouseLook.SetFacing(yawVector.y, 0f);
         }
     }
 
