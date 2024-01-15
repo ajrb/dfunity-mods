@@ -13,7 +13,7 @@ namespace RoleplayRealism
     public class ItemHauberk : DaggerfallUnityItem
     {
         public const int templateIndex = 515;
-        public const string mail = "Mail ";
+        public static string mail = RoleplayRealismItemsMod.Localize("mail");
 
         public ItemHauberk() : base(ItemGroups.Armor, templateIndex)
         {

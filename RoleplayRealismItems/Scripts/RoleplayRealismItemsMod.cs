@@ -39,6 +39,8 @@ namespace RoleplayRealism
         static bool newWeapons = false;
         static bool newArmor = false;
 
+        static Dictionary<string, string> textDataBase = null;
+
         [Invoke(StateManager.StateTypes.Start, 0)]
         public static void Init(InitParams initParams)
         {
@@ -61,6 +63,8 @@ namespace RoleplayRealism
             newWeapons = settings.GetBool("Modules", "newWeapons");
             newArmor = settings.GetBool("Modules", "newArmor");
             bool alchemistPotions = settings.GetBool("Modules", "alchemistPotions");
+
+            LoadTextData();
 
             InitMod(lootRebalance, bandaging, conditionBasedPrices, storeQualityItems, enemyEquipment, skillStartEquip, skillStartSpells, weaponBalance, newWeapons, newArmor, alchemistPotions);
 
@@ -130,8 +134,8 @@ namespace RoleplayRealism
             if (newWeapons)
             {
                 // Add Archers Axe and Light Flail as custom weapon items.
-                DaggerfallUnity.Instance.ItemHelper.RegisterCustomItem(513, ItemGroups.Weapons, typeof(ItemArchersAxe));
-                DaggerfallUnity.Instance.ItemHelper.RegisterCustomItem(514, ItemGroups.Weapons, typeof(ItemLightFlail));
+                DaggerfallUnity.Instance.ItemHelper.RegisterCustomItem(ItemArchersAxe.templateIndex, ItemGroups.Weapons, typeof(ItemArchersAxe));
+                DaggerfallUnity.Instance.ItemHelper.RegisterCustomItem(ItemLightFlail.templateIndex, ItemGroups.Weapons, typeof(ItemLightFlail));
             }
 
             if (newArmor)
@@ -966,9 +970,9 @@ namespace RoleplayRealism
         }
 
         // New spell definitions:
-        static EffectBundleSettings minorShockSpell = new EffectBundleSettings()
+        static EffectBundleSettings minorShockSpell => new EffectBundleSettings()
         {
-            Name = "Minor Shock",
+            Name = Localize("minorShock"),
             Version = EntityEffectBroker.CurrentSpellVersion,
             BundleType = BundleTypes.Spell,
             TargetType = TargetTypes.ByTouch,
@@ -983,9 +987,9 @@ namespace RoleplayRealism
                     })
             },
         };
-        static EffectBundleSettings arcaneArrowSpell = new EffectBundleSettings()
+        static EffectBundleSettings arcaneArrowSpell => new EffectBundleSettings()
         {
-            Name = "Arcane Arrow",
+            Name = Localize("arcaneArrow"),
             Version = EntityEffectBroker.CurrentSpellVersion,
             BundleType = BundleTypes.Spell,
             TargetType = TargetTypes.SingleTargetAtRange,
@@ -999,9 +1003,9 @@ namespace RoleplayRealism
                 })
             },
         };
-        static EffectBundleSettings gentleFallSpell = new EffectBundleSettings()
+        static EffectBundleSettings gentleFallSpell => new EffectBundleSettings()
         {
-            Name = "Gentle Fall",
+            Name = Localize("gentleFall"),
             Version = EntityEffectBroker.CurrentSpellVersion,
             BundleType = BundleTypes.Spell,
             TargetType = TargetTypes.CasterOnly,
@@ -1014,9 +1018,9 @@ namespace RoleplayRealism
                     })
             },
         };
-        static EffectBundleSettings candleSpell = new EffectBundleSettings()
+        static EffectBundleSettings candleSpell => new EffectBundleSettings()
         {
-            Name = "Candle",
+            Name = Localize("candle"),
             Version = EntityEffectBroker.CurrentSpellVersion,
             BundleType = BundleTypes.Spell,
             TargetType = TargetTypes.CasterOnly,
@@ -1029,9 +1033,9 @@ namespace RoleplayRealism
                 })
             },
         };
-        static EffectBundleSettings knickKnackSpell = new EffectBundleSettings()
+        static EffectBundleSettings knickKnackSpell => new EffectBundleSettings()
         {
-            Name = "Knick-Knack",
+            Name = Localize("knickKnack"),
             Version = EntityEffectBroker.CurrentSpellVersion,
             BundleType = BundleTypes.Spell,
             TargetType = TargetTypes.CasterOnly,
@@ -1044,9 +1048,9 @@ namespace RoleplayRealism
                 })
             },
         };
-        static EffectBundleSettings salveBruiseSpell = new EffectBundleSettings()
+        static EffectBundleSettings salveBruiseSpell => new EffectBundleSettings()
         {
-            Name = "Salve Bruise",
+            Name = Localize("salveBruise"),
             Version = EntityEffectBroker.CurrentSpellVersion,
             BundleType = BundleTypes.Spell,
             TargetType = TargetTypes.CasterOnly,
@@ -1059,9 +1063,9 @@ namespace RoleplayRealism
                 })
              },
         };
-        static EffectBundleSettings smellingSaltsSpell = new EffectBundleSettings()
+        static EffectBundleSettings smellingSaltsSpell => new EffectBundleSettings()
         {
-            Name = "Smelling Salts",
+            Name = Localize("smellingSalts"),
             Version = EntityEffectBroker.CurrentSpellVersion,
             BundleType = BundleTypes.Spell,
             TargetType = TargetTypes.CasterOnly,
@@ -1074,9 +1078,9 @@ namespace RoleplayRealism
                 })
              },
         };
-        static EffectBundleSettings riseSpell = new EffectBundleSettings()
+        static EffectBundleSettings riseSpell => new EffectBundleSettings()
         {
-            Name = "Rise",
+            Name = Localize("rise"),
             Version = EntityEffectBroker.CurrentSpellVersion,
             BundleType = BundleTypes.Spell,
             TargetType = TargetTypes.CasterOnly,
@@ -1089,9 +1093,9 @@ namespace RoleplayRealism
                 })
             },
         };
-        static EffectBundleSettings knockSpell = new EffectBundleSettings()
+        static EffectBundleSettings knockSpell => new EffectBundleSettings()
         {
-            Name = "Knock",
+            Name = Localize("knock"),
             Version = EntityEffectBroker.CurrentSpellVersion,
             BundleType = BundleTypes.Spell,
             TargetType = TargetTypes.CasterOnly,
@@ -1152,5 +1156,23 @@ namespace RoleplayRealism
             new LootChanceMatrix() {key = "LR2", MinGold = 0,   MaxGold = 5,    P1 = 3, P2 = 3, C1 = 1, C2 = 1, C3 = 3, M1 = 3, AM = 0,  WP = 20, MI = 1, CL = 60,BK = 10,M2 = 3, RL = 0 }, //Healer, Orc Shaman
             new LootChanceMatrix() {key = "LR3", MinGold = 0,   MaxGold = 30,   P1 = 3, P2 = 3, C1 = 1, C2 = 1, C3 = 1, M1 = 2, AM = 0,  WP = 20, MI = 1, CL = 95,BK = 45,M2 = 2, RL = 10 },//Spellcasters
         };
+
+        static void LoadTextData()
+        {
+            const string csvFilename = "RoleplayRealismItemsModData.csv";
+
+            if (textDataBase == null)
+                textDataBase = StringTableCSVParser.LoadDictionary(csvFilename);
+
+            return;
+        }
+
+        public static string Localize(string Key)
+        {
+            if (textDataBase.ContainsKey(Key))
+                return textDataBase[Key];
+
+            return string.Empty;
+        }
     }
 }

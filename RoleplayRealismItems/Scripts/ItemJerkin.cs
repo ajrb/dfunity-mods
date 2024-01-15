@@ -32,8 +32,8 @@ namespace RoleplayRealism
     public class ItemJerkin : DaggerfallUnityItem
     {
         public const int templateIndex = 520;
-        public const string fur = "Fur ";
-        public const string brig = "Brigandine ";
+        public static string fur = RoleplayRealismItemsMod.Localize("fur");
+        public static string brig = RoleplayRealismItemsMod.Localize("brig");
 
         public ItemJerkin() : base(ItemGroups.Armor, templateIndex)
         {
