@@ -3,6 +3,8 @@
 // License:         MIT License (http://www.opensource.org/licenses/mit-license.php)
 // Author:          Hazelnut
 
+using System.Collections.Generic;
+
 using DaggerfallConnect.Arena2;
 using DaggerfallWorkshop.Game.Entity;
 using DaggerfallWorkshop.Game.Player;
@@ -12,18 +14,20 @@ namespace DaggerfallWorkshop.Game.Guilds
 {
     public class DarkBrotherhoodRR : DarkBrotherhood
     {
+        static Dictionary<string, string> textDataBase = null;
+
         protected static TextFile.Token newLine = TextFile.CreateFormatToken(TextFile.Formatting.JustifyCenter);
-        protected static TextFile.Token[] expulsionTokens =
-        {
-            TextFile.CreateTextToken("%pcn, you have disappointed us yet again, and you've not"), newLine,
-            TextFile.CreateTextToken("made powerful enough connections to save your reputation."), newLine, newLine,
-            TextFile.CreateTextToken("Our patience is limited and it's worn thin. Now your"), newLine,
-            TextFile.CreateTextToken("membership, and by extension your life, is forfeit!"), newLine,
-        };
 
         public override TextFile.Token[] TokensExpulsion()
         {
-            return expulsionTokens;
+            LoadTextData();
+
+            return new TextFile.Token[] {
+                TextFile.CreateTextToken(Localize("DarkBrotherhoodExpulsion1")), newLine,
+                TextFile.CreateTextToken(Localize("DarkBrotherhoodExpulsion2")), newLine, newLine,
+                TextFile.CreateTextToken(Localize("DarkBrotherhoodExpulsion3")), newLine,
+                TextFile.CreateTextToken(Localize("DarkBrotherhoodExpulsion4")), newLine,
+            };
         }
 
         protected override int AllowGuildExpulsion(PlayerEntity playerEntity, int newRank)
@@ -50,6 +54,24 @@ namespace DaggerfallWorkshop.Game.Guilds
             int deathSquad = 4 + (GameManager.Instance.PlayerEntity.Level / 2);
             GameObjectHelper.CreateFoeSpawner(false, MobileTypes.Assassin, deathSquad, 1, 5);
             GameObjectHelper.CreateFoeSpawner(false, MobileTypes.Nightblade, deathSquad, 4, 16);
+        }
+
+        static void LoadTextData()
+        {
+            const string csvFilename = "RoleplayRealismModData.csv";
+
+            if (textDataBase == null)
+                textDataBase = StringTableCSVParser.LoadDictionary(csvFilename);
+
+            return;
+        }
+
+        public static string Localize(string Key)
+        {
+            if (textDataBase.ContainsKey(Key))
+                return textDataBase[Key];
+
+            return string.Empty;
         }
     }
 }
