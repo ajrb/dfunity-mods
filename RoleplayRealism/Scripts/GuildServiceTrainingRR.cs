@@ -8,7 +8,6 @@ using DaggerfallConnect;
 using DaggerfallConnect.Arena2;
 using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
-using DaggerfallWorkshop.Game.Entity;
 using DaggerfallWorkshop.Game.Guilds;
 using DaggerfallWorkshop.Game.UserInterface;
 using DaggerfallWorkshop.Game.UserInterfaceWindows;
@@ -20,9 +19,9 @@ namespace RoleplayRealism
     public class GuildServiceTrainingRR : DaggerfallGuildServiceTraining, IMacroContextProvider
     {
         protected const DaggerfallMessageBox.MessageBoxButtons weekButton = (DaggerfallMessageBox.MessageBoxButtons)21;
-        protected static TextFile.Token newLine = TextFile.CreateFormatToken(TextFile.Formatting.JustifyCenter);
 
         DFCareer.Skills skillToTrain;
+        string skillName;
         int trainingCost = 0;
         int intensiveCost = 0;
 
@@ -87,18 +86,31 @@ namespace RoleplayRealism
                     trainingCost -= (int)(trainingCost * skillOfMax / 2);
                 }
 
+                skillName = DaggerfallUnity.Instance.TextProvider.GetSkillName(skillToTrain);
+
                 // Offer training and cost to player
                 TextFile.Token[] tokens = DaggerfallUnity.Instance.TextProvider.GetRSCTokens(TrainingOfferId);
                 int pos = tokens[0].text.IndexOf(" ");
-                tokens[0].text = tokens[0].text.Substring(0, pos) + " " + skillToTrain + tokens[0].text.Substring(pos);
+                tokens[0].text = tokens[0].text.Substring(0, pos) + " " + skillName + tokens[0].text.Substring(pos);
 
                 intensiveCost = (trainingCost + (playerEntity.Level * 8) + 72) * 5;
                 TextFile.Token[] trainingTokens =
                 {
-                    TextFile.CreateTextToken(string.Format(RoleplayRealism.Localize("trainingSkill1"), skillToTrain)), newLine, newLine,
-                    TextFile.CreateTextToken(RoleplayRealism.Localize("trainingSkill2")), newLine,
-                    TextFile.CreateTextToken(string.Format(RoleplayRealism.Localize("trainingSkill3"), intensiveCost)), newLine, newLine,
-                    TextFile.CreateTextToken(string.Format(RoleplayRealism.Localize("trainingSkill4"), skillToTrain)), newLine,
+                    TextFile.CreateTextToken(string.Format(RoleplayRealism.Localize("trainingSkill1"), skillName)),
+                    TextFile.CreateFormatToken(TextFile.Formatting.JustifyCenter),
+
+                    TextFile.NewLineToken,
+
+                    TextFile.CreateTextToken(RoleplayRealism.Localize("trainingSkill2")),
+                    TextFile.CreateFormatToken(TextFile.Formatting.JustifyCenter),
+
+                    TextFile.CreateTextToken(string.Format(RoleplayRealism.Localize("trainingSkill3"), intensiveCost)),
+                    TextFile.CreateFormatToken(TextFile.Formatting.JustifyCenter),
+
+                    TextFile.NewLineToken,
+
+                    TextFile.CreateTextToken(string.Format(RoleplayRealism.Localize("trainingSkill4"), skillName)),
+                    TextFile.CreateFormatToken(TextFile.Formatting.JustifyCenter),
                 };
 
                 DaggerfallMessageBox messageBox = new DaggerfallMessageBox(uiManager, uiManager.TopWindow);
@@ -161,12 +173,20 @@ namespace RoleplayRealism
 
             TrainSkill(skillToTrain);
 
+            skillName = DaggerfallUnity.Instance.TextProvider.GetSkillName(skillToTrain);
+
             TextFile.Token[] intenseTokens =
             {
-                TextFile.CreateTextToken(RoleplayRealism.Localize("trainingSkillIntense1")), newLine,
-                TextFile.CreateTextToken(string.Format(RoleplayRealism.Localize("trainingSkillIntense2"), skillToTrain)), newLine, newLine,
-                TextFile.CreateTextToken(RoleplayRealism.Localize("trainingSkillIntense3"))
+                TextFile.CreateTextToken(RoleplayRealism.Localize("trainingSkillIntense1")),
+                TextFile.CreateFormatToken(TextFile.Formatting.JustifyCenter),
+
+                TextFile.CreateTextToken(string.Format(RoleplayRealism.Localize("trainingSkillIntense2"), skillName)),
+                TextFile.CreateFormatToken(TextFile.Formatting.JustifyCenter),
+
+                TextFile.CreateTextToken(RoleplayRealism.Localize("trainingSkillIntense3")),
+                TextFile.CreateFormatToken(TextFile.Formatting.JustifyCenter),
             };
+
             DaggerfallUI.MessageBox(intenseTokens);
         }
 

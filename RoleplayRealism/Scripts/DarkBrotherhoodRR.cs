@@ -16,17 +16,24 @@ namespace DaggerfallWorkshop.Game.Guilds
     {
         static Dictionary<string, string> textDataBase = null;
 
-        protected static TextFile.Token newLine = TextFile.CreateFormatToken(TextFile.Formatting.JustifyCenter);
-
         public override TextFile.Token[] TokensExpulsion()
         {
             LoadTextData();
 
             return new TextFile.Token[] {
-                TextFile.CreateTextToken(Localize("DarkBrotherhoodExpulsion1")), newLine,
-                TextFile.CreateTextToken(Localize("DarkBrotherhoodExpulsion2")), newLine, newLine,
-                TextFile.CreateTextToken(Localize("DarkBrotherhoodExpulsion3")), newLine,
-                TextFile.CreateTextToken(Localize("DarkBrotherhoodExpulsion4")), newLine,
+                TextFile.CreateTextToken(Localize("DarkBrotherhoodExpulsion1")),
+                TextFile.CreateFormatToken(TextFile.Formatting.JustifyCenter),
+
+                TextFile.CreateTextToken(Localize("DarkBrotherhoodExpulsion2")),
+                TextFile.CreateFormatToken(TextFile.Formatting.JustifyCenter),
+
+                TextFile.NewLineToken,
+
+                TextFile.CreateTextToken(Localize("DarkBrotherhoodExpulsion3")),
+                TextFile.CreateFormatToken(TextFile.Formatting.JustifyCenter),
+
+                TextFile.CreateTextToken(Localize("DarkBrotherhoodExpulsion4")),
+                TextFile.CreateFormatToken(TextFile.Formatting.JustifyCenter),
             };
         }
 
