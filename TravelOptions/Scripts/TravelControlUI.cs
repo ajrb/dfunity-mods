@@ -40,8 +40,8 @@ namespace TravelOptions
 
         #region Fields
 
-        public const string TipMap = "Consult Map";
-        public const string TipCamp = "Stop to Camp";
+        public static string TipMap => TravelOptionsMod.Localize("TipMap");
+        public static string TipCamp => TravelOptionsMod.Localize("TipCamp");
 
         const string baseTextureName = "TOcontrolUI.png";
 

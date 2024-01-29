@@ -16,12 +16,13 @@ namespace TravelOptions
 {
     public class TravelOptionsPopUp : DaggerfallTravelPopUp
     {
-        private const string MsgPlayerControlled = "Player Controlled Journey";
-        private string MsgTimeFormat = " {0} hours {1} mins (approx)";
-        private const string MsgNoPort = "You cannot travel by ship from here, since there's no port.";
-        private const string MsgNoDestPort = "You cannot travel by ship to there, as that location has no port.";
-        private const string MsgNoSailing = "Your journey doesn't cross any ocean, so a ship is not needed.";
-        private const string MsgNotVisited = "You have not visited this location yet, so can't fast travel there.";
+        private static string MsgPlayerControlled => TravelOptionsMod.Localize("MsgPlayerControlled");
+        private static string MsgTimeFormat => TravelOptionsMod.Localize("MsgTimeFormat");
+        private static string MsgTimeFormatNoSDF => TravelOptionsMod.Localize("MsgTimeFormatNoSDF");
+        private static string MsgNoPort => TravelOptionsMod.Localize("MsgNoPort");
+        private static string MsgNoDestPort => TravelOptionsMod.Localize("MsgNoDestPort");
+        private static string MsgNoSailing => TravelOptionsMod.Localize("MsgNoSailing");
+        private static string MsgNotVisited => TravelOptionsMod.Localize("MsgNotVisited");
 
         protected TravelOptionsMapWindow travelWindowTO;
 
@@ -44,10 +45,6 @@ namespace TravelOptions
             {
                 travelTimeLabel.MaxCharacters = 28;
                 tripCostLabel.MaxCharacters = 25;
-            }
-            else
-            {
-                MsgTimeFormat = '~' + MsgTimeFormat;
             }
 
             Refresh();
@@ -126,7 +123,14 @@ namespace TravelOptions
                 tripCostLabel.Text = MsgPlayerControlled;
                 int travelTimeHours = travelTimeTotalMins / 60;
                 int travelTimeMinutes = travelTimeTotalMins % 60;
-                travelTimeLabel.Text = string.Format(MsgTimeFormat, travelTimeHours, travelTimeMinutes);
+                if (DaggerfallWorkshop.DaggerfallUnity.Settings.SDFFontRendering)
+                {
+                    travelTimeLabel.Text = string.Format(MsgTimeFormat, travelTimeHours, travelTimeMinutes);
+                }
+                else
+                {
+                    travelTimeLabel.Text = string.Format(MsgTimeFormatNoSDF, travelTimeHours, travelTimeMinutes);
+                }
             }
             else
             {
@@ -142,7 +146,7 @@ namespace TravelOptions
                 bool hasVisitedLocation = false;
                 ModManager.Instance.SendModMessage(TravelOptionsMod.HIDDEN_MAP_LOCATIONS_MODNAME, "hasVisitedLocation",
                     new Tuple<int, int, bool>(EndPos.X, EndPos.Y, TravelShip),
-                    (string _, object result) => {  hasVisitedLocation = (bool)result; });
+                    (string _, object result) => { hasVisitedLocation = (bool)result; });
 
                 if (!hasVisitedLocation)
                 {

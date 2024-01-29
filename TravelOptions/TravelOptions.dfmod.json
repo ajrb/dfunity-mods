@@ -1,6 +1,6 @@
 {
     "ModTitle": "TravelOptions",
-    "ModVersion": "1.8.1",
+    "ModVersion": "1.9.0",
     "ModAuthor": "Hazelnut",
     "ContactInfo": "forums.dfworkshop.net",
     "DFUnity_Version": "1.0.0",
@@ -20,6 +20,7 @@
         "Assets/Game/Mods/TravelOptions/TravelOptions.dfmod.json",
         "Assets/Game/Mods/TravelOptions/Scripts/MagesGuildTO.cs",
         "Assets/Game/Mods/TravelOptions/Scripts/CastWhenHeldTO.cs",
-        "Assets/Game/Mods/TravelOptions/Scripts/TravelTimeCalculatorTO.cs"
+        "Assets/Game/Mods/TravelOptions/Scripts/TravelTimeCalculatorTO.cs",
+        "Assets/Game/Mods/TravelOptions/TravelOptionsModData.csv"
     ]
 }

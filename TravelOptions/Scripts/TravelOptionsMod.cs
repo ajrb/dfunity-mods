@@ -5,6 +5,7 @@
 // Contributor:     Jedidia
 
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using DaggerfallConnect;
 using DaggerfallConnect.Arena2;
@@ -40,21 +41,33 @@ namespace TravelOptions
 
         public const int MaxCircumnavigationAccel = 15;
 
-        protected const string MsgArrived = "You have arrived at your destination.";
-        protected const string MsgEnemies = "Enemies are seeking to prevent your travel...";
-        protected const string MsgAvoidFail = "You failed to avoid an encounter!";
-        protected const string MsgAvoidSuccess = "You successfully avoided an encounter.";
-        protected const string MsgLowHealth = "You are close to the point of death!";
-        protected const string MsgLowFatigue = "You are exhausted and should rest.";
-        protected const string MsgOcean = "You've found yourself in the sea, maybe you should travel on a ship.";
-        protected const string MsgNearLocation = "Paused the journey since a {0} called {1} is nearby.";
-        protected const string MsgEnterLocation = "Paused the journey as you've entered a {0} called {1}.";
-        protected const string MsgCircumnavigate = "Circumnavigating {0}.";
-        protected const string MsgNoPath = "There's no path here to follow in that direction.";
-        protected const string MsgFollowRoad = "Following a road.";
-        protected const string MsgFollowTrack = "Following a dirt track.";
-        protected const string MsgTargetCoords = "Map coordinates: {0}, {1}.";
-        protected const string MsgNewRegion = "You have entered the region of {0}.";
+        protected static string MsgArrived => Localize("MsgArrived");
+        protected static string MsgArrivedJunc => Localize("MsgArrivedJunc");
+        protected static string MsgEnemies => Localize("MsgEnemies");
+        protected static string MsgAvoidFail => Localize("MsgAvoidFail");
+        protected static string MsgAvoidSuccess => Localize("MsgAvoidSuccess");
+        protected static string MsgLowHealth => Localize("MsgLowHealth");
+        protected static string MsgLowFatigue => Localize("MsgLowFatigue");
+        protected static string MsgOcean => Localize("MsgOcean");
+        protected static string MsgNearLocation => Localize("MsgNearLocation");
+        protected static string MsgEnterLocation => Localize("MsgEnterLocation");
+        protected static string MsgCircumnavigate => Localize("MsgCircumnavigate");
+        protected static string MsgNoPath => Localize("MsgNoPath");
+        protected static string MsgFollowRoad => Localize("MsgFollowRoad");
+        protected static string MsgFollowTrack => Localize("MsgFollowTrack");
+        protected static string MsgTargetCoords => Localize("MsgTargetCoords");
+        protected static string MsgNewRegion => Localize("MsgNewRegion");
+        protected static string DirectionN => Localize("DirectionN");
+        protected static string DirectionNE => Localize("DirectionNE");
+        protected static string DirectionE => Localize("DirectionE");
+        protected static string DirectionSE => Localize("DirectionSE");
+        protected static string DirectionS => Localize("DirectionS");
+        protected static string DirectionSW => Localize("DirectionSW");
+        protected static string DirectionW => Localize("DirectionW");
+        protected static string DirectionNW => Localize("DirectionNW");
+        protected static string DirectionNone => Localize("DirectionNone");
+
+        static Dictionary<string, string> textDataBase = null;
 
         // Path type and direction constants copied from BasicRoadsTexturing
         public const int path_roads = 0;
@@ -246,6 +259,8 @@ namespace TravelOptions
         {
             Debug.Log("Begin mod init: TravelOptions");
 
+            LoadTextData();
+
             // Hidden Map Locations mod integration setup
             Mod hiddenMapLocationsMod = ModManager.Instance.GetMod(HIDDEN_MAP_LOCATIONS_MODNAME);
             HiddenMapLocationsEnabled = hiddenMapLocationsMod != null && hiddenMapLocationsMod.Enabled;
@@ -262,15 +277,18 @@ namespace TravelOptions
             Mod roadsMod = ModManager.Instance.GetMod(ROADS_MODNAME);
             bool roadsModEnabled = roadsMod != null && roadsMod.Enabled;
             bool riversStreams = false;
-            try {
+            try
+            {
                 riversStreams = roadsMod.GetSettings().GetBool("Settings", "RiversAndStreams");
-            } catch (Exception) { }
+            }
+            catch (Exception) { }
 
             // Load non-dynamic settings.
             ModSettings settings = mod.GetSettings();
 
             RoadsIntegration = settings.GetValue<bool>("RoadsIntegration", "Enable") && roadsModEnabled;
-            if (RoadsIntegration) {
+            if (RoadsIntegration)
+            {
                 VariableSizeDots = settings.GetValue<bool>("RoadsIntegration", "VariableSizeDots");
                 roadsJunctionMap = settings.GetValue<bool>("RoadsJunctionMap", "Enable");
                 WaterwaysEnabled = settings.GetValue<bool>("RoadsIntegration", "EnableWaterways") && roadsModEnabled && riversStreams;
@@ -376,7 +394,7 @@ namespace TravelOptions
             {
                 if (travelControlUI.isShowing)
                     travelControlUI.CloseWindow();
-                DaggerfallUI.MessageBox(string.Format(MsgEnterLocation, MacroHelper.LocationTypeName(), dfLocation.Name));
+                DaggerfallUI.MessageBox(string.Format(MsgEnterLocation, MacroHelper.LocationTypeName(), TextManager.Instance.GetLocalizedLocationName(dfLocation.MapTableData.MapId, dfLocation.Name)));
             }
         }
 
@@ -417,8 +435,8 @@ namespace TravelOptions
             DFLocation targetLocation;
             if (DaggerfallUnity.Instance.ContentReader.GetLocation(destinationSummary.RegionIndex, destinationSummary.MapIndex, out targetLocation))
             {
-                DestinationName = targetLocation.Name;
-                travelControlUI.SetDestinationName(targetLocation.Name);
+                DestinationName = TextManager.Instance.GetLocalizedLocationName(targetLocation.MapTableData.MapId, targetLocation.Name);
+                travelControlUI.SetDestinationName(TextManager.Instance.GetLocalizedLocationName(targetLocation.MapTableData.MapId, targetLocation.Name));
                 DestinationSummary = destinationSummary;
                 DestinationCautious = speedCautious;
                 if (alwaysUseStartingAccel)
@@ -560,7 +578,7 @@ namespace TravelOptions
             DFPosition currMapPixel = playerGPS.CurrentMapPixel;
 
             bool inLoc = locationRect.Contains(new Vector2(playerGPS.WorldX, playerGPS.WorldZ));
-            
+
             // Start following a path
             byte pathsDataPt = GetPathsDataPoint(currMapPixel);
             byte onPath = IsPlayerOnPath(playerGPS, pathsDataPt);
@@ -663,7 +681,7 @@ namespace TravelOptions
                 }
                 else
                 {
-                    DaggerfallUI.AddHUDText("You've arrived at a junction.");
+                    DaggerfallUI.AddHUDText(MsgArrivedJunc);
                     if (roadsJunctionMap)
                     {
                         Debug.Log("Displaying junction map on HUD.");
@@ -710,7 +728,7 @@ namespace TravelOptions
             else
                 return;
 
-            travelControlUI.SetDestinationName(string.Format(MsgCircumnavigate, GameManager.Instance.PlayerGPS.CurrentLocation.Name));
+            travelControlUI.SetDestinationName(string.Format(MsgCircumnavigate, GameManager.Instance.PlayerGPS.CurrentLocalizedLocationName));
 
             DestinationCautious = false;
             if (alwaysUseStartingAccel)
@@ -821,23 +839,23 @@ namespace TravelOptions
             switch (direction)
             {
                 case N:
-                    return "N";
+                    return DirectionN;
                 case NE:
-                    return "NE";
+                    return DirectionNE;
                 case E:
-                    return "E";
+                    return DirectionE;
                 case SE:
-                    return "SE";
+                    return DirectionSE;
                 case S:
-                    return "S";
+                    return DirectionS;
                 case SW:
-                    return "SW";
+                    return DirectionSW;
                 case W:
-                    return "W";
+                    return DirectionW;
                 case NW:
-                    return "NW";
+                    return DirectionNW;
                 default:
-                    return "none";
+                    return DirectionNone;
             }
         }
 
@@ -936,25 +954,12 @@ namespace TravelOptions
         public void DisplayHelpInfo()
         {
             bool sdfFonts = DaggerfallUnity.Settings.SDFFontRendering;
-            DaggerfallUI.MessageBox(new string[] {
-                "Travel Options Help",
-                "",
-                "Travel Map",
-                "",
-                "LeftClick - Select travel destination (region, location, map pixel)",
-                "RightClick - Zoom in or out",
-                "MiddleClick - Mark a location" + (sdfFonts ? " (for example as a destination for road following)" : ""),
-                "I - Location information known to character" + (sdfFonts ? " (press while hovering or after selecting)" : ""),
-                "",
-                "Accelerated Travel",
-                "",
-                followKeyCode.ToString() + " - Follow road or track",
-                "M - Open travel map while travelling (or click map button)",
-                "C - Pause travel for camp (or click camp button)",
-                DaggerfallShortcut.GetBinding(DaggerfallShortcut.Buttons.TravelExit).ToString() + " - Exit travel (or click exit button)",
-                InputManager.Instance.GetBinding(InputManager.Actions.TravelMap).ToString() + " - Open travel map when stopped to resume journey," + (sdfFonts ? " or to choose a new destination" : ""),
-                sdfFonts ? "" : "    or to choose a new destination"
-            });
+
+            string HelpTextKey = sdfFonts ? "HelpInfoSDF" : "HelpInfo";
+
+            string HelpText = string.Format(Localize(HelpTextKey), followKeyCode.ToString(), DaggerfallShortcut.GetBinding(DaggerfallShortcut.Buttons.TravelExit).ToString(), InputManager.Instance.GetBinding(InputManager.Actions.TravelMap).ToString());
+
+            DaggerfallUI.MessageBox(HelpText.Split('\n'));
         }
 
         void Update()
@@ -1028,13 +1033,13 @@ namespace TravelOptions
                 }
 
                 // If location pause set to nearby and travelling to destination, check for a nearby location and stop if found
-                if (locationPause == LocPauseNear && DestinationName != null && playerGPS.HasCurrentLocation && !playerGPS.CurrentLocation.Equals(lastLocation) && playerGPS.CurrentLocation.Name != DestinationName)
+                if (locationPause == LocPauseNear && DestinationName != null && playerGPS.HasCurrentLocation && !playerGPS.CurrentLocation.Equals(lastLocation) && playerGPS.CurrentLocalizedLocationName != DestinationName)
                 {
                     // Store location so it doesn't trigger again and ensure discovered
                     lastLocation = playerGPS.CurrentLocation;
                     playerGPS.DiscoverLocation(playerGPS.CurrentLocation.RegionName, playerGPS.CurrentLocation.Name);
 
-                    StopTravelWithMessage(string.Format(MsgNearLocation, LocationTypeString(), playerGPS.CurrentLocation.Name));
+                    StopTravelWithMessage(string.Format(MsgNearLocation, LocationTypeString(), playerGPS.CurrentLocalizedLocationName));
                     return;
                 }
 
@@ -1115,11 +1120,11 @@ namespace TravelOptions
             switch (GameManager.Instance.PlayerGPS.CurrentLocationType)
             {
                 case DFRegion.LocationTypes.DungeonKeep:
-                    return "Keep";
+                    return Localize("LocationTypeDungeonKeep");
                 case DFRegion.LocationTypes.DungeonLabyrinth:
-                    return "Labyrinth";
+                    return Localize("LocationTypeDungeonLabyrinth");
                 case DFRegion.LocationTypes.DungeonRuin:
-                    return "Ruin";
+                    return Localize("LocationTypeDungeonRuin");
                 default:
                     return MacroHelper.LocationTypeName();
             }
@@ -1260,5 +1265,27 @@ namespace TravelOptions
                     break;
             }
         }
+
+        #region Localization
+
+        static void LoadTextData()
+        {
+            const string csvFilename = "TravelOptionsModData.csv";
+
+            if (textDataBase == null)
+                textDataBase = StringTableCSVParser.LoadDictionary(csvFilename);
+
+            return;
+        }
+
+        public static string Localize(string Key)
+        {
+            if (textDataBase.ContainsKey(Key))
+                return textDataBase[Key];
+
+            return string.Empty;
+        }
+
+        #endregion Localization
     }
 }
