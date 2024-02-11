@@ -1,6 +1,6 @@
 {
     "ModTitle": "BasicRoads",
-    "ModVersion": "1.4",
+    "ModVersion": "1.3.1",
     "ModAuthor": "Hazelnut",
     "ContactInfo": "forums.dfworkshop.net",
     "DFUnity_Version": "1.0.0",
@@ -22,7 +22,6 @@
         "Assets/Game/Mods/BasicRoads/Textures/riversOn.png",
         "Assets/Game/Mods/BasicRoads/Textures/riversOff.png",
         "Assets/Game/Mods/BasicRoads/streamData.bytes",
-        "Assets/Game/Mods/BasicRoads/riverData.bytes",
-        "Assets/Game/Mods/BasicRoads/textdatabase.txt"
+        "Assets/Game/Mods/BasicRoads/riverData.bytes"
     ]
 }

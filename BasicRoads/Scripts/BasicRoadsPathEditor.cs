@@ -286,7 +286,7 @@ namespace BasicRoads
             else if (changed)
             {
                 DaggerfallMessageBox messageBox = new DaggerfallMessageBox(uiManager, this);
-                messageBox.SetText(BasicRoadsMod.mod.Localize("saveChanges"));
+                messageBox.SetText("Do you want to save changes?");
                 messageBox.AddButton(DaggerfallMessageBox.MessageBoxButtons.Yes);
                 messageBox.AddButton(DaggerfallMessageBox.MessageBoxButtons.No);
                 messageBox.OnButtonClick += SaveBoxClick;

@@ -21,7 +21,7 @@ namespace BasicRoads
         public const string GET_PATHS_POINT = "getPathsPoint";
         public const string SCHEDULE_ROADS_JOB = "scheduleRoadsJob";
 
-        public static Mod mod;
+        static Mod mod;
         static BasicRoadsTexturing roadTexturing;
 
         [Invoke(StateManager.StateTypes.Start, 0)]

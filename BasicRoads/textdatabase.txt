@@ -1,4 +1,0 @@
-schema: *key, $text
-
-- Question
-saveChanges,"Do you want to save changes?"
