@@ -513,7 +513,7 @@ namespace TravelOptions
                 base.ClickHandler(sender, position);
             }
             // Set scale factors into popup, except when teleport travelling
-            if (!teleportationTravel)
+            if (popUp != null && !teleportationTravel)
                 ((TravelOptionsPopUp)popUp).SetScaleFactors(TravelOptionsMod.Instance.FastTravelCostScaleFactor, TravelOptionsMod.Instance.ShipTravelCostScaleFactor);
         }
 
