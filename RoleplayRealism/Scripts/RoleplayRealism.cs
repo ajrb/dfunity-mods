@@ -52,15 +52,16 @@ namespace RoleplayRealism
         };
         static readonly int[] loanVals = { 2000, 4000, 6000, 8000, 10000, 20000, 30000, 40000, 50000 };
 
-        public const string FORT_VERYNEAR1 = "You see many heavy bootprints in the mud and even spot a discarded shield.";
-        public const string FORT_VERYNEAR2 = "These are definite tracks from of a band of warriors somewhere nearby.";
-        public const string FORT_NEAR = "You spot signs of recent activity in the area that seem to lead to the {0}.";
+        public static string FORT_VERYNEAR1 => Localize("fortVerynear1");
+        public static string FORT_VERYNEAR2 => Localize("fortVerynear2");
+        public static string FORT_NEAR => Localize("fortNear");
 
         static Mod mod;
         static int loanMaxPerLevel;
         static bool travelOptionsEnabled;
         static Mod villagerVarietyMod;
         static int villagerVarietyNumVariants = 0;
+        static Dictionary<string, string> textDataBase = null;
 
         [Invoke(StateManager.StateTypes.Start, 0)]
         public static void Init(InitParams initParams)
@@ -95,6 +96,8 @@ namespace RoleplayRealism
 
             loanMaxPerLevel = loanVals[settings.GetInt("Modules", "loanAmountPerLevel")];
             FormulaHelper.RegisterOverride(mod, "CalculateMaxBankLoan", (Func<int>)CalculateMaxBankLoan);
+
+            LoadTextData();
 
             InitMod(bedSleeping, archery, riding, encumbrance, bandaging, shipPorts, expulsion, climbing, weaponSpeed, weaponMaterials, equipDamage, enemyAppearance, purifyPot, autoExtinguishLight, classicStrDmgBonus, variantNpcs, variantResidents, training);
 
@@ -238,7 +241,7 @@ namespace RoleplayRealism
             questMachine.FactionsTable.AddIntoTable(factionsTable);
 
             // Register the custom armor service and location detection
-            Services.RegisterMerchantService(1022, CustomArmorService, "Custom Armor");
+            Services.RegisterMerchantService(1022, CustomArmorService, Localize("customArmor"));
             PlayerGPS.OnEnterLocationRect += PlayerGPS_OnEnterLocationRect;
             PlayerGPS.OnMapPixelChanged += PlayerGPS_OnMapPixelChanged;
 
@@ -250,7 +253,7 @@ namespace RoleplayRealism
             if (WorldDataVariants.GetBuildingVariant(location.RegionIndex, location.LocationIndex, "ARMRAM03.RMB", 14) != null)
             {
                 // Entered the location of the master armorer, so discover his shop with a custom name
-                GameManager.Instance.PlayerGPS.DiscoverBuilding(GetMasterArmBuildingKey(location.RegionIndex), "Dharjen Custom Armor");
+                GameManager.Instance.PlayerGPS.DiscoverBuilding(GetMasterArmBuildingKey(location.RegionIndex), Localize("dharjenCustomArmor"));
             }
         }
 
@@ -266,21 +269,21 @@ namespace RoleplayRealism
                     DaggerfallUI.AddHUDText(FORT_VERYNEAR2, 5);
                 }
                 else if (mapPixel.X == 938 && mapPixel.Y == 50)
-                    DaggerfallUI.AddHUDText(String.Format(FORT_NEAR, "south"), 5);
+                    DaggerfallUI.AddHUDText(String.Format(FORT_NEAR, TextManager.Instance.GetLocalizedText("south")), 5);
                 else if (mapPixel.X == 939 && mapPixel.Y == 50)
-                    DaggerfallUI.AddHUDText(String.Format(FORT_NEAR, "south west"), 5);
+                    DaggerfallUI.AddHUDText(String.Format(FORT_NEAR, TextManager.Instance.GetLocalizedText("southwest")), 5);
                 else if (mapPixel.X == 939 && mapPixel.Y == 51)
-                    DaggerfallUI.AddHUDText(String.Format(FORT_NEAR, "west"), 5);
+                    DaggerfallUI.AddHUDText(String.Format(FORT_NEAR, TextManager.Instance.GetLocalizedText("west")), 5);
                 else if (mapPixel.X == 939 && mapPixel.Y == 52)
-                    DaggerfallUI.AddHUDText(String.Format(FORT_NEAR, "north west"), 5);
+                    DaggerfallUI.AddHUDText(String.Format(FORT_NEAR, TextManager.Instance.GetLocalizedText("northwest")), 5);
                 else if (mapPixel.X == 938 && mapPixel.Y == 52)
-                    DaggerfallUI.AddHUDText(String.Format(FORT_NEAR, "north"), 5);
+                    DaggerfallUI.AddHUDText(String.Format(FORT_NEAR, TextManager.Instance.GetLocalizedText("north")), 5);
                 else if (mapPixel.X == 937 && mapPixel.Y == 52)
-                    DaggerfallUI.AddHUDText(String.Format(FORT_NEAR, "north east"), 5);
+                    DaggerfallUI.AddHUDText(String.Format(FORT_NEAR, TextManager.Instance.GetLocalizedText("northeast")), 5);
                 else if (mapPixel.X == 937 && mapPixel.Y == 51)
-                    DaggerfallUI.AddHUDText(String.Format(FORT_NEAR, "east"), 5);
+                    DaggerfallUI.AddHUDText(String.Format(FORT_NEAR, TextManager.Instance.GetLocalizedText("east")), 5);
                 else if (mapPixel.X == 937 && mapPixel.Y == 50)
-                    DaggerfallUI.AddHUDText(String.Format(FORT_NEAR, "south east"), 5);
+                    DaggerfallUI.AddHUDText(String.Format(FORT_NEAR, TextManager.Instance.GetLocalizedText("southeast")), 5);
             }
         }
 
@@ -313,7 +316,7 @@ namespace RoleplayRealism
             // Fail to climb if weapon not sheathed.
             if (!GameManager.Instance.WeaponManager.Sheathed && GameManager.Instance.WeaponManager.ScreenWeapon.WeaponType != WeaponTypes.Melee)
             {
-                DaggerfallUI.SetMidScreenText("You can't climb whilst holding your weapon.", 1f);
+                DaggerfallUI.SetMidScreenText(Localize("noClimbHoldingWeapon"), 1f);
                 return 0;
             }
 
@@ -410,7 +413,7 @@ namespace RoleplayRealism
             ItemHelper itemHelper = DaggerfallUnity.Instance.ItemHelper;
             if (playerEntity.Level < 9)
             {
-                DaggerfallUI.MessageBox("Sorry I have not yet sourced enough rare materials to make you armor.");
+                DaggerfallUI.MessageBox(Localize("notEnoughMaterials"));
                 return;
             }
             ItemCollection armorItems = new ItemCollection();
@@ -650,7 +653,7 @@ namespace RoleplayRealism
                 id = 1020,
                 parent = 0,
                 type = 4,
-                name = "Lord Verathon",
+                name = Localize("lordVerathonName"),
                 summon = -1,
                 region = 16,
                 power = 10,
@@ -666,7 +669,7 @@ namespace RoleplayRealism
                 id = 1021,
                 parent = 1020,
                 type = 4,
-                name = "Captain Ulthega",
+                name = Localize("captainUlthegaName"),
                 summon = -1,
                 region = 16,
                 power = 2,
@@ -682,7 +685,7 @@ namespace RoleplayRealism
                 id = 1022,
                 parent = 0,
                 type = 4,
-                name = "Orthus Dharjen",
+                name = Localize("orthusDharjenName"),
                 summon = -1,
                 region = 17,
                 power = 2,
@@ -1057,6 +1060,24 @@ namespace RoleplayRealism
                 default:
                     return -1;
             }
+        }
+
+        static void LoadTextData()
+        {
+            const string csvFilename = "RoleplayRealismModData.csv";
+
+            if (textDataBase == null)
+                textDataBase = StringTableCSVParser.LoadDictionary(csvFilename);
+
+            return;
+        }
+
+        public static string Localize(string Key)
+        {
+            if (textDataBase.ContainsKey(Key))
+                return textDataBase[Key];
+
+            return string.Empty;
         }
 
     }

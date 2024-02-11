@@ -22,9 +22,11 @@ namespace TravelOptions
 {
     public class TravelOptionsMapWindow : DaggerfallTravelMapWindow
     {
-        private const string MsgResume = "Resume your journey to {0}?";
-        private const string MsgFollow = "Do you want to follow this road?";
-        private const string MsgTeleportCost = "Teleportation will cost you {0} gold, is that acceptable?";
+        private static string MsgResume => TravelOptionsMod.Localize("MsgResume");
+        private static string MsgFollow => TravelOptionsMod.Localize("MsgFollow");
+        private static string MsgTeleportCost => TravelOptionsMod.Localize("MsgTeleportCost");
+        private static string MsgGuildHalls => TravelOptionsMod.Localize("MsgGuildHalls");
+        private static string MsgNoKnowledge => TravelOptionsMod.Localize("MsgNoKnowledge");
         private const int notEnoughGoldId = 454;
 
         // Path type and direction constants from BasicRoadsTexturing.
@@ -419,7 +421,7 @@ namespace TravelOptions
                     tab3.x = 200;
                     if (!string.IsNullOrWhiteSpace(guilds))
                     {
-                        tokens.Add(TextFile.CreateTextToken("Guild Halls:    " + guilds));
+                        tokens.Add(TextFile.CreateTextToken(MsgGuildHalls + guilds));
                     }
                     tokens.Add(newLine);
                     tokens.Add(TextFile.NewLineToken);
@@ -427,7 +429,8 @@ namespace TravelOptions
                     bool secondColumn = false;
                     foreach (DFLocation.BuildingTypes buildingType in buildingTypeCounts.Keys)
                     {
-                        tokens.Add(TextFile.CreateTextToken(buildingType.ToString()));
+                        // exteriorAutomapBuildingType + BuildingType
+                        tokens.Add(TextFile.CreateTextToken(TextManager.Instance.GetLocalizedText("exteriorAutomapBuildingType" + buildingType.ToString())));
                         tokens.Add(!secondColumn ? tab1 : tab3);
                         tokens.Add(TextFile.CreateTextToken(buildingTypeCounts[buildingType].ToString()));
                         if (!secondColumn)
@@ -447,7 +450,7 @@ namespace TravelOptions
                     return;
                 }
             }
-            DaggerfallUI.MessageBox("You have no knowledge of " + GetLocationNameInCurrentRegion(locationSummary.MapIndex, true) + ".");
+            DaggerfallUI.MessageBox(string.Format(MsgNoKnowledge, GetLocationNameInCurrentRegion(locationSummary.MapIndex, true)));
         }
 
         protected void InfoBox_Close()
@@ -766,7 +769,7 @@ namespace TravelOptions
         public void DrawMapSection(int originX, int originY, int width, int height, ref Color32[] pixelBuffer, bool circular = false)
         {
             GetDiscoveredLocationsFromHiddenMapMod();
-        
+
             Array.Clear(pixelBuffer, 0, pixelBuffer.Length);
 
             for (int y = 0; y < height; y++)
@@ -781,7 +784,7 @@ namespace TravelOptions
                     if (mpX < 0 || mpX >= MapsFile.MaxMapPixelX)
                         continue;
 
-                    if (circular && height == width && Mathf.Sqrt(Mathf.Pow(Mathf.Abs(x - (width / 2) + 0.5f), 2) + Mathf.Pow(Mathf.Abs(y - (height / 2) + 0.5f), 2)) >= (height + 1.5) / 2) 
+                    if (circular && height == width && Mathf.Sqrt(Mathf.Pow(Mathf.Abs(x - (width / 2) + 0.5f), 2) + Mathf.Pow(Mathf.Abs(y - (height / 2) + 0.5f), 2)) >= (height + 1.5) / 2)
                         continue;
 
                     int offset = ((height - y - 1) * width) + x;
@@ -972,6 +975,6 @@ namespace TravelOptions
             455174,     // Abibon-Gora	Papyrydai
             202333,  // Shalgora Aldbrugh
         };
-        
+
     }
 }

@@ -3,6 +3,8 @@
 // License:         MIT License (http://www.opensource.org/licenses/mit-license.php)
 // Author:          Hazelnut
 
+using System.Collections.Generic;
+
 using DaggerfallConnect.Arena2;
 using DaggerfallWorkshop.Game.Entity;
 using DaggerfallWorkshop.Game.Player;
@@ -12,19 +14,30 @@ namespace DaggerfallWorkshop.Game.Guilds
 {
     public class ThievesGuildRR : ThievesGuild
     {
-        protected static TextFile.Token newLine = TextFile.CreateFormatToken(TextFile.Formatting.JustifyCenter);
-        protected static TextFile.Token[] expulsionTokens =
-        {
-            TextFile.CreateTextToken("%pcn, you've disappointed us yet again with your bleedin'"), newLine,
-            TextFile.CreateTextToken("shoddy work and our patience has run as dry as a desert."), newLine,
-            TextFile.CreateTextToken("An' without bringing in nearly enough dough or gaining"), newLine,
-            TextFile.CreateTextToken("powerful connections, is not sufficient to save your skin."), newLine, newLine,
-            TextFile.CreateTextToken("You're bloody done as a thief, get 'em lads!"), newLine,
-        };
+        static Dictionary<string, string> textDataBase = null;
 
         public override TextFile.Token[] TokensExpulsion()
         {
-            return expulsionTokens;
+            LoadTextData();
+
+            return new TextFile.Token[] {
+                TextFile.CreateTextToken(Localize("ThievesGuildExpulsion1")),
+                TextFile.CreateFormatToken(TextFile.Formatting.JustifyCenter),
+
+                TextFile.CreateTextToken(Localize("ThievesGuildExpulsion2")),
+                TextFile.CreateFormatToken(TextFile.Formatting.JustifyCenter),
+
+                TextFile.CreateTextToken(Localize("ThievesGuildExpulsion3")),
+                TextFile.CreateFormatToken(TextFile.Formatting.JustifyCenter),
+
+                TextFile.CreateTextToken(Localize("ThievesGuildExpulsion4")),
+                TextFile.CreateFormatToken(TextFile.Formatting.JustifyCenter),
+
+                TextFile.NewLineToken,
+
+                TextFile.CreateTextToken(Localize("ThievesGuildExpulsion5")),
+                TextFile.CreateFormatToken(TextFile.Formatting.JustifyCenter),
+            };
         }
 
         protected override int AllowGuildExpulsion(PlayerEntity playerEntity, int newRank)
@@ -51,6 +64,24 @@ namespace DaggerfallWorkshop.Game.Guilds
             int deathSquad = 4 + (int)(GameManager.Instance.PlayerEntity.Level / 1.5);
             GameObjectHelper.CreateFoeSpawner(false, MobileTypes.Rogue, deathSquad, 1, 8);
             GameObjectHelper.CreateFoeSpawner(false, MobileTypes.Thief, deathSquad, 1, 4);
+        }
+
+        static void LoadTextData()
+        {
+            const string csvFilename = "RoleplayRealismModData.csv";
+
+            if (textDataBase == null)
+                textDataBase = StringTableCSVParser.LoadDictionary(csvFilename);
+
+            return;
+        }
+
+        public static string Localize(string Key)
+        {
+            if (textDataBase.ContainsKey(Key))
+                return textDataBase[Key];
+
+            return string.Empty;
         }
     }
 }

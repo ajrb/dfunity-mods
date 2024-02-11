@@ -1,9 +1,9 @@
 {
     "ModTitle": "RoleplayRealism",
-    "ModVersion": "1.4.4",
+    "ModVersion": "1.5.0",
     "ModAuthor": "Hazelnut",
-    "ContactInfo": "forums.dfworkshop.net",
-    "DFUnity_Version": "0.14.1",
+    "ContactInfo": "https://forums.dfworkshop.net",
+    "DFUnity_Version": "1.0.0",
     "ModDescription": "Modular roleplay and realism gameplay modifications",
     "GUID": "d828b782-46e9-40e7-8ae6-19cde308032e",
     "Files": [
@@ -53,6 +53,7 @@
         "Assets/Game/Mods/RoleplayRealism/Textures/Buttons/BUTTONS.RCI_35-0.png",
         "Assets/Game/Mods/RoleplayRealism/Textures/Buttons/BUTTONS.RCI_36-0.png",
         "Assets/Game/Mods/RoleplayRealism/modpresets.json",
-        "Assets/Game/Mods/RoleplayRealism/Textures/Buttons/BUTTONS.RCI_37-0.png"
+        "Assets/Game/Mods/RoleplayRealism/Textures/Buttons/BUTTONS.RCI_37-0.png",
+        "Assets/Game/Mods/RoleplayRealism/RoleplayRealismModData.csv"
     ]
 }
