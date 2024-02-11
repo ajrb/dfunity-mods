@@ -25,6 +25,7 @@ using DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings;
 using DaggerfallWorkshop.Utility;
 using DaggerfallWorkshop.Utility.AssetInjection;
 using DaggerfallConnect.Utility;
+using DaggerfallWorkshop.Game.MagicAndEffects.MagicEffects;
 
 namespace RoleplayRealism
 {
@@ -472,8 +473,44 @@ namespace RoleplayRealism
 
         private static void BedActivation(RaycastHit hit)
         {
-            IUserInterfaceManager uiManager = DaggerfallUI.UIManager;
-            uiManager.PushWindow(new DaggerfallRestWindow(uiManager, true));
+            if (GameManager.Instance.AreEnemiesNearby(true))
+            {
+                // Raise enemy alert status when monsters nearby
+                GameManager.Instance.PlayerEntity.SetEnemyAlert(true);
+
+                // Alert player if monsters nearby
+                const int enemiesNearby = 354;
+                DaggerfallUI.MessageBox(enemiesNearby);
+            }
+            else if (GameManager.Instance.PlayerEnterExit.IsPlayerSwimming ||
+                     !GameManager.Instance.PlayerMotor.StartRestGroundedCheck())
+            {
+                const int cannotRestNow = 355;
+                DaggerfallUI.MessageBox(cannotRestNow);
+            }
+            else
+            {
+                var preventedRestMessage = GameManager.Instance.GetPreventedRestMessage();
+                if (preventedRestMessage != null)
+                {
+                    if (preventedRestMessage != "")
+                        DaggerfallUI.MessageBox(preventedRestMessage);
+                    else
+                    {
+                        const int cannotRestNow = 355;
+                        DaggerfallUI.MessageBox(cannotRestNow);
+                    }
+                }
+                else
+                {
+                    RacialOverrideEffect racialOverride = GameManager.Instance.PlayerEffectManager.GetRacialOverrideEffect(); // Allow custom race to block rest (e.g. vampire not sated)
+                    if (racialOverride != null && !racialOverride.CheckStartRest(GameManager.Instance.PlayerEntity))
+                        return;
+
+                    IUserInterfaceManager uiManager = DaggerfallUI.UIManager;
+                    uiManager.PushWindow(UIWindowFactory.GetInstanceWithArgs(UIWindowType.Rest, new object[] { uiManager, true }));
+                }
+            }
         }
 
         private static int AdjustWeaponHitChanceMod(DaggerfallEntity attacker, DaggerfallEntity target, int hitChanceMod, int weaponAnimTime, DaggerfallUnityItem weapon)
