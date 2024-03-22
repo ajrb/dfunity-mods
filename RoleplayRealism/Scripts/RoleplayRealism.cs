@@ -958,6 +958,7 @@ namespace RoleplayRealism
                                 {
                                     archive = billboard.Summary.Archive,
                                     record = billboard.Summary.Record,
+                                    gender = gender.ToString(),
                                     faceIndex = faceRecord,
                                 };
 
