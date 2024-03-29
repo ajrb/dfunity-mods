@@ -150,6 +150,10 @@ namespace TravelOptions
         {
             base.Setup();
 
+            // Override default colours (again as setup will have reset them)
+            if (TravelOptionsMod.Instance.LocationColors != null)
+                locationPixelColors = TravelOptionsMod.Instance.LocationColors;
+
             NativePanel.OnMiddleMouseClick += MarkLocationHandler;
 
             if (TravelOptionsMod.Instance.ShipTravelPortsOnly)
@@ -310,9 +314,14 @@ namespace TravelOptions
 
             teleportCharge = teleportationTravel && TravelOptionsMod.Instance.TeleportCost;
 
-            // Open to region map if travel UI showing, else check if there's an active destination and ask to resume
             TravelOptionsMod travelModInstance = TravelOptionsMod.Instance;
             travelModInstance.DisableJunctionMap();
+
+            // Override default colours
+            if (travelModInstance.LocationColors != null)
+                locationPixelColors = travelModInstance.LocationColors;
+
+            // Open to region map if travel UI showing, else check if there's an active destination and ask to resume
             if (travelModInstance.GetTravelControlUI().isShowing)
             {
                 OpenRegionPanel(GetPlayerRegion());

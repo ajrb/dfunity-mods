@@ -412,6 +412,203 @@
                 }
             ],
             "$version": "v1"
+        },
+        {
+            "Name": "--",
+            "Description": null,
+            "IsAdvanced": false,
+            "Keys": [],
+            "$version": "v1"
+        },
+        {
+            "Name": "..",
+            "Description": null,
+            "IsAdvanced": false,
+            "Keys": [],
+            "$version": "v1"
+        },
+        {
+            "Name": ".",
+            "Description": null,
+            "IsAdvanced": false,
+            "Keys": [],
+            "$version": "v1"
+        },
+        {
+            "Name": "LocationColours",
+            "Description": "Configure the colours used to display different types of locations on the travel map.",
+            "IsAdvanced": false,
+            "Keys": [
+                {
+                    "Value": {
+                        "r": 215,
+                        "g": 119,
+                        "b": 39,
+                        "a": 255
+                    },
+                    "Name": "DungeonLabyrinth",
+                    "Description": "The colour shown on the travel map",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ColorKey"
+                },
+                {
+                    "Value": {
+                        "r": 191,
+                        "g": 87,
+                        "b": 27,
+                        "a": 255
+                    },
+                    "Name": "DungeonKeep",
+                    "Description": "The colour shown on the travel map",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ColorKey"
+                },
+                {
+                    "Value": {
+                        "r": 171,
+                        "g": 51,
+                        "b": 15,
+                        "a": 255
+                    },
+                    "Name": "DungeonRuin",
+                    "Description": "The colour shown on the travel map",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ColorKey"
+                },
+                {
+                    "Value": {
+                        "r": 147,
+                        "g": 15,
+                        "b": 7,
+                        "a": 255
+                    },
+                    "Name": "Graveyard",
+                    "Description": "The colour shown on the travel map",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ColorKey"
+                },
+                {
+                    "Value": {
+                        "r": 15,
+                        "g": 15,
+                        "b": 15,
+                        "a": 255
+                    },
+                    "Name": "Coven",
+                    "Description": "The colour shown on the travel map",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ColorKey"
+                },
+                {
+                    "Value": {
+                        "r": 155,
+                        "g": 105,
+                        "b": 106,
+                        "a": 255
+                    },
+                    "Name": "Farm",
+                    "Description": "The colour shown on the travel map",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ColorKey"
+                },
+                {
+                    "Value": {
+                        "r": 188,
+                        "g": 138,
+                        "b": 138,
+                        "a": 255
+                    },
+                    "Name": "WealthyHome",
+                    "Description": "The colour shown on the travel map",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ColorKey"
+                },
+                {
+                    "Value": {
+                        "r": 126,
+                        "g": 81,
+                        "b": 89,
+                        "a": 255
+                    },
+                    "Name": "PoorHome",
+                    "Description": "The colour shown on the travel map",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ColorKey"
+                },
+                {
+                    "Value": {
+                        "r": 176,
+                        "g": 205,
+                        "b": 255,
+                        "a": 255
+                    },
+                    "Name": "Temple",
+                    "Description": "The colour shown on the travel map",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ColorKey"
+                },
+                {
+                    "Value": {
+                        "r": 68,
+                        "g": 124,
+                        "b": 192,
+                        "a": 255
+                    },
+                    "Name": "Cult",
+                    "Description": "The colour shown on the travel map",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ColorKey"
+                },
+                {
+                    "Value": {
+                        "r": 140,
+                        "g": 86,
+                        "b": 55,
+                        "a": 255
+                    },
+                    "Name": "Tavern",
+                    "Description": "The colour shown on the travel map",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ColorKey"
+                },
+                {
+                    "Value": {
+                        "r": 227,
+                        "g": 180,
+                        "b": 144,
+                        "a": 255
+                    },
+                    "Name": "City",
+                    "Description": "The colour shown on the travel map",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ColorKey"
+                },
+                {
+                    "Value": {
+                        "r": 193,
+                        "g": 133,
+                        "b": 100,
+                        "a": 255
+                    },
+                    "Name": "Hamlet",
+                    "Description": "The colour shown on the travel map",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ColorKey"
+                },
+                {
+                    "Value": {
+                        "r": 165,
+                        "g": 100,
+                        "b": 70,
+                        "a": 255
+                    },
+                    "Name": "Village",
+                    "Description": "The colour shown on the travel map",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ColorKey"
+                }
+            ],
+            "$version": "v1"
         }
     ]
 }

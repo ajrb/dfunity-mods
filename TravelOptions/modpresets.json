@@ -2,7 +2,7 @@
     {
         "Title": "DefaultSettings",
         "Author": "Hazelnut",
-        "Description": "Default settings the mod ships with - affects all settings, except for junction map",
+        "Description": "Default settings the mod ships with - affects all settings, except for junction map & travel map colours",
         "SettingsVersion": "1.0",
         "Values": {
             "GeneralOptions": {
@@ -100,6 +100,81 @@
             },
             "StopAtInnsTravel": {
                 "PlayerControlledInnsTravel": "True"
+            }
+        },
+        "$version": "v1"
+    },
+    {
+        "Title": "TravelMapColours-DaggerfallUnity",
+        "Author": "Hazelnut",
+        "Description": "Travel Map Location colours, Daggerfall Unity defaults",
+        "SettingsVersion": "1.0",
+        "Values": {
+            "LocationColours": {
+                "DungeonLabyrinth": "D77727FF",
+                "DungeonKeep": "BF571BFF",
+                "DungeonRuin": "AB330FFF",
+                "Graveyard": "930F07FF",
+                "Coven": "0F0F0FFF",
+                "Farm": "9B696AFF",
+                "WealthyHome": "BC8A8AFF",
+                "PoorHome": "7E5159FF",
+                "Temple": "B0CDFFFF",
+                "Cult": "447CC0FF",
+                "Tavern": "8C5637FF",
+                "City": "E3B490FF",
+                "Hamlet": "C18564FF",
+                "Village": "A56446FF"
+            }
+        },
+        "$version": "v1"
+    },
+    {
+        "Title": "TravelMapColours-DaggerfallOriginal",
+        "Author": "Hazelnut",
+        "Description": "Original Daggerfall defaults for travel map location colours",
+        "SettingsVersion": "1.0",
+        "Values": {
+            "LocationColours": {
+                "DungeonLabyrinth": "D77524FF",
+                "DungeonKeep": "BE5518FF",
+                "DungeonRuin": "AA300CFF",
+                "Graveyard": "930F07FF",
+                "Coven": "0C0C0CFF",
+                "Farm": "A56446FF",
+                "WealthyHome": "C18564FF",
+                "PoorHome": "8C5637FF",
+                "Temple": "B0CDFFFF",
+                "Cult": "447CC0FF",
+                "Tavern": "7E5159FF",
+                "City": "DCB1B1FF",
+                "Hamlet": "BC7F9EFF",
+                "Village": "9B6282FF"
+            }
+        },
+        "$version": "v1"
+    },
+    {
+        "Title": "TravelMapColours-GhostPutty",
+        "Author": "GhostPutty",
+        "Description": "GhostPutty preset for travel map location colours",
+        "SettingsVersion": "1.0",
+        "Values": {
+            "LocationColours": {
+                "DungeonLabyrinth": "A249AFF",
+                "DungeonKeep": "285353FF",
+                "DungeonRuin": "930F07FF",
+                "Graveyard": "797979FF",
+                "Coven": "0F0F0FFF",
+                "Farm": "94B08DFF",
+                "WealthyHome": "C6891EFF",
+                "PoorHome": "996813FF",
+                "Temple": "B0CDFFFF",
+                "Cult": "447CC0FF",
+                "Tavern": "B4A800FF",
+                "City": "DCB1B1FF",
+                "Hamlet": "C18564FF",
+                "Village": "825740FF"
             }
         },
         "$version": "v1"

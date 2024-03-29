@@ -116,6 +116,7 @@ namespace TravelOptions
         public bool StreamsToggle { get; private set; }
         public Color32 MarkLocationColor { get; private set; }
         public bool TargetCoordsAllowed { get; private set; }
+        public Color32[] LocationColors { get; private set; }
 
         public float RecklessTravelMultiplier { get; private set; } = 1f;
         public float CautiousTravelMultiplier { get; private set; } = 0.8f;
@@ -244,6 +245,27 @@ namespace TravelOptions
 
             FastTravelCostScaleFactor = settings.GetValue<int>("FastTravelCostScaling", "FastTravelCostScaleFactor");
             ShipTravelCostScaleFactor = settings.GetValue<int>("FastTravelCostScaling", "ShipTravelCostScaleFactor");
+
+            try {
+                Color32[] locPixels = new Color32[14];
+                locPixels[0] = settings.GetValue<Color32>("LocationColours", "DungeonLabyrinth");
+                locPixels[1] = settings.GetValue<Color32>("LocationColours", "DungeonKeep");
+                locPixels[2] = settings.GetValue<Color32>("LocationColours", "DungeonRuin");
+                locPixels[3] = settings.GetValue<Color32>("LocationColours", "Graveyard");
+                locPixels[4] = settings.GetValue<Color32>("LocationColours", "Coven");
+                locPixels[5] = settings.GetValue<Color32>("LocationColours", "Farm");
+                locPixels[6] = settings.GetValue<Color32>("LocationColours", "WealthyHome");
+                locPixels[7] = settings.GetValue<Color32>("LocationColours", "PoorHome");
+                locPixels[8] = settings.GetValue<Color32>("LocationColours", "Temple");
+                locPixels[9] = settings.GetValue<Color32>("LocationColours", "Cult");
+                locPixels[10] = settings.GetValue<Color32>("LocationColours", "Tavern");
+                locPixels[11] = settings.GetValue<Color32>("LocationColours", "City");
+                locPixels[12] = settings.GetValue<Color32>("LocationColours", "Hamlet");
+                locPixels[13] = settings.GetValue<Color32>("LocationColours", "Village");
+
+                LocationColors = locPixels;
+
+            } catch (KeyNotFoundException) { }
         }
 
         private KeyCode GetFollowKeyFromText(string text)
