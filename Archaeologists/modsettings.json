@@ -19,6 +19,13 @@
                     "Description": "Override standard Daggerfall pacification formula",
                     "$version": "v1",
                     "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
+                },
+                {
+                    "Value": true,
+                    "Name": "TeleportationPotions",
+                    "Description": "Adds potions of teleportation if enabled",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
                 }
             ],
             "$version": "v1"

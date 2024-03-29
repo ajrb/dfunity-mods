@@ -48,6 +48,7 @@ namespace Archaeologists
             ModSettings settings = mod.GetSettings();
             RestrictGuildRankMagesGuild = settings.GetBool("General", "RestrictGuildRankMagesGuild");
             bool overridePacification = settings.GetBool("General", "OverridePacification");
+            bool teleportationPotions = settings.GetBool("General", "TeleportationPotions");
 
             // Register the new faction id's
             if (RegisterFactionIds())
@@ -80,9 +81,6 @@ namespace Archaeologists
                 Services.RegisterGuildService(1007, GuildServices.MakePotions);
                 // Register the make potions service id
                 Services.RegisterGuildService(1008, GuildServices.MakeMagicItems);
-
-                // Register the Teleport potion
-                GameManager.Instance.EntityEffectBroker.RegisterEffectTemplate(new TeleportPotion(), true);
             }
             else
                 throw new Exception("Faction id's are already in use, unable to register factions for Archaeologists Guild.");
@@ -90,6 +88,10 @@ namespace Archaeologists
             // Override default formula if enabled in settings
             if (overridePacification)
                 FormulaHelper.RegisterOverride(mod, "CalculateEnemyPacification", (Func<PlayerEntity, DFCareer.Skills, bool>)CalculateEnemyPacification);
+
+            // Register the Teleport potion if enabled in settings
+            if (teleportationPotions)
+                GameManager.Instance.EntityEffectBroker.RegisterEffectTemplate(new TeleportPotion(), true);
 
             // Add locator device object to scene and attach script
             GameObject go = new GameObject("LocatorDevice");
