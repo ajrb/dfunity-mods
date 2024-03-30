@@ -28,7 +28,9 @@
                 "enhancedRiding": "True",
                 "RealisticMovement": "True",
                 "followTerrainEnabled": "True",
-                "followTerrainSoftenFactor": "8"
+                "followTerrainSoftenFactor": "8",
+                "GallopingInTowns": "False",
+                "TrampleCivilians": "True"
             },
             "RefinedTraining": {
                 "refinedTraining": "True",

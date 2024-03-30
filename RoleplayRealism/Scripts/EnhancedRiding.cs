@@ -31,6 +31,7 @@ namespace DaggerfallWorkshop.Game
         ImageData[] horseNeckTextures = new ImageData[4];
         ImageData[] cartNeckTextures = new ImageData[4];
 
+        PlayerGPS playerGPS;
         PlayerMotor playerMotor;
         TransportManager transportManager;
         PlayerMouseLook playerMouseLook;
@@ -43,6 +44,9 @@ namespace DaggerfallWorkshop.Game
         public bool RealisticMovement { get; set; }
         public bool TerrainFollowing { get; set; }
 
+        public bool GallopingInTowns { get; set; }
+        public bool TrampleCivilians { get; set; }
+
         public void SetFollowTerrainSoftenFactor(int softenFollow)
         {
             this.softenFollow = softenFollow;
@@ -52,12 +56,17 @@ namespace DaggerfallWorkshop.Game
         // Delegate for PlayerSpeedChanger - allows horse running.
         public bool CanRunUnlessRidingCart()
         {
-            return !(GameManager.Instance.TransportManager.TransportMode == TransportModes.Cart && playerMotor.IsRiding);
+            bool inTownNoGallop = playerGPS.IsPlayerInTown(true) && !GallopingInTowns;
+            return !((GameManager.Instance.TransportManager.TransportMode == TransportModes.Cart || inTownNoGallop) && playerMotor.IsRiding);
         }
 
         // Initialise.
         void Start()
         {
+            playerGPS = GetComponent<PlayerGPS>();
+            if (!playerGPS)
+                throw new Exception("PlayerGPS not found.");
+
             playerMotor = GetComponent<PlayerMotor>();
             if (!playerMotor)
                 throw new Exception("PlayerMotor not found.");
@@ -125,7 +134,7 @@ namespace DaggerfallWorkshop.Game
         // Handle trampling civilian NPCs.
         private void OnTriggerEnter(Collider other)
         {
-            if (playerMotor.IsRiding && playerMotor.IsRunning)
+            if (TrampleCivilians && playerMotor.IsRiding && playerMotor.IsRunning)
             {
                 PlayerEntity playerEntity = GameManager.Instance.PlayerEntity;
                 Transform npcTransform = other.gameObject.transform;

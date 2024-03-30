@@ -173,6 +173,20 @@
                     "Description": "Scale factor to soften terrain gradient following. (0=none, 32=max soften)",
                     "$version": "v1",
                     "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.SliderIntKey"
+                },
+                {
+                    "Value": false,
+                    "Name": "GallopingInTowns",
+                    "Description": "Enables galloping (sprinting) while riding horses in towns.",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
+                },
+                {
+                    "Value": true,
+                    "Name": "TrampleCivilians",
+                    "Description": "Enables the crime of trampling innocent townsfolk when galloping in a town. Be careful!",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
                 }
             ],
             "$version": "v1"
