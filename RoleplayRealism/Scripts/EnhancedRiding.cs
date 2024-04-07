@@ -7,6 +7,7 @@ using DaggerfallConnect;
 using DaggerfallWorkshop.Game.Entity;
 using DaggerfallWorkshop.Game.Formulas;
 using DaggerfallWorkshop.Game.Items;
+using DaggerfallWorkshop.Game.Utility.ModSupport;
 using DaggerfallWorkshop.Utility.AssetInjection;
 using RoleplayRealism;
 using System;
@@ -22,14 +23,18 @@ namespace DaggerfallWorkshop.Game
 
         const int nativeScreenHeight = 200;
         const int samples = 16;
+        const string horseVariantTextureName = "MREDvariant";
         const string horseNeckTextureName = "MRED00I1.CFA";
         const string cartNeckTextureName = "MRED01I1.CFA";
         const SoundClips trampleMale = SoundClips.BretonMalePain3;
         const SoundClips trampleFemale = SoundClips.BretonFemalePain3;
 
+        bool isRiding;
         int sampleIdx = 0;
         int softenFollow = 0;
         float[] terrainAngles = new float[samples];
+        int horseVariantTexturesLoaded = -1;
+        ImageData[] horseVariantTextures;
         ImageData[] horseNeckTextures = new ImageData[4];
         ImageData[] cartNeckTextures = new ImageData[4];
 
@@ -73,6 +78,7 @@ namespace DaggerfallWorkshop.Game
             playerMotor = GetComponent<PlayerMotor>();
             if (!playerMotor)
                 throw new Exception("PlayerMotor not found.");
+            isRiding = playerMotor.IsRiding;
 
             transportManager = GetComponent<TransportManager>();
             if (!transportManager)
@@ -104,19 +110,12 @@ namespace DaggerfallWorkshop.Game
                 TextureReplacement.TryImportCifRci(cartNeckTextureName, 0, i, false, out cartNeckTextures[i].texture);
         }
 
-        // Update the mouse look pitch limit when riding status changes.
+        
         void Update()
         {
+            // Update the mouse look pitch limit while riding.
             if (!GameManager.IsGamePaused && playerMotor.IsRiding)
             {
-                if (RealisticMovement)
-                {
-                    InputManager.Instance.NegVerticalLimit = (transportManager.TransportMode == TransportModes.Cart) ? 0.2f : 0.5f;
-                    float horseStrafeLimit = (transportManager.TransportMode == TransportModes.Cart) ? 0.1f : 0.4f;
-                    InputManager.Instance.NegHorizontalLimit = horseStrafeLimit;
-                    InputManager.Instance.PosHorizontalLimit = horseStrafeLimit;
-                }
-
                 // Sample angle of terrain
                 Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit1);
                 Physics.Raycast(transform.position + transform.forward, Vector3.down, out RaycastHit hit2);
@@ -129,13 +128,54 @@ namespace DaggerfallWorkshop.Game
             }
             else
             {
+                playerMouseLook.PitchMaxLimit = PlayerMouseLook.PitchMax;
+            }
+
+            // Update move limits and variant textures when riding status changes.
+            if (playerMotor.IsRiding != isRiding)
+            {
+                isRiding = playerMotor.IsRiding;
+
                 if (RealisticMovement)
                 {
-                    InputManager.Instance.NegVerticalLimit = 1f;
-                    InputManager.Instance.NegHorizontalLimit = 1f;
-                    InputManager.Instance.PosHorizontalLimit = 1f;
+                    if (isRiding)
+                    {
+                        InputManager.Instance.NegVerticalLimit = (transportManager.TransportMode == TransportModes.Cart) ? 0.2f : 0.5f;
+                        float horseStrafeLimit = (transportManager.TransportMode == TransportModes.Cart) ? 0.1f : 0.4f;
+                        InputManager.Instance.NegHorizontalLimit = horseStrafeLimit;
+                        InputManager.Instance.PosHorizontalLimit = horseStrafeLimit;
+                    }
+                    else
+                    {
+                        InputManager.Instance.NegVerticalLimit = 1f;
+                        InputManager.Instance.NegHorizontalLimit = 1f;
+                        InputManager.Instance.PosHorizontalLimit = 1f;
+                    }
                 }
-                playerMouseLook.PitchMaxLimit = PlayerMouseLook.PitchMax;
+
+                if (HorseVariants)
+                {
+                    if (isRiding)
+                    {
+                        ItemHorseVariant horseVariant = (ItemHorseVariant)GameManager.Instance.PlayerEntity.Items.GetItem(ItemGroups.Transportation, ItemHorseVariant.templateIndex, false, false, false);
+                        if (horseVariant != null)
+                        {
+                            if (horseVariant.CurrentVariant != horseVariantTexturesLoaded)
+                            {
+                                horseVariantTextures = new ImageData[4];
+                                for (int i = 0; i < 4; i++)
+                                    ModManager.Instance.TryGetAsset(TextureReplacement.GetNameCifRci(horseVariantTextureName, horseVariant.CurrentVariant, i), null, out horseVariantTextures[i].texture);
+                                    // TextureReplacement.TryImportCifRci(horseVariantTextureName, horseVariant.CurrentVariant, i, false, out horseVariantTextures[i].texture);
+                                horseVariantTexturesLoaded = horseVariant.CurrentVariant;
+                            }
+                        }
+                        else
+                        {
+                            horseVariantTexturesLoaded = -1;
+                            horseVariantTextures = null;
+                        }
+                    }
+                }
             }
         }
 
@@ -237,6 +277,13 @@ namespace DaggerfallWorkshop.Game
             {
                 ImageData ridingTexture = transportManager.RidingTexture;
                 int frameIdx = transportManager.FrameIndex;
+
+                // Replace texture with variant if loaded.
+                if (HorseVariants && horseVariantTexturesLoaded > -1)
+                {
+                    ridingTexture.texture = horseVariantTextures[frameIdx].texture;
+                }
+
                 if ((transportManager.TransportMode == TransportModes.Horse || transportManager.TransportMode == TransportModes.Cart) && ridingTexture.texture != null)
                 {
                     // Draw horse texture behind other HUD elements & weapons.
