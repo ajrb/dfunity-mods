@@ -145,6 +145,7 @@ namespace RoleplayRealism
                         enhancedRiding.RealisticMovement = mod.GetSettings().GetBool("EnhancedRiding", "RealisticMovement");
                         enhancedRiding.TerrainFollowing = mod.GetSettings().GetBool("EnhancedRiding", "followTerrainEnabled");
                         enhancedRiding.SetFollowTerrainSoftenFactor(mod.GetSettings().GetInt("EnhancedRiding", "followTerrainSoftenFactor"));
+                        enhancedRiding.HorseVariants = mod.GetSettings().GetBool("EnhancedRiding", "HorseVariants");
                         enhancedRiding.GallopingInTowns = mod.GetSettings().GetBool("EnhancedRiding", "GallopingInTowns");
                         enhancedRiding.TrampleCivilians = mod.GetSettings().GetBool("EnhancedRiding", "TrampleCivilians");
                     }

@@ -6,7 +6,9 @@
 using DaggerfallConnect;
 using DaggerfallWorkshop.Game.Entity;
 using DaggerfallWorkshop.Game.Formulas;
+using DaggerfallWorkshop.Game.Items;
 using DaggerfallWorkshop.Utility.AssetInjection;
+using RoleplayRealism;
 using System;
 using UnityEngine;
 
@@ -44,6 +46,7 @@ namespace DaggerfallWorkshop.Game
         public bool RealisticMovement { get; set; }
         public bool TerrainFollowing { get; set; }
 
+        public bool HorseVariants { get; set; }
         public bool GallopingInTowns { get; set; }
         public bool TrampleCivilians { get; set; }
 
@@ -75,6 +78,11 @@ namespace DaggerfallWorkshop.Game
             if (!transportManager)
                 throw new Exception("TransportManager not found.");
             transportManager.DrawHorse = false;
+            if (HorseVariants)
+            {
+                DaggerfallUnity.Instance.ItemHelper.RegisterCustomItem(ItemHorseVariant.templateIndex, ItemGroups.Transportation, typeof(ItemHorseVariant));
+                transportManager.AddHorseItemIndex(ItemHorseVariant.templateIndex);
+            }
 
             playerMouseLook = GameManager.Instance.PlayerMouseLook;
             if (!playerMouseLook)

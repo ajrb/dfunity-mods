@@ -176,6 +176,13 @@
                 },
                 {
                     "Value": false,
+                    "Name": "HorseVariants",
+                    "Description": "Enables horse variants to be sold in towns.",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
+                },
+                {
+                    "Value": false,
                     "Name": "GallopingInTowns",
                     "Description": "Enables galloping (sprinting) while riding horses in towns.",
                     "$version": "v1",

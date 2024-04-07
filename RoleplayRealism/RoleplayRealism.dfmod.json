@@ -1,6 +1,6 @@
 {
     "ModTitle": "RoleplayRealism",
-    "ModVersion": "1.6",
+    "ModVersion": "1.7",
     "ModAuthor": "Hazelnut",
     "ContactInfo": "https://forums.dfworkshop.net",
     "DFUnity_Version": "1.0.0",
@@ -54,6 +54,19 @@
         "Assets/Game/Mods/RoleplayRealism/Textures/Buttons/BUTTONS.RCI_36-0.png",
         "Assets/Game/Mods/RoleplayRealism/modpresets.json",
         "Assets/Game/Mods/RoleplayRealism/Textures/Buttons/BUTTONS.RCI_37-0.png",
-        "Assets/Game/Mods/RoleplayRealism/RoleplayRealismModData.csv"
+        "Assets/Game/Mods/RoleplayRealism/RoleplayRealismModData.csv",
+        "Assets/Game/Mods/RoleplayRealism/ItemTemplates.json",
+        "Assets/Game/Mods/RoleplayRealism/Textures/HorseVariants/527_0-2.PNG",
+        "Assets/Game/Mods/RoleplayRealism/Textures/HorseVariants/527_2-3.PNG",
+        "Assets/Game/Mods/RoleplayRealism/Textures/HorseVariants/527_2-0.PNG",
+        "Assets/Game/Mods/RoleplayRealism/Textures/HorseVariants/527_2-1.PNG",
+        "Assets/Game/Mods/RoleplayRealism/Textures/HorseVariants/527_1-2.PNG",
+        "Assets/Game/Mods/RoleplayRealism/Textures/HorseVariants/527_0-3.PNG",
+        "Assets/Game/Mods/RoleplayRealism/Textures/HorseVariants/527_2-2.PNG",
+        "Assets/Game/Mods/RoleplayRealism/Textures/HorseVariants/527_0-0.PNG",
+        "Assets/Game/Mods/RoleplayRealism/Textures/HorseVariants/527_1-3.PNG",
+        "Assets/Game/Mods/RoleplayRealism/Textures/HorseVariants/527_1-1.PNG",
+        "Assets/Game/Mods/RoleplayRealism/Textures/HorseVariants/527_1-0.PNG",
+        "Assets/Game/Mods/RoleplayRealism/Textures/HorseVariants/527_0-1.PNG"
     ]
 }

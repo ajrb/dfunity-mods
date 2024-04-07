@@ -29,6 +29,7 @@
                 "RealisticMovement": "True",
                 "followTerrainEnabled": "True",
                 "followTerrainSoftenFactor": "8",
+                "HorseVariants": "True",
                 "GallopingInTowns": "False",
                 "TrampleCivilians": "True"
             },

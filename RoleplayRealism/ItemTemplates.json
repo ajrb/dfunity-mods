@@ -1,0 +1,23 @@
+[
+    {
+        "index": 527,
+        "name": "Variant Horse",
+        "baseWeight": 800,
+        "hitPoints": 100,
+        "capacityOrTarget": 750,
+        "basePrice": 4000,
+        "enchantmentPoints": 0,
+        "rarity": 1,
+        "variants": 3,
+        "drawOrderOrEffect": 0,
+        "isBluntWeapon": false,
+        "isLiquid": false,
+        "isOneHanded": false,
+        "isIngredient": false,
+        "worldTextureArchive": 0,
+        "worldTextureRecord": 0,
+        "playerTextureArchive": 527,
+        "playerTextureRecord": 0,
+        "hasNoEncumbrance": true
+    }
+]
