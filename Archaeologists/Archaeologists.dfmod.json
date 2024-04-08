@@ -1,6 +1,6 @@
 {
     "ModTitle": "Archaeologists",
-    "ModVersion": "2.6",
+    "ModVersion": "2.6.1",
     "ModAuthor": "Hazelnut",
     "ContactInfo": "forums.dfworkshop.net",
     "DFUnity_Version": "1.0.0",
@@ -81,5 +81,10 @@
         "Assets/Game/Mods/Archaeologists/Textures/1200_8-0.xml",
         "Assets/Game/Mods/Archaeologists/Textures/1200_4-0.xml",
         "Assets/Game/Mods/Archaeologists/Textures/1200_3-0.png"
-    ]
+    ],
+    "Contributes": {
+        "BooksMapping": [
+            "ArchsGuildBooks"
+        ]
+    }
 }
