@@ -22,7 +22,8 @@
                 "classicStrengthDamageBonus": "True",
                 "variantNpcs": "True",
                 "variantResidents": "True",
-                "loanAmountPerLevel": "4"
+                "loanAmountPerLevel": "4",
+                "fightersTeachHandToHand": "False"
             },
             "EnhancedRiding": {
                 "enhancedRiding": "True",

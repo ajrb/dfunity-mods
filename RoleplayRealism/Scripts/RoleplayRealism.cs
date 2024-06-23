@@ -90,6 +90,7 @@ namespace RoleplayRealism
             bool classicStrDmgBonus = settings.GetBool("Modules", "classicStrengthDamageBonus");
             bool variantNpcs = settings.GetBool("Modules", "variantNpcs");
             bool variantResidents = settings.GetBool("Modules", "variantResidents");
+            bool fgH2H = settings.GetBool("Modules", "fightersTeachHandToHand");
 
             bool riding = settings.GetBool("EnhancedRiding", "enhancedRiding");
             bool training = settings.GetBool("RefinedTraining", "refinedTraining");
@@ -99,13 +100,13 @@ namespace RoleplayRealism
 
             LoadTextData();
 
-            InitMod(bedSleeping, archery, riding, encumbrance, bandaging, shipPorts, expulsion, climbing, weaponSpeed, weaponMaterials, equipDamage, enemyAppearance, purifyPot, autoExtinguishLight, classicStrDmgBonus, variantNpcs, variantResidents, training);
+            InitMod(bedSleeping, archery, riding, encumbrance, bandaging, shipPorts, expulsion, climbing, weaponSpeed, weaponMaterials, equipDamage, enemyAppearance, purifyPot, autoExtinguishLight, classicStrDmgBonus, variantNpcs, variantResidents, fgH2H, training);
 
             mod.IsReady = true;
         }
 
         public static void InitMod(bool bedSleeping, bool archery, bool riding, bool encumbrance, bool bandaging, bool shipPorts, bool expulsion, bool climbing, bool weaponSpeed, bool weaponMaterials, bool equipDamage, bool enemyAppearance,
-            bool purifyPot, bool autoExtinguishLight, bool classicStrDmgBonus, bool variantNpcs, bool variantResidents, bool training)
+            bool purifyPot, bool autoExtinguishLight, bool classicStrDmgBonus, bool variantNpcs, bool variantResidents, bool fgH2H, bool training)
         {
             Debug.Log("Begin mod init: RoleplayRealism");
 
@@ -224,6 +225,13 @@ namespace RoleplayRealism
             if (variantResidents)
             {
                 PlayerEnterExit.OnTransitionInterior += OnTransitionToInterior_VariantResidenceNPCsprites;
+            }
+
+            if (fgH2H)
+            {
+                // Register the FG Guild class
+                if (!GuildManager.RegisterCustomGuild(FactionFile.GuildGroups.FightersGuild, typeof(FightersGuildRR)))
+                    throw new Exception("GuildGroup FightersGuild is already overridden, unable to register FightersGuildRR guild class.");
             }
 
             if (training)
