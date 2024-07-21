@@ -98,9 +98,9 @@
                     "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
                 },
                 {
-                    "Value": true,
+                    "Value": false,
                     "Name": "classicStrengthDamageBonus",
-                    "Description": "Use classic displayed strength damage bonus (half) instead of classic internal value",
+                    "Description": "Display the strength damage bonus like classic Daggerfall (half) instead of the value used internally that DFU displays",
                     "$version": "v1",
                     "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
                 },

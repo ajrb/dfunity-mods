@@ -231,8 +231,10 @@ namespace DaggerfallWorkshop.Game
                 int frameIdx = transportManager.FrameIndex;
                 if ((transportManager.TransportMode == TransportModes.Horse || transportManager.TransportMode == TransportModes.Cart) && ridingTexture.texture != null)
                 {
-                    // Draw horse texture behind other HUD elements & weapons.
+                    // Draw horse texture behind other HUD elements & weapons, and apply current tint from FPS lighting.
                     GUI.depth = 2;
+                    Color tint = GameManager.Instance.TransportManager.Tint;
+
                     // Get horse texture scaling factor. (base on height to avoid aspect ratio issues like fat horses)
                     float horseScaleY = (float)Screen.height / (float)nativeScreenHeight;
                     float horseScaleX = horseScaleY * TransportManager.ScaleFactorX;
@@ -260,7 +262,7 @@ namespace DaggerfallWorkshop.Game
                                     Screen.height - ((ridingTexture.height + yAdj) * horseScaleY) - horseOffsetHeight,
                                     ridingTexture.width * horseScaleX,
                                     ridingTexture.height * horseScaleY);
-                    DaggerfallUI.DrawTexture(pos, ridingTexture.texture);
+                    DaggerfallUI.DrawTexture(pos, ridingTexture.texture, ScaleMode.StretchToFill, true, tint);
 
                     // Draw additional horse neck if required.
                     float drawBottom = pos.y + pos.height - horseScaleY;
@@ -272,7 +274,7 @@ namespace DaggerfallWorkshop.Game
                             // Duplicate a section of existing sprite.
                             float yAdjNeck = yAdj / 100;
                             Rect posNeck = new Rect(pos.x, drawBottom, (ridingTexture.width - 14) * horseScaleX, Screen.height - drawBottom + horseScaleY - horseOffsetHeight);
-                            DaggerfallUI.DrawTextureWithTexCoords(posNeck, ridingTexture.texture, new Rect(extX, 0.2f - yAdjNeck, extW, yAdjNeck));
+                            DaggerfallUI.DrawTextureWithTexCoords(posNeck, ridingTexture.texture, new Rect(extX, 0.2f - yAdjNeck, extW, yAdjNeck), true, tint);
                         }
                         else
                         {
@@ -280,7 +282,7 @@ namespace DaggerfallWorkshop.Game
                             float yAdjNeck = yAdj / 20.8f;
                             yAdjNeck = yAdjNeck > 0 ? yAdjNeck : 0.001f;
                             Rect posNeck = new Rect(pos.x, drawBottom, ridingTexture.width * horseScaleX, Screen.height - drawBottom + horseScaleY - horseOffsetHeight);
-                            DaggerfallUI.DrawTextureWithTexCoords(posNeck, neckTextures[frameIdx].texture, new Rect(0, 1-yAdjNeck, 1, yAdjNeck));
+                            DaggerfallUI.DrawTextureWithTexCoords(posNeck, neckTextures[frameIdx].texture, new Rect(0, 1-yAdjNeck, 1, yAdjNeck), true, tint);
                         }
                     }
                 }
