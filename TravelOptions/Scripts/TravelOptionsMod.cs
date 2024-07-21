@@ -171,6 +171,7 @@ namespace TravelOptions
         // Junction map variables
         bool roadsJunctionMap = false;
         bool persistentJunctionMap = false;
+        bool toggleMapOffPaths = false;
         bool junctionMapCircular = true;
         const int junctionMapWidth = 20;
         const int junctionMapHeight = 20;
@@ -234,6 +235,7 @@ namespace TravelOptions
                 if (roadsJunctionMap)
                 {
                     persistentJunctionMap = settings.GetValue<bool>("RoadsJunctionMap", "PersistentMap");
+                    toggleMapOffPaths = settings.GetValue<bool>("RoadsJunctionMap", "ToggleMapOffPaths");
 
                     if (junctionMapTexture != null)
                         junctionMapTexture.filterMode = filterModes[settings.GetValue<int>("RoadsJunctionMap", "FilterMode")];
@@ -639,7 +641,19 @@ namespace TravelOptions
                 return;
             }
 
-            DaggerfallUI.AddHUDText(MsgNoPath);
+            if (roadsJunctionMap && toggleMapOffPaths)
+            {
+                junctionMapPanel.Enabled = !junctionMapPanel.Enabled;
+                if (junctionMapPanel.Enabled)
+                {
+                    DrawJunctionMap(GameManager.Instance.PlayerGPS.CurrentMapPixel);
+                    DaggerfallUI.AddHUDText(MsgNoPath);
+                }
+            }
+            else
+            {
+                DaggerfallUI.AddHUDText(MsgNoPath);
+            }
         }
 
         protected void BeginPathTravel(DFPosition targetPixel, bool starting = true)
@@ -691,7 +705,22 @@ namespace TravelOptions
                     if (playerDirection == 0)
                     {
                         byte fromDirection = GetDirection(GetNormalisedPlayerYaw(true));
-                        playerDirection = (byte)(pathsDataPt ^ fromDirection);
+
+                        // Eliminate closest matching from direction using XOR (handles edge cases)
+                        int sc = 1;     // Search counter
+                        bool clockwise = sc % 2 == 0;
+                        playerDirection = (byte)(pathsDataPt ^ fromDirection);  // Should work 99% of the time
+                        while (CountSetBits(playerDirection) != 1 && sc < 9)
+                        {
+                            Debug.LogFormat("Try {0}", playerDirection);
+                            fromDirection = (byte)(clockwise ? fromDirection >> sc : fromDirection << sc);
+                            if (fromDirection == 0)
+                                fromDirection = (byte)(clockwise ? 128 : 1);
+                            sc++;
+                            clockwise = sc % 2 == 0;
+                            playerDirection = (byte)(pathsDataPt ^ fromDirection);
+                        }
+
                     }
 #if UNITY_EDITOR
                     Debug.LogFormat("Heading {0}", GetDirectionStr(playerDirection));
@@ -939,7 +968,7 @@ namespace TravelOptions
 
         internal void DisableJunctionMap(bool force = false)
         {
-            if (force || (roadsJunctionMap && !persistentJunctionMap))
+            if (force || (roadsJunctionMap && !persistentJunctionMap && !toggleMapOffPaths))
                 if (junctionMapPanel != null)
                     junctionMapPanel.Enabled = false;
         }
@@ -1121,10 +1150,10 @@ namespace TravelOptions
                 }
                 else if (!travelControlUI.isShowing)
                 {
-                    // Disable junction map if player has moved off the path, or update it
+                    // Disable junction map if player has moved off the path and toggle disabled, or update it
                     DFPosition currMapPixel = playerGPS.CurrentMapPixel;
                     byte pathsDataPt = GetPathsDataPoint(currMapPixel);
-                    if (IsPlayerOnPath(playerGPS, pathsDataPt) == 0)
+                    if (!toggleMapOffPaths && (IsPlayerOnPath(playerGPS, pathsDataPt) == 0))
                         junctionMapPanel.Enabled = false;
                     else
                         UpdateJunctionMap(currMapPixel);

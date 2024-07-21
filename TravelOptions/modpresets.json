@@ -195,7 +195,8 @@
                 "PlayerColor": "FF0000FF",
                 "Opaque": "False",
                 "BackgroundColor": "327F19FF",
-                "PersistentMap": "False"
+                "PersistentMap": "False",
+                "ToggleMapOffPaths": "True"
             }
         },
         "$version": "v1"
@@ -210,8 +211,7 @@
                 "Enable": "True",
                 "ScreenSize": "100",
                 "ScreenPositionX": "107",
-                "ScreenPositionY": "46",
-                "PersistentMap": "False"
+                "ScreenPositionY": "46"
             }
         },
         "$version": "v1"
