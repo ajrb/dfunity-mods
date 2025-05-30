@@ -513,12 +513,14 @@ namespace TravelOptions
                 if (position.x < 0 || position.x > regionTextureOverlayPanelRect.width || position.y < 0 || position.y > regionTextureOverlayPanelRect.height)
                     return;
 
-                if (popUp == null)
+                if (popUp == null || (popUp as TravelOptionsPopUp == null)) //the second check ensures travelling outside of locations still works when another mod replaces the travel popup
                 {
-                    popUp = (DaggerfallTravelPopUp)UIWindowFactory.GetInstanceWithArgs(UIWindowType.TravelPopUp, new object[] { uiManager, uiManager.TopWindow, this });
+                    //popUp = (DaggerfallTravelPopUp)UIWindowFactory.GetInstanceWithArgs(UIWindowType.TravelPopUp, new object[] { uiManager, uiManager.TopWindow, this });
+                    popUp = new TravelOptionsPopUp(uiManager, uiManager.TopWindow, this);
                 }
                 ((TravelOptionsPopUp)popUp).EndPos = GetClickMPCoords();
                 uiManager.PushWindow(popUp);
+                popUp = null;   //ensures the next travel popup will be created from scratch so that if another mod has replaced it, TO's popup ONLY appears during non-location travel 
             }
             else
             {
@@ -526,7 +528,8 @@ namespace TravelOptions
             }
             // Set scale factors into popup, except when teleport travelling
             if (popUp != null && !teleportationTravel)
-                ((TravelOptionsPopUp)popUp).SetScaleFactors(TravelOptionsMod.Instance.FastTravelCostScaleFactor, TravelOptionsMod.Instance.ShipTravelCostScaleFactor);
+                if(popUp as TravelOptionsPopUp != null) 	//ensures the map doesn't break when another mod has replaced the travel popup
+                    ((TravelOptionsPopUp)popUp).SetScaleFactors(TravelOptionsMod.Instance.FastTravelCostScaleFactor, TravelOptionsMod.Instance.ShipTravelCostScaleFactor);
         }
 
         protected void MarkLocationHandler(BaseScreenComponent sender, Vector2 position)
